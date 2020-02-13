@@ -14,9 +14,12 @@
     "lint:markdown": "markdownlint README.md"
   },
   "dependencies": {
-    "ethers": "^4.0.44"
+    "ethers": "^4.0.44",
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
+    "@types/node": "^13.7.1",
+    "@types/uuid": "^3.4.7",
     "@typescript-eslint/eslint-plugin": "^2.3.2",
     "@typescript-eslint/parser": "^2.3.2",
     "eslint": "^6.5.1",
