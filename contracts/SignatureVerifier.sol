@@ -31,7 +31,7 @@ library SignatureVerifier {
         signature,
         order.walletAddress
       ),
-      'Invalid wallet signature for buy order'
+      'Invalid wallet signature'
     );
   }
 
