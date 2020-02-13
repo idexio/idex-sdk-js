@@ -1,0 +1,13 @@
+{
+  "default": true,
+  "fenced-code-language": false,
+  "line-length": {
+    "line_length": 120,
+    "code_blocks": false,
+    "headings": false,
+    "tables": false
+  },
+  "no-bare-urls": false,
+  "no-duplicate-header": false,
+  "single-h1": false
+}

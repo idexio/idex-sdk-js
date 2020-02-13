@@ -1,0 +1,40 @@
+{
+  "name": "idex-node",
+  "version": "0.0.1",
+  "description": "Sample Node.js code for the IDEX API",
+  "main": "index.js",
+  "repository": "git@github.com:idexio/idex-node.git",
+  "author": "dileepfrog <dileepfrog@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "yarn clean && tsc",
+    "clean": "rm -rf dist",
+    "lint": "prettier-eslint 'src/**/*.ts' --write",
+    "lint:markdown": "markdownlint README.md"
+  },
+  "dependencies": {
+    "ethers": "^4.0.44"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.3.2",
+    "@typescript-eslint/parser": "^2.3.2",
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.3.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "husky": "^3.0.8",
+    "markdownlint-cli": "^0.18.0",
+    "prettier-eslint": "^9.0.0",
+    "prettier-eslint-cli": "^5.0.0",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.3.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint:markdown"
+    }
+  }
+}
