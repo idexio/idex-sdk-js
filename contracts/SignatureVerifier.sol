@@ -47,12 +47,10 @@ library SignatureVerifier {
             orderMarketSymbol,
             uint8(order.side),
             uint8(order.orderType),
-            order.baseAssetAddress,
-            order.quoteAssetAddress
+            // Ledger qtys and prices are in pip, but order was signed by wallet owner with decimal values
+            pipToDecimal(order.totalQuantity)
           ),
           abi.encodePacked(
-            // Ledger qtys and prices are in pip, but order was signed by wallet owner with decimal values
-            pipToDecimal(order.totalQuantity),
             order.limitPrice > 0 ? pipToDecimal(order.limitPrice) : '',
             order.stopPrice > 0 ? pipToDecimal(order.stopPrice) : '',
             order.walletAddress,
