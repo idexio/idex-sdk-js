@@ -14,8 +14,8 @@ const limitOrder: models.LimitOrder = {
   quantity: '1.20000000',
   price: '0.50000000',
   // customClientOrderId: '6f392746-4dd9-11ea-ba35-05698b78935d',
-  nonce: uuidv1(),
   walletAddress: wallet.address,
+  nonce: uuidv1(),
 };
 
 const marketOrder: models.MarketOrder = {
@@ -24,8 +24,8 @@ const marketOrder: models.MarketOrder = {
   type: 'market',
   quantity: '1.20000000',
   // customClientOrderId: '6f392747-4dd9-11ea-ba35-05698b78935d',
-  nonce: uuidv1(),
   walletAddress: wallet.address,
+  nonce: uuidv1(),
 };
 
 const stopLimitOrder: models.StopLimitOrder = {
@@ -36,8 +36,8 @@ const stopLimitOrder: models.StopLimitOrder = {
   price: '0.50000000',
   stopPrice: '0.60000000',
   // customClientOrderId: '6f392748-4dd9-11ea-ba35-05698b78935d',
-  nonce: uuidv1(),
   walletAddress: wallet.address,
+  nonce: uuidv1(),
 };
 
 async function runForOrder(order: models.Order, type: string) {

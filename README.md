@@ -11,7 +11,7 @@ Modify wallet and orders and run to see corresponding request JSON and signature
 ```
 nvm use
 yarn && yarn build
-node dist/index.js
+yarn start
 ```
 
 ```
@@ -22,13 +22,11 @@ node dist/index.js
     side: 'buy',
     type: 'limit',
     quantity: '1.20000000',
-    price: '0.50000000'
+    price: '0.50000000',
+    walletAddress: '0x7357589f8e367c2C31F51242fB77B350A11830F3',
+    nonce: 'f1359e70-51cd-11ea-994f-db2e1629c1d6'
   },
-  wallet: {
-    address: '0x7357589f8e367c2C31F51242fB77B350A11830F3',
-    nonce: '5ec081a0-4f6f-11ea-b1ec-6508036be2f7',
-    signature: '0x8eb63278745323cd19b4ec5d55b2174a79f3fa982fec635adc6c6d15e395e9360ecfbfff1b728b95bc03e9c418a357d74ff6bb950bc144ba1866f0bf023697e31b'
-  }
+  signature: '0xf2ac7ad88ccc6d4ef7348c2de255f3fd3e5ded3c55e36dcd3e2ba3d66573106c4d159a0f78038081d0a96c7b4a86a94c71e304fa338ae5e06e67272a2c0dc3261c'
 }
 Signature verified ✅
 
@@ -38,13 +36,11 @@ Signature verified ✅
     market: 'IDEX-ETH',
     side: 'sell',
     type: 'market',
-    quantity: '1.20000000'
+    quantity: '1.20000000',
+    walletAddress: '0x7357589f8e367c2C31F51242fB77B350A11830F3',
+    nonce: 'f1359e71-51cd-11ea-994f-db2e1629c1d6'
   },
-  wallet: {
-    address: '0x7357589f8e367c2C31F51242fB77B350A11830F3',
-    nonce: '5ec626f0-4f6f-11ea-b1ec-6508036be2f7',
-    signature: '0x8beea823f03ce17ebc640591b6cc21e780d192fe44003e971abeb7028c7ab80e2c11db32f0cc45b80997b58e4d2b1465da030a6ce0ad8d063eed19c3409fdd371b'
-  }
+  signature: '0x9a504cb4fd0dee0ba55f4d1de65d81ded6d9293d758fb078a04c86fd5e727e1b1a1758d614f85299450d751b620a9960de8204feddf31635eb718ae2fa087e841b'
 }
 Signature verified ✅
 
@@ -56,13 +52,11 @@ Signature verified ✅
     type: 'stopLimit',
     quantity: '1.20000000',
     price: '0.50000000',
-    stopPrice: '0.60000000'
+    stopPrice: '0.60000000',
+    walletAddress: '0x7357589f8e367c2C31F51242fB77B350A11830F3',
+    nonce: 'f1359e72-51cd-11ea-994f-db2e1629c1d6'
   },
-  wallet: {
-    address: '0x7357589f8e367c2C31F51242fB77B350A11830F3',
-    nonce: '5ec897f0-4f6f-11ea-b1ec-6508036be2f7',
-    signature: '0x6491044c23a89074e3c6c6a47312e1d6044590035582ac7b33f1952e5368b475254831da554297c71262e795f316cba9d96962b931b8d2a9e8ed3c27f64626a91c'
-  }
+  signature: '0xab31c5cb8ebda22baeb28efb1d6785cd44d630cd31e1111b2ef7670906a032485d0198d3f357c3b3a40ea3614c0c2f2700695fc2aedb509ae0c6b2e030d9c7101b'
 }
 Signature verified ✅
 ```
