@@ -2,8 +2,10 @@ import { ethers } from 'ethers';
 import { v1 as uuidv1 } from 'uuid';
 
 import * as models from './models';
-import RequestBuilder from './request-builder';
-import RequestVerifier from './request-verifier';
+
+const wallet = new ethers.Wallet(
+  '0x3141592653589793238462643383279502884197169399375105820974944592',
+);
 
 const limitOrder: models.LimitOrder = {
   market: 'IDEX-ETH',
@@ -11,7 +13,9 @@ const limitOrder: models.LimitOrder = {
   type: 'limit',
   quantity: '1.20000000',
   price: '0.50000000',
-  // customClientOrderId: '6f392746-4dd9-11ea-ba35-05698b78935d'
+  // customClientOrderId: '6f392746-4dd9-11ea-ba35-05698b78935d',
+  nonce: uuidv1(),
+  walletAddress: wallet.address,
 };
 
 const marketOrder: models.MarketOrder = {
@@ -19,7 +23,9 @@ const marketOrder: models.MarketOrder = {
   side: 'sell',
   type: 'market',
   quantity: '1.20000000',
-  // customClientOrderId: '6f392747-4dd9-11ea-ba35-05698b78935d'
+  // customClientOrderId: '6f392747-4dd9-11ea-ba35-05698b78935d',
+  nonce: uuidv1(),
+  walletAddress: wallet.address,
 };
 
 const stopLimitOrder: models.StopLimitOrder = {
@@ -29,33 +35,33 @@ const stopLimitOrder: models.StopLimitOrder = {
   quantity: '1.20000000',
   price: '0.50000000',
   stopPrice: '0.60000000',
-  // customClientOrderId: '6f392748-4dd9-11ea-ba35-05698b78935d'
+  // customClientOrderId: '6f392748-4dd9-11ea-ba35-05698b78935d',
+  nonce: uuidv1(),
+  walletAddress: wallet.address,
 };
 
-async function runForOrder(
-  order: models.Order,
-  type: string,
-  requestBuilder: RequestBuilder,
-) {
-  const request = await requestBuilder.createOrder(order);
+async function runForOrder(order: models.Order, type: string) {
+  const request = {
+    order,
+    signature: await wallet.signMessage(models.getOrderHash(order)),
+  };
+  const isSignatureValid =
+    ethers.utils.verifyMessage(
+      models.getOrderHash(request.order),
+      request.signature,
+    ) === request.order.walletAddress;
+
   console.log(`\n*** ${type} Order ***`);
   console.log(request);
   console.log(
-    RequestVerifier.createOrder(request)
-      ? 'Signature verified ✅'
-      : 'Signature invalid ❌',
+    isSignatureValid ? 'Signature verified ✅' : 'Signature invalid ❌',
   );
 }
 
 async function run() {
-  const wallet = new ethers.Wallet(
-    '0x3141592653589793238462643383279502884197169399375105820974944592',
-  );
-  const requestBuilder = new RequestBuilder(wallet);
-
-  await runForOrder(limitOrder, 'Limit', requestBuilder);
-  await runForOrder(marketOrder, 'Market', requestBuilder);
-  await runForOrder(stopLimitOrder, 'Stop Limit', requestBuilder);
+  await runForOrder(limitOrder, 'Limit');
+  await runForOrder(marketOrder, 'Market');
+  await runForOrder(stopLimitOrder, 'Stop Limit');
 }
 
 run();

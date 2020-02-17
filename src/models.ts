@@ -21,6 +21,8 @@ export interface Order {
   price?: string;
   stopPrice?: string;
   customClientOrderId?: string;
+  walletAddress: string;
+  nonce: string;
 }
 
 export interface LimitOrder extends Order {
@@ -38,22 +40,12 @@ export interface StopLimitOrder extends Order {
   stopPrice: string;
 }
 
-export interface CreateOrderRequestWallet {
-  address: string;
-  nonce: string;
+export interface CreateOrderRequest {
+  order: Order;
   signature: string;
 }
 
-export interface CreateOrderRequest {
-  order: Order;
-  wallet: CreateOrderRequestWallet;
-}
-
-export const getOrderHash = (
-  order: Order,
-  walletAddress: string,
-  nonce: string,
-) =>
+export const getOrderHash = (order: Order) =>
   ethers.utils.solidityKeccak256(
     [
       'string',
@@ -72,7 +64,7 @@ export const getOrderHash = (
       order.quantity,
       order.price || '',
       order.stopPrice || '',
-      walletAddress,
-      utils.uuidToBuffer(nonce),
+      order.walletAddress,
+      utils.uuidToBuffer(order.nonce),
     ],
   );
