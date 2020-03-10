@@ -6,3 +6,6 @@ toc:
   - name: Types
     children:
       - ExchangeInfo
+      - OrderType
+      - Order
+

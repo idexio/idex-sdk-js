@@ -14,7 +14,6 @@ import * as utils from './utils';
  * @property {string} usdVolume24h - 24h volume in USD
  * @property {string} makerFeeRate
  * @property {string} takerFeeRate
- *
  */
 export interface ExchangeInfo {
   timeZone: string;
@@ -27,26 +26,63 @@ export interface ExchangeInfo {
   takerFeeRate: string;
 }
 
+/**
+ * @readonly
+ * @enum {string}
+ */
 export enum OrderType {
+  /** @type {string} */
   market,
+  /** @type {string} */
   limit,
+  /** @type {string} */
   limitMaker,
+  /** @type {string} */
   stopLoss,
+  /** @type {string} */
   stopLossLimit,
+  /** @type {string} */
   takeProfit,
+  /** @type {string} */
   takeProfitLimit,
 }
 
+/**
+ * @readonly
+ * @enum {string}
+ */
 export enum OrderSide {
+  /** @type {string} */
   buy,
+  /** @type {string} */
   sell,
 }
 
+/**
+ * @readonly
+ * @enum {string}
+ */
 export enum OrderTimeInForce {
-  gtc, // Good until cancelled (default)
-  gtt, // Good until time
-  ioc, // Immediate or cancel
-  fok, // Fill or kill
+  /**
+   * Good until cancelled (default)
+   * @type {string}
+   */
+  gtc,
+  /**
+   * Good until time
+   * @type {string}
+   */
+  gtt,
+  /**
+   *Immediate or cancel
+   * @type {string}
+   */
+  ioc,
+  /**
+   * Fill or kill
+   * @type {string}
+   */
+  fok,
 }
 
 export interface AllOrderParameters {
@@ -119,6 +155,20 @@ export type OrderByQuoteQuantity = (
   | TakeProfitLimitOrder
 ) & { quoteOrderQuantity: string };
 
+/**
+ * @typedef {Object} Order
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
+ * @property {OrderType} type
+ * @property {OrderSide} side
+ * @property {OrderTimeInForce} [timeInForce] - Defaults to gtc
+ * @property {string} [quantity] - Order quantity in base terms, exclusive with quoteOrderQuantity
+ * @property {string} [quoteOrderQuantity] - Order quantity in quote terms, exclusive with quantity
+ * @property {string} [price] - Price in quote terms, optional for market orders
+ * @property {string} [clientOrderId] - Client-supplied order id
+ * @property {string} [stopPrice] - Stop loss or take profit price, only if stop or take order
+ */
 export type Order = XOR<OrderByBaseQuantity, OrderByQuoteQuantity>;
 
 export type OrderWithPrice =

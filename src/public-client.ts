@@ -41,6 +41,8 @@ export default class PublicClient {
 
   /**
    * Get basic exchange info
+   *
+   * @return {Promise<ExchangeInfo>}
    */
   public async getExchangeInfo(): Promise<types.ExchangeInfo> {
     return (await this.get('/exchange')).data;
