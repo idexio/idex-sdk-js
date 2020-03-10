@@ -5,8 +5,8 @@ import queryString from 'query-string';
 import sha256 from 'crypto-js/sha256';
 import { ethers } from 'ethers';
 
-import * as types from './types';
-import * as utils from './utils';
+import { enums, request, response } from '../types';
+import * as utils from '../utils';
 
 /**
  * Authenticated API client
@@ -60,7 +60,7 @@ export default class AuthenticatedClient {
    *
    * @param {Order} order
    */
-  public async placeOrder(order: types.Order): Promise<AxiosResponse> {
+  public async placeOrder(order: request.Order): Promise<AxiosResponse> {
     return this.post('/orders', {
       parameters: order,
       signature: await this.wallet.signMessage(getOrderHash(order)),
@@ -70,9 +70,11 @@ export default class AuthenticatedClient {
   /**
    * Create a new withdrawal
    *
-   * @param {Withdrawal} order
+   * @param {Withdrawal} withdrawal
    */
-  public async withdraw(withdrawal: types.Withdrawal): Promise<AxiosResponse> {
+  public async withdraw(
+    withdrawal: request.Withdrawal,
+  ): Promise<AxiosResponse> {
     return this.post('/orders', {
       parameters: withdrawal,
       signature: await this.wallet.signMessage(getWithdrawalHash(withdrawal)),
@@ -130,7 +132,7 @@ export default class AuthenticatedClient {
   }
 }
 
-const getOrderHash = (order: types.Order) =>
+const getOrderHash = (order: request.Order) =>
   ethers.utils.solidityKeccak256(
     [
       'string',
@@ -145,18 +147,18 @@ const getOrderHash = (order: types.Order) =>
     ],
     [
       order.market,
-      types.OrderSide[order.side],
-      types.OrderType[order.type],
-      (order as types.OrderByBaseQuantity).quantity || '',
-      (order as types.OrderByQuoteQuantity).quoteOrderQuantity || '',
-      (order as types.OrderWithPrice).price || '',
-      (order as types.OrderWithStopPrice).stopPrice || '',
+      enums.OrderSide[order.side],
+      enums.OrderType[order.type],
+      (order as request.OrderByBaseQuantity).quantity || '',
+      (order as request.OrderByQuoteQuantity).quoteOrderQuantity || '',
+      (order as request.OrderWithPrice).price || '',
+      (order as request.OrderWithStopPrice).stopPrice || '',
       order.wallet,
       utils.uuidToBuffer(order.nonce),
     ],
   );
 
-const getWithdrawalHash = (withdrawal: types.Withdrawal) =>
+const getWithdrawalHash = (withdrawal: request.Withdrawal) =>
   (withdrawal.assetContractAddress || '').length > 0
     ? ethers.utils.solidityKeccak256(
         ['uint128', 'address', 'address', 'uint64', 'bool'],

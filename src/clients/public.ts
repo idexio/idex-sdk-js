@@ -5,7 +5,7 @@ import queryString from 'query-string';
 import sha256 from 'crypto-js/sha256';
 import { ethers } from 'ethers';
 
-import * as types from './types';
+import { request, response } from '../types';
 
 /**
  * Public API client
@@ -44,7 +44,7 @@ export default class PublicClient {
    *
    * @return {Promise<ExchangeInfo>}
    */
-  public async getExchangeInfo(): Promise<types.ExchangeInfo> {
+  public async getExchangeInfo(): Promise<response.ExchangeInfo> {
     return (await this.get('/exchange')).data;
   }
 
@@ -53,7 +53,7 @@ export default class PublicClient {
    *
    * @return {Promise<Asset[]>}
    */
-  public async getAssets(): Promise<types.Asset[]> {
+  public async getAssets(): Promise<response.Asset[]> {
     return (await this.get('/assets')).data;
   }
 
@@ -62,8 +62,18 @@ export default class PublicClient {
    *
    * @return {Promise<Market[]>}
    */
-  public async getMarkets(): Promise<types.Market[]> {
+  public async getMarkets(): Promise<response.Market[]> {
     return (await this.get('/markets')).data;
+  }
+
+  /**
+   * Get currently listed markets
+   *
+   * @param {string} [market] - Base-quote pair e.g. 'IDEX-ETH', if provided limits ticker data to a single market
+   * @return {Promise<Ticker[]>}
+   */
+  public async getTickers(market?: string): Promise<response.Ticker[]> {
+    return (await this.get('/tickers', { market })).data;
   }
 
   private async get(
