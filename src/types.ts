@@ -2,6 +2,20 @@ import { ethers } from 'ethers';
 
 import * as utils from './utils';
 
+/**
+ * Basic exchange info
+ *
+ * @typedef {Object} ExchangeInfo
+ * @property {string} timeZone - UTC
+ * @property {number} serverTime - UNIX epoch time in ms
+ * @property {string} ethereumDepositContractAddress
+ * @property {string} ethUsdPrice
+ * @property {string} gasPrice - In gwei
+ * @property {string} usdVolume24h - 24h volume in USD
+ * @property {string} makerFeeRate
+ * @property {string} takerFeeRate
+ *
+ */
 export interface ExchangeInfo {
   timeZone: string;
   serverTime: number;
@@ -122,29 +136,3 @@ export interface CreateOrderRequest {
   order: Order;
   signature: string;
 }
-
-export const getOrderHash = (order: Order) =>
-  ethers.utils.solidityKeccak256(
-    [
-      'string',
-      'uint8',
-      'uint8',
-      'string',
-      'string',
-      'string',
-      'string',
-      'address',
-      'uint128',
-    ],
-    [
-      order.market,
-      OrderSide[order.side],
-      OrderType[order.type],
-      (order as OrderByBaseQuantity).quantity || '',
-      (order as OrderByQuoteQuantity).quoteOrderQuantity || '',
-      (order as OrderWithPrice).price || '',
-      (order as OrderWithStopPrice).stopPrice || '',
-      order.wallet,
-      utils.uuidToBuffer(order.nonce),
-    ],
-  );

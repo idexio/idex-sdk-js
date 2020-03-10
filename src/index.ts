@@ -1,13 +1,14 @@
 import { ethers } from 'ethers';
 import { v1 as uuidv1 } from 'uuid';
 
-import * as models from './models';
+import * as types from './types';
 
+/*
 const wallet = new ethers.Wallet(
   '0x3141592653589793238462643383279502884197169399375105820974944592',
 );
 
-const limitOrder: models.Order = {
+const limitOrder: types.Order = {
   market: 'IDEX-ETH',
   side: 'buy',
   type: 'limit',
@@ -19,7 +20,7 @@ const limitOrder: models.Order = {
   nonce: uuidv1(),
 };
 
-const marketOrder: models.Order = {
+const marketOrder: types.Order = {
   market: 'IDEX-ETH',
   side: 'sell',
   type: 'market',
@@ -30,7 +31,7 @@ const marketOrder: models.Order = {
   nonce: uuidv1(),
 };
 
-const stopLimitOrder: models.Order = {
+const stopLimitOrder: types.Order = {
   market: 'IDEX-ETH',
   side: 'buy',
   type: 'stopLoss',
@@ -42,14 +43,14 @@ const stopLimitOrder: models.Order = {
   nonce: uuidv1(),
 };
 
-async function runForOrder(order: models.Order, type: string) {
+async function runForOrder(order: types.Order, type: string) {
   const request = {
     order,
-    signature: await wallet.signMessage(models.getOrderHash(order)),
+    signature: await wallet.signMessage(types.getOrderHash(order)),
   };
   const isSignatureValid =
     ethers.utils.verifyMessage(
-      models.getOrderHash(request.order),
+      types.getOrderHash(request.order),
       request.signature,
     ) === request.order.wallet;
 
@@ -67,3 +68,4 @@ async function run() {
 }
 
 run();
+*/

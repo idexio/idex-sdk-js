@@ -5,8 +5,15 @@ import queryString from 'query-string';
 import sha256 from 'crypto-js/sha256';
 import { ethers } from 'ethers';
 
-import * as models from './models';
+import * as types from './types';
 
+/**
+ * Public API client
+ *
+ * ```typescript
+ * const publicClient = new PublicClient('https://api-sandbox.idex.io/api/v1');
+ * ```
+ */
 export default class PublicClient {
   public baseURL: string;
 
@@ -18,15 +25,24 @@ export default class PublicClient {
     this.axios = Axios.create({});
   }
 
+  /**
+   * Test connectivity to the REST API
+   */
   public async ping(): Promise<void> {
     this.get('/ping');
   }
 
+  /**
+   * Get the current server time
+   */
   public async getServerTime(): Promise<number> {
     return (await this.get('/time')).data.serverTime;
   }
 
-  public async getExchangeInfo(): Promise<models.ExchangeInfo> {
+  /**
+   * Get basic exchange info
+   */
+  public async getExchangeInfo(): Promise<types.ExchangeInfo> {
     return (await this.get('/exchange')).data;
   }
 

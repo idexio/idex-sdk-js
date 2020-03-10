@@ -8,8 +8,9 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "yarn clean && tsc",
+    "build": "yarn clean && tsc && yarn documentation",
     "clean": "rm -rf dist",
+    "documentation": "npx documentation readme src/** --section=API --parse-extension ts --shallow  --config documentation.yaml",
     "lint": "prettier-eslint 'src/**/*.ts' --write",
     "lint:markdown": "markdownlint README.md",
     "start": "node dist/index.js"
@@ -27,6 +28,7 @@
     "@types/uuid": "^3.4.7",
     "@typescript-eslint/eslint-plugin": "^2.3.2",
     "@typescript-eslint/parser": "^2.3.2",
+    "documentation": "^12.1.4",
     "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.3.0",
@@ -42,7 +44,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint:markdown"
+      "pre-commit_DISABLED": "yarn lint:markdown"
     }
   }
 }
