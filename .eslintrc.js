@@ -18,12 +18,20 @@ module.exports = {
     '@typescript-eslint/class-name-casing': 'off',
     'comma-dangle': ['error', 'always-multiline'],
     'consistent-return': 'off',
-    'curly': ['error', 'all'],
+    curly: ['error', 'all'],
     'no-restricted-syntax': 'off',
     'no-multi-assign': 'off',
     'no-use-before-define': 'off',
     'no-console': 'off',
     'no-underscore-dangle': 'off',
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        ts: 'never',
+      },
+    ],
     // typescript type imports suffer from this
     'import/no-cycle': 'off',
     'import/prefer-default-export': 'off',
@@ -34,23 +42,24 @@ module.exports = {
       },
     ],
     'prettier/prettier': [
-      'error', {
+      'error',
+      {
         bracketSpacing: true,
         singleQuote: true,
         trailingComma: 'all',
       },
     ],
-    'quotes': ['error', 'single'],
+    quotes: ['error', 'single'],
   },
   plugins: ['import', 'promise', 'prettier', '@typescript-eslint'],
   settings: {
-    'import/extensions': ['.ts', '.tsx'],
+    'import/extensions': ['.ts'],
     'import/parsers': {
-      '@typescript-eslint/parser': ['.ts', '.tsx'],
+      '@typescript-eslint/parser': ['.ts'],
     },
     'import/resolver': {
       node: {
-        extensions: ['.js', '.ts', '.tsx'],
+        extensions: ['.js', '.ts'],
       },
     },
   },

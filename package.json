@@ -15,10 +15,14 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
+    "axios": "^0.19.2",
+    "crypto-js": "^4.0.0",
     "ethers": "^4.0.44",
+    "query-string": "^6.11.1",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
+    "@types/crypto-js": "^3.1.43",
     "@types/node": "^13.7.1",
     "@types/uuid": "^3.4.7",
     "@typescript-eslint/eslint-plugin": "^2.3.2",
@@ -34,7 +38,7 @@
     "prettier-eslint": "^9.0.0",
     "prettier-eslint-cli": "^5.0.0",
     "ts-node": "^8.1.0",
-    "typescript": "^3.3.1"
+    "typescript": "^3.8.3"
   },
   "husky": {
     "hooks": {
