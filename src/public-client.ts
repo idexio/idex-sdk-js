@@ -40,6 +40,13 @@ export default class PublicClient {
   }
 
   /**
+   * Get comprehensive list of assets
+   */
+  public async getAssets(): Promise<types.Asset[]> {
+    return (await this.get('/assets')).data;
+  }
+
+  /**
    * Get basic exchange info
    *
    * @return {Promise<ExchangeInfo>}

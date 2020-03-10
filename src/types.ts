@@ -3,6 +3,58 @@ import { ethers } from 'ethers';
 import * as utils from './utils';
 
 /**
+ * Asset
+ *
+ * @typedef {Object} Asset
+ * @property {number} id - Internal id of the asset
+ * @property {string} name
+ * @property {string} symbol
+ * @property {string} contractAddress
+ * @property {string} decimals
+ * @property {string} depositMinimum - In gwei
+ * @property {string} tradeMinimum - 24h volume in USD
+ * @property {string} withdrawalMinimum
+ */
+export interface Asset {
+  id: number;
+  name: string;
+  symbol: string;
+  contractAddress: string;
+  decimals: string;
+  depositMinimum: string;
+  tradeMinimum: string;
+  withdrawalMinimum: string;
+}
+
+/**
+ * Market
+ *
+ * @typedef {Object} Market
+ * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
+ * @property {MarketStatus} status
+ * @property {string} baseAsset - e.g. 'IDEX'
+ * @property {number} baseAssetPrecision
+ * @property {string} quoteAsset - e.g. 'ETH'
+ * @property {number} quoteAssetPrecision
+ * @property {string} makerFeeRate
+ * @property {string} takerFeeRate
+ * @property {OrderType[]} orderTypes
+ * @property {string} tradeMinimum - Minimum quantity in base terms
+ */
+export interface Market {
+  market: string;
+  status: MarketStatus;
+  baseAsset: string;
+  baseAssetPrecision: number;
+  quoteAsset: string;
+  quoteAssetPrecision: number;
+  makerFeeRate: string;
+  takerFeeRate: string;
+  orderTypes: (keyof typeof OrderType)[];
+  tradeMinimum: string;
+}
+
+/**
  * Basic exchange info
  *
  * @typedef {Object} ExchangeInfo
@@ -24,6 +76,28 @@ export interface ExchangeInfo {
   usdVolume24h: string;
   makerFeeRate: string;
   takerFeeRate: string;
+}
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+export enum MarketStatus {
+  /**
+   * No orders or cancels accepted
+   * @type {string}
+   */
+  inactive,
+  /**
+   * Cancels accepted but not trades
+   * @type {string}
+   */
+  cancelsOnly,
+  /**
+   * Trades and cancels accepted
+   * @type {string}
+   */
+  active,
 }
 
 /**

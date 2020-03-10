@@ -3,14 +3,19 @@ toc:
     children:
       - PublicClient
       - AuthenticatedClient
-  - name: Types
+  - name: Enums
+    description: |
+      Sets of named constants used as field types for several requests and responses
     children:
-      - name: Enums
-        children:
-          - ExchangeInfo
-          - OrderType
-          - OrderSide
-          - OrderTimeInForce
-      - ExchangeInfo
+      - MarketStatus
+      - OrderType
+      - OrderSide
+      - OrderTimeInForce
+  - name: Requests
+    children:
       - Order
-
+  - name: Responses
+    children:
+      - Asset
+      - ExchangeInfo
+      - Market

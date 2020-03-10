@@ -57,6 +57,8 @@ export default class AuthenticatedClient {
 
   /**
    * Place a new order
+   *
+   * @param {Order} order
    */
   public async placeOrder(order: types.Order): Promise<AxiosResponse> {
     return this.post('/orders', {

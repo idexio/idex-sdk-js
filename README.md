@@ -13,33 +13,43 @@ The official Node.js wrapper for the IDEX API
         -   [Parameters](#parameters)
         -   [ping](#ping)
         -   [getServerTime](#getservertime)
+        -   [getAssets](#getassets)
         -   [getExchangeInfo](#getexchangeinfo)
     -   [AuthenticatedClient](#authenticatedclient)
         -   [Parameters](#parameters-1)
         -   [placeOrder](#placeorder)
             -   [Parameters](#parameters-2)
--   [Types](#types)
-    -   [Enums](#enums)
-        -   [OrderType](#ordertype)
-            -   [market](#market)
-            -   [limit](#limit)
-            -   [limitMaker](#limitmaker)
-            -   [stopLoss](#stoploss)
-            -   [stopLossLimit](#stoplosslimit)
-            -   [takeProfit](#takeprofit)
-            -   [takeProfitLimit](#takeprofitlimit)
-        -   [OrderSide](#orderside)
-            -   [buy](#buy)
-            -   [sell](#sell)
-        -   [OrderTimeInForce](#ordertimeinforce)
-            -   [gtc](#gtc)
-            -   [gtt](#gtt)
-            -   [ioc](#ioc)
-            -   [fok](#fok)
-    -   [ExchangeInfo](#exchangeinfo)
-        -   [Properties](#properties)
+-   [Enums](#enums)
+    -   [MarketStatus](#marketstatus)
+        -   [inactive](#inactive)
+        -   [cancelsOnly](#cancelsonly)
+        -   [active](#active)
+    -   [OrderType](#ordertype)
+        -   [market](#market)
+        -   [limit](#limit)
+        -   [limitMaker](#limitmaker)
+        -   [stopLoss](#stoploss)
+        -   [stopLossLimit](#stoplosslimit)
+        -   [takeProfit](#takeprofit)
+        -   [takeProfitLimit](#takeprofitlimit)
+    -   [OrderSide](#orderside)
+        -   [buy](#buy)
+        -   [sell](#sell)
+    -   [OrderTimeInForce](#ordertimeinforce)
+        -   [gtc](#gtc)
+        -   [gtt](#gtt)
+        -   [ioc](#ioc)
+        -   [fok](#fok)
+-   [Requests](#requests)
     -   [Order](#order)
+        -   [Properties](#properties)
+-   [Responses](#responses)
+    -   [Asset](#asset)
         -   [Properties](#properties-1)
+    -   [ExchangeInfo](#exchangeinfo)
+        -   [Properties](#properties-2)
+    -   [Market](#market-1)
+        -   [Properties](#properties-3)
 
 ### Clients
 
@@ -69,6 +79,12 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 Get the current server time
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)>** 
+
+##### getAssets
+
+Get comprehensive list of assets
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.Asset>>** 
 
 ##### getExchangeInfo
 
@@ -110,108 +126,113 @@ Place a new order
 
 ###### Parameters
 
--   `order` **types.Order** 
+-   `order` **[Order](#order)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;AxiosResponse>** 
 
-### Types
+### Enums
+
+Sets of named constants used as field types for several requests and responses
 
 
-
-
-#### Enums
-
-
-
-
-##### OrderType
+#### MarketStatus
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-###### market
+##### inactive
+
+No orders or cancels accepted
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-###### limit
+##### cancelsOnly
+
+Cancels accepted but not trades
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-###### limitMaker
+##### active
+
+Trades and cancels accepted
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-###### stopLoss
+#### OrderType
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-###### stopLossLimit
+##### market
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-###### takeProfit
+##### limit
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-###### takeProfitLimit
+##### limitMaker
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-##### OrderSide
+##### stopLoss
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-###### buy
+##### stopLossLimit
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-###### sell
+##### takeProfit
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-##### OrderTimeInForce
+##### takeProfitLimit
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-###### gtc
+#### OrderSide
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+##### buy
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+##### sell
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### OrderTimeInForce
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+##### gtc
 
 Good until cancelled (default)
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-###### gtt
+##### gtt
 
 Good until time
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-###### ioc
+##### ioc
 
 Immediate or cancel
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-###### fok
+##### fok
 
 Fill or kill
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-#### ExchangeInfo
+### Requests
 
-Basic exchange info
 
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
-##### Properties
-
--   `timeZone` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UTC
--   `serverTime` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** UNIX epoch time in ms
--   `ethereumDepositContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `ethUsdPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `gasPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** In gwei
--   `usdVolume24h` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 24h volume in USD
--   `makerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `takerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 #### Order
 
@@ -230,6 +251,64 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Price in quote terms, optional for market orders
 -   `clientOrderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Client-supplied order id
 -   `stopPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Stop loss or take profit price, only if stop or take order
+
+### Responses
+
+
+
+
+#### Asset
+
+Asset
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+##### Properties
+
+-   `id` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Internal id of the asset
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `symbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `contractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `decimals` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `depositMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** In gwei
+-   `tradeMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 24h volume in USD
+-   `withdrawalMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+#### ExchangeInfo
+
+Basic exchange info
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+##### Properties
+
+-   `timeZone` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UTC
+-   `serverTime` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** UNIX epoch time in ms
+-   `ethereumDepositContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `ethUsdPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `gasPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** In gwei
+-   `usdVolume24h` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 24h volume in USD
+-   `makerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `takerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+#### Market
+
+Market
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+##### Properties
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
+-   `status` **[MarketStatus](#marketstatus)** 
+-   `baseAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** e.g. 'IDEX'
+-   `baseAssetPrecision` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+-   `quoteAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** e.g. 'ETH'
+-   `quoteAssetPrecision` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+-   `makerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `takerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `orderTypes` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[OrderType](#ordertype)>** 
+-   `tradeMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum quantity in base terms
 
 ## Contracts
 
