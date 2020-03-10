@@ -67,6 +67,18 @@ export default class AuthenticatedClient {
     });
   }
 
+  /**
+   * Create a new withdrawal
+   *
+   * @param {Withdrawal} order
+   */
+  public async withdraw(withdrawal: types.Withdrawal): Promise<AxiosResponse> {
+    return this.post('/orders', {
+      parameters: withdrawal,
+      signature: await this.wallet.signMessage(getWithdrawalHash(withdrawal)),
+    });
+  }
+
   private async get(
     endpoint: string,
     requestParams: Record<string, number | string> = {},
@@ -143,3 +155,26 @@ const getOrderHash = (order: types.Order) =>
       utils.uuidToBuffer(order.nonce),
     ],
   );
+
+const getWithdrawalHash = (withdrawal: types.Withdrawal) =>
+  (withdrawal.assetContractAddress || '').length > 0
+    ? ethers.utils.solidityKeccak256(
+        ['uint128', 'address', 'address', 'uint64', 'bool'],
+        [
+          withdrawal.nonce,
+          withdrawal.wallet,
+          withdrawal.assetContractAddress,
+          withdrawal.quantity,
+          true, // Auto-dispatch
+        ],
+      )
+    : ethers.utils.solidityKeccak256(
+        ['uint128', 'address', 'string', 'uint64', 'bool'],
+        [
+          withdrawal.nonce,
+          withdrawal.wallet,
+          withdrawal.asset,
+          withdrawal.quantity,
+          true, // Auto-dispatch
+        ],
+      );

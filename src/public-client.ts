@@ -40,19 +40,30 @@ export default class PublicClient {
   }
 
   /**
-   * Get comprehensive list of assets
-   */
-  public async getAssets(): Promise<types.Asset[]> {
-    return (await this.get('/assets')).data;
-  }
-
-  /**
    * Get basic exchange info
    *
    * @return {Promise<ExchangeInfo>}
    */
   public async getExchangeInfo(): Promise<types.ExchangeInfo> {
     return (await this.get('/exchange')).data;
+  }
+
+  /**
+   * Get comprehensive list of assets
+   *
+   * @return {Promise<Asset[]>}
+   */
+  public async getAssets(): Promise<types.Asset[]> {
+    return (await this.get('/assets')).data;
+  }
+
+  /**
+   * Get currently listed markets
+   *
+   * @return {Promise<Market[]>}
+   */
+  public async getMarkets(): Promise<types.Market[]> {
+    return (await this.get('/markets')).data;
   }
 
   private async get(

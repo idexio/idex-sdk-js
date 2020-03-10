@@ -9,12 +9,15 @@
         -   [Parameters](#parameters)
         -   [ping](#ping)
         -   [getServerTime](#getservertime)
-        -   [getAssets](#getassets)
         -   [getExchangeInfo](#getexchangeinfo)
+        -   [getAssets](#getassets)
+        -   [getMarkets](#getmarkets)
     -   [AuthenticatedClient](#authenticatedclient)
         -   [Parameters](#parameters-1)
         -   [placeOrder](#placeorder)
             -   [Parameters](#parameters-2)
+        -   [withdraw](#withdraw)
+            -   [Parameters](#parameters-3)
 -   [Enums](#enums)
     -   [MarketStatus](#marketstatus)
         -   [inactive](#inactive)
@@ -39,13 +42,15 @@
 -   [Requests](#requests)
     -   [Order](#order)
         -   [Properties](#properties)
+    -   [Withdrawal](#withdrawal)
+        -   [Properties](#properties-1)
 -   [Responses](#responses)
     -   [Asset](#asset)
-        -   [Properties](#properties-1)
-    -   [ExchangeInfo](#exchangeinfo)
         -   [Properties](#properties-2)
-    -   [Market](#market-1)
+    -   [ExchangeInfo](#exchangeinfo)
         -   [Properties](#properties-3)
+    -   [Market](#market-1)
+        -   [Properties](#properties-4)
 
 ## Clients
 
@@ -76,17 +81,23 @@ Get the current server time
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)>** 
 
-#### getAssets
-
-Get comprehensive list of assets
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.Asset>>** 
-
 #### getExchangeInfo
 
 Get basic exchange info
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[ExchangeInfo](#exchangeinfo)>** 
+
+#### getAssets
+
+Get comprehensive list of assets
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Asset](#asset)>>** 
+
+#### getMarkets
+
+Get currently listed markets
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Market](#market)>>** 
 
 ### AuthenticatedClient
 
@@ -123,6 +134,17 @@ Place a new order
 ##### Parameters
 
 -   `order` **[Order](#order)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;AxiosResponse>** 
+
+#### withdraw
+
+Create a new withdrawal
+
+##### Parameters
+
+-   `withdrawal` **types.Withdrawal** 
+-   `order` **[Withdrawal](#withdrawal)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;AxiosResponse>** 
 
@@ -247,6 +269,18 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Price in quote terms, optional for market orders
 -   `clientOrderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Client-supplied order id
 -   `stopPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Stop loss or take profit price, only if stop or take order
+
+### Withdrawal
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `asset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by symbol
+-   `assetContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset by contract address
+-   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Withdrawal amount in asset terms, fees are taken from this value
 
 ## Responses
 

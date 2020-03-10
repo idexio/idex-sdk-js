@@ -260,3 +260,19 @@ export interface CreateOrderRequest {
   order: Order;
   signature: string;
 }
+
+/**
+ * @typedef {Object} Withdrawal
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ * @property {string} asset - Asset by symbol
+ * @property {string} [assetContractAddress] - Asset by contract address
+ * @property {string} quantity - Withdrawal amount in asset terms, fees are taken from this value
+ */
+export interface Withdrawal {
+  nonce: string;
+  wallet: string;
+  asset: string;
+  assetContractAddress?: string;
+  quantity: string;
+}
