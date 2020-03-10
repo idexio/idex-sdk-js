@@ -19,26 +19,27 @@ The official Node.js wrapper for the IDEX API
         -   [placeOrder](#placeorder)
             -   [Parameters](#parameters-2)
 -   [Types](#types)
+    -   [Enums](#enums)
+        -   [OrderType](#ordertype)
+            -   [market](#market)
+            -   [limit](#limit)
+            -   [limitMaker](#limitmaker)
+            -   [stopLoss](#stoploss)
+            -   [stopLossLimit](#stoplosslimit)
+            -   [takeProfit](#takeprofit)
+            -   [takeProfitLimit](#takeprofitlimit)
+        -   [OrderSide](#orderside)
+            -   [buy](#buy)
+            -   [sell](#sell)
+        -   [OrderTimeInForce](#ordertimeinforce)
+            -   [gtc](#gtc)
+            -   [gtt](#gtt)
+            -   [ioc](#ioc)
+            -   [fok](#fok)
     -   [ExchangeInfo](#exchangeinfo)
         -   [Properties](#properties)
-    -   [OrderType](#ordertype)
-        -   [market](#market)
-        -   [limit](#limit)
-        -   [limitMaker](#limitmaker)
-        -   [stopLoss](#stoploss)
-        -   [stopLossLimit](#stoplosslimit)
-        -   [takeProfit](#takeprofit)
-        -   [takeProfitLimit](#takeprofitlimit)
     -   [Order](#order)
         -   [Properties](#properties-1)
--   [OrderSide](#orderside)
-    -   [buy](#buy)
-    -   [sell](#sell)
--   [OrderTimeInForce](#ordertimeinforce)
-    -   [gtc](#gtc)
-    -   [gtt](#gtt)
-    -   [ioc](#ioc)
-    -   [fok](#fok)
 
 ### Clients
 
@@ -118,6 +119,83 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 
 
+#### Enums
+
+
+
+
+##### OrderType
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+###### market
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+###### limit
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+###### limitMaker
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+###### stopLoss
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+###### stopLossLimit
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+###### takeProfit
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+###### takeProfitLimit
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+##### OrderSide
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+###### buy
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+###### sell
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+##### OrderTimeInForce
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+###### gtc
+
+Good until cancelled (default)
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+###### gtt
+
+Good until time
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+###### ioc
+
+Immediate or cancel
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+###### fok
+
+Fill or kill
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
 #### ExchangeInfo
 
 Basic exchange info
@@ -134,38 +212,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `usdVolume24h` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 24h volume in USD
 -   `makerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `takerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-#### OrderType
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-##### market
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-##### limit
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-##### limitMaker
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-##### stopLoss
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-##### stopLossLimit
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-##### takeProfit
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-##### takeProfitLimit
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### Order
 
@@ -184,46 +230,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Price in quote terms, optional for market orders
 -   `clientOrderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Client-supplied order id
 -   `stopPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Stop loss or take profit price, only if stop or take order
-
-### OrderSide
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-#### buy
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-#### sell
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### OrderTimeInForce
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-#### gtc
-
-Good until cancelled (default)
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-#### gtt
-
-Good until time
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-#### ioc
-
-Immediate or cancel
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-#### fok
-
-Fill or kill
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 ## Contracts
 

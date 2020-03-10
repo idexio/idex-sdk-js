@@ -5,7 +5,12 @@ toc:
       - AuthenticatedClient
   - name: Types
     children:
+      - name: Enums
+        children:
+          - ExchangeInfo
+          - OrderType
+          - OrderSide
+          - OrderTimeInForce
       - ExchangeInfo
-      - OrderType
       - Order
 
