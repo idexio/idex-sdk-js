@@ -8,21 +8,27 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "yarn clean && tsc",
+    "build": "yarn clean && tsc && yarn documentation",
     "clean": "rm -rf dist",
+    "documentation": "npx documentation readme src/** --section=API --parse-extension ts --shallow  --config documentation.yaml",
     "lint": "prettier-eslint 'src/**/*.ts' --write",
     "lint:markdown": "markdownlint README.md",
     "start": "node dist/index.js"
   },
   "dependencies": {
+    "axios": "^0.19.2",
+    "crypto-js": "^4.0.0",
     "ethers": "^4.0.44",
+    "query-string": "^6.11.1",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
+    "@types/crypto-js": "^3.1.43",
     "@types/node": "^13.7.1",
     "@types/uuid": "^3.4.7",
     "@typescript-eslint/eslint-plugin": "^2.3.2",
     "@typescript-eslint/parser": "^2.3.2",
+    "documentation": "^12.1.4",
     "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.3.0",
@@ -34,11 +40,11 @@
     "prettier-eslint": "^9.0.0",
     "prettier-eslint-cli": "^5.0.0",
     "ts-node": "^8.1.0",
-    "typescript": "^3.3.1"
+    "typescript": "^3.8.3"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint:markdown"
+      "pre-commit_DISABLED": "yarn lint:markdown"
     }
   }
 }

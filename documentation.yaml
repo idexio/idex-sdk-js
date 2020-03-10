@@ -1,0 +1,11 @@
+toc:
+  - name: Clients
+    children:
+      - PublicClient
+      - AuthenticatedClient
+  - name: Types
+    children:
+      - ExchangeInfo
+      - OrderType
+      - Order
+
