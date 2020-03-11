@@ -113,9 +113,10 @@ export interface Market {
  * @property {string} [stopPrice] - Stop loss or take profit price, only if stop or take order
  * @property {OrderSelfTradePrevention} [selfTradePrevention] - Stop loss or take profit price, only if stop or take order
  * @property {string} originalQuantity - Original quantity specified by the order in base terms
- * @property {string} executedQuantity - amount of quantity that has been executed in base terms
+ * @property {string} executedQuantity - Amount of quantity that has been executed in base terms
  * @property {string} cumulativeQuoteQuantity - Represents the cumulative amount of the quote that has been spent (with a BUY order) or received (with a SELL order). Historical orders will have a value < 0 in this field indicating the data is not available at this time
- * @property  {string} [avgExecutionPrice]
+ * @property {string} [avgExecutionPrice]
+ * @property {response.Fill[]} fills
  */
 export interface Order {
   market: string;

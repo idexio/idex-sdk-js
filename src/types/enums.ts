@@ -24,6 +24,34 @@ export enum MarketStatus {
  * @readonly
  * @enum {string}
  */
+export enum OrderSelfTradePrevention {
+  /**
+   * When two orders from the same user cross, the smaller order will be canceled and the larger order size will be
+   * decremented by the smaller order size. If the two orders are the same size, both will be canceled.
+   * @type {string}
+   */
+  decreaseAndCancel,
+  /**
+   * Cancel the older (maker) order in full
+   * @type {string}
+   */
+  cancelOldest,
+  /**
+   * Cancel the newer (taker) order in full
+   * @type {string}
+   */
+  cancelNewest,
+  /**
+   * Cancel both orders
+   * @type {string}
+   */
+  cancelBoth,
+}
+
+/**
+ * @readonly
+ * @enum {string}
+ */
 export enum OrderSide {
   /** @type {string} */
   buy,
@@ -87,27 +115,6 @@ export enum OrderStatus {
  * @readonly
  * @enum {string}
  */
-export enum OrderType {
-  /** @type {string} */
-  market,
-  /** @type {string} */
-  limit,
-  /** @type {string} */
-  limitMaker,
-  /** @type {string} */
-  stopLoss,
-  /** @type {string} */
-  stopLossLimit,
-  /** @type {string} */
-  takeProfit,
-  /** @type {string} */
-  takeProfitLimit,
-}
-
-/**
- * @readonly
- * @enum {string}
- */
 export enum OrderTimeInForce {
   /**
    * Good until cancelled (default)
@@ -135,26 +142,19 @@ export enum OrderTimeInForce {
  * @readonly
  * @enum {string}
  */
-export enum OrderSelfTradePrevention {
-  /**
-   * When two orders from the same user cross, the smaller order will be canceled and the larger order size will be
-   * decremented by the smaller order size. If the two orders are the same size, both will be canceled.
-   * @type {string}
-   */
-  decreaseAndCancel,
-  /**
-   * Cancel the older (maker) order in full
-   * @type {string}
-   */
-  cancelOldest,
-  /**
-   * Cancel the newer (taker) order in full
-   * @type {string}
-   */
-  cancelNewest,
-  /**
-   * Cancel both orders
-   * @type {string}
-   */
-  cancelBoth,
+export enum OrderType {
+  /** @type {string} */
+  market,
+  /** @type {string} */
+  limit,
+  /** @type {string} */
+  limitMaker,
+  /** @type {string} */
+  stopLoss,
+  /** @type {string} */
+  stopLossLimit,
+  /** @type {string} */
+  takeProfit,
+  /** @type {string} */
+  takeProfitLimit,
 }

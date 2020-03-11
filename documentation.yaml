@@ -8,9 +8,11 @@ toc:
       Sets of named constants used as field types for several requests and responses
     children:
       - MarketStatus
-      - OrderType
+      - OrderSelfTradePrevention
       - OrderSide
+      - OrderStatus
       - OrderTimeInForce
+      - OrderType
   - name: Requests
     children:
       - request.Order
