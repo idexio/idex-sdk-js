@@ -42,7 +42,7 @@ export default class PublicClient {
   /**
    * Get basic exchange info
    *
-   * @return {Promise<ExchangeInfo>}
+   * @return {Promise<response.ExchangeInfo>}
    */
   public async getExchangeInfo(): Promise<response.ExchangeInfo> {
     return (await this.get('/exchange')).data;
@@ -51,7 +51,7 @@ export default class PublicClient {
   /**
    * Get comprehensive list of assets
    *
-   * @return {Promise<Asset[]>}
+   * @return {Promise<response.Asset[]>}
    */
   public async getAssets(): Promise<response.Asset[]> {
     return (await this.get('/assets')).data;
@@ -60,7 +60,7 @@ export default class PublicClient {
   /**
    * Get currently listed markets
    *
-   * @return {Promise<Market[]>}
+   * @return {Promise<response.Market[]>}
    */
   public async getMarkets(): Promise<response.Market[]> {
     return (await this.get('/markets')).data;
@@ -70,7 +70,7 @@ export default class PublicClient {
    * Get currently listed markets
    *
    * @param {string} [market] - Base-quote pair e.g. 'IDEX-ETH', if provided limits ticker data to a single market
-   * @return {Promise<Ticker[]>}
+   * @return {Promise<response.Ticker[]>}
    */
   public async getTickers(market?: string): Promise<response.Ticker[]> {
     return (await this.get('/tickers', { market })).data;

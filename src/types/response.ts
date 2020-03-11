@@ -3,7 +3,7 @@ import * as enums from './enums';
 /**
  * Asset
  *
- * @typedef {Object} Asset
+ * @typedef {Object} response.Asset
  * @property {number} id - Internal id of the asset
  * @property {string} name
  * @property {string} symbol
@@ -27,7 +27,7 @@ export interface Asset {
 /**
  * Basic exchange info
  *
- * @typedef {Object} ExchangeInfo
+ * @typedef {Object} response.ExchangeInfo
  * @property {string} timeZone - UTC
  * @property {number} serverTime - UNIX epoch time in ms
  * @property {string} ethereumDepositContractAddress
@@ -49,9 +49,27 @@ export interface ExchangeInfo {
 }
 
 /**
+ * Fill
+ *
+ * @typedef {Object} response.Fill
+ * @property {string} price - Executed price of fill in quote terms
+ * @property {number} quantity - Executed quantity of fill in base terms
+ * @property {string} fee - Fee amount on fill
+ * @property {string} feeAsset - Which token the fee was taken in
+ * @property {string} gas
+ */
+export interface Fill {
+  price: string;
+  quantity: number;
+  fee: string;
+  feeAsset: string;
+  gas: string;
+}
+
+/**
  * Market
  *
- * @typedef {Object} Market
+ * @typedef {Object} response.Market
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
  * @property {MarketStatus} status
  * @property {string} baseAsset - e.g. 'IDEX'
@@ -77,9 +95,54 @@ export interface Market {
 }
 
 /**
+ * Order
+ *
+ * @typedef {Object} response.Order
+ * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
+ * @property {string} orderId - IDEX-assigned order id
+ * @property {string} [clientOrderId] - If provided by the client
+ * @property {string} wallet
+ * @property {string} time - Timestamp of initial trading engine processing
+ * @property {OrderStatus} status
+ * @property {string} [rejectionCode] - Error code capturing reason for rejection
+ * @property {string} [rejectionReason] - Human readable rejection error message
+ * @property {OrderType} type
+ * @property {OrderSide} side
+ * @property {OrderTimeInForce} [timeInForce] - Defaults to gtc
+ * @property {string} [price] - Price in quote terms, optional for market orders
+ * @property {string} [stopPrice] - Stop loss or take profit price, only if stop or take order
+ * @property {OrderSelfTradePrevention} [selfTradePrevention] - Stop loss or take profit price, only if stop or take order
+ * @property {string} originalQuantity - Original quantity specified by the order in base terms
+ * @property {string} executedQuantity - amount of quantity that has been executed in base terms
+ * @property {string} cumulativeQuoteQuantity - Represents the cumulative amount of the quote that has been spent (with a BUY order) or received (with a SELL order). Historical orders will have a value < 0 in this field indicating the data is not available at this time
+ * @property  {string} [avgExecutionPrice]
+ */
+export interface Order {
+  market: string;
+  orderId: string;
+  clientOrderId?: string;
+  wallet: string;
+  time: number;
+  status: keyof typeof enums.OrderStatus;
+  rejectionCode?: string;
+  rejectionReason?: string;
+  type: keyof typeof enums.OrderType;
+  side: keyof typeof enums.OrderSide;
+  timeInForce: keyof typeof enums.OrderTimeInForce;
+  price?: string;
+  stopPrice?: string;
+  selfTradePrevention: keyof typeof enums.OrderSelfTradePrevention;
+  originalQuantity: string;
+  executedQuantity: string;
+  cumulativeQuoteQuantity: string;
+  avgExecutionPrice?: string;
+  fills: Fill[];
+}
+
+/**
  * Ticker
  *
- * @typedef {Object} Ticker
+ * @typedef {Object} response.Ticker
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
  * @property {string} percentChange - % change from open to close
  * @property {string} baseVolume - 24h volume in base terms
@@ -112,4 +175,26 @@ export interface Ticker {
   time: string;
   numTrades?: string;
   lastSequenceNumber?: string;
+}
+
+/**
+ * @typedef {Object} response.Withdrawal
+ * @property {string} withdrawalId - IDEX-issued withdrawal identifier
+ * @property {string} asset - Asset by symbol
+ * @property {string} [assetContractAddress] - Asset by contract address
+ * @property {string} quantity - Withdrawal amount in asset terms, fees are taken from this value
+ * @property {string} fee - Amount in asset deducted from withdrawal to cover gas
+ * @property {string} gas - Asset by symbol
+ * @property {string} [txId] - Ethereum transaction hash, if available
+ * @property {number} time - Timestamp of receipt / processing
+ */
+export interface Withdrawal {
+  withdrawalId: string;
+  asset: string;
+  assetContractAddress?: string;
+  quantity: string;
+  fee: string;
+  gas: string;
+  txId?: string;
+  time: string;
 }

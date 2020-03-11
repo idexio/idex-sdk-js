@@ -8,7 +8,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "yarn clean && tsc && yarn build:documentation",
+    "build": "yarn clean; npx tsc; yarn build:documentation",
     "build:documentation": "npx documentation readme src/** --section=API --parse-extension ts --shallow  --config documentation.yaml",
     "clean": "rm -rf dist",
     "lint": "prettier-eslint $PWD/'src/**/*.ts' --write",

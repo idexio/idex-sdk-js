@@ -58,27 +58,31 @@ export default class AuthenticatedClient {
   /**
    * Place a new order
    *
-   * @param {Order} order
+   * @param {request.Order} order
    */
-  public async placeOrder(order: request.Order): Promise<AxiosResponse> {
-    return this.post('/orders', {
-      parameters: order,
-      signature: await this.wallet.signMessage(getOrderHash(order)),
-    });
+  public async placeOrder(order: request.Order): Promise<response.Order> {
+    return (
+      await this.post('/orders', {
+        parameters: order,
+        signature: await this.wallet.signMessage(getOrderHash(order)),
+      })
+    ).data;
   }
 
   /**
    * Create a new withdrawal
    *
-   * @param {Withdrawal} withdrawal
+   * @param {request.Withdrawal} withdrawal
    */
   public async withdraw(
     withdrawal: request.Withdrawal,
-  ): Promise<AxiosResponse> {
-    return this.post('/orders', {
-      parameters: withdrawal,
-      signature: await this.wallet.signMessage(getWithdrawalHash(withdrawal)),
-    });
+  ): Promise<response.Withdrawal> {
+    return (
+      await this.post('/orders', {
+        parameters: withdrawal,
+        signature: await this.wallet.signMessage(getWithdrawalHash(withdrawal)),
+      })
+    ).data;
   }
 
   private async get(

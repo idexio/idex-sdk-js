@@ -13,11 +13,14 @@ toc:
       - OrderTimeInForce
   - name: Requests
     children:
-      - Order
-      - Withdrawal
+      - request.Order
+      - request.Withdrawal
   - name: Responses
     children:
-      - Asset
-      - ExchangeInfo
-      - Market
-      - Ticker
+      - response.Asset
+      - response.ExchangeInfo
+      - response.Fill
+      - response.Market
+      - response.Order
+      - response.Ticker
+      - response.Withdrawal

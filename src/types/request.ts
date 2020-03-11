@@ -13,6 +13,8 @@ export interface AllOrderParameters {
   side: keyof typeof enums.OrderSide;
   timeInForce?: keyof typeof enums.OrderTimeInForce;
   customClientOrderId?: string;
+  selfTradePrevention?: keyof typeof enums.OrderSelfTradePrevention;
+  cancelAfter?: number;
 }
 
 // Limit
@@ -71,7 +73,7 @@ export type OrderByQuoteQuantity = (
 ) & { quoteOrderQuantity: string };
 
 /**
- * @typedef {Object} Order
+ * @typedef {Object} request.Order
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
@@ -81,8 +83,10 @@ export type OrderByQuoteQuantity = (
  * @property {string} [quantity] - Order quantity in base terms, exclusive with quoteOrderQuantity
  * @property {string} [quoteOrderQuantity] - Order quantity in quote terms, exclusive with quantity
  * @property {string} [price] - Price in quote terms, optional for market orders
- * @property {string} [clientOrderId] - Client-supplied order id
+ * @property {ustring} [clientOrderId] - Client-supplied order id
  * @property {string} [stopPrice] - Stop loss or take profit price, only if stop or take order
+ * @property {OrderSelfTradePrevention} [selfTradePrevention] - Stop loss or take profit price, only if stop or take order
+ * @property {number} [cancelAfter] - Timestamp after which a standing limit order will be automatically cancelled; gtt tif only
  */
 export type Order = XOR<OrderByBaseQuantity, OrderByQuoteQuantity>;
 
@@ -103,7 +107,7 @@ export interface CreateOrderRequest {
 }
 
 /**
- * @typedef {Object} Withdrawal
+ * @typedef {Object} request.Withdrawal
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} asset - Asset by symbol
