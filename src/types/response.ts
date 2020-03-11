@@ -53,14 +53,14 @@ export interface ExchangeInfo {
  *
  * @typedef {Object} response.Fill
  * @property {string} price - Executed price of fill in quote terms
- * @property {number} quantity - Executed quantity of fill in base terms
+ * @property {string} quantity - Executed quantity of fill in base terms
  * @property {string} fee - Fee amount on fill
  * @property {string} feeAsset - Which token the fee was taken in
  * @property {string} gas
  */
 export interface Fill {
   price: string;
-  quantity: number;
+  quantity: string;
   fee: string;
   feeAsset: string;
   gas: string;
@@ -247,6 +247,26 @@ export interface Ticker {
   time: string;
   numTrades?: string;
   lastSequenceNumber?: string;
+}
+
+/**
+ * Trade
+ *
+ * @typedef {Object} response.Trade
+ * @property {string} fillId - Internal ID of fill
+ * @property {string} price - Executed price of trade in quote terms
+ * @property {string} quantity - Executed quantity of trade in base terms
+ * @property {string} quoteQuantity - Executed quantity of trade in quote terms
+ * @property {number} time - Fill timestamp
+ * @property {OrderSide} makerSide - Which side of the order the liquidity maker was on
+ */
+export interface Trade {
+  fillId: string;
+  price: string;
+  quantity: string;
+  quoteQuantity: string;
+  time: number;
+  makerSide: enums.OrderSide;
 }
 
 /**

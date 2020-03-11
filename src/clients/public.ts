@@ -10,12 +10,27 @@ import { request, response } from '../types';
 /**
  * Public API client
  *
- * @param {string} baseUrl
- * @param {string} [apiKey] Optional, increases rate limits if provided
- *
  * ```typescript
- * const publicClient = new PublicClient('https://api-sandbox.idex.io/api/v1');
+ * import * as idex from '@idexio/idex-node';
+ *
+ * // Edit the values below for your environment
+ * const config = {
+ *   baseURL: 'https://api-sandbox.idex.io/api/v1',
+ *   apiKey:
+ *     'MTQxMA==.MQ==.TlRnM01qSmtPVEF0TmpJNFpDMHhNV1ZoTFRrMU5HVXROMlJrTWpRMVpEUmlNRFU0',
+ * };
+ *
+ * const publicClient = new idex.PublicClient(config.baseURL);
+ *
+ * // Optionally provide an API key to increase rate limits
+ * const publicClientWithApiKey = new idex.PublicClient(
+ *   config.baseURL,
+ *   config.apiKey,
+ * );
  * ```
+ *
+ * @param {string} baseUrl
+ * @param {string} [apiKey] Increases rate limits if provided
  */
 export default class PublicClient {
   public baseURL: string;
@@ -44,6 +59,8 @@ export default class PublicClient {
 
   /**
    * Get the current server time
+   *
+   * @returns {Promise<number>} Milliseconds since UNIX epoch
    */
   public async getServerTime(): Promise<number> {
     return (await this.get('/time')).data.serverTime;
@@ -106,7 +123,7 @@ export default class PublicClient {
    * Get current order book entries for a market
    *
    * @param {string} market - Base-quote pair e.g. 'IDEX-ETH'
-   * @param {number} limit - Number of bids and asks to return. Default is 50, 0 returns the entire book
+   * @param {number} limit - Number of bids and asks to return. Value of 0 returns the entire book
    * @return {Promise<response.OrderBookLevel3>}
    */
   public async getOrderBookLevel3(
@@ -124,6 +141,27 @@ export default class PublicClient {
    */
   public async getTickers(market?: string): Promise<response.Ticker[]> {
     return (await this.get('/tickers', { market })).data;
+  }
+
+  /**
+   * Get public trade history for a market
+   *
+   * @param {string} market - Base-quote pair e.g. 'IDEX-ETH'
+   * @param {number} [start] - Starting timestamp (inclusive)
+   * @param {number} [end] - Ending timestamp (inclusive)
+   * @param {number} [limit] - Max results to return from 1-1000
+   * @param {string} [fromId] - Fills created at the same timestamp or after fillId
+   * @return {Promise<response.Ticker[]>}
+   */
+  public async getTrades(
+    market: string,
+    start?: number,
+    end?: number,
+    limit = 50,
+    fromId?: string,
+  ): Promise<response.Trade[]> {
+    return (await this.get('/trades', { market, start, end, limit, fromId }))
+      .data;
   }
 
   private async get(

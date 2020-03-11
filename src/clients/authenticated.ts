@@ -12,6 +12,9 @@ import * as utils from '../utils';
  * Authenticated API client
  *
  * ```typescript
+ * import * as idex from '@idexio/idex-node';
+ *
+ * // Edit the values below for your environment
  * const config = {
  *   baseURL: 'https://api-sandbox.idex.io/api/v1',
  *   apiKey:
@@ -20,7 +23,8 @@ import * as utils from '../utils';
  *   walletPrivateKey:
  *     '0x3141592653589793238462643383279502884197169399375105820974944592',
  * };
- * const authenticatedClient = new AuthenticatedClient(
+ *
+ * const authenticatedClient = new idex.AuthenticatedClient(
  *   config.baseURL,
  *   config.apiKey,
  *   config.apiSecret,
