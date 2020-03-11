@@ -141,6 +141,77 @@ export interface Order {
 }
 
 /**
+ * OrderBookPriceLevel
+ *
+ * @typedef {Object} response.OrderBookPriceLevel
+ * @property {string} price
+ * @property {number} size
+ * @property {number} [numOrders]
+ */
+export interface OrderBookPriceLevel {
+  price: string;
+  size: number;
+  numOrders?: number;
+}
+
+/**
+ * OrderBookOrder
+ *
+ * @typedef {Object} response.OrderBookOrder
+ * @property {string} price
+ * @property {number} size
+ * @property {string} orderId
+ */
+
+export interface OrderBookOrder {
+  price: string;
+  size: number;
+  orderId: string;
+}
+
+interface OrderBook {
+  sequence: number;
+  bids: unknown[];
+  asks: unknown[];
+}
+
+/**
+ * OrderBookLevel1
+ *
+ * @typedef {Object} response.OrderBookLevel1
+ * @property {[response.OrderBookPriceLevel]} bids
+ * @property {[response.OrderBookPriceLevel]} asks
+ */
+export interface OrderBookLevel1 extends OrderBook {
+  bids: [OrderBookPriceLevel];
+  asks: [OrderBookPriceLevel];
+}
+
+/**
+ * OrderBookLevel2
+ *
+ * @typedef {Object} response.OrderBookLevel2
+ * @property {response.OrderBookPriceLevel[]} bids
+ * @property {response.OrderBookPriceLevel[]} asks
+ */
+export interface OrderBookLevel2 extends OrderBook {
+  bids: OrderBookPriceLevel[];
+  asks: OrderBookPriceLevel[];
+}
+
+/**
+ * OrderBookLevel3
+ *
+ * @typedef {Object} response.OrderBookLevel3
+ * @property {response.OrderBookOrder[]} bids
+ * @property {response.OrderBookOrder[]} asks
+ */
+export interface OrderBookLevel3 extends OrderBook {
+  bids: OrderBookOrder[];
+  asks: OrderBookOrder[];
+}
+
+/**
  * Ticker
  *
  * @typedef {Object} response.Ticker

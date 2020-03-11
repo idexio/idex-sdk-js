@@ -9,7 +9,7 @@
   "private": true,
   "scripts": {
     "build": "yarn clean; npx tsc; yarn build:documentation",
-    "build:documentation": "npx documentation readme src/** --section=API --parse-extension ts --shallow  --config documentation.yaml",
+    "build:documentation": "npx documentation readme src/** --section=API --parse-extension ts --shallow --resolve node --config documentation.yaml",
     "clean": "rm -rf dist",
     "lint": "prettier-eslint $PWD/'src/**/*.ts' --write",
     "lint:markdown": "markdownlint README.md",

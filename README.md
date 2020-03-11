@@ -12,14 +12,20 @@
         -   [getExchangeInfo](#getexchangeinfo)
         -   [getAssets](#getassets)
         -   [getMarkets](#getmarkets)
-        -   [getTickers](#gettickers)
+        -   [getOrderBookLevel1](#getorderbooklevel1)
             -   [Parameters](#parameters-1)
-    -   [AuthenticatedClient](#authenticatedclient)
-        -   [Parameters](#parameters-2)
-        -   [placeOrder](#placeorder)
+        -   [getOrderBookLevel2](#getorderbooklevel2)
+            -   [Parameters](#parameters-2)
+        -   [getOrderBookLevel3](#getorderbooklevel3)
             -   [Parameters](#parameters-3)
-        -   [withdraw](#withdraw)
+        -   [getTickers](#gettickers)
             -   [Parameters](#parameters-4)
+    -   [AuthenticatedClient](#authenticatedclient)
+        -   [Parameters](#parameters-5)
+        -   [placeOrder](#placeorder)
+            -   [Parameters](#parameters-6)
+        -   [withdraw](#withdraw)
+            -   [Parameters](#parameters-7)
 -   [Enums](#enums)
     -   [MarketStatus](#marketstatus)
         -   [inactive](#inactive)
@@ -72,10 +78,20 @@
         -   [Properties](#properties-5)
     -   [response.Order](#responseorder)
         -   [Properties](#properties-6)
-    -   [response.Ticker](#responseticker)
+    -   [response.OrderBookLevel1](#responseorderbooklevel1)
         -   [Properties](#properties-7)
-    -   [response.Withdrawal](#responsewithdrawal)
+    -   [response.OrderBookLevel2](#responseorderbooklevel2)
         -   [Properties](#properties-8)
+    -   [response.OrderBookLevel3](#responseorderbooklevel3)
+        -   [Properties](#properties-9)
+    -   [response.OrderBookOrder](#responseorderbookorder)
+        -   [Properties](#properties-10)
+    -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
+        -   [Properties](#properties-11)
+    -   [response.Ticker](#responseticker)
+        -   [Properties](#properties-12)
+    -   [response.Withdrawal](#responsewithdrawal)
+        -   [Properties](#properties-13)
 
 ## Clients
 
@@ -86,13 +102,13 @@
 
 Public API client
 
-```typescript
-const publicClient = new PublicClient('https://api-sandbox.idex.io/api/v1');
-```
-
 #### Parameters
 
 -   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Optional, increases rate limits if provided```typescript
+    const publicClient = new PublicClient('https://api-sandbox.idex.io/api/v1');
+    ```
+-   `baseUrl` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 #### ping
 
@@ -123,6 +139,38 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 Get currently listed markets
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Market](#responsemarket)>>** 
+
+#### getOrderBookLevel1
+
+Get current top bid/ask price levels of order book for a market
+
+##### Parameters
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.OrderBookLevel1](#responseorderbooklevel1)>** 
+
+#### getOrderBookLevel2
+
+Get current order book price levels for a market
+
+##### Parameters
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
+-   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Number of bids and asks to return. Default is 50, 0 returns the entire book (optional, default `50`)
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.OrderBookLevel2](#responseorderbooklevel2)>** 
+
+#### getOrderBookLevel3
+
+Get current order book entries for a market
+
+##### Parameters
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
+-   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Number of bids and asks to return. Default is 50, 0 returns the entire book (optional, default `50`)
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.OrderBookLevel3](#responseorderbooklevel3)>** 
 
 #### getTickers
 
@@ -504,6 +552,63 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `cumulativeQuoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Represents the cumulative amount of the quote that has been spent (with a BUY order) or received (with a SELL order). Historical orders will have a value &lt; 0 in this field indicating the data is not available at this time
 -   `avgExecutionPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 -   `fills` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Fill](#responsefill)>** 
+
+### response.OrderBookLevel1
+
+OrderBookLevel1
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `bids` **\[[response.OrderBookPriceLevel](#responseorderbookpricelevel)]** 
+-   `asks` **\[[response.OrderBookPriceLevel](#responseorderbookpricelevel)]** 
+
+### response.OrderBookLevel2
+
+OrderBookLevel2
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `bids` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.OrderBookPriceLevel](#responseorderbookpricelevel)>** 
+-   `asks` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.OrderBookPriceLevel](#responseorderbookpricelevel)>** 
+
+### response.OrderBookLevel3
+
+OrderBookLevel3
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `bids` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.OrderBookOrder](#responseorderbookorder)>** 
+-   `asks` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.OrderBookOrder](#responseorderbookorder)>** 
+
+### response.OrderBookOrder
+
+OrderBookOrder
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `size` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+-   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+### response.OrderBookPriceLevel
+
+OrderBookPriceLevel
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `size` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+-   `numOrders` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** 
 
 ### response.Ticker
 

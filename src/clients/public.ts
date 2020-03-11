@@ -10,6 +10,9 @@ import { request, response } from '../types';
 /**
  * Public API client
  *
+ * @param {string} baseUrl
+ * @param {string} [apiKey] Optional, increases rate limits if provided
+ *
  * ```typescript
  * const publicClient = new PublicClient('https://api-sandbox.idex.io/api/v1');
  * ```
@@ -17,12 +20,19 @@ import { request, response } from '../types';
 export default class PublicClient {
   public baseURL: string;
 
+  public apiKey: string | null;
+
   private axios: AxiosInstance;
 
-  public constructor(baseURL: string) {
+  public constructor(baseURL: string, apiKey?: string) {
     this.baseURL = baseURL;
+    this.apiKey = apiKey;
 
-    this.axios = Axios.create({});
+    this.axios = apiKey
+      ? (this.axios = Axios.create({
+          headers: { Authorization: `Bearer ${apiKey}` },
+        }))
+      : Axios.create({});
   }
 
   /**
@@ -64,6 +74,46 @@ export default class PublicClient {
    */
   public async getMarkets(): Promise<response.Market[]> {
     return (await this.get('/markets')).data;
+  }
+
+  /**
+   * Get current top bid/ask price levels of order book for a market
+   *
+   * @param {string} market - Base-quote pair e.g. 'IDEX-ETH'
+   * @return {Promise<response.OrderBookLevel1>}
+   */
+  public async getOrderBookLevel1(
+    market: string,
+  ): Promise<response.OrderBookLevel1> {
+    return (await this.get('/orderbook', { level: 1, market })).data;
+  }
+
+  /**
+   * Get current order book price levels for a market
+   *
+   * @param {string} market - Base-quote pair e.g. 'IDEX-ETH'
+   * @param {number} limit - Number of bids and asks to return. Default is 50, 0 returns the entire book
+   * @return {Promise<response.OrderBookLevel2>}
+   */
+  public async getOrderBookLevel2(
+    market: string,
+    limit = 50,
+  ): Promise<response.OrderBookLevel2> {
+    return (await this.get('/orderbook', { level: 2, market, limit })).data;
+  }
+
+  /**
+   * Get current order book entries for a market
+   *
+   * @param {string} market - Base-quote pair e.g. 'IDEX-ETH'
+   * @param {number} limit - Number of bids and asks to return. Default is 50, 0 returns the entire book
+   * @return {Promise<response.OrderBookLevel3>}
+   */
+  public async getOrderBookLevel3(
+    market: string,
+    limit = 50,
+  ): Promise<response.OrderBookLevel3> {
+    return (await this.get('/orderbook', { level: 3, market, limit })).data;
   }
 
   /**

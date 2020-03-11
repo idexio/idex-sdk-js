@@ -24,5 +24,10 @@ toc:
       - response.Fill
       - response.Market
       - response.Order
+      - response.OrderBookLevel1
+      - response.OrderBookLevel2
+      - response.OrderBookLevel3
+      - response.OrderBookOrder
+      - response.OrderBookPriceLevel
       - response.Ticker
       - response.Withdrawal
