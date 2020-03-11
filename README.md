@@ -25,6 +25,29 @@
         -   [inactive](#inactive)
         -   [cancelsOnly](#cancelsonly)
         -   [active](#active)
+    -   [OrderSelfTradePrevention](#orderselftradeprevention)
+        -   [decreaseAndCancel](#decreaseandcancel)
+        -   [cancelOldest](#canceloldest)
+        -   [cancelNewest](#cancelnewest)
+        -   [cancelBoth](#cancelboth)
+    -   [OrderSide](#orderside)
+        -   [buy](#buy)
+        -   [sell](#sell)
+    -   [OrderStatus](#orderstatus)
+        -   [active](#active-1)
+        -   [open](#open)
+        -   [partiallyFilled](#partiallyfilled)
+        -   [filled](#filled)
+        -   [cancelled](#cancelled)
+        -   [rejected](#rejected)
+        -   [expired](#expired)
+        -   [testOnlyAccepted](#testonlyaccepted)
+        -   [testOnlyRejected](#testonlyrejected)
+    -   [OrderTimeInForce](#ordertimeinforce)
+        -   [gtc](#gtc)
+        -   [gtt](#gtt)
+        -   [ioc](#ioc)
+        -   [fok](#fok)
     -   [OrderType](#ordertype)
         -   [market](#market)
         -   [limit](#limit)
@@ -33,14 +56,6 @@
         -   [stopLossLimit](#stoplosslimit)
         -   [takeProfit](#takeprofit)
         -   [takeProfitLimit](#takeprofitlimit)
-    -   [OrderSide](#orderside)
-        -   [buy](#buy)
-        -   [sell](#sell)
-    -   [OrderTimeInForce](#ordertimeinforce)
-        -   [gtc](#gtc)
-        -   [gtt](#gtt)
-        -   [ioc](#ioc)
-        -   [fok](#fok)
 -   [Requests](#requests)
     -   [request.Order](#requestorder)
         -   [Properties](#properties)
@@ -61,21 +76,6 @@
         -   [Properties](#properties-7)
     -   [response.Withdrawal](#responsewithdrawal)
         -   [Properties](#properties-8)
--   [OrderStatus](#orderstatus)
-    -   [active](#active-1)
-    -   [open](#open)
-    -   [partiallyFilled](#partiallyfilled)
-    -   [filled](#filled)
-    -   [cancelled](#cancelled)
-    -   [rejected](#rejected)
-    -   [expired](#expired)
-    -   [testOnlyAccepted](#testonlyaccepted)
-    -   [testOnlyRejected](#testonlyrejected)
--   [OrderSelfTradePrevention](#orderselftradeprevention)
-    -   [decreaseAndCancel](#decreaseandcancel)
-    -   [cancelOldest](#canceloldest)
-    -   [cancelNewest](#cancelnewest)
-    -   [cancelBoth](#cancelboth)
 
 ## Clients
 
@@ -209,6 +209,133 @@ Trades and cancels accepted
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
+### OrderSelfTradePrevention
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### decreaseAndCancel
+
+When two orders from the same user cross, the smaller order will be canceled and the larger order size will be
+decremented by the smaller order size. If the two orders are the same size, both will be canceled.
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### cancelOldest
+
+Cancel the older (maker) order in full
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### cancelNewest
+
+Cancel the newer (taker) order in full
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### cancelBoth
+
+Cancel both orders
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### OrderSide
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### buy
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### sell
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### OrderStatus
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### active
+
+Stop order exists on the order book
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### open
+
+Limit order exists on the order book
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### partiallyFilled
+
+Limit order has completed fills but has remaining open quantity
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### filled
+
+Limit order is completely filled and is no longer on the book; market order was filled
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### cancelled
+
+Limit order was cancelled prior to execution completion but may be partially filled
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### rejected
+
+Order was rejected by the trading engine
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### expired
+
+GTT limit order expired prior to execution completion but may be partially filled
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### testOnlyAccepted
+
+Order submitted to the test endpoint and accepted by the trading engine, not executed
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### testOnlyRejected
+
+Order submitted to the test endpoint and rejected by validation or the trading engine, not executed
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### OrderTimeInForce
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### gtc
+
+Good until cancelled (default)
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### gtt
+
+Good until time
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### ioc
+
+Immediate or cancel
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### fok
+
+Fill or kill
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
 ### OrderType
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
@@ -238,46 +365,6 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### takeProfitLimit
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### OrderSide
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-#### buy
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-#### sell
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### OrderTimeInForce
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-#### gtc
-
-Good until cancelled (default)
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-#### gtt
-
-Good until time
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-#### ioc
-
-Immediate or cancel
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-#### fok
-
-Fill or kill
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
@@ -413,9 +500,10 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `stopPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Stop loss or take profit price, only if stop or take order
 -   `selfTradePrevention` **[OrderSelfTradePrevention](#orderselftradeprevention)?** Stop loss or take profit price, only if stop or take order
 -   `originalQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Original quantity specified by the order in base terms
--   `executedQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** amount of quantity that has been executed in base terms
+-   `executedQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of quantity that has been executed in base terms
 -   `cumulativeQuoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Represents the cumulative amount of the quote that has been spent (with a BUY order) or received (with a SELL order). Historical orders will have a value &lt; 0 in this field indicating the data is not available at this time
 -   `avgExecutionPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
+-   `fills` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Fill](#responsefill)>** 
 
 ### response.Ticker
 
@@ -455,93 +543,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by symbol
 -   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Ethereum transaction hash, if available
 -   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of receipt / processing
-
-## OrderStatus
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### active
-
-Stop order exists on the order book
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### open
-
-Limit order exists on the order book
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### partiallyFilled
-
-Limit order has completed fills but has remaining open quantity
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### filled
-
-Limit order is completely filled and is no longer on the book; market order was filled
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### cancelled
-
-Limit order was cancelled prior to execution completion but may be partially filled
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### rejected
-
-Order was rejected by the trading engine
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### expired
-
-GTT limit order expired prior to execution completion but may be partially filled
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### testOnlyAccepted
-
-Order submitted to the test endpoint and accepted by the trading engine, not executed
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### testOnlyRejected
-
-Order submitted to the test endpoint and rejected by validation or the trading engine, not executed
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-## OrderSelfTradePrevention
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### decreaseAndCancel
-
-When two orders from the same user cross, the smaller order will be canceled and the larger order size will be
-decremented by the smaller order size. If the two orders are the same size, both will be canceled.
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### cancelOldest
-
-Cancel the older (maker) order in full
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### cancelNewest
-
-Cancel the newer (taker) order in full
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### cancelBoth
-
-Cancel both orders
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 # Contracts
 
