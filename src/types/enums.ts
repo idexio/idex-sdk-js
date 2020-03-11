@@ -2,6 +2,20 @@
  * @readonly
  * @enum {string}
  */
+export enum CandleInterval {
+  '1m',
+  '5m',
+  '15m',
+  '30m',
+  '1h',
+  '6h',
+  '1d',
+}
+
+/**
+ * @readonly
+ * @enum {string}
+ */
 export enum MarketStatus {
   /**
    * No orders or cancels accepted

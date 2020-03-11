@@ -20,15 +20,18 @@
             -   [Parameters](#parameters-3)
         -   [getTickers](#gettickers)
             -   [Parameters](#parameters-4)
-        -   [getTrades](#gettrades)
+        -   [getCandles](#getcandles)
             -   [Parameters](#parameters-5)
+        -   [getTrades](#gettrades)
+            -   [Parameters](#parameters-6)
     -   [AuthenticatedClient](#authenticatedclient)
-        -   [Parameters](#parameters-6)
+        -   [Parameters](#parameters-7)
         -   [placeOrder](#placeorder)
-            -   [Parameters](#parameters-7)
-        -   [withdraw](#withdraw)
             -   [Parameters](#parameters-8)
+        -   [withdraw](#withdraw)
+            -   [Parameters](#parameters-9)
 -   [Enums](#enums)
+    -   [CandleInterval](#candleinterval)
     -   [MarketStatus](#marketstatus)
         -   [inactive](#inactive)
         -   [cancelsOnly](#cancelsonly)
@@ -72,30 +75,32 @@
 -   [Responses](#responses)
     -   [response.Asset](#responseasset)
         -   [Properties](#properties-2)
-    -   [response.ExchangeInfo](#responseexchangeinfo)
+    -   [response.Candle](#responsecandle)
         -   [Properties](#properties-3)
-    -   [response.Fill](#responsefill)
+    -   [response.ExchangeInfo](#responseexchangeinfo)
         -   [Properties](#properties-4)
-    -   [response.Market](#responsemarket)
+    -   [response.Fill](#responsefill)
         -   [Properties](#properties-5)
-    -   [response.Order](#responseorder)
+    -   [response.Market](#responsemarket)
         -   [Properties](#properties-6)
-    -   [response.OrderBookLevel1](#responseorderbooklevel1)
+    -   [response.Order](#responseorder)
         -   [Properties](#properties-7)
-    -   [response.OrderBookLevel2](#responseorderbooklevel2)
+    -   [response.OrderBookLevel1](#responseorderbooklevel1)
         -   [Properties](#properties-8)
-    -   [response.OrderBookLevel3](#responseorderbooklevel3)
+    -   [response.OrderBookLevel2](#responseorderbooklevel2)
         -   [Properties](#properties-9)
-    -   [response.OrderBookOrder](#responseorderbookorder)
+    -   [response.OrderBookLevel3](#responseorderbooklevel3)
         -   [Properties](#properties-10)
-    -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
+    -   [response.OrderBookOrder](#responseorderbookorder)
         -   [Properties](#properties-11)
-    -   [response.Ticker](#responseticker)
+    -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
         -   [Properties](#properties-12)
-    -   [response.Trade](#responsetrade)
+    -   [response.Ticker](#responseticker)
         -   [Properties](#properties-13)
-    -   [response.Withdrawal](#responsewithdrawal)
+    -   [response.Trade](#responsetrade)
         -   [Properties](#properties-14)
+    -   [response.Withdrawal](#responsewithdrawal)
+        -   [Properties](#properties-15)
 
 ## Clients
 
@@ -203,6 +208,20 @@ Get currently listed markets
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Ticker](#responseticker)>>** 
 
+#### getCandles
+
+Get candle (OHLCV) data for a market
+
+##### Parameters
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Base-quote pair e.g. 'IDEX-ETH'
+-   `interval` **[CandleInterval](#candleinterval)?** Time interval for data
+-   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Start period timestamp
+-   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** End period timestamp
+-   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000 (optional, default `50`)
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Candle](#responsecandle)>>** 
+
 #### getTrades
 
 Get public trade history for a market
@@ -215,7 +234,7 @@ Get public trade history for a market
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000 (optional, default `50`)
 -   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Fills created at the same timestamp or after fillId
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Ticker](#responseticker)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Trade](#responsetrade)>>** 
 
 ### AuthenticatedClient
 
@@ -273,6 +292,10 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 Sets of named constants used as field types for several requests and responses
 
+
+### CandleInterval
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 ### MarketStatus
 
@@ -513,6 +536,21 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `depositMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `tradeMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `withdrawalMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+### response.Candle
+
+Candle
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of the datapoint
+-   `open` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Price of the first fill of the interval in quote terms
+-   `high` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Price of the highest fill of the interval in quote terms
+-   `low` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Price of the lowest fill of the interval in quote terms
+-   `close` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Price of the last fill of the interval in quote terms
+-   `volume` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total volume of the period in base terms
 
 ### response.ExchangeInfo
 

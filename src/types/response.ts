@@ -25,6 +25,26 @@ export interface Asset {
 }
 
 /**
+ * Candle
+ *
+ * @typedef {Object} response.Candle
+ * @property {number} time - Timestamp of the datapoint
+ * @property {string} open - Price of the first fill of the interval in quote terms
+ * @property {string} high - Price of the highest fill of the interval in quote terms
+ * @property {string} low - Price of the lowest fill of the interval in quote terms
+ * @property {string} close - Price of the last fill of the interval in quote terms
+ * @property {string} volume - Total volume of the period in base terms
+ */
+export interface Candle {
+  time: number;
+  open: string;
+  high: string;
+  low: string;
+  close: string;
+  volume: string;
+}
+
+/**
  * Basic exchange info
  *
  * @typedef {Object} response.ExchangeInfo

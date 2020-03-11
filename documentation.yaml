@@ -7,6 +7,7 @@ toc:
     description: |
       Sets of named constants used as field types for several requests and responses
     children:
+      - CandleInterval
       - MarketStatus
       - OrderSelfTradePrevention
       - OrderSide
@@ -20,6 +21,7 @@ toc:
   - name: Responses
     children:
       - response.Asset
+      - response.Candle
       - response.ExchangeInfo
       - response.Fill
       - response.Market

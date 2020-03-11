@@ -5,7 +5,7 @@ import queryString from 'query-string';
 import sha256 from 'crypto-js/sha256';
 import { ethers } from 'ethers';
 
-import { request, response } from '../types';
+import { enums, request, response } from '../types';
 
 /**
  * Public API client
@@ -144,6 +144,27 @@ export default class PublicClient {
   }
 
   /**
+   * Get candle (OHLCV) data for a market
+   *
+   * @param {string} [market] - Base-quote pair e.g. 'IDEX-ETH'
+   * @param {CandleInterval} [interval] - Time interval for data
+   * @param {number} [start] - Start period timestamp
+   * @param {number} [end] - End period timestamp
+   * @param {number} [limit] - Max results to return from 1-1000
+
+   * @return {Promise<response.Candle[]>}
+   */
+  public async getCandles(
+    market: string,
+    interval: enums.CandleInterval,
+    start?: number,
+    end?: number,
+    limit = 50,
+  ): Promise<response.Candle[]> {
+    return (await this.get('/candles', { market })).data;
+  }
+
+  /**
    * Get public trade history for a market
    *
    * @param {string} market - Base-quote pair e.g. 'IDEX-ETH'
@@ -151,7 +172,7 @@ export default class PublicClient {
    * @param {number} [end] - Ending timestamp (inclusive)
    * @param {number} [limit] - Max results to return from 1-1000
    * @param {string} [fromId] - Fills created at the same timestamp or after fillId
-   * @return {Promise<response.Ticker[]>}
+   * @return {Promise<response.Trade[]>}
    */
   public async getTrades(
     market: string,
