@@ -20,12 +20,14 @@
             -   [Parameters](#parameters-3)
         -   [getTickers](#gettickers)
             -   [Parameters](#parameters-4)
+        -   [getTrades](#gettrades)
+            -   [Parameters](#parameters-5)
     -   [AuthenticatedClient](#authenticatedclient)
-        -   [Parameters](#parameters-5)
+        -   [Parameters](#parameters-6)
         -   [placeOrder](#placeorder)
-            -   [Parameters](#parameters-6)
-        -   [withdraw](#withdraw)
             -   [Parameters](#parameters-7)
+        -   [withdraw](#withdraw)
+            -   [Parameters](#parameters-8)
 -   [Enums](#enums)
     -   [MarketStatus](#marketstatus)
         -   [inactive](#inactive)
@@ -90,8 +92,10 @@
         -   [Properties](#properties-11)
     -   [response.Ticker](#responseticker)
         -   [Properties](#properties-12)
-    -   [response.Withdrawal](#responsewithdrawal)
+    -   [response.Trade](#responsetrade)
         -   [Properties](#properties-13)
+    -   [response.Withdrawal](#responsewithdrawal)
+        -   [Properties](#properties-14)
 
 ## Clients
 
@@ -102,12 +106,29 @@
 
 Public API client
 
+```typescript
+import * as idex from '@idexio/idex-node';
+
+// Edit the values below for your environment
+const config = {
+  baseURL: 'https://api-sandbox.idex.io/api/v1',
+  apiKey:
+    'MTQxMA==.MQ==.TlRnM01qSmtPVEF0TmpJNFpDMHhNV1ZoTFRrMU5HVXROMlJrTWpRMVpEUmlNRFU0',
+};
+
+const publicClient = new idex.PublicClient(config.baseURL);
+
+// Optionally provide an API key to increase rate limits
+const publicClientWithApiKey = new idex.PublicClient(
+  config.baseURL,
+  config.apiKey,
+);
+```
+
 #### Parameters
 
 -   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Optional, increases rate limits if provided```typescript
-    const publicClient = new PublicClient('https://api-sandbox.idex.io/api/v1');
-    ```
+-   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Increases rate limits if provided
 -   `baseUrl` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 #### ping
@@ -120,7 +141,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 Get the current server time
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)>** Milliseconds since UNIX epoch
 
 #### getExchangeInfo
 
@@ -168,7 +189,7 @@ Get current order book entries for a market
 ##### Parameters
 
 -   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
--   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Number of bids and asks to return. Default is 50, 0 returns the entire book (optional, default `50`)
+-   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Number of bids and asks to return. Value of 0 returns the entire book (optional, default `50`)
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.OrderBookLevel3](#responseorderbooklevel3)>** 
 
@@ -182,11 +203,28 @@ Get currently listed markets
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Ticker](#responseticker)>>** 
 
+#### getTrades
+
+Get public trade history for a market
+
+##### Parameters
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
+-   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
+-   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
+-   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000 (optional, default `50`)
+-   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Fills created at the same timestamp or after fillId
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Ticker](#responseticker)>>** 
+
 ### AuthenticatedClient
 
 Authenticated API client
 
 ```typescript
+import * as idex from '@idexio/idex-node';
+
+// Edit the values below for your environment
 const config = {
   baseURL: 'https://api-sandbox.idex.io/api/v1',
   apiKey:
@@ -195,7 +233,8 @@ const config = {
   walletPrivateKey:
     '0x3141592653589793238462643383279502884197169399375105820974944592',
 };
-const authenticatedClient = new AuthenticatedClient(
+
+const authenticatedClient = new idex.AuthenticatedClient(
   config.baseURL,
   config.apiKey,
   config.apiSecret,
@@ -501,7 +540,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 #### Properties
 
 -   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed price of fill in quote terms
--   `quantity` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Executed quantity of fill in base terms
+-   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of fill in base terms
 -   `fee` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fee amount on fill
 -   `feeAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Which token the fee was taken in
 -   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
@@ -633,6 +672,21 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Time when data was calculated, open and change is assumed to be trailing 24h
 -   `numTrades` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Number of fills for the market in the period
 -   `lastSequenceNumber` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Last trade sequence number for the market
+
+### response.Trade
+
+Trade
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `fillId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of fill
+-   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed price of trade in quote terms
+-   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of trade in base terms
+-   `quoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of trade in quote terms
+-   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Fill timestamp
+-   `makerSide` **[OrderSide](#orderside)** Which side of the order the liquidity maker was on
 
 ### response.Withdrawal
 

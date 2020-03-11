@@ -30,4 +30,5 @@ toc:
       - response.OrderBookOrder
       - response.OrderBookPriceLevel
       - response.Ticker
+      - response.Trade
       - response.Withdrawal
