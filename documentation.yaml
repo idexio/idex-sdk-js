@@ -17,8 +17,9 @@ toc:
       - UserStatus
   - name: Requests
     children:
-      - request.CancelOrder
-      - request.CancelOrders
+      - request.FindOrder
+      - request.FindOrders
+      - request.FindOrdersIncludingInactive
       - request.Order
       - request.Withdrawal
   - name: Responses

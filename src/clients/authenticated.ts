@@ -57,7 +57,7 @@ export default class AuthenticatedClient {
   }
 
   /**
-   * Ger asset quantity data (positions) held by a wallet on the exchange
+   * Get asset quantity data (positions) held by a wallet on the exchange
    *
    * @param {string} nonce - UUIDv1
    */
@@ -67,6 +67,66 @@ export default class AuthenticatedClient {
     asset?: string,
   ): Promise<response.Balance | response.Balance[]> {
     return (await this.get('/balances', { nonce, wallet, asset })).data;
+  }
+
+  /**
+   * Get an order
+   *
+   * @param {request.FindOrder} findOrder
+   * @return {Promise<response.Order>}
+   */
+  public async getOrder(findOrder: request.FindOrder): Promise<response.Order> {
+    const { nonce, wallet, orderId, clientOrderId } = findOrder;
+    return (
+      await this.get('/orders', {
+        nonce,
+        wallet,
+        orderId,
+        clientOrderId,
+      })
+    ).data;
+  }
+
+  /**
+   * Get multiple orders including inactive ones
+   *
+   * @param {request.FindOrders} findOrders
+   * @return {Promise<response.Order[]>}
+   */
+  public async getOrdersIncludingInactive(
+    findOrders: request.FindOrdersIncludingInactive,
+  ): Promise<response.Order[]> {
+    const { nonce, wallet, market, start, end, limit } = findOrders;
+    return (
+      await this.get('/orders', {
+        includeInactiveOrders: true,
+        nonce,
+        wallet,
+        market,
+        start,
+        end,
+        limit,
+      })
+    ).data;
+  }
+
+  /**
+   * Get multiple orders
+   *
+   * @param {request.FindOrders} findOrders
+   * @return {Promise<response.Order[]>}
+   */
+  public async getOrders(
+    findOrders: request.FindOrders,
+  ): Promise<response.Order[]> {
+    const { nonce, wallet, market } = findOrders;
+    return (
+      await this.get('/orders', {
+        nonce,
+        wallet,
+        market,
+      })
+    ).data;
   }
 
   /**
@@ -128,9 +188,7 @@ export default class AuthenticatedClient {
    *
    * @param {request.CancelOrder} order
    */
-  public async cancelOrder(
-    order: request.CancelOrder,
-  ): Promise<response.Order> {
+  public async cancelOrder(order: request.FindOrder): Promise<response.Order> {
     return (await this.delete('/orders', order)).data;
   }
 
@@ -140,7 +198,7 @@ export default class AuthenticatedClient {
    * @param {request.CancelOrder} order
    */
   public async cancelOrders(
-    orders: request.CancelOrders,
+    orders: request.FindOrders,
   ): Promise<response.Order[]> {
     return (await this.delete('/orders', orders)).data;
   }
@@ -167,7 +225,7 @@ export default class AuthenticatedClient {
 
   private async get(
     endpoint: string,
-    requestParams: Record<string, number | string> = {},
+    requestParams: Record<string, boolean | number | string> = {},
   ): Promise<AxiosResponse> {
     return this.axios({
       method: 'GET',

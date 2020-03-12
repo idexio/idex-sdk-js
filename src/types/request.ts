@@ -5,39 +5,51 @@ type XOR<T, U> = T | U extends object
   ? (Without<T, U> & U) | (Without<U, T> & T)
   : T | U;
 
-interface CancelOrdersByWallet {
+interface FindOrdersByWallet {
   nonce: string;
   wallet: string;
 }
 
-interface CancelOrdersByMarket extends CancelOrdersByWallet {
-  market: string;
+interface FindOrdersByMarket extends FindOrdersByWallet {
+  market?: string;
 }
 
-interface CancelOrderByOrderId extends CancelOrdersByWallet {
+interface FindOrderByOrderId extends FindOrdersByWallet {
   orderId: string;
 }
 
-interface CancelOrderByClientOrderId extends CancelOrdersByWallet {
+interface FindOrderByClientOrderId extends FindOrdersByWallet {
   clientOrderId: string;
 }
 
 /**
- * @typedef {Object} request.CancelOrder
+ * @typedef {Object} request.FindOrder
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} [orderId] - Exclusive with clientOrderId
  * @property {string} [clientOrderId] - Exclusive with orderId
  */
+export type FindOrder = XOR<FindOrderByOrderId, FindOrderByClientOrderId>;
 
-export type CancelOrder = XOR<CancelOrderByOrderId, CancelOrderByClientOrderId>;
 /**
- * @typedef {Object} request.CancelOrders
+ * @typedef {Object} request.FindOrders
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} [market] - Base-quote pair e.g. 'IDEX-ETH'
  */
-export type CancelOrders = XOR<CancelOrdersByWallet, CancelOrdersByMarket>;
+export type FindOrders = FindOrdersByMarket;
+
+/**
+ * @typedef {Object} request.FindOrdersIncludingInactive
+ * @property {number} [start] - Starting timestamp (inclusive)
+ * @property {number} [end] - Ending timestamp (inclusive)
+ * @property {number} [limit=50] - Max results to return from 1-1000
+ */
+export interface FindOrdersIncludingInactive extends FindOrdersByMarket {
+  start?: number;
+  end?: number;
+  limit?: number;
+}
 
 export interface AllOrderParameters {
   nonce: string;
