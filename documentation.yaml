@@ -18,9 +18,13 @@ toc:
       - UserStatus
   - name: Requests
     children:
+      - request.FindDeposit
+      - request.FindDeposits
       - request.FindOrder
       - request.FindOrders
       - request.FindOrdersIncludingInactive
+      - request.FindWithdrawal
+      - request.FindWithdrawals
       - request.Order
       - request.Withdrawal
   - name: Responses
@@ -28,6 +32,7 @@ toc:
       - response.Asset
       - response.Balance
       - response.Candle
+      - response.Deposit
       - response.ExchangeInfo
       - response.Fill
       - response.Market

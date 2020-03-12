@@ -122,6 +122,47 @@ export default class AuthenticatedClient {
   }
 
   /**
+   * Get a deposit
+   *
+   * @param {request.FindDeposit} findDeposit
+   * @return {Promise<response.Deposit>}
+   */
+  public async getDeposit(
+    findDeposit: request.FindDeposit,
+  ): Promise<response.Deposit> {
+    const { nonce, wallet, depositId } = findDeposit;
+    return (
+      await this.get('/deposits', {
+        nonce,
+        wallet,
+        depositId,
+      })
+    ).data;
+  }
+
+  /**
+   * Get multiple deposits
+   *
+   * @param {request.FindDeposits} findDeposits
+   * @return {Promise<response.Deposit[]>}
+   */
+  public async getDeposits(
+    findDeposits: request.FindDeposits,
+  ): Promise<response.Deposit[]> {
+    const { nonce, wallet, asset, start, end, limit } = findDeposits;
+    return (
+      await this.get('/deposits', {
+        nonce,
+        wallet,
+        asset,
+        start,
+        end,
+        limit,
+      })
+    ).data;
+  }
+
+  /**
    * Get an order
    *
    * @param {request.FindOrder} findOrder
@@ -135,6 +176,25 @@ export default class AuthenticatedClient {
         wallet,
         orderId,
         clientOrderId,
+      })
+    ).data;
+  }
+
+  /**
+   * Get multiple orders
+   *
+   * @param {request.FindOrders} findOrders
+   * @return {Promise<response.Order[]>}
+   */
+  public async getOrders(
+    findOrders: request.FindOrders,
+  ): Promise<response.Order[]> {
+    const { nonce, wallet, market } = findOrders;
+    return (
+      await this.get('/orders', {
+        nonce,
+        wallet,
+        market,
       })
     ).data;
   }
@@ -163,25 +223,6 @@ export default class AuthenticatedClient {
   }
 
   /**
-   * Get multiple orders
-   *
-   * @param {request.FindOrders} findOrders
-   * @return {Promise<response.Order[]>}
-   */
-  public async getOrders(
-    findOrders: request.FindOrders,
-  ): Promise<response.Order[]> {
-    const { nonce, wallet, market } = findOrders;
-    return (
-      await this.get('/orders', {
-        nonce,
-        wallet,
-        market,
-      })
-    ).data;
-  }
-
-  /**
    * Get account details for the API key’s user
    *
    * @param {string} nonce - UUIDv1
@@ -197,6 +238,56 @@ export default class AuthenticatedClient {
    */
   public async getWallets(nonce: string): Promise<response.Wallet[]> {
     return (await this.get('/wallets', { nonce })).data;
+  }
+
+  /**
+   * Get a withdrawal
+   *
+   * @param {request.FindWithdrawal} findWithdrawal
+   * @return {Promise<response.Withdrawal>}
+   */
+  public async getWithdrawal(
+    findWithdrawal: request.FindWithdrawal,
+  ): Promise<response.Withdrawal> {
+    const { nonce, wallet, withdrawalId } = findWithdrawal;
+    return (
+      await this.get('/withdrawals', {
+        nonce,
+        wallet,
+        withdrawalId,
+      })
+    ).data;
+  }
+
+  /**
+   * Get multiple withdrawals
+   *
+   * @param {request.FindWithdrawals} findWithdrawals
+   * @return {Promise<response.Withdrawal[]>}
+   */
+  public async getWithdrawals(
+    findWithdrawals: request.FindWithdrawals,
+  ): Promise<response.Withdrawal[]> {
+    const {
+      nonce,
+      wallet,
+      asset,
+      assetContractAddress,
+      start,
+      end,
+      limit,
+    } = findWithdrawals;
+    return (
+      await this.get('/withdrawals', {
+        nonce,
+        wallet,
+        asset,
+        assetContractAddress,
+        start,
+        end,
+        limit,
+      })
+    ).data;
   }
 
   /**

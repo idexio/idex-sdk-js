@@ -5,20 +5,46 @@ type XOR<T, U> = T | U extends object
   ? (Without<T, U> & U) | (Without<U, T> & T)
   : T | U;
 
-interface FindOrdersByWallet {
+interface FindByWallet {
   nonce: string;
   wallet: string;
 }
 
-interface FindOrdersByMarket extends FindOrdersByWallet {
+/**
+ * @typedef {Object} request.FindDeposit
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ * @property {string} depositId
+ */
+export interface FindDeposit extends FindByWallet {
+  depositId: string;
+}
+
+/**
+ * @typedef {Object} request.FindDeposits
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ * @property {string} [asset] - Asset by symbol
+ * @property {number} [start] - Starting timestamp (inclusive)
+ * @property {number} [end] - Ending timestamp (inclusive)
+ * @property {number} [limit=50] - Max results to return from 1-1000
+ */
+export interface FindDeposits extends FindByWallet {
+  asset?: string;
+  start?: number;
+  end?: number;
+  limit?: number;
+}
+
+interface FindOrdersByMarket extends FindByWallet {
   market?: string;
 }
 
-interface FindOrderByOrderId extends FindOrdersByWallet {
+interface FindOrderByOrderId extends FindByWallet {
   orderId: string;
 }
 
-interface FindOrderByClientOrderId extends FindOrdersByWallet {
+interface FindOrderByClientOrderId extends FindByWallet {
   clientOrderId: string;
 }
 
@@ -49,6 +75,34 @@ export type FindOrders = FindOrdersByMarket;
  * @property {number} [limit=50] - Max results to return from 1-1000
  */
 export interface FindOrdersIncludingInactive extends FindOrdersByMarket {
+  start?: number;
+  end?: number;
+  limit?: number;
+}
+
+/**
+ * @typedef {Object} request.FindWithdrawal
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ * @property {string} withdrawalId
+ */
+export interface FindWithdrawal extends FindByWallet {
+  withdrawalId: string;
+}
+
+/**
+ * @typedef {Object} request.FindWithdrawals
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ * @property {string} [asset] - Asset by symbol
+ * @property {string} [assetContractAddress] - Asset by contract address
+ * @property {number} [start] - Starting timestamp (inclusive)
+ * @property {number} [end] - Ending timestamp (inclusive)
+ * @property {number} [limit=50] - Max results to return from 1-1000
+ */
+export interface FindWithdrawals extends FindByWallet {
+  asset?: string;
+  assetContractAddress?: string;
   start?: number;
   end?: number;
   limit?: number;

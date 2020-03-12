@@ -34,22 +34,30 @@
             -   [Parameters](#parameters-10)
         -   [getFills](#getfills)
             -   [Parameters](#parameters-11)
-        -   [getOrder](#getorder)
+        -   [getDeposit](#getdeposit)
             -   [Parameters](#parameters-12)
-        -   [getOrdersIncludingInactive](#getordersincludinginactive)
+        -   [getDeposits](#getdeposits)
             -   [Parameters](#parameters-13)
-        -   [getOrders](#getorders)
+        -   [getOrder](#getorder)
             -   [Parameters](#parameters-14)
-        -   [getUser](#getuser)
+        -   [getOrders](#getorders)
             -   [Parameters](#parameters-15)
-        -   [getWallets](#getwallets)
+        -   [getOrdersIncludingInactive](#getordersincludinginactive)
             -   [Parameters](#parameters-16)
-        -   [placeOrder](#placeorder)
+        -   [getUser](#getuser)
             -   [Parameters](#parameters-17)
-        -   [placeTestOrder](#placetestorder)
+        -   [getWallets](#getwallets)
             -   [Parameters](#parameters-18)
-        -   [withdraw](#withdraw)
+        -   [getWithdrawal](#getwithdrawal)
             -   [Parameters](#parameters-19)
+        -   [getWithdrawals](#getwithdrawals)
+            -   [Parameters](#parameters-20)
+        -   [placeOrder](#placeorder)
+            -   [Parameters](#parameters-21)
+        -   [placeTestOrder](#placetestorder)
+            -   [Parameters](#parameters-22)
+        -   [withdraw](#withdraw)
+            -   [Parameters](#parameters-23)
 -   [Enums](#enums)
     -   [CandleInterval](#candleinterval)
     -   [Liquidity](#liquidity)
@@ -94,53 +102,63 @@
         -   [active](#active-2)
         -   [inactive](#inactive-1)
 -   [Requests](#requests)
-    -   [request.FindOrder](#requestfindorder)
+    -   [request.FindDeposit](#requestfinddeposit)
         -   [Properties](#properties)
-    -   [request.FindOrders](#requestfindorders)
+    -   [request.FindDeposits](#requestfinddeposits)
         -   [Properties](#properties-1)
-    -   [request.FindOrdersIncludingInactive](#requestfindordersincludinginactive)
+    -   [request.FindOrder](#requestfindorder)
         -   [Properties](#properties-2)
-    -   [request.Order](#requestorder)
+    -   [request.FindOrders](#requestfindorders)
         -   [Properties](#properties-3)
-    -   [request.Withdrawal](#requestwithdrawal)
+    -   [request.FindOrdersIncludingInactive](#requestfindordersincludinginactive)
         -   [Properties](#properties-4)
+    -   [request.FindWithdrawal](#requestfindwithdrawal)
+        -   [Properties](#properties-5)
+    -   [request.FindWithdrawals](#requestfindwithdrawals)
+        -   [Properties](#properties-6)
+    -   [request.Order](#requestorder)
+        -   [Properties](#properties-7)
+    -   [request.Withdrawal](#requestwithdrawal)
+        -   [Properties](#properties-8)
 -   [Responses](#responses)
     -   [response.Asset](#responseasset)
-        -   [Properties](#properties-5)
-    -   [response.Balance](#responsebalance)
-        -   [Properties](#properties-6)
-    -   [response.Candle](#responsecandle)
-        -   [Properties](#properties-7)
-    -   [response.ExchangeInfo](#responseexchangeinfo)
-        -   [Properties](#properties-8)
-    -   [response.Market](#responsemarket)
         -   [Properties](#properties-9)
-    -   [response.Order](#responseorder)
+    -   [response.Balance](#responsebalance)
         -   [Properties](#properties-10)
-    -   [response.OrderBookLevel1](#responseorderbooklevel1)
+    -   [response.Candle](#responsecandle)
         -   [Properties](#properties-11)
-    -   [response.OrderBookLevel2](#responseorderbooklevel2)
+    -   [response.Deposit](#responsedeposit)
         -   [Properties](#properties-12)
-    -   [response.OrderBookLevel3](#responseorderbooklevel3)
+    -   [response.ExchangeInfo](#responseexchangeinfo)
         -   [Properties](#properties-13)
-    -   [response.OrderBookOrder](#responseorderbookorder)
+    -   [response.Fill](#responsefill)
         -   [Properties](#properties-14)
-    -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
+    -   [response.Market](#responsemarket)
         -   [Properties](#properties-15)
-    -   [response.OrderFill](#responseorderfill)
+    -   [response.Order](#responseorder)
         -   [Properties](#properties-16)
-    -   [response.OrderFill](#responseorderfill-1)
+    -   [response.OrderBookLevel1](#responseorderbooklevel1)
         -   [Properties](#properties-17)
-    -   [response.Ticker](#responseticker)
+    -   [response.OrderBookLevel2](#responseorderbooklevel2)
         -   [Properties](#properties-18)
-    -   [response.Trade](#responsetrade)
+    -   [response.OrderBookLevel3](#responseorderbooklevel3)
         -   [Properties](#properties-19)
-    -   [response.User](#responseuser)
+    -   [response.OrderBookOrder](#responseorderbookorder)
         -   [Properties](#properties-20)
-    -   [response.Wallet](#responsewallet)
+    -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
         -   [Properties](#properties-21)
-    -   [response.Withdrawal](#responsewithdrawal)
+    -   [response.OrderFill](#responseorderfill)
         -   [Properties](#properties-22)
+    -   [response.Ticker](#responseticker)
+        -   [Properties](#properties-23)
+    -   [response.Trade](#responsetrade)
+        -   [Properties](#properties-24)
+    -   [response.User](#responseuser)
+        -   [Properties](#properties-25)
+    -   [response.Wallet](#responsewallet)
+        -   [Properties](#properties-26)
+    -   [response.Withdrawal](#responsewithdrawal)
+        -   [Properties](#properties-27)
 
 ## Clients
 
@@ -355,7 +373,27 @@ Get public trade history for a market
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000 (optional, default `50`)
 -   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Fills created at the same timestamp or after fillId
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;response.Fill>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Fill](#responsefill)>>** 
+
+#### getDeposit
+
+Get a deposit
+
+##### Parameters
+
+-   `findDeposit` **[request.FindDeposit](#requestfinddeposit)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Deposit](#responsedeposit)>** 
+
+#### getDeposits
+
+Get multiple deposits
+
+##### Parameters
+
+-   `findDeposits` **[request.FindDeposits](#requestfinddeposits)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Deposit](#responsedeposit)>>** 
 
 #### getOrder
 
@@ -367,9 +405,9 @@ Get an order
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
 
-#### getOrdersIncludingInactive
+#### getOrders
 
-Get multiple orders including inactive ones
+Get multiple orders
 
 ##### Parameters
 
@@ -377,9 +415,9 @@ Get multiple orders including inactive ones
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Order](#responseorder)>>** 
 
-#### getOrders
+#### getOrdersIncludingInactive
 
-Get multiple orders
+Get multiple orders including inactive ones
 
 ##### Parameters
 
@@ -406,6 +444,26 @@ Get account details for the API key’s user
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Wallet](#responsewallet)>>** 
+
+#### getWithdrawal
+
+Get a withdrawal
+
+##### Parameters
+
+-   `findWithdrawal` **[request.FindWithdrawal](#requestfindwithdrawal)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Withdrawal](#responsewithdrawal)>** 
+
+#### getWithdrawals
+
+Get multiple withdrawals
+
+##### Parameters
+
+-   `findWithdrawals` **[request.FindWithdrawals](#requestfindwithdrawals)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Withdrawal](#responsewithdrawal)>>** 
 
 #### placeOrder
 
@@ -660,6 +718,29 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 
 
+### request.FindDeposit
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `depositId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+### request.FindDeposits
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `asset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset by symbol
+-   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
+-   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
+-   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
+
 ### request.FindOrder
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -690,6 +771,30 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Base-quote pair e.g. 'IDEX-ETH'
+-   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
+-   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
+-   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
+
+### request.FindWithdrawal
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `withdrawalId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+### request.FindWithdrawals
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `asset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset by symbol
+-   `assetContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset by contract address
 -   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
 -   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
@@ -764,7 +869,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### response.Candle
 
-Candle
+OHLCV data points aggregated by time interval
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -776,6 +881,21 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `low` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Price of the lowest fill of the interval in quote terms
 -   `close` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Price of the last fill of the interval in quote terms
 -   `volume` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total volume of the period in base terms
+
+### response.Deposit
+
+Asset deposits into smart contract
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `depositId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** IDEX-issued deposit identifier
+-   `asset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by symbol
+-   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Deposit amount in asset terms
+-   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum transaction hash
+-   `txTime` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of the Ethereum deposit tx
+-   `confirmationTime` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of credit on IDEX including block confirmations
 
 ### response.ExchangeInfo
 
@@ -793,6 +913,29 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `usdVolume24h` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 24h volume in USD
 -   `makerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `takerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+### response.Fill
+
+Fill
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `fillId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of fill
+-   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of order
+-   `clientOrderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Client-provided ID of order
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
+-   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed price of fill in quote terms
+-   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of fill in base terms
+-   `quoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of trade in quote terms
+-   `makerSide` **[OrderSide](#orderside)** Which side of the order the liquidity maker was on
+-   `fee` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fee amount on fill
+-   `feeAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Which token the fee was taken in
+-   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `side` **[OrderSide](#orderside)** 
+-   `liquidity` **[Liquidity](#liquidity)** 
+-   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fill timestamp
 
 ### response.Market
 
@@ -839,7 +982,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `executedQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of quantity that has been executed in base terms
 -   `cumulativeQuoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Represents the cumulative amount of the quote that has been spent (with a BUY order) or received (with a SELL order). Historical orders will have a value &lt; 0 in this field indicating the data is not available at this time
 -   `avgExecutionPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
--   `fills` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;response.Fill>** 
+-   `fills` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Fill](#responsefill)>** 
 
 ### response.OrderBookLevel1
 
@@ -897,29 +1040,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `size` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 -   `numOrders` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** 
-
-### response.OrderFill
-
-Fill
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-#### Properties
-
--   `fillId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of fill
--   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of order
--   `clientOrderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Client-provided ID of order
--   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
--   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed price of fill in quote terms
--   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of fill in base terms
--   `quoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of trade in quote terms
--   `makerSide` **[OrderSide](#orderside)** Which side of the order the liquidity maker was on
--   `fee` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fee amount on fill
--   `feeAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Which token the fee was taken in
--   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `side` **[OrderSide](#orderside)** 
--   `liquidity` **[Liquidity](#liquidity)** 
--   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fill timestamp
 
 ### response.OrderFill
 

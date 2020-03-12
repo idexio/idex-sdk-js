@@ -43,7 +43,7 @@ export interface Balance {
 }
 
 /**
- * Candle
+ * OHLCV data points aggregated by time interval
  *
  * @typedef {Object} response.Candle
  * @property {number} time - Timestamp of the datapoint
@@ -60,6 +60,26 @@ export interface Candle {
   low: string;
   close: string;
   volume: string;
+}
+
+/**
+ * Asset deposits into smart contract
+ *
+ * @typedef {Object} response.Deposit
+ * @property {string} depositId - IDEX-issued deposit identifier
+ * @property {string} asset - Asset by symbol
+ * @property {string} quantity - Deposit amount in asset terms
+ * @property {string} txId - Ethereum transaction hash
+ * @property {number} txTime - Timestamp of the Ethereum deposit tx
+ * @property {number} confirmationTime - Timestamp of credit on IDEX including block confirmations
+ */
+export interface Deposit {
+  depositId: string;
+  asset: string;
+  quantity: string;
+  txId: string;
+  txTime: string;
+  confirmationTime: string;
 }
 
 /**
@@ -89,7 +109,7 @@ export interface ExchangeInfo {
 /**
  * Fill
  *
- * @typedef {Object} response.OrderFill
+ * @typedef {Object} response.Fill
  * @property {string} fillId - Internal ID of fill
  * @property {string} orderId - Internal ID of order
  * @property {string} clientOrderId - Client-provided ID of order
