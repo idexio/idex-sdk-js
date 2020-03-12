@@ -16,6 +16,23 @@ export enum CandleInterval {
  * @readonly
  * @enum {string}
  */
+export enum Liquidity {
+  /**
+   * Maker provides liquidity
+   * @type {string}
+   */
+  maker,
+  /**
+   * Taker removes liquidity
+   * @type {string}
+   */
+  taker,
+}
+
+/**
+ * @readonly
+ * @enum {string}
+ */
 export enum MarketStatus {
   /**
    * No orders or cancels accepted

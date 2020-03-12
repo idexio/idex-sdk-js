@@ -89,14 +89,50 @@ export interface ExchangeInfo {
 /**
  * Fill
  *
- * @typedef {Object} response.Fill
+ * @typedef {Object} response.OrderFill
+ * @property {string} fillId - Internal ID of fill
+ * @property {string} orderId - Internal ID of order
+ * @property {string} clientOrderId - Client-provided ID of order
+ * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
+ * @property {string} price - Executed price of fill in quote terms
+ * @property {string} quantity - Executed quantity of fill in base terms
+ * @property {string} quoteQuantity - Executed quantity of trade in quote terms
+ * @property {OrderSide} makerSide - Which side of the order the liquidity maker was on
+ * @property {string} fee - Fee amount on fill
+ * @property {string} feeAsset - Which token the fee was taken in
+ * @property {string} gas
+ * @property {OrderSide} side
+ * @property {Liquidity} liquidity
+ * @property {string} time - Fill timestamp
+ */
+export interface Fill extends OrderFill {
+  fillId: string;
+  orderId: string;
+  clientOrderId: string;
+  market: string;
+  price: string;
+  quantity: string;
+  quoteQuantity: string;
+  makerSide: keyof typeof enums.OrderSide;
+  fee: string;
+  feeAsset: string;
+  gas: string;
+  side: keyof typeof enums.OrderSide;
+  liquidity: keyof typeof enums.Liquidity;
+  time: number;
+}
+
+/**
+ * OrderFill
+ *
+ * @typedef {Object} response.OrderFill
  * @property {string} price - Executed price of fill in quote terms
  * @property {string} quantity - Executed quantity of fill in base terms
  * @property {string} fee - Fee amount on fill
  * @property {string} feeAsset - Which token the fee was taken in
  * @property {string} gas
  */
-export interface Fill {
+export interface OrderFill {
   price: string;
   quantity: string;
   fee: string;
@@ -175,7 +211,7 @@ export interface Order {
   executedQuantity: string;
   cumulativeQuoteQuantity: string;
   avgExecutionPrice?: string;
-  fills: Fill[];
+  fills: OrderFill[];
 }
 
 /**

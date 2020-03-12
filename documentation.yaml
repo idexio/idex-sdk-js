@@ -8,6 +8,7 @@ toc:
       Sets of named constants used as field types for several requests and responses
     children:
       - CandleInterval
+      - Liquidity
       - MarketStatus
       - OrderSelfTradePrevention
       - OrderSide
@@ -36,6 +37,7 @@ toc:
       - response.OrderBookLevel3
       - response.OrderBookOrder
       - response.OrderBookPriceLevel
+      - response.OrderFill
       - response.Ticker
       - response.Trade
       - response.User

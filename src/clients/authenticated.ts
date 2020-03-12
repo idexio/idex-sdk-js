@@ -57,6 +57,26 @@ export default class AuthenticatedClient {
   }
 
   /**
+   * Cancel an order
+   *
+   * @param {request.CancelOrder} order
+   */
+  public async cancelOrder(order: request.FindOrder): Promise<response.Order> {
+    return (await this.delete('/orders', order)).data;
+  }
+
+  /**
+   * Cancel multiple orders
+   *
+   * @param {request.CancelOrder} order
+   */
+  public async cancelOrders(
+    orders: request.FindOrders,
+  ): Promise<response.Order[]> {
+    return (await this.delete('/orders', orders)).data;
+  }
+
+  /**
    * Get asset quantity data (positions) held by a wallet on the exchange
    *
    * @param {string} nonce - UUIDv1
@@ -67,6 +87,38 @@ export default class AuthenticatedClient {
     asset?: string,
   ): Promise<response.Balance | response.Balance[]> {
     return (await this.get('/balances', { nonce, wallet, asset })).data;
+  }
+
+  /**
+   * Get public trade history for a market
+   *
+   * @param {string} market - Base-quote pair e.g. 'IDEX-ETH'
+   * @param {number} [start] - Starting timestamp (inclusive)
+   * @param {number} [end] - Ending timestamp (inclusive)
+   * @param {number} [limit] - Max results to return from 1-1000
+   * @param {string} [fromId] - Fills created at the same timestamp or after fillId
+   * @return {Promise<response.Fill[]>}
+   */
+  public async getFills(
+    nonce: string,
+    wallet: string,
+    market: string,
+    start?: number,
+    end?: number,
+    limit = 50,
+    fromId?: string,
+  ): Promise<response.Fill[]> {
+    return (
+      await this.get('/fills', {
+        nonce,
+        wallet,
+        market,
+        start,
+        end,
+        limit,
+        fromId,
+      })
+    ).data;
   }
 
   /**
@@ -181,26 +233,6 @@ export default class AuthenticatedClient {
         signature: await this.wallet.signMessage(getOrderHash(order)),
       })
     ).data;
-  }
-
-  /**
-   * Cancel an order
-   *
-   * @param {request.CancelOrder} order
-   */
-  public async cancelOrder(order: request.FindOrder): Promise<response.Order> {
-    return (await this.delete('/orders', order)).data;
-  }
-
-  /**
-   * Cancel multiple orders
-   *
-   * @param {request.CancelOrder} order
-   */
-  public async cancelOrders(
-    orders: request.FindOrders,
-  ): Promise<response.Order[]> {
-    return (await this.delete('/orders', orders)).data;
   }
 
   /**

@@ -41,6 +41,9 @@ export type FindOrders = FindOrdersByMarket;
 
 /**
  * @typedef {Object} request.FindOrdersIncludingInactive
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ * @property {string} [market] - Base-quote pair e.g. 'IDEX-ETH'
  * @property {number} [start] - Starting timestamp (inclusive)
  * @property {number} [end] - Ending timestamp (inclusive)
  * @property {number} [limit=50] - Max results to return from 1-1000
