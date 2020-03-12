@@ -14,6 +14,7 @@ toc:
       - OrderStatus
       - OrderTimeInForce
       - OrderType
+      - UserStatus
   - name: Requests
     children:
       - request.Order
@@ -33,4 +34,5 @@ toc:
       - response.OrderBookPriceLevel
       - response.Ticker
       - response.Trade
+      - response.User
       - response.Withdrawal

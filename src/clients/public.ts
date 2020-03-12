@@ -35,13 +35,10 @@ import { enums, request, response } from '../types';
 export default class PublicClient {
   public baseURL: string;
 
-  public apiKey: string | null;
-
   private axios: AxiosInstance;
 
   public constructor(baseURL: string, apiKey?: string) {
     this.baseURL = baseURL;
-    this.apiKey = apiKey;
 
     this.axios = apiKey
       ? (this.axios = Axios.create({

@@ -26,10 +26,12 @@
             -   [Parameters](#parameters-6)
     -   [AuthenticatedClient](#authenticatedclient)
         -   [Parameters](#parameters-7)
-        -   [placeOrder](#placeorder)
+        -   [getUser](#getuser)
             -   [Parameters](#parameters-8)
-        -   [withdraw](#withdraw)
+        -   [placeOrder](#placeorder)
             -   [Parameters](#parameters-9)
+        -   [withdraw](#withdraw)
+            -   [Parameters](#parameters-10)
 -   [Enums](#enums)
     -   [CandleInterval](#candleinterval)
     -   [MarketStatus](#marketstatus)
@@ -67,6 +69,9 @@
         -   [stopLossLimit](#stoplosslimit)
         -   [takeProfit](#takeprofit)
         -   [takeProfitLimit](#takeprofitlimit)
+    -   [UserStatus](#userstatus)
+        -   [active](#active-2)
+        -   [inactive](#inactive-1)
 -   [Requests](#requests)
     -   [request.Order](#requestorder)
         -   [Properties](#properties)
@@ -99,8 +104,10 @@
         -   [Properties](#properties-13)
     -   [response.Trade](#responsetrade)
         -   [Properties](#properties-14)
-    -   [response.Withdrawal](#responsewithdrawal)
+    -   [response.User](#responseuser)
         -   [Properties](#properties-15)
+    -   [response.Withdrawal](#responsewithdrawal)
+        -   [Properties](#properties-16)
 
 ## Clients
 
@@ -266,7 +273,17 @@ const authenticatedClient = new idex.AuthenticatedClient(
 -   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `wallet` **ethers.Wallet** 
+-   `wallet` **ethers.Wallet?** 
+
+#### getUser
+
+Get account details for the API key’s user
+
+##### Parameters
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.User](#responseuser)>** 
 
 #### placeOrder
 
@@ -475,6 +492,18 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### takeProfitLimit
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### UserStatus
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### active
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### inactive
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
@@ -725,6 +754,23 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `quoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of trade in quote terms
 -   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Fill timestamp
 -   `makerSide` **[OrderSide](#orderside)** Which side of the order the liquidity maker was on
+
+### response.User
+
+User
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `depositStatus` **[UserStatus](#userstatus)** 
+-   `orderStatus` **[UserStatus](#userstatus)** 
+-   `cancelStatus` **[UserStatus](#userstatus)** 
+-   `withdrawStatus` **[UserStatus](#userstatus)** 
+-   `kycTier` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+-   `totalPortfolioValue` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of all holdings of all wallets on the exchange, denominated in USD
+-   `withdrawalLimit` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 24h withdrawal limit for the user account denominated in USD (non-negative integer or “unlimited”)
+-   `withdrawalRemaining` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Remaining 24h withdrawal amount for the user account denominated in USD (non-negative integer or “unlimited”)
 
 ### response.Withdrawal
 

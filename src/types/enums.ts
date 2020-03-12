@@ -172,3 +172,14 @@ export enum OrderType {
   /** @type {string} */
   takeProfitLimit,
 }
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+export enum UserStatus {
+  /** @type {string} */
+  active,
+  /** @type {string} */
+  inactive,
+}

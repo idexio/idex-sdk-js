@@ -37,20 +37,17 @@ export default class AuthenticatedClient {
 
   private axios: AxiosInstance;
 
-  private apiKey: string;
-
   private apiSecret: string;
 
-  private wallet: ethers.Wallet;
+  private wallet: ethers.Wallet | null;
 
   public constructor(
     baseURL: string,
     apiKey: string,
     apiSecret: string,
-    wallet: ethers.Wallet,
+    wallet?: ethers.Wallet,
   ) {
     this.baseURL = baseURL;
-    this.apiKey = apiKey;
     this.apiSecret = apiSecret;
     this.wallet = wallet;
 
@@ -60,11 +57,24 @@ export default class AuthenticatedClient {
   }
 
   /**
+   * Get account details for the API key’s user
+   *
+   * @param {string} nonce - UUIDv1
+   */
+  public async getUser(nonce: string): Promise<response.User> {
+    return (await this.get('/user', { nonce })).data;
+  }
+
+  /**
    * Place a new order
    *
    * @param {request.Order} order
    */
   public async placeOrder(order: request.Order): Promise<response.Order> {
+    if (!this.wallet) {
+      throw new Error('Must configure wallet before calling placeOrder');
+    }
+
     return (
       await this.post('/orders', {
         parameters: order,
@@ -81,8 +91,12 @@ export default class AuthenticatedClient {
   public async withdraw(
     withdrawal: request.Withdrawal,
   ): Promise<response.Withdrawal> {
+    if (!this.wallet) {
+      throw new Error('Must configure wallet before calling withdraw');
+    }
+
     return (
-      await this.post('/orders', {
+      await this.post('/withdrawals', {
         parameters: withdrawal,
         signature: await this.wallet.signMessage(getWithdrawalHash(withdrawal)),
       })
