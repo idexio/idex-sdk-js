@@ -26,12 +26,22 @@
             -   [Parameters](#parameters-6)
     -   [AuthenticatedClient](#authenticatedclient)
         -   [Parameters](#parameters-7)
-        -   [getUser](#getuser)
+        -   [getBalances](#getbalances)
             -   [Parameters](#parameters-8)
-        -   [placeOrder](#placeorder)
+        -   [getUser](#getuser)
             -   [Parameters](#parameters-9)
-        -   [withdraw](#withdraw)
+        -   [getWallets](#getwallets)
             -   [Parameters](#parameters-10)
+        -   [placeOrder](#placeorder)
+            -   [Parameters](#parameters-11)
+        -   [placeTestOrder](#placetestorder)
+            -   [Parameters](#parameters-12)
+        -   [cancelOrder](#cancelorder)
+            -   [Parameters](#parameters-13)
+        -   [cancelOrders](#cancelorders)
+            -   [Parameters](#parameters-14)
+        -   [withdraw](#withdraw)
+            -   [Parameters](#parameters-15)
 -   [Enums](#enums)
     -   [CandleInterval](#candleinterval)
     -   [MarketStatus](#marketstatus)
@@ -73,41 +83,49 @@
         -   [active](#active-2)
         -   [inactive](#inactive-1)
 -   [Requests](#requests)
-    -   [request.Order](#requestorder)
+    -   [request.CancelOrder](#requestcancelorder)
         -   [Properties](#properties)
-    -   [request.Withdrawal](#requestwithdrawal)
+    -   [request.CancelOrders](#requestcancelorders)
         -   [Properties](#properties-1)
+    -   [request.Order](#requestorder)
+        -   [Properties](#properties-2)
+    -   [request.Withdrawal](#requestwithdrawal)
+        -   [Properties](#properties-3)
 -   [Responses](#responses)
     -   [response.Asset](#responseasset)
-        -   [Properties](#properties-2)
-    -   [response.Candle](#responsecandle)
-        -   [Properties](#properties-3)
-    -   [response.ExchangeInfo](#responseexchangeinfo)
         -   [Properties](#properties-4)
-    -   [response.Fill](#responsefill)
+    -   [response.Balance](#responsebalance)
         -   [Properties](#properties-5)
-    -   [response.Market](#responsemarket)
+    -   [response.Candle](#responsecandle)
         -   [Properties](#properties-6)
-    -   [response.Order](#responseorder)
+    -   [response.ExchangeInfo](#responseexchangeinfo)
         -   [Properties](#properties-7)
-    -   [response.OrderBookLevel1](#responseorderbooklevel1)
+    -   [response.Fill](#responsefill)
         -   [Properties](#properties-8)
-    -   [response.OrderBookLevel2](#responseorderbooklevel2)
+    -   [response.Market](#responsemarket)
         -   [Properties](#properties-9)
-    -   [response.OrderBookLevel3](#responseorderbooklevel3)
+    -   [response.Order](#responseorder)
         -   [Properties](#properties-10)
-    -   [response.OrderBookOrder](#responseorderbookorder)
+    -   [response.OrderBookLevel1](#responseorderbooklevel1)
         -   [Properties](#properties-11)
-    -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
+    -   [response.OrderBookLevel2](#responseorderbooklevel2)
         -   [Properties](#properties-12)
-    -   [response.Ticker](#responseticker)
+    -   [response.OrderBookLevel3](#responseorderbooklevel3)
         -   [Properties](#properties-13)
-    -   [response.Trade](#responsetrade)
+    -   [response.OrderBookOrder](#responseorderbookorder)
         -   [Properties](#properties-14)
-    -   [response.User](#responseuser)
+    -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
         -   [Properties](#properties-15)
-    -   [response.Withdrawal](#responsewithdrawal)
+    -   [response.Ticker](#responseticker)
         -   [Properties](#properties-16)
+    -   [response.Trade](#responsetrade)
+        -   [Properties](#properties-17)
+    -   [response.User](#responseuser)
+        -   [Properties](#properties-18)
+    -   [response.Wallet](#responsewallet)
+        -   [Properties](#properties-19)
+    -   [response.Withdrawal](#responsewithdrawal)
+        -   [Properties](#properties-20)
 
 ## Clients
 
@@ -275,6 +293,18 @@ const authenticatedClient = new idex.AuthenticatedClient(
 -   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `wallet` **ethers.Wallet?** 
 
+#### getBalances
+
+Ger asset quantity data (positions) held by a wallet on the exchange
+
+##### Parameters
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `asset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;([response.Balance](#responsebalance) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Balance](#responsebalance)>)>** 
+
 #### getUser
 
 Get account details for the API key’s user
@@ -285,6 +315,16 @@ Get account details for the API key’s user
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.User](#responseuser)>** 
 
+#### getWallets
+
+Get account details for the API key’s user
+
+##### Parameters
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Wallet](#responsewallet)>>** 
+
 #### placeOrder
 
 Place a new order
@@ -294,6 +334,37 @@ Place a new order
 -   `order` **[request.Order](#requestorder)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
+
+#### placeTestOrder
+
+Test new order creation, validation, and trading engine acceptance, but no order is placed or executed
+
+##### Parameters
+
+-   `order` **[request.Order](#requestorder)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
+
+#### cancelOrder
+
+Cancel an order
+
+##### Parameters
+
+-   `order` **[request.CancelOrder](#requestcancelorder)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
+
+#### cancelOrders
+
+Cancel multiple orders
+
+##### Parameters
+
+-   `orders` **[request.CancelOrders](#requestcancelorders)** 
+-   `order` **[request.CancelOrder](#requestcancelorder)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Order](#responseorder)>>** 
 
 #### withdraw
 
@@ -512,6 +583,27 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 
 
+### request.CancelOrder
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Exclusive with clientOrderId
+-   `clientOrderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Exclusive with orderId
+
+### request.CancelOrders
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Base-quote pair e.g. 'IDEX-ETH'
+
 ### request.Order
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -565,6 +657,20 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `depositMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `tradeMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `withdrawalMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+### response.Balance
+
+Balance
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `asset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Balance symbol
+-   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total quantity of the asset held by the wallet on the exchange
+-   `availableForTrade` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of the asset available for trading, ie quantity - locked
+-   `availableForWithdrawal` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of the asset available for withdrawal, similar to availableForTrade, but subject to the KYC tier withdrawal limit of the user
+-   `locked` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of the asset locked in trades on the order book
 
 ### response.Candle
 
@@ -771,6 +877,17 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `totalPortfolioValue` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of all holdings of all wallets on the exchange, denominated in USD
 -   `withdrawalLimit` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 24h withdrawal limit for the user account denominated in USD (non-negative integer or “unlimited”)
 -   `withdrawalRemaining` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Remaining 24h withdrawal amount for the user account denominated in USD (non-negative integer or “unlimited”)
+
+### response.Wallet
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `walletId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of the wallet
+-   `address` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum address of the wallet
+-   `totalPortfolioValue` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of all holdings of the wallet on the exchange, denominated in USD
+-   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of wallet association with the user account
 
 ### response.Withdrawal
 

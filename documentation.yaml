@@ -17,11 +17,14 @@ toc:
       - UserStatus
   - name: Requests
     children:
+      - request.CancelOrder
+      - request.CancelOrders
       - request.Order
       - request.Withdrawal
   - name: Responses
     children:
       - response.Asset
+      - response.Balance
       - response.Candle
       - response.ExchangeInfo
       - response.Fill
@@ -35,4 +38,5 @@ toc:
       - response.Ticker
       - response.Trade
       - response.User
+      - response.Wallet
       - response.Withdrawal

@@ -25,6 +25,24 @@ export interface Asset {
 }
 
 /**
+ * Balance
+ *
+ * @typedef {Object} response.Balance
+ * @property {string} asset - Balance symbol
+ * @property {string} quantity - Total quantity of the asset held by the wallet on the exchange
+ * @property {string} availableForTrade - Quantity of the asset available for trading, ie quantity - locked
+ * @property {string} availableForWithdrawal - Quantity of the asset available for withdrawal, similar to availableForTrade, but subject to the KYC tier withdrawal limit of the user
+ * @property {string} locked - Quantity of the asset locked in trades on the order book
+ */
+export interface Balance {
+  asset: number;
+  quantity: string;
+  availableForTrade: string;
+  availableForWithdrawal: string;
+  locked: string;
+}
+
+/**
  * Candle
  *
  * @typedef {Object} response.Candle
@@ -311,6 +329,20 @@ export interface User {
   totalPortfolioValue: string;
   withdrawalLimit: string;
   withdrawalRemaining: string;
+}
+
+/**
+ * @typedef {Object} response.Wallet
+ * @property {string} walletId - Internal ID of the wallet
+ * @property {string} address - Ethereum address of the wallet
+ * @property {string} totalPortfolioValue - Total value of all holdings of the wallet on the exchange, denominated in USD
+ * @property {number} time - Timestamp of wallet association with the user account
+ */
+export interface Wallet {
+  walletId?: string;
+  address: string;
+  totalPortfolioValue: string;
+  time: string;
 }
 
 /**

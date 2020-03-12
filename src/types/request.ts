@@ -5,6 +5,40 @@ type XOR<T, U> = T | U extends object
   ? (Without<T, U> & U) | (Without<U, T> & T)
   : T | U;
 
+interface CancelOrdersByWallet {
+  nonce: string;
+  wallet: string;
+}
+
+interface CancelOrdersByMarket extends CancelOrdersByWallet {
+  market: string;
+}
+
+interface CancelOrderByOrderId extends CancelOrdersByWallet {
+  orderId: string;
+}
+
+interface CancelOrderByClientOrderId extends CancelOrdersByWallet {
+  clientOrderId: string;
+}
+
+/**
+ * @typedef {Object} request.CancelOrder
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ * @property {string} [orderId] - Exclusive with clientOrderId
+ * @property {string} [clientOrderId] - Exclusive with orderId
+ */
+
+export type CancelOrder = XOR<CancelOrderByOrderId, CancelOrderByClientOrderId>;
+/**
+ * @typedef {Object} request.CancelOrders
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ * @property {string} [market] - Base-quote pair e.g. 'IDEX-ETH'
+ */
+export type CancelOrders = XOR<CancelOrdersByWallet, CancelOrdersByMarket>;
+
 export interface AllOrderParameters {
   nonce: string;
   wallet: string;

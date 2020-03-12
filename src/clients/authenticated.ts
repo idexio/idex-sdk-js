@@ -57,12 +57,34 @@ export default class AuthenticatedClient {
   }
 
   /**
+   * Ger asset quantity data (positions) held by a wallet on the exchange
+   *
+   * @param {string} nonce - UUIDv1
+   */
+  public async getBalances(
+    nonce: string,
+    wallet: string,
+    asset?: string,
+  ): Promise<response.Balance | response.Balance[]> {
+    return (await this.get('/balances', { nonce, wallet, asset })).data;
+  }
+
+  /**
    * Get account details for the API key’s user
    *
    * @param {string} nonce - UUIDv1
    */
   public async getUser(nonce: string): Promise<response.User> {
     return (await this.get('/user', { nonce })).data;
+  }
+
+  /**
+   * Get account details for the API key’s user
+   *
+   * @param {string} nonce - UUIDv1
+   */
+  public async getWallets(nonce: string): Promise<response.Wallet[]> {
+    return (await this.get('/wallets', { nonce })).data;
   }
 
   /**
@@ -81,6 +103,46 @@ export default class AuthenticatedClient {
         signature: await this.wallet.signMessage(getOrderHash(order)),
       })
     ).data;
+  }
+
+  /**
+   * Test new order creation, validation, and trading engine acceptance, but no order is placed or executed
+   *
+   * @param {request.Order} order
+   */
+  public async placeTestOrder(order: request.Order): Promise<response.Order> {
+    if (!this.wallet) {
+      throw new Error('Must configure wallet before calling placeTestOrder');
+    }
+
+    return (
+      await this.post('/orders/test', {
+        parameters: order,
+        signature: await this.wallet.signMessage(getOrderHash(order)),
+      })
+    ).data;
+  }
+
+  /**
+   * Cancel an order
+   *
+   * @param {request.CancelOrder} order
+   */
+  public async cancelOrder(
+    order: request.CancelOrder,
+  ): Promise<response.Order> {
+    return (await this.delete('/orders', order)).data;
+  }
+
+  /**
+   * Cancel multiple orders
+   *
+   * @param {request.CancelOrder} order
+   */
+  public async cancelOrders(
+    orders: request.CancelOrders,
+  ): Promise<response.Order[]> {
+    return (await this.delete('/orders', orders)).data;
   }
 
   /**
