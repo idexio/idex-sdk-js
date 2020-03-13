@@ -28,7 +28,6 @@ import * as utils from '../utils';
  *   config.baseURL,
  *   config.apiKey,
  *   config.apiSecret,
- *   new ethers.Wallet(config.walletPrivateKey),
  * );
  * ```
  */
@@ -39,18 +38,9 @@ export default class AuthenticatedClient {
 
   private apiSecret: string;
 
-  private wallet: ethers.Wallet | null;
-
-  public constructor(
-    baseURL: string,
-    apiKey: string,
-    apiSecret: string,
-    wallet?: ethers.Wallet,
-  ) {
+  public constructor(baseURL: string, apiKey: string, apiSecret: string) {
     this.baseURL = baseURL;
     this.apiSecret = apiSecret;
-    this.wallet = wallet;
-
     this.axios = Axios.create({
       headers: { Authorization: `Bearer ${apiKey}` },
     });
@@ -80,6 +70,7 @@ export default class AuthenticatedClient {
    * Get asset quantity data (positions) held by a wallet on the exchange
    *
    * @param {string} nonce - UUIDv1
+   * @param {string} wallet - Ethereum wallet address
    */
   public async getBalances(
     nonce: string,
@@ -90,24 +81,28 @@ export default class AuthenticatedClient {
   }
 
   /**
+   * Obtain a datastream API token
+   *
+   * @param {string} nonce - UUIDv1
+   * @param {string} wallet - Ethereum wallet address
+   */
+  public async getDatastreamToken(
+    nonce: string,
+    wallet: string,
+  ): Promise<string> {
+    return (await this.get('/datastream', { nonce, wallet })).data.token;
+  }
+
+  /**
    * Get public trade history for a market
    *
-   * @param {string} market - Base-quote pair e.g. 'IDEX-ETH'
-   * @param {number} [start] - Starting timestamp (inclusive)
-   * @param {number} [end] - Ending timestamp (inclusive)
-   * @param {number} [limit] - Max results to return from 1-1000
-   * @param {string} [fromId] - Fills created at the same timestamp or after fillId
+   * @param {request.FindFills} findFills
    * @return {Promise<response.Fill[]>}
    */
   public async getFills(
-    nonce: string,
-    wallet: string,
-    market: string,
-    start?: number,
-    end?: number,
-    limit = 50,
-    fromId?: string,
+    findFills: request.FindFills,
   ): Promise<response.Fill[]> {
+    const { nonce, wallet, market, start, end, limit, fromId } = findFills;
     return (
       await this.get('/fills', {
         nonce,
@@ -294,16 +289,18 @@ export default class AuthenticatedClient {
    * Place a new order
    *
    * @param {request.Order} order
+   * @param {string} walletPrivateKey
    */
-  public async placeOrder(order: request.Order): Promise<response.Order> {
-    if (!this.wallet) {
-      throw new Error('Must configure wallet before calling placeOrder');
-    }
-
+  public async placeOrder(
+    order: request.Order,
+    walletPrivateKey: string,
+  ): Promise<response.Order> {
     return (
       await this.post('/orders', {
         parameters: order,
-        signature: await this.wallet.signMessage(getOrderHash(order)),
+        signature: await new ethers.Wallet(walletPrivateKey).signMessage(
+          getOrderHash(order),
+        ),
       })
     ).data;
   }
@@ -312,16 +309,18 @@ export default class AuthenticatedClient {
    * Test new order creation, validation, and trading engine acceptance, but no order is placed or executed
    *
    * @param {request.Order} order
+   * @param {string} walletPrivateKey
    */
-  public async placeTestOrder(order: request.Order): Promise<response.Order> {
-    if (!this.wallet) {
-      throw new Error('Must configure wallet before calling placeTestOrder');
-    }
-
+  public async placeTestOrder(
+    order: request.Order,
+    walletPrivateKey: string,
+  ): Promise<response.Order> {
     return (
       await this.post('/orders/test', {
         parameters: order,
-        signature: await this.wallet.signMessage(getOrderHash(order)),
+        signature: await new ethers.Wallet(walletPrivateKey).signMessage(
+          getOrderHash(order),
+        ),
       })
     ).data;
   }
@@ -330,18 +329,18 @@ export default class AuthenticatedClient {
    * Create a new withdrawal
    *
    * @param {request.Withdrawal} withdrawal
+   * @param {string} walletPrivateKey
    */
   public async withdraw(
     withdrawal: request.Withdrawal,
+    walletPrivateKey: string,
   ): Promise<response.Withdrawal> {
-    if (!this.wallet) {
-      throw new Error('Must configure wallet before calling withdraw');
-    }
-
     return (
       await this.post('/withdrawals', {
         parameters: withdrawal,
-        signature: await this.wallet.signMessage(getWithdrawalHash(withdrawal)),
+        signature: await new ethers.Wallet(walletPrivateKey).signMessage(
+          getWithdrawalHash(withdrawal),
+        ),
       })
     ).data;
   }

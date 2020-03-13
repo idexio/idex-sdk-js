@@ -32,32 +32,34 @@
             -   [Parameters](#parameters-9)
         -   [getBalances](#getbalances)
             -   [Parameters](#parameters-10)
-        -   [getFills](#getfills)
+        -   [getDatastreamToken](#getdatastreamtoken)
             -   [Parameters](#parameters-11)
-        -   [getDeposit](#getdeposit)
+        -   [getFills](#getfills)
             -   [Parameters](#parameters-12)
-        -   [getDeposits](#getdeposits)
+        -   [getDeposit](#getdeposit)
             -   [Parameters](#parameters-13)
-        -   [getOrder](#getorder)
+        -   [getDeposits](#getdeposits)
             -   [Parameters](#parameters-14)
-        -   [getOrders](#getorders)
+        -   [getOrder](#getorder)
             -   [Parameters](#parameters-15)
-        -   [getOrdersIncludingInactive](#getordersincludinginactive)
+        -   [getOrders](#getorders)
             -   [Parameters](#parameters-16)
-        -   [getUser](#getuser)
+        -   [getOrdersIncludingInactive](#getordersincludinginactive)
             -   [Parameters](#parameters-17)
-        -   [getWallets](#getwallets)
+        -   [getUser](#getuser)
             -   [Parameters](#parameters-18)
-        -   [getWithdrawal](#getwithdrawal)
+        -   [getWallets](#getwallets)
             -   [Parameters](#parameters-19)
-        -   [getWithdrawals](#getwithdrawals)
+        -   [getWithdrawal](#getwithdrawal)
             -   [Parameters](#parameters-20)
-        -   [placeOrder](#placeorder)
+        -   [getWithdrawals](#getwithdrawals)
             -   [Parameters](#parameters-21)
-        -   [placeTestOrder](#placetestorder)
+        -   [placeOrder](#placeorder)
             -   [Parameters](#parameters-22)
-        -   [withdraw](#withdraw)
+        -   [placeTestOrder](#placetestorder)
             -   [Parameters](#parameters-23)
+        -   [withdraw](#withdraw)
+            -   [Parameters](#parameters-24)
 -   [Enums](#enums)
     -   [CandleInterval](#candleinterval)
     -   [Liquidity](#liquidity)
@@ -159,6 +161,8 @@
         -   [Properties](#properties-26)
     -   [response.Withdrawal](#responsewithdrawal)
         -   [Properties](#properties-27)
+-   [request.FindFills](#requestfindfills)
+    -   [Properties](#properties-28)
 
 ## Clients
 
@@ -315,7 +319,6 @@ const authenticatedClient = new idex.AuthenticatedClient(
   config.baseURL,
   config.apiKey,
   config.apiSecret,
-  new ethers.Wallet(config.walletPrivateKey),
 );
 ```
 
@@ -324,7 +327,6 @@ const authenticatedClient = new idex.AuthenticatedClient(
 -   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `wallet` **ethers.Wallet?** 
 
 #### cancelOrder
 
@@ -354,10 +356,21 @@ Get asset quantity data (positions) held by a wallet on the exchange
 ##### Parameters
 
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum wallet address
 -   `asset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;([response.Balance](#responsebalance) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Balance](#responsebalance)>)>** 
+
+#### getDatastreamToken
+
+Obtain a datastream API token
+
+##### Parameters
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum wallet address
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 
 #### getFills
 
@@ -365,13 +378,7 @@ Get public trade history for a market
 
 ##### Parameters
 
--   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
--   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
--   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
--   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000 (optional, default `50`)
--   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Fills created at the same timestamp or after fillId
+-   `findFills` **[request.FindFills](#requestfindfills)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Fill](#responsefill)>>** 
 
@@ -472,6 +479,7 @@ Place a new order
 ##### Parameters
 
 -   `order` **[request.Order](#requestorder)** 
+-   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
 
@@ -482,6 +490,7 @@ Test new order creation, validation, and trading engine acceptance, but no order
 ##### Parameters
 
 -   `order` **[request.Order](#requestorder)** 
+-   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
 
@@ -492,6 +501,7 @@ Create a new withdrawal
 ##### Parameters
 
 -   `withdrawal` **[request.Withdrawal](#requestwithdrawal)** 
+-   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Withdrawal](#responsewithdrawal)>** 
 
@@ -1136,6 +1146,20 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by symbol
 -   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Ethereum transaction hash, if available
 -   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of receipt / processing
+
+## request.FindFills
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum wallet address
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
+-   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
+-   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
+-   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
+-   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Fills created at the same timestamp or after fillId
 
 # Contracts
 

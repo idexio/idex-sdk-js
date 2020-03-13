@@ -36,6 +36,24 @@ export interface FindDeposits extends FindByWallet {
   limit?: number;
 }
 
+/**
+ * @typedef {Object} request.FindFills
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet - Ethereum wallet address
+ * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
+ * @property {number} [start] - Starting timestamp (inclusive)
+ * @property {number} [end] - Ending timestamp (inclusive)
+ * @property {number} [limit] - Max results to return from 1-1000
+ * @property {string} [fromId] - Fills created at the same timestamp or after fillId
+ */
+export interface FindFills extends FindByWallet {
+  market?: string;
+  start?: number;
+  end?: number;
+  limit?: number;
+  fromId?: string;
+}
+
 interface FindOrdersByMarket extends FindByWallet {
   market?: string;
 }
