@@ -20,6 +20,7 @@ toc:
     children:
       - request.FindDeposit
       - request.FindDeposits
+      - request.FindFills
       - request.FindOrder
       - request.FindOrders
       - request.FindOrdersIncludingInactive
