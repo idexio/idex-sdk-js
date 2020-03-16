@@ -50,8 +50,8 @@ export default class PublicClient {
   /**
    * Test connectivity to the REST API
    */
-  public async ping(): Promise<void> {
-    this.get('/ping');
+  public async ping(): Promise<{}> {
+    return (await this.get('/ping')).data;
   }
 
   /**
