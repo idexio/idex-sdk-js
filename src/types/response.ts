@@ -68,6 +68,7 @@ export interface Candle {
  * @typedef {Object} response.Deposit
  * @property {string} depositId - IDEX-issued deposit identifier
  * @property {string} asset - Asset by symbol
+ * @property {string} assetContractAddress - Asset by contract address
  * @property {string} quantity - Deposit amount in asset terms
  * @property {string} txId - Ethereum transaction hash
  * @property {number} txTime - Timestamp of the Ethereum deposit tx
@@ -76,10 +77,11 @@ export interface Candle {
 export interface Deposit {
   depositId: string;
   asset: string;
+  assetContractAddress: string;
   quantity: string;
   txId: string;
-  txTime: string;
-  confirmationTime: string;
+  txTime: number;
+  confirmationTime: number;
 }
 
 /**

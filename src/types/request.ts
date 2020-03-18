@@ -10,6 +10,12 @@ interface FindByWallet {
   wallet: string;
 }
 
+export interface FindWithPagination {
+  start?: number;
+  end?: number;
+  limit?: number;
+}
+
 /**
  * @typedef {Object} request.FindDeposit
  * @property {string} nonce - UUIDv1
@@ -29,11 +35,8 @@ export interface FindDeposit extends FindByWallet {
  * @property {number} [end] - Ending timestamp (inclusive)
  * @property {number} [limit=50] - Max results to return from 1-1000
  */
-export interface FindDeposits extends FindByWallet {
+export interface FindDeposits extends FindByWallet, FindWithPagination {
   asset?: string;
-  start?: number;
-  end?: number;
-  limit?: number;
 }
 
 /**
@@ -46,11 +49,8 @@ export interface FindDeposits extends FindByWallet {
  * @property {number} [limit] - Max results to return from 1-1000
  * @property {string} [fromId] - Fills created at the same timestamp or after fillId
  */
-export interface FindFills extends FindByWallet {
+export interface FindFills extends FindByWallet, FindWithPagination {
   market?: string;
-  start?: number;
-  end?: number;
-  limit?: number;
   fromId?: string;
 }
 
@@ -92,11 +92,9 @@ export type FindOrders = FindOrdersByMarket;
  * @property {number} [end] - Ending timestamp (inclusive)
  * @property {number} [limit=50] - Max results to return from 1-1000
  */
-export interface FindOrdersIncludingInactive extends FindOrdersByMarket {
-  start?: number;
-  end?: number;
-  limit?: number;
-}
+export interface FindOrdersIncludingInactive
+  extends FindOrdersByMarket,
+    FindWithPagination {}
 
 /**
  * @typedef {Object} request.FindWithdrawal
@@ -118,12 +116,9 @@ export interface FindWithdrawal extends FindByWallet {
  * @property {number} [end] - Ending timestamp (inclusive)
  * @property {number} [limit=50] - Max results to return from 1-1000
  */
-export interface FindWithdrawals extends FindByWallet {
+export interface FindWithdrawals extends FindByWallet, FindWithPagination {
   asset?: string;
   assetContractAddress?: string;
-  start?: number;
-  end?: number;
-  limit?: number;
 }
 
 export interface AllOrderParameters {

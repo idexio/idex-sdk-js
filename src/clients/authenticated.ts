@@ -132,7 +132,7 @@ export default class AuthenticatedClient {
         wallet,
         depositId,
       })
-    ).data;
+    ).data[0];
   }
 
   /**
