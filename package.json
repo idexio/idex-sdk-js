@@ -1,6 +1,6 @@
 {
   "name": "@idexio/idex-node",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Sample Node.js code for the IDEX API",
   "main": "dist/index.js",
   "repository": "git@github.com:idexio/idex-node.git",
