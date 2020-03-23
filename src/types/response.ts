@@ -407,20 +407,20 @@ export interface Wallet {
  * @typedef {Object} response.Withdrawal
  * @property {string} withdrawalId - IDEX-issued withdrawal identifier
  * @property {string} asset - Asset by symbol
- * @property {string} [assetContractAddress] - Asset by contract address
+ * @property {string} assetContractAddress - Asset by contract address
  * @property {string} quantity - Withdrawal amount in asset terms, fees are taken from this value
  * @property {string} fee - Amount in asset deducted from withdrawal to cover gas
- * @property {string} gas - Asset by symbol
+ * @property {string} gas - Gas price in wei used to compute fee
  * @property {string} [txId] - Ethereum transaction hash, if available
  * @property {number} time - Timestamp of receipt / processing
  */
 export interface Withdrawal {
   withdrawalId: string;
   asset: string;
-  assetContractAddress?: string;
+  assetContractAddress: string;
   quantity: string;
   fee: string;
   gas: string;
-  txId?: string;
-  time: string;
+  txId: string | null;
+  time: number;
 }

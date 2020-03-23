@@ -1,4 +1,7 @@
+import { ethers } from 'ethers';
+
 import * as enums from './enums';
+import * as utils from '../utils';
 
 type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 type XOR<T, U> = T | U extends object
@@ -222,18 +225,75 @@ export interface CreateOrderRequest {
   signature: string;
 }
 
+interface WithdrawalBase {
+  nonce: string;
+  wallet: string;
+  quantity: string;
+}
+
+export interface WithdrawalBySymbol extends WithdrawalBase {
+  asset: string;
+}
+
+export interface WithdrawalByAddress extends WithdrawalBase {
+  assetContractAddress: string;
+}
+
 /**
  * @typedef {Object} request.Withdrawal
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
- * @property {string} asset - Asset by symbol
+ * @property {string} [asset] - Asset by symbol
  * @property {string} [assetContractAddress] - Asset by contract address
  * @property {string} quantity - Withdrawal amount in asset terms, fees are taken from this value
  */
-export interface Withdrawal {
-  nonce: string;
-  wallet: string;
-  asset: string;
-  assetContractAddress?: string;
-  quantity: string;
-}
+export type Withdrawal = XOR<WithdrawalBySymbol, WithdrawalByAddress>;
+
+export const getOrderHash = (order: Order): string =>
+  ethers.utils.solidityKeccak256(
+    [
+      'string',
+      'uint8',
+      'uint8',
+      'string',
+      'string',
+      'string',
+      'string',
+      'address',
+      'uint128',
+    ],
+    [
+      order.market,
+      enums.OrderSide[order.side],
+      enums.OrderType[order.type],
+      (order as OrderByBaseQuantity).quantity || '',
+      (order as OrderByQuoteQuantity).quoteOrderQuantity || '',
+      (order as OrderWithPrice).price || '',
+      (order as OrderWithStopPrice).stopPrice || '',
+      order.wallet,
+      utils.uuidToBuffer(order.nonce),
+    ],
+  );
+
+export const getWithdrawalHash = (withdrawal: Withdrawal): string =>
+  (withdrawal.assetContractAddress || '').length > 0
+    ? ethers.utils.solidityKeccak256(
+        ['uint128', 'address', 'address', 'string', 'bool'],
+        [
+          utils.uuidToBuffer(withdrawal.nonce),
+          withdrawal.wallet,
+          withdrawal.assetContractAddress,
+          withdrawal.quantity,
+          true, // Auto-dispatch
+        ],
+      )
+    : ethers.utils.solidityKeccak256(
+        ['uint128', 'address', 'string', 'string', 'bool'],
+        [
+          utils.uuidToBuffer(withdrawal.nonce),
+          withdrawal.wallet,
+          withdrawal.asset,
+          withdrawal.quantity,
+          true, // Auto-dispatch
+        ],
+      );
