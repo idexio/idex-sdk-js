@@ -126,6 +126,7 @@ export interface ExchangeInfo {
  * @property {OrderSide} side
  * @property {Liquidity} liquidity
  * @property {string} time - Fill timestamp
+ * @property {string} sequence - Last trade sequence number for the market
  */
 export interface Fill extends OrderFill {
   fillId: string;
@@ -142,6 +143,7 @@ export interface Fill extends OrderFill {
   side: keyof typeof enums.OrderSide;
   liquidity: keyof typeof enums.Liquidity;
   time: number;
+  sequence: number;
 }
 
 /**
@@ -355,6 +357,7 @@ export interface Ticker {
  * @property {string} quoteQuantity - Executed quantity of trade in quote terms
  * @property {number} time - Fill timestamp
  * @property {OrderSide} makerSide - Which side of the order the liquidity maker was on
+ * @property {string} sequence - Last trade sequence number for the market
  */
 export interface Trade {
   fillId: string;
@@ -363,6 +366,7 @@ export interface Trade {
   quoteQuantity: string;
   time: number;
   makerSide: keyof typeof enums.OrderSide;
+  sequence: number;
 }
 
 /**
