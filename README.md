@@ -202,7 +202,7 @@ const publicClientWithApiKey = new idex.PublicClient(
 
 Test connectivity to the REST API
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{}>** 
 
 #### getServerTime
 
@@ -851,7 +851,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `asset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by symbol
+-   `asset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset by symbol
 -   `assetContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset by contract address
 -   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Withdrawal amount in asset terms, fees are taken from this value
 
@@ -916,6 +916,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 -   `depositId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** IDEX-issued deposit identifier
 -   `asset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by symbol
+-   `assetContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by contract address
 -   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Deposit amount in asset terms
 -   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum transaction hash
 -   `txTime` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of the Ethereum deposit tx
@@ -960,6 +961,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `side` **[OrderSide](#orderside)** 
 -   `liquidity` **[Liquidity](#liquidity)** 
 -   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fill timestamp
+-   `sequence` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Last trade sequence number for the market
 
 ### response.Market
 
@@ -1117,6 +1119,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `quoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of trade in quote terms
 -   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Fill timestamp
 -   `makerSide` **[OrderSide](#orderside)** Which side of the order the liquidity maker was on
+-   `sequence` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Last trade sequence number for the market
 
 ### response.User
 
@@ -1154,10 +1157,10 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 -   `withdrawalId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** IDEX-issued withdrawal identifier
 -   `asset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by symbol
--   `assetContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset by contract address
+-   `assetContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by contract address
 -   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Withdrawal amount in asset terms, fees are taken from this value
 -   `fee` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount in asset deducted from withdrawal to cover gas
--   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by symbol
+-   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Gas price in wei used to compute fee
 -   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Ethereum transaction hash, if available
 -   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of receipt / processing
 
