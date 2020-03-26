@@ -106,7 +106,7 @@ export default class PublicClient {
    * Get current order book price levels for a market
    *
    * @param {string} market - Base-quote pair e.g. 'IDEX-ETH'
-   * @param {number} limit - Number of bids and asks to return. Default is 50, 0 returns the entire book
+   * @param {number} [limit=50] - Number of bids and asks to return. Default is 50, 0 returns the entire book
    * @return {Promise<response.OrderBookLevel2>}
    */
   public async getOrderBookLevel2(
@@ -120,7 +120,7 @@ export default class PublicClient {
    * Get current order book entries for a market
    *
    * @param {string} market - Base-quote pair e.g. 'IDEX-ETH'
-   * @param {number} limit - Number of bids and asks to return. Value of 0 returns the entire book
+   * @param {number} [limit=50] - Number of bids and asks to return. Value of 0 returns the entire book
    * @return {Promise<response.OrderBookLevel3>}
    */
   public async getOrderBookLevel3(
@@ -143,48 +143,30 @@ export default class PublicClient {
   /**
    * Get candle (OHLCV) data for a market
    *
-   * @param {string} [market] - Base-quote pair e.g. 'IDEX-ETH'
-   * @param {CandleInterval} [interval] - Time interval for data
-   * @param {number} [start] - Start period timestamp
-   * @param {number} [end] - End period timestamp
-   * @param {number} [limit] - Max results to return from 1-1000
-
+   * @param {FindCandles} findCandles
    * @return {Promise<response.Candle[]>}
    */
   public async getCandles(
-    market: string,
-    interval: enums.CandleInterval,
-    start?: number,
-    end?: number,
-    limit = 50,
+    findCandles: request.FindCandles,
   ): Promise<response.Candle[]> {
-    return (await this.get('/candles', { market })).data;
+    return (await this.get('/candles', findCandles)).data;
   }
 
   /**
    * Get public trade history for a market
    *
-   * @param {string} market - Base-quote pair e.g. 'IDEX-ETH'
-   * @param {number} [start] - Starting timestamp (inclusive)
-   * @param {number} [end] - Ending timestamp (inclusive)
-   * @param {number} [limit] - Max results to return from 1-1000
-   * @param {string} [fromId] - Fills created at the same timestamp or after fillId
+   * @param {request.FindTrades} findTrades
    * @return {Promise<response.Trade[]>}
    */
   public async getTrades(
-    market: string,
-    start?: number,
-    end?: number,
-    limit = 50,
-    fromId?: string,
+    findTrades: request.FindTrades,
   ): Promise<response.Trade[]> {
-    return (await this.get('/trades', { market, start, end, limit, fromId }))
-      .data;
+    return (await this.get('/trades', findTrades)).data;
   }
 
   private async get(
     endpoint: string,
-    requestParams: Record<string, number | string> = {},
+    requestParams: Record<string, any> = {},
   ): Promise<AxiosResponse> {
     return this.axios({
       method: 'GET',

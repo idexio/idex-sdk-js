@@ -20,6 +20,19 @@ export interface FindWithPagination {
 }
 
 /**
+ * @typedef {Object} request.FindCandles
+ * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
+ * @property {CandleInterval} [interval] - Time interval for data
+ * @property {number} [start] - Starting timestamp (inclusive)
+ * @property {number} [end] - Ending timestamp (inclusive)
+ * @property {number} [limit=50] - Max results to return from 1-1000
+ */
+export interface FindCandles extends FindWithPagination {
+  market?: string;
+  interval?: enums.CandleInterval;
+}
+
+/**
  * @typedef {Object} request.FindDeposit
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
@@ -49,7 +62,7 @@ export interface FindDeposits extends FindByWallet, FindWithPagination {
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
  * @property {number} [start] - Starting timestamp (inclusive)
  * @property {number} [end] - Ending timestamp (inclusive)
- * @property {number} [limit] - Max results to return from 1-1000
+ * @property {number} [limit=50] - Max results to return from 1-1000
  * @property {string} [fromId] - Fills created at the same timestamp or after fillId
  */
 export interface FindFills extends FindByWallet, FindWithPagination {
@@ -98,6 +111,19 @@ export type FindOrders = FindOrdersByMarket;
 export interface FindOrdersIncludingInactive
   extends FindOrdersByMarket,
     FindWithPagination {}
+
+/**
+ * @typedef {Object} request.FindTrades
+ * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
+ * @property {number} [start] - Starting timestamp (inclusive)
+ * @property {number} [end] - Ending timestamp (inclusive)
+ * @property {number} [limit] - Max results to return from 1-1000
+ * @property {string} [fromId] - Trades created at the same timestamp or after fromId
+ */
+export interface FindTrades extends FindWithPagination {
+  market?: string;
+  fromId?: string;
+}
 
 /**
  * @typedef {Object} request.FindWithdrawal
@@ -229,6 +255,8 @@ interface WithdrawalBase {
   nonce: string;
   wallet: string;
   quantity: string;
+  /** Currently has no effect */
+  autoDispatchEnabled?: boolean;
 }
 
 export interface WithdrawalBySymbol extends WithdrawalBase {
