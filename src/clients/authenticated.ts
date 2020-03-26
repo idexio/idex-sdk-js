@@ -93,7 +93,7 @@ export default class AuthenticatedClient {
   }
 
   /**
-   * Get order fill history for a wallet
+   * Get private, detailed data about fills against orders placed by the calling user account
    *
    * @param {request.FindFills} findFills
    * @return {Promise<response.Fill[]>}
