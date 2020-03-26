@@ -93,7 +93,7 @@ export default class AuthenticatedClient {
   }
 
   /**
-   * Get public trade history for a market
+   * Get private, detailed data about fills against orders placed by the calling user account
    *
    * @param {request.FindFills} findFills
    * @return {Promise<response.Fill[]>}
@@ -101,18 +101,7 @@ export default class AuthenticatedClient {
   public async getFills(
     findFills: request.FindFills,
   ): Promise<response.Fill[]> {
-    const { nonce, wallet, market, start, end, limit, fromId } = findFills;
-    return (
-      await this.get('/fills', {
-        nonce,
-        wallet,
-        market,
-        start,
-        end,
-        limit,
-        fromId,
-      })
-    ).data;
+    return (await this.get('/fills', findFills)).data;
   }
 
   /**
@@ -124,14 +113,7 @@ export default class AuthenticatedClient {
   public async getDeposit(
     findDeposit: request.FindDeposit,
   ): Promise<response.Deposit> {
-    const { nonce, wallet, depositId } = findDeposit;
-    return (
-      await this.get('/deposits', {
-        nonce,
-        wallet,
-        depositId,
-      })
-    ).data[0];
+    return (await this.get('/deposits', findDeposit)).data[0];
   }
 
   /**
@@ -143,17 +125,7 @@ export default class AuthenticatedClient {
   public async getDeposits(
     findDeposits: request.FindDeposits,
   ): Promise<response.Deposit[]> {
-    const { nonce, wallet, asset, start, end, limit } = findDeposits;
-    return (
-      await this.get('/deposits', {
-        nonce,
-        wallet,
-        asset,
-        start,
-        end,
-        limit,
-      })
-    ).data;
+    return (await this.get('/deposits', findDeposits)).data;
   }
 
   /**
@@ -163,15 +135,7 @@ export default class AuthenticatedClient {
    * @return {Promise<response.Order>}
    */
   public async getOrder(findOrder: request.FindOrder): Promise<response.Order> {
-    const { nonce, wallet, orderId, clientOrderId } = findOrder;
-    return (
-      await this.get('/orders', {
-        nonce,
-        wallet,
-        orderId,
-        clientOrderId,
-      })
-    ).data[0];
+    return (await this.get('/orders', findOrder)).data[0];
   }
 
   /**
@@ -183,14 +147,7 @@ export default class AuthenticatedClient {
   public async getOrders(
     findOrders: request.FindOrders,
   ): Promise<response.Order[]> {
-    const { nonce, wallet, market } = findOrders;
-    return (
-      await this.get('/orders', {
-        nonce,
-        wallet,
-        market,
-      })
-    ).data;
+    return (await this.get('/orders', findOrders)).data;
   }
 
   /**
@@ -202,16 +159,10 @@ export default class AuthenticatedClient {
   public async getOrdersIncludingInactive(
     findOrders: request.FindOrdersIncludingInactive,
   ): Promise<response.Order[]> {
-    const { nonce, wallet, market, start, end, limit } = findOrders;
     return (
       await this.get('/orders', {
+        ...findOrders,
         includeInactiveOrders: true,
-        nonce,
-        wallet,
-        market,
-        start,
-        end,
-        limit,
       })
     ).data;
   }
@@ -243,14 +194,7 @@ export default class AuthenticatedClient {
   public async getWithdrawal(
     findWithdrawal: request.FindWithdrawal,
   ): Promise<response.Withdrawal> {
-    const { nonce, wallet, withdrawalId } = findWithdrawal;
-    return (
-      await this.get('/withdrawals', {
-        nonce,
-        wallet,
-        withdrawalId,
-      })
-    ).data[0];
+    return (await this.get('/withdrawals', findWithdrawal)).data[0];
   }
 
   /**
@@ -262,26 +206,7 @@ export default class AuthenticatedClient {
   public async getWithdrawals(
     findWithdrawals: request.FindWithdrawals,
   ): Promise<response.Withdrawal[]> {
-    const {
-      nonce,
-      wallet,
-      asset,
-      assetContractAddress,
-      start,
-      end,
-      limit,
-    } = findWithdrawals;
-    return (
-      await this.get('/withdrawals', {
-        nonce,
-        wallet,
-        asset,
-        assetContractAddress,
-        start,
-        end,
-        limit,
-      })
-    ).data;
+    return (await this.get('/withdrawals', findWithdrawals)).data;
   }
 
   /**
@@ -346,7 +271,7 @@ export default class AuthenticatedClient {
 
   private async get(
     endpoint: string,
-    requestParams: Record<string, boolean | number | string> = {},
+    requestParams: Record<string, any> = {},
   ): Promise<AxiosResponse> {
     return this.axios({
       method: 'GET',
