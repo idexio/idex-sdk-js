@@ -10,7 +10,6 @@ import * as enums from './enums';
  * @property {string} contractAddress
  * @property {number} decimals
  * @property {string} depositMinimum
- * @property {string} tradeMinimum
  * @property {string} withdrawalMinimum
  */
 export interface Asset {
@@ -20,7 +19,6 @@ export interface Asset {
   contractAddress: string;
   decimals: number;
   depositMinimum: string;
-  tradeMinimum: string;
   withdrawalMinimum: string;
 }
 
