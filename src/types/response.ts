@@ -181,7 +181,7 @@ export interface OrderFill {
  */
 export interface Market {
   market: string;
-  status: enums.MarketStatus;
+  status: keyof typeof enums.MarketStatus;
   baseAsset: string;
   baseAssetPrecision: number;
   quoteAsset: string;
