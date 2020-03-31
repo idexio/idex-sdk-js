@@ -172,8 +172,8 @@ export interface OrderFill {
  * @property {number} baseAssetPrecision
  * @property {string} quoteAsset - e.g. 'ETH'
  * @property {number} quoteAssetPrecision
- * @property {number} makerFeeRate
- * @property {number} takerFeeRate
+ * @property {string} makerFeeRate
+ * @property {string} takerFeeRate
  * @property {OrderType[]} orderTypes
  * @property {string} tradeMinimum - Minimum quantity in base terms
  */
@@ -184,8 +184,8 @@ export interface Market {
   baseAssetPrecision: number;
   quoteAsset: string;
   quoteAssetPrecision: number;
-  makerFeeRate: number;
-  takerFeeRate: number;
+  makerFeeRate: string;
+  takerFeeRate: string;
   orderTypes: (keyof typeof enums.OrderType)[];
   tradeMinimum: string;
 }
