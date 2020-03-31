@@ -62,6 +62,13 @@
             -   [Parameters](#parameters-24)
 -   [Enums](#enums)
     -   [CandleInterval](#candleinterval)
+        -   [1m](#1m)
+        -   [5m](#5m)
+        -   [15m](#15m)
+        -   [30m](#30m)
+        -   [1h](#1h)
+        -   [6h](#6h)
+        -   [1d](#1d)
     -   [Liquidity](#liquidity)
         -   [maker](#maker)
         -   [taker](#taker)
@@ -104,65 +111,70 @@
         -   [active](#active-2)
         -   [inactive](#inactive-1)
 -   [Requests](#requests)
-    -   [request.FindDeposit](#requestfinddeposit)
+    -   [request.FindCandles](#requestfindcandles)
         -   [Properties](#properties)
-    -   [request.FindDeposits](#requestfinddeposits)
+    -   [request.FindDeposit](#requestfinddeposit)
         -   [Properties](#properties-1)
-    -   [request.FindFills](#requestfindfills)
+    -   [request.FindDeposits](#requestfinddeposits)
         -   [Properties](#properties-2)
-    -   [request.FindOrder](#requestfindorder)
+    -   [request.FindFills](#requestfindfills)
         -   [Properties](#properties-3)
-    -   [request.FindOrders](#requestfindorders)
+    -   [request.FindOrder](#requestfindorder)
         -   [Properties](#properties-4)
-    -   [request.FindOrdersIncludingInactive](#requestfindordersincludinginactive)
+    -   [request.FindOrders](#requestfindorders)
         -   [Properties](#properties-5)
-    -   [request.FindWithdrawal](#requestfindwithdrawal)
+    -   [request.FindOrdersIncludingInactive](#requestfindordersincludinginactive)
         -   [Properties](#properties-6)
-    -   [request.FindWithdrawals](#requestfindwithdrawals)
+    -   [request.FindTrades](#requestfindtrades)
         -   [Properties](#properties-7)
-    -   [request.Order](#requestorder)
+    -   [request.FindWithdrawal](#requestfindwithdrawal)
         -   [Properties](#properties-8)
-    -   [request.Withdrawal](#requestwithdrawal)
+    -   [request.FindWithdrawals](#requestfindwithdrawals)
         -   [Properties](#properties-9)
+    -   [request.Order](#requestorder)
+        -   [Properties](#properties-10)
+    -   [request.Withdrawal](#requestwithdrawal)
+        -   [Properties](#properties-11)
 -   [Responses](#responses)
     -   [response.Asset](#responseasset)
-        -   [Properties](#properties-10)
-    -   [response.Balance](#responsebalance)
-        -   [Properties](#properties-11)
-    -   [response.Candle](#responsecandle)
         -   [Properties](#properties-12)
-    -   [response.Deposit](#responsedeposit)
+    -   [response.Balance](#responsebalance)
         -   [Properties](#properties-13)
-    -   [response.ExchangeInfo](#responseexchangeinfo)
+    -   [response.Candle](#responsecandle)
         -   [Properties](#properties-14)
-    -   [response.Fill](#responsefill)
+    -   [response.Deposit](#responsedeposit)
         -   [Properties](#properties-15)
-    -   [response.Market](#responsemarket)
+    -   [response.ExchangeInfo](#responseexchangeinfo)
         -   [Properties](#properties-16)
-    -   [response.Order](#responseorder)
+    -   [response.Fill](#responsefill)
         -   [Properties](#properties-17)
-    -   [response.OrderBookLevel1](#responseorderbooklevel1)
+    -   [response.Market](#responsemarket)
         -   [Properties](#properties-18)
-    -   [response.OrderBookLevel2](#responseorderbooklevel2)
+    -   [response.Order](#responseorder)
         -   [Properties](#properties-19)
-    -   [response.OrderBookLevel3](#responseorderbooklevel3)
+    -   [response.OrderBookLevel1](#responseorderbooklevel1)
         -   [Properties](#properties-20)
-    -   [response.OrderBookOrder](#responseorderbookorder)
+    -   [response.OrderBookLevel2](#responseorderbooklevel2)
         -   [Properties](#properties-21)
-    -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
+    -   [response.OrderBookLevel3](#responseorderbooklevel3)
         -   [Properties](#properties-22)
-    -   [response.OrderFill](#responseorderfill)
+    -   [response.OrderBookOrder](#responseorderbookorder)
         -   [Properties](#properties-23)
-    -   [response.Ticker](#responseticker)
+    -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
         -   [Properties](#properties-24)
-    -   [response.Trade](#responsetrade)
+    -   [response.OrderFill](#responseorderfill)
         -   [Properties](#properties-25)
-    -   [response.User](#responseuser)
+    -   [response.Ticker](#responseticker)
         -   [Properties](#properties-26)
-    -   [response.Wallet](#responsewallet)
+    -   [response.Trade](#responsetrade)
         -   [Properties](#properties-27)
-    -   [response.Withdrawal](#responsewithdrawal)
+    -   [response.User](#responseuser)
         -   [Properties](#properties-28)
+    -   [response.Wallet](#responsewallet)
+        -   [Properties](#properties-29)
+    -   [response.Withdrawal](#responsewithdrawal)
+        -   [Properties](#properties-30)
+-   [autoDispatchEnabled](#autodispatchenabled)
 
 ## Clients
 
@@ -276,11 +288,7 @@ Get candle (OHLCV) data for a market
 
 ##### Parameters
 
--   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Base-quote pair e.g. 'IDEX-ETH'
--   `interval` **[CandleInterval](#candleinterval)?** Time interval for data
--   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Start period timestamp
--   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** End period timestamp
--   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000 (optional, default `50`)
+-   `findCandles` **FindCandles** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Candle](#responsecandle)>>** 
 
@@ -290,11 +298,7 @@ Get public trade history for a market
 
 ##### Parameters
 
--   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
--   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
--   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
--   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000 (optional, default `50`)
--   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Fills created at the same timestamp or after fillId
+-   `findTrades` **[request.FindTrades](#requestfindtrades)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Trade](#responsetrade)>>** 
 
@@ -374,7 +378,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getFills
 
-Get public trade history for a market
+Get private, detailed data about fills against orders placed by the calling user account
 
 ##### Parameters
 
@@ -511,6 +515,34 @@ Sets of named constants used as field types for several requests and responses
 
 
 ### CandleInterval
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### 1m
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### 5m
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### 15m
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### 30m
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### 1h
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### 6h
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+#### 1d
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
@@ -728,6 +760,18 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 
 
+### request.FindCandles
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
+-   `interval` **[CandleInterval](#candleinterval)?** Time interval for data
+-   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
+-   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
+-   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
+
 ### request.FindDeposit
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -798,6 +842,18 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
 -   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
+
+### request.FindTrades
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
+-   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
+-   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
+-   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
+-   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Trades created at the same timestamp or after fromId
 
 ### request.FindWithdrawal
 
@@ -1163,6 +1219,12 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Gas price in wei used to compute fee
 -   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Ethereum transaction hash, if available
 -   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of receipt / processing
+
+## autoDispatchEnabled
+
+Currently has no effect
+
+Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
 
 # Contracts
 

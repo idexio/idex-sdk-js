@@ -18,12 +18,14 @@ toc:
       - UserStatus
   - name: Requests
     children:
+      - request.FindCandles
       - request.FindDeposit
       - request.FindDeposits
       - request.FindFills
       - request.FindOrder
       - request.FindOrders
       - request.FindOrdersIncludingInactive
+      - request.FindTrades
       - request.FindWithdrawal
       - request.FindWithdrawals
       - request.Order
