@@ -3,12 +3,40 @@
  * @enum {string}
  */
 export enum CandleInterval {
+  /**
+   * 1 minute
+   * @type {string}
+   */
   '1m',
+  /**
+   * 5 minutes
+   * @type {string}
+   */
   '5m',
+  /**
+   * 15 minutes
+   * @type {string}
+   */
   '15m',
+  /**
+   * 30 minutes
+   * @type {string}
+   */
   '30m',
+  /**
+   * 1 hour
+   * @type {string}
+   */
   '1h',
+  /**
+   * 6 hours
+   * @type {string}
+   */
   '6h',
+  /**
+   * 1 day
+   * @type {string}
+   */
   '1d',
 }
 
