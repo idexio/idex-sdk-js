@@ -62,6 +62,13 @@
             -   [Parameters](#parameters-24)
 -   [Enums](#enums)
     -   [CandleInterval](#candleinterval)
+        -   [1m](#1m)
+        -   [5m](#5m)
+        -   [15m](#15m)
+        -   [30m](#30m)
+        -   [1h](#1h)
+        -   [6h](#6h)
+        -   [1d](#1d)
     -   [Liquidity](#liquidity)
         -   [maker](#maker)
         -   [taker](#taker)
@@ -511,45 +518,31 @@ Sets of named constants used as field types for several requests and responses
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-#### 
-
-1 minute
+#### 1m
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-#### 
-
-5 minutes
+#### 5m
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-#### 
-
-15 minutes
+#### 15m
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-#### 
-
-30 minutes
+#### 30m
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-#### 
-
-1 hour
+#### 1h
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-#### 
-
-6 hours
+#### 6h
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-#### 
-
-1 day
+#### 1d
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
