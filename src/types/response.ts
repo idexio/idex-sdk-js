@@ -8,7 +8,7 @@ import * as enums from './enums';
  * @property {string} name
  * @property {string} symbol
  * @property {string} contractAddress
- * @property {string} decimals
+ * @property {number} decimals
  * @property {string} depositMinimum
  * @property {string} tradeMinimum
  * @property {string} withdrawalMinimum
@@ -18,7 +18,7 @@ export interface Asset {
   name: string;
   symbol: string;
   contractAddress: string;
-  decimals: string;
+  decimals: number;
   depositMinimum: string;
   tradeMinimum: string;
   withdrawalMinimum: string;
@@ -174,8 +174,8 @@ export interface OrderFill {
  * @property {number} baseAssetPrecision
  * @property {string} quoteAsset - e.g. 'ETH'
  * @property {number} quoteAssetPrecision
- * @property {string} makerFeeRate
- * @property {string} takerFeeRate
+ * @property {number} makerFeeRate
+ * @property {number} takerFeeRate
  * @property {OrderType[]} orderTypes
  * @property {string} tradeMinimum - Minimum quantity in base terms
  */
@@ -186,8 +186,8 @@ export interface Market {
   baseAssetPrecision: number;
   quoteAsset: string;
   quoteAssetPrecision: number;
-  makerFeeRate: string;
-  takerFeeRate: string;
+  makerFeeRate: number;
+  takerFeeRate: number;
   orderTypes: (keyof typeof enums.OrderType)[];
   tradeMinimum: string;
 }
