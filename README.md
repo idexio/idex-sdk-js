@@ -315,6 +315,7 @@ const config = {
   apiKey:
     'MTQxMA==.MQ==.TlRnM01qSmtPVEF0TmpJNFpDMHhNV1ZoTFRrMU5HVXROMlJrTWpRMVpEUmlNRFU0',
   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j'
+  walletPrivateKey: '0x3141592653589793238462643383279502884197169399375105820974944592'
 };
 
 const authenticatedClient = new idex.AuthenticatedClient(
@@ -325,7 +326,7 @@ const authenticatedClient = new idex.AuthenticatedClient(
 
 await authenticatedClient.placeOrder(
   myOrderObject, // See spec
-  sign: idex.privateKeyHashSigner('0x0123456...'), // Built-in sign method
+  sign: idex.privateKeyHashSigner(config.walletPrivateKey), // Built-in sign method
 );
 ```
 
