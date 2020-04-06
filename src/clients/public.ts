@@ -1,11 +1,6 @@
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
-import Base64 from 'crypto-js/enc-base64';
-import hmacSHA512 from 'crypto-js/hmac-sha512';
-import queryString from 'query-string';
-import sha256 from 'crypto-js/sha256';
-import { ethers } from 'ethers';
 
-import { enums, request, response } from '../types';
+import { request, response } from '../types';
 
 /**
  * Public API client

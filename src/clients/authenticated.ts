@@ -40,17 +40,16 @@ export default class AuthenticatedClient {
   public constructor(baseURL: string, apiKey: string, apiSecret: string) {
     this.baseURL = baseURL;
     this.apiSecret = apiSecret;
-    this.axios = Axios.create({
-      headers: { Authorization: `Bearer ${apiKey}` },
-    });
+    this.axios = Axios.create(
+      apiKey === 'withCredentials'
+        ? {
+            withCredentials: true,
+          }
+        : {
+            headers: { Authorization: `Bearer ${apiKey}` },
+          },
+    );
   }
-
-  // private async signHash(structure) {
-  //   await this.signMessage();
-  //   // await new ethers.Wallet(walletPrivateKey).signMessage(
-  //   //   ethers.utils.arrayify(request.getOrderHash(order)),
-  //   // ),
-  // }
 
   /**
    * Cancel an order

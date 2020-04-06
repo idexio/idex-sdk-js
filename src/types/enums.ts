@@ -38,6 +38,11 @@ export enum CandleInterval {
    * @type {string}
    */
   '1d',
+
+  // Format for months and weeks would be:
+  //  2 weeks  = 2w
+  //  5 months = 5m
+  //  2 years  = 24m
 }
 
 /**
