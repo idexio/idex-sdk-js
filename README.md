@@ -314,15 +314,18 @@ const config = {
   baseURL: 'https://api-sandbox.idex.io/api/v1',
   apiKey:
     'MTQxMA==.MQ==.TlRnM01qSmtPVEF0TmpJNFpDMHhNV1ZoTFRrMU5HVXROMlJrTWpRMVpEUmlNRFU0',
-  apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
-  walletPrivateKey:
-    '0x3141592653589793238462643383279502884197169399375105820974944592',
+  apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j'
 };
 
 const authenticatedClient = new idex.AuthenticatedClient(
   config.baseURL,
   config.apiKey,
   config.apiSecret,
+);
+
+await authenticatedClient.placeOrder(
+  myOrderObject, // See spec
+  sign: idex.privateKeyHashSigner('0x0123456...'), // Built-in sign method
 );
 ```
 
@@ -483,7 +486,7 @@ Place a new order
 ##### Parameters
 
 -   `order` **[request.Order](#requestorder)** 
--   `sign` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Sign hash function implementation. Possbile to use built-in `import { signHashWithPrivateKey } from "@idexio/idex-node"`
+-   `sign` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Sign hash function implementation. Possbile to use built-in `privateKeyHashSigner('YourPrivateKey')`
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
 
@@ -494,7 +497,7 @@ Test new order creation, validation, and trading engine acceptance, but no order
 ##### Parameters
 
 -   `order` **[request.Order](#requestorder)** 
--   `sign` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Sign hash function implementation. Possbile to use built-in `import { signHashWithPrivateKey } from "@idexio/idex-node"`
+-   `sign` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Sign hash function implementation. Possbile to use built-in  `privateKeyHashSigner('YourPrivateKey')`
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
 
@@ -505,7 +508,7 @@ Create a new withdrawal
 ##### Parameters
 
 -   `withdrawal` **[request.Withdrawal](#requestwithdrawal)** 
--   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `sign` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Sign hash function implementation. Possbile to use built-in `privateKeyHashSigner('YourPrivateKey')`
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Withdrawal](#responsewithdrawal)>** 
 

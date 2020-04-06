@@ -1,7 +1,6 @@
 import { ethers } from 'ethers';
 
-export const signHashWithPrivateKey = (
-  walletPrivateKey: string,
+export const privateKeyHashSigner = (walletPrivateKey: string) => (
   hashToSign: string,
 ): Promise<string> =>
   new ethers.Wallet(walletPrivateKey).signMessage(

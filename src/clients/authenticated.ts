@@ -3,7 +3,6 @@ import Base64 from 'crypto-js/enc-base64';
 import hmacSHA512 from 'crypto-js/hmac-sha512';
 import queryString from 'query-string';
 import sha256 from 'crypto-js/sha256';
-import { ethers } from 'ethers';
 
 import { request, response } from '../types';
 
@@ -18,9 +17,7 @@ import { request, response } from '../types';
  *   baseURL: 'https://api-sandbox.idex.io/api/v1',
  *   apiKey:
  *     'MTQxMA==.MQ==.TlRnM01qSmtPVEF0TmpJNFpDMHhNV1ZoTFRrMU5HVXROMlJrTWpRMVpEUmlNRFU0',
- *   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
- *   walletPrivateKey:
- *     '0x3141592653589793238462643383279502884197169399375105820974944592',
+ *   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j'
  * };
  *
  * const authenticatedClient = new idex.AuthenticatedClient(
@@ -28,6 +25,12 @@ import { request, response } from '../types';
  *   config.apiKey,
  *   config.apiSecret,
  * );
+ *
+ * await authenticatedClient.placeOrder(
+ *   myOrderObject, // See spec
+ *   sign: idex.privateKeyHashSigner('0x0123456...'), // Built-in sign method
+ * );
+ *
  * ```
  */
 export default class AuthenticatedClient {
@@ -219,7 +222,7 @@ export default class AuthenticatedClient {
    * Place a new order
    *
    * @param {request.Order} order
-   * @param {function} sign Sign hash function implementation. Possbile to use built-in `import { signHashWithPrivateKey } from "@idexio/idex-node"`
+   * @param {function} sign Sign hash function implementation. Possbile to use built-in `privateKeyHashSigner('YourPrivateKey')`
    */
   public async placeOrder(
     order: request.Order,
@@ -237,7 +240,7 @@ export default class AuthenticatedClient {
    * Test new order creation, validation, and trading engine acceptance, but no order is placed or executed
    *
    * @param {request.Order} order
-   * @param {function} sign Sign hash function implementation. Possbile to use built-in `import { signHashWithPrivateKey } from "@idexio/idex-node"`
+   * @param {function} sign Sign hash function implementation. Possbile to use built-in  `privateKeyHashSigner('YourPrivateKey')`
    */
   public async placeTestOrder(
     order: request.Order,
@@ -255,18 +258,16 @@ export default class AuthenticatedClient {
    * Create a new withdrawal
    *
    * @param {request.Withdrawal} withdrawal
-   * @param {string} walletPrivateKey
+   * @param {function} sign Sign hash function implementation. Possbile to use built-in `privateKeyHashSigner('YourPrivateKey')`
    */
   public async withdraw(
     withdrawal: request.Withdrawal,
-    walletPrivateKey: string,
+    sign: (hash: string) => Promise<string>,
   ): Promise<response.Withdrawal> {
     return (
       await this.post('/withdrawals', {
         parameters: withdrawal,
-        signature: await new ethers.Wallet(walletPrivateKey).signMessage(
-          ethers.utils.arrayify(request.getWithdrawalHash(withdrawal)),
-        ),
+        signature: await sign(request.getWithdrawalHash(withdrawal)),
       })
     ).data;
   }
