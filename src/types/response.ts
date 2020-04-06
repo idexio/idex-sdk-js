@@ -331,7 +331,7 @@ export interface OrderBookLevel3 extends OrderBook {
  */
 export interface Ticker {
   market: string;
-  percentChange: string;
+  percentChange: string; // TODO: number ?
   baseVolume: string;
   quoteVolume: string;
   last: string;

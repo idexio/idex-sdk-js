@@ -45,6 +45,13 @@ export default class AuthenticatedClient {
     });
   }
 
+  // private async signHash(structure) {
+  //   await this.signMessage();
+  //   // await new ethers.Wallet(walletPrivateKey).signMessage(
+  //   //   ethers.utils.arrayify(request.getOrderHash(order)),
+  //   // ),
+  // }
+
   /**
    * Cancel an order
    *
@@ -217,14 +224,15 @@ export default class AuthenticatedClient {
    */
   public async placeOrder(
     order: request.Order,
-    walletPrivateKey: string,
+    sign: (hash: string) => Promise<string>,
   ): Promise<response.Order> {
     return (
       await this.post('/orders', {
         parameters: order,
-        signature: await new ethers.Wallet(walletPrivateKey).signMessage(
-          ethers.utils.arrayify(request.getOrderHash(order)),
-        ),
+        signature: await sign(request.getOrderHash(order)),
+        // await new ethers.Wallet(walletPrivateKey).signMessage(
+        //   ethers.utils.arrayify(request.getOrderHash(order)),
+        // ),
       })
     ).data;
   }
@@ -237,14 +245,12 @@ export default class AuthenticatedClient {
    */
   public async placeTestOrder(
     order: request.Order,
-    walletPrivateKey: string,
+    sign: (hash: string) => Promise<string>,
   ): Promise<response.Order> {
     return (
       await this.post('/orders/test', {
         parameters: order,
-        signature: await new ethers.Wallet(walletPrivateKey).signMessage(
-          ethers.utils.arrayify(request.getOrderHash(order)),
-        ),
+        signature: await sign(request.getOrderHash(order)),
       })
     ).data;
   }
