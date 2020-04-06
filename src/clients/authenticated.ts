@@ -37,17 +37,17 @@ export default class AuthenticatedClient {
 
   private apiSecret: string;
 
+  private usingSessionCredentials: boolean;
+
   public constructor(baseURL: string, apiKey: string, apiSecret: string) {
     this.baseURL = baseURL;
     this.apiSecret = apiSecret;
+    this.usingSessionCredentials = apiKey === 'withCredentials';
+
     this.axios = Axios.create(
-      apiKey === 'withCredentials'
-        ? {
-            withCredentials: true,
-          }
-        : {
-            headers: { Authorization: `Bearer ${apiKey}` },
-          },
+      this.usingSessionCredentials
+        ? { withCredentials: true }
+        : { headers: { Authorization: `Bearer ${apiKey}` } },
     );
   }
 
@@ -219,7 +219,7 @@ export default class AuthenticatedClient {
    * Place a new order
    *
    * @param {request.Order} order
-   * @param {string} walletPrivateKey
+   * @param {function} sign Sign hash function implementation. Possbile to use built-in `import { signHashWithPrivateKey } from "@idexio/idex-node"`
    */
   public async placeOrder(
     order: request.Order,
@@ -229,9 +229,6 @@ export default class AuthenticatedClient {
       await this.post('/orders', {
         parameters: order,
         signature: await sign(request.getOrderHash(order)),
-        // await new ethers.Wallet(walletPrivateKey).signMessage(
-        //   ethers.utils.arrayify(request.getOrderHash(order)),
-        // ),
       })
     ).data;
   }
@@ -240,7 +237,7 @@ export default class AuthenticatedClient {
    * Test new order creation, validation, and trading engine acceptance, but no order is placed or executed
    *
    * @param {request.Order} order
-   * @param {string} walletPrivateKey
+   * @param {function} sign Sign hash function implementation. Possbile to use built-in `import { signHashWithPrivateKey } from "@idexio/idex-node"`
    */
   public async placeTestOrder(
     order: request.Order,
@@ -315,6 +312,9 @@ export default class AuthenticatedClient {
   private createHmacRequestSignatureHeader(
     payload: string | Record<string, any>,
   ): { 'hmac-request-signature': string } {
+    if (this.usingSessionCredentials) {
+      return;
+    }
     const hashDigest = sha256(
       typeof payload === 'string' ? payload : JSON.stringify(payload),
     );
