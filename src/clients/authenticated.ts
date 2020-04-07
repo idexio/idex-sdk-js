@@ -17,7 +17,7 @@ import { request, response } from '../types';
  *   baseURL: 'https://api-sandbox.idex.io/api/v1',
  *   apiKey:
  *     'MTQxMA==.MQ==.TlRnM01qSmtPVEF0TmpJNFpDMHhNV1ZoTFRrMU5HVXROMlJrTWpRMVpEUmlNRFU0',
- *   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j'
+ *   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
  *   walletPrivateKey: '0x3141592653589793238462643383279502884197169399375105820974944592'
  * };
  *
@@ -26,14 +26,9 @@ import { request, response } from '../types';
  *   config.apiKey,
  *   config.apiSecret,
  * );
- *
- * await authenticatedClient.placeOrder(
- *   myOrderObject, // See spec
- *   sign: idex.privateKeyHashSigner(config.walletPrivateKey), // Built-in sign method
- * );
- *
  * ```
  */
+
 export default class AuthenticatedClient {
   public baseURL: string;
 
@@ -41,15 +36,16 @@ export default class AuthenticatedClient {
 
   private apiSecret: string;
 
-  private usingSessionCredentials: boolean;
+  private isUsingSessionCredentials: boolean;
 
   public constructor(baseURL: string, apiKey: string, apiSecret: string) {
     this.baseURL = baseURL;
     this.apiSecret = apiSecret;
-    this.usingSessionCredentials = apiKey === 'withCredentials';
+    // Magic api key "withCredentials" to enable internal session cookie authentication method
+    this.isUsingSessionCredentials = apiKey === 'withCredentials';
 
     this.axios = Axios.create(
-      this.usingSessionCredentials
+      this.isUsingSessionCredentials
         ? { withCredentials: true }
         : { headers: { Authorization: `Bearer ${apiKey}` } },
     );
@@ -222,8 +218,17 @@ export default class AuthenticatedClient {
   /**
    * Place a new order
    *
+   * Example:
+   *
+   * ```typescript
+   *  await authenticatedClient.placeOrder(
+   *   orderObject, // See type
+   *   sign: idex.getPrivateKeySigner(config.walletPrivateKey),
+   * );
+   * ```
+   *
    * @param {request.Order} order
-   * @param {function} sign Sign hash function implementation. Possbile to use built-in `privateKeyHashSigner('YourPrivateKey')`
+   * @param {function} sign Sign hash function implementation. Possbile to use built-in `getPrivateKeySigner('YourPrivateKey')`
    */
   public async placeOrder(
     order: request.Order,
@@ -240,8 +245,16 @@ export default class AuthenticatedClient {
   /**
    * Test new order creation, validation, and trading engine acceptance, but no order is placed or executed
    *
+   * Example:
+   *
+   * ```typescript
+   *  await authenticatedClient.placeTestOrder(
+   *   orderObject, // See type
+   *   sign: idex.getPrivateKeySigner(config.walletPrivateKey),
+   * );
+   *
    * @param {request.Order} order
-   * @param {function} sign Sign hash function implementation. Possbile to use built-in  `privateKeyHashSigner('YourPrivateKey')`
+   * @param {function} sign Sign hash function implementation. Possbile to use built-in  `getPrivateKeySigner('YourPrivateKey')`
    */
   public async placeTestOrder(
     order: request.Order,
@@ -258,8 +271,16 @@ export default class AuthenticatedClient {
   /**
    * Create a new withdrawal
    *
+   * Example:
+   *
+   * ```typescript
+   *  await authenticatedClient.withdraw(
+   *   withdrawalObject, // See type
+   *   sign: idex.getPrivateKeySigner(config.walletPrivateKey),
+   * );
+   *
    * @param {request.Withdrawal} withdrawal
-   * @param {function} sign Sign hash function implementation. Possbile to use built-in `privateKeyHashSigner('YourPrivateKey')`
+   * @param {function} sign Sign hash function implementation. Possbile to use built-in `getPrivateKeySigner('YourPrivateKey')`
    */
   public async withdraw(
     withdrawal: request.Withdrawal,
@@ -314,7 +335,7 @@ export default class AuthenticatedClient {
   private createHmacRequestSignatureHeader(
     payload: string | Record<string, any>,
   ): { 'hmac-request-signature': string } {
-    if (this.usingSessionCredentials) {
+    if (this.isUsingSessionCredentials) {
       return;
     }
     const hashDigest = sha256(
