@@ -315,8 +315,7 @@ const config = {
   apiKey:
     'MTQxMA==.MQ==.TlRnM01qSmtPVEF0TmpJNFpDMHhNV1ZoTFRrMU5HVXROMlJrTWpRMVpEUmlNRFU0',
   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
-  walletPrivateKey:
-    '0x3141592653589793238462643383279502884197169399375105820974944592',
+  walletPrivateKey: '0x3141592653589793238462643383279502884197169399375105820974944592'
 };
 
 const authenticatedClient = new idex.AuthenticatedClient(
@@ -480,10 +479,19 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 Place a new order
 
+Example:
+
+```typescript
+ await authenticatedClient.placeOrder(
+  orderObject, // See type
+  sign: idex.getPrivateKeySigner(config.walletPrivateKey),
+);
+```
+
 ##### Parameters
 
 -   `order` **[request.Order](#requestorder)** 
--   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `sign` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Sign hash function implementation. Possbile to use built-in `getPrivateKeySigner('YourPrivateKey')`
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
 
@@ -491,10 +499,19 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 Test new order creation, validation, and trading engine acceptance, but no order is placed or executed
 
+Example:
+
+```typescript
+ await authenticatedClient.placeTestOrder(
+  orderObject, // See type
+  sign: idex.getPrivateKeySigner(config.walletPrivateKey),
+);
+```
+
 ##### Parameters
 
 -   `order` **[request.Order](#requestorder)** 
--   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `sign` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Sign hash function implementation. Possbile to use built-in  `getPrivateKeySigner('YourPrivateKey')`
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
 
@@ -502,10 +519,19 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 Create a new withdrawal
 
+Example:
+
+```typescript
+ await authenticatedClient.withdraw(
+  withdrawalObject, // See type
+  sign: idex.getPrivateKeySigner(config.walletPrivateKey),
+);
+```
+
 ##### Parameters
 
 -   `withdrawal` **[request.Withdrawal](#requestwithdrawal)** 
--   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `sign` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Sign hash function implementation. Possbile to use built-in `getPrivateKeySigner('YourPrivateKey')`
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Withdrawal](#responsewithdrawal)>** 
 

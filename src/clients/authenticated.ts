@@ -3,7 +3,6 @@ import Base64 from 'crypto-js/enc-base64';
 import hmacSHA512 from 'crypto-js/hmac-sha512';
 import queryString from 'query-string';
 import sha256 from 'crypto-js/sha256';
-import { ethers } from 'ethers';
 
 import { request, response } from '../types';
 
@@ -19,8 +18,7 @@ import { request, response } from '../types';
  *   apiKey:
  *     'MTQxMA==.MQ==.TlRnM01qSmtPVEF0TmpJNFpDMHhNV1ZoTFRrMU5HVXROMlJrTWpRMVpEUmlNRFU0',
  *   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
- *   walletPrivateKey:
- *     '0x3141592653589793238462643383279502884197169399375105820974944592',
+ *   walletPrivateKey: '0x3141592653589793238462643383279502884197169399375105820974944592'
  * };
  *
  * const authenticatedClient = new idex.AuthenticatedClient(
@@ -30,6 +28,7 @@ import { request, response } from '../types';
  * );
  * ```
  */
+
 export default class AuthenticatedClient {
   public baseURL: string;
 
@@ -37,12 +36,19 @@ export default class AuthenticatedClient {
 
   private apiSecret: string;
 
+  private isUsingSessionCredentials: boolean;
+
   public constructor(baseURL: string, apiKey: string, apiSecret: string) {
     this.baseURL = baseURL;
     this.apiSecret = apiSecret;
-    this.axios = Axios.create({
-      headers: { Authorization: `Bearer ${apiKey}` },
-    });
+    // Magic api key "withCredentials" to enable internal session cookie authentication method
+    this.isUsingSessionCredentials = apiKey === 'withCredentials';
+
+    this.axios = Axios.create(
+      this.isUsingSessionCredentials
+        ? { withCredentials: true }
+        : { headers: { Authorization: `Bearer ${apiKey}` } },
+    );
   }
 
   /**
@@ -212,19 +218,26 @@ export default class AuthenticatedClient {
   /**
    * Place a new order
    *
+   * Example:
+   *
+   * ```typescript
+   *  await authenticatedClient.placeOrder(
+   *   orderObject, // See type
+   *   sign: idex.getPrivateKeySigner(config.walletPrivateKey),
+   * );
+   * ```
+   *
    * @param {request.Order} order
-   * @param {string} walletPrivateKey
+   * @param {function} sign Sign hash function implementation. Possbile to use built-in `getPrivateKeySigner('YourPrivateKey')`
    */
   public async placeOrder(
     order: request.Order,
-    walletPrivateKey: string,
+    sign: (hash: string) => Promise<string>,
   ): Promise<response.Order> {
     return (
       await this.post('/orders', {
         parameters: order,
-        signature: await new ethers.Wallet(walletPrivateKey).signMessage(
-          ethers.utils.arrayify(request.getOrderHash(order)),
-        ),
+        signature: await sign(request.getOrderHash(order)),
       })
     ).data;
   }
@@ -232,19 +245,25 @@ export default class AuthenticatedClient {
   /**
    * Test new order creation, validation, and trading engine acceptance, but no order is placed or executed
    *
+   * Example:
+   *
+   * ```typescript
+   *  await authenticatedClient.placeTestOrder(
+   *   orderObject, // See type
+   *   sign: idex.getPrivateKeySigner(config.walletPrivateKey),
+   * );
+   *
    * @param {request.Order} order
-   * @param {string} walletPrivateKey
+   * @param {function} sign Sign hash function implementation. Possbile to use built-in  `getPrivateKeySigner('YourPrivateKey')`
    */
   public async placeTestOrder(
     order: request.Order,
-    walletPrivateKey: string,
+    sign: (hash: string) => Promise<string>,
   ): Promise<response.Order> {
     return (
       await this.post('/orders/test', {
         parameters: order,
-        signature: await new ethers.Wallet(walletPrivateKey).signMessage(
-          ethers.utils.arrayify(request.getOrderHash(order)),
-        ),
+        signature: await sign(request.getOrderHash(order)),
       })
     ).data;
   }
@@ -252,19 +271,25 @@ export default class AuthenticatedClient {
   /**
    * Create a new withdrawal
    *
+   * Example:
+   *
+   * ```typescript
+   *  await authenticatedClient.withdraw(
+   *   withdrawalObject, // See type
+   *   sign: idex.getPrivateKeySigner(config.walletPrivateKey),
+   * );
+   *
    * @param {request.Withdrawal} withdrawal
-   * @param {string} walletPrivateKey
+   * @param {function} sign Sign hash function implementation. Possbile to use built-in `getPrivateKeySigner('YourPrivateKey')`
    */
   public async withdraw(
     withdrawal: request.Withdrawal,
-    walletPrivateKey: string,
+    sign: (hash: string) => Promise<string>,
   ): Promise<response.Withdrawal> {
     return (
       await this.post('/withdrawals', {
         parameters: withdrawal,
-        signature: await new ethers.Wallet(walletPrivateKey).signMessage(
-          ethers.utils.arrayify(request.getWithdrawalHash(withdrawal)),
-        ),
+        signature: await sign(request.getWithdrawalHash(withdrawal)),
       })
     ).data;
   }
@@ -310,6 +335,9 @@ export default class AuthenticatedClient {
   private createHmacRequestSignatureHeader(
     payload: string | Record<string, any>,
   ): { 'hmac-request-signature': string } {
+    if (this.isUsingSessionCredentials) {
+      return;
+    }
     const hashDigest = sha256(
       typeof payload === 'string' ? payload : JSON.stringify(payload),
     );
