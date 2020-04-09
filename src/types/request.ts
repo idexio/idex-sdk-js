@@ -290,6 +290,16 @@ export const getOrderHash = (order: Order): string =>
     ['uint128', uuidToBuffer(order.nonce)],
   ]);
 
+export const getDeleteOrderHash = (
+  walletAddress: string,
+  nonce: string,
+): string =>
+  solidityHashOfParams([
+    ['string', 'deleteOrders'],
+    ['address', walletAddress],
+    ['uint128', uuidToBuffer(nonce)],
+  ]);
+
 export const getWithdrawalHash = (withdrawal: Withdrawal): string =>
   solidityHashOfParams([
     ['uint128', uuidToBuffer(withdrawal.nonce)],

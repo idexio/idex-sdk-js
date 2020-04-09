@@ -56,19 +56,18 @@ export default class AuthenticatedClient {
    *
    * @param {request.CancelOrder} order
    */
-  public async cancelOrder(order: request.FindOrder): Promise<response.Order> {
-    return (await this.delete('/orders', order)).data;
-  }
-
-  /**
-   * Cancel multiple orders
-   *
-   * @param {request.CancelOrder} order
-   */
-  public async cancelOrders(
-    orders: request.FindOrders,
-  ): Promise<response.Order[]> {
-    return (await this.delete('/orders', orders)).data;
+  public async cancelOrder(
+    order: request.FindOrder,
+    sign: (hash: string) => Promise<string>,
+  ): Promise<response.Order> {
+    return (
+      await this.delete('/orders', {
+        parameters: order,
+        signature: await sign(
+          request.getDeleteOrderHash(order.wallet, order.nonce),
+        ),
+      })
+    ).data;
   }
 
   /**
