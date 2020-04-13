@@ -26,40 +26,38 @@
             -   [Parameters](#parameters-6)
     -   [AuthenticatedClient](#authenticatedclient)
         -   [Parameters](#parameters-7)
-        -   [cancelOrder](#cancelorder)
-            -   [Parameters](#parameters-8)
         -   [cancelOrders](#cancelorders)
-            -   [Parameters](#parameters-9)
+            -   [Parameters](#parameters-8)
         -   [getBalances](#getbalances)
-            -   [Parameters](#parameters-10)
+            -   [Parameters](#parameters-9)
         -   [getDatastreamToken](#getdatastreamtoken)
-            -   [Parameters](#parameters-11)
+            -   [Parameters](#parameters-10)
         -   [getFills](#getfills)
-            -   [Parameters](#parameters-12)
+            -   [Parameters](#parameters-11)
         -   [getDeposit](#getdeposit)
-            -   [Parameters](#parameters-13)
+            -   [Parameters](#parameters-12)
         -   [getDeposits](#getdeposits)
-            -   [Parameters](#parameters-14)
+            -   [Parameters](#parameters-13)
         -   [getOrder](#getorder)
-            -   [Parameters](#parameters-15)
+            -   [Parameters](#parameters-14)
         -   [getOrders](#getorders)
-            -   [Parameters](#parameters-16)
+            -   [Parameters](#parameters-15)
         -   [getOrdersIncludingInactive](#getordersincludinginactive)
-            -   [Parameters](#parameters-17)
+            -   [Parameters](#parameters-16)
         -   [getUser](#getuser)
-            -   [Parameters](#parameters-18)
+            -   [Parameters](#parameters-17)
         -   [getWallets](#getwallets)
-            -   [Parameters](#parameters-19)
+            -   [Parameters](#parameters-18)
         -   [getWithdrawal](#getwithdrawal)
-            -   [Parameters](#parameters-20)
+            -   [Parameters](#parameters-19)
         -   [getWithdrawals](#getwithdrawals)
-            -   [Parameters](#parameters-21)
+            -   [Parameters](#parameters-20)
         -   [placeOrder](#placeorder)
-            -   [Parameters](#parameters-22)
+            -   [Parameters](#parameters-21)
         -   [placeTestOrder](#placetestorder)
-            -   [Parameters](#parameters-23)
+            -   [Parameters](#parameters-22)
         -   [withdraw](#withdraw)
-            -   [Parameters](#parameters-24)
+            -   [Parameters](#parameters-23)
 -   [Enums](#enums)
     -   [CandleInterval](#candleinterval)
         -   [1m](#1m)
@@ -331,26 +329,17 @@ const authenticatedClient = new idex.AuthenticatedClient(
 -   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
-#### cancelOrder
-
-Cancel an order
-
-##### Parameters
-
--   `order` **request.CancelOrder** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
-
 #### cancelOrders
 
-Cancel multiple orders
+Cancel orders
 
 ##### Parameters
 
--   `orders` **[request.FindOrders](#requestfindorders)** 
--   `order` **request.CancelOrder** 
+-   `parameters` **{wallet: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), nonce: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), market: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?, orderId: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?}** 
+-   `sign` **function (hash: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+-   `order` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Order](#responseorder)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
 
 #### getBalances
 
