@@ -26,7 +26,7 @@
             -   [Parameters](#parameters-6)
     -   [AuthenticatedClient](#authenticatedclient)
         -   [Parameters](#parameters-7)
-        -   [cancelOrder](#cancelorder)
+        -   [cancelOrders](#cancelorders)
             -   [Parameters](#parameters-8)
         -   [getBalances](#getbalances)
             -   [Parameters](#parameters-9)
@@ -329,14 +329,15 @@ const authenticatedClient = new idex.AuthenticatedClient(
 -   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
-#### cancelOrder
+#### cancelOrders
 
-Cancel an order
+Cancel orders
 
 ##### Parameters
 
--   `order` **request.CancelOrder** 
+-   `parameters` **{wallet: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), nonce: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), market: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?, orderId: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?}** 
 -   `sign` **function (hash: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)): [Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+-   `order` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
 

@@ -293,10 +293,14 @@ export const getOrderHash = (order: Order): string =>
 export const getDeleteOrderHash = (
   walletAddress: string,
   nonce: string,
+  market?: string,
+  orderId?: string,
 ): string =>
   solidityHashOfParams([
     ['string', 'deleteOrders'],
     ['address', walletAddress],
+    ['string', market || ''],
+    ['string', orderId || ''],
     ['uint128', uuidToBuffer(nonce)],
   ]);
 

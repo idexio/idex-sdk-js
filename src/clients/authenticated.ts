@@ -52,19 +52,29 @@ export default class AuthenticatedClient {
   }
 
   /**
-   * Cancel an order
+   * Cancel orders
    *
-   * @param {request.CancelOrder} order
+   * @param {string} order
    */
-  public async cancelOrder(
-    order: request.FindOrder,
+  public async cancelOrders(
+    parameters: {
+      wallet: string;
+      nonce: string;
+      market?: string;
+      orderId?: string;
+    },
     sign: (hash: string) => Promise<string>,
   ): Promise<response.Order> {
     return (
       await this.delete('/orders', {
-        parameters: order,
+        parameters,
         signature: await sign(
-          request.getDeleteOrderHash(order.wallet, order.nonce),
+          request.getDeleteOrderHash(
+            parameters.wallet,
+            parameters.nonce,
+            parameters.market,
+            parameters.orderId,
+          ),
         ),
       })
     ).data;
