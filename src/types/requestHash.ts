@@ -9,7 +9,6 @@ type TypeValuePair =
 export const solidityHashOfParams = (params: TypeValuePair[]): string => {
   const fields = params.map(param => param[0]);
   const values = params.map(param => param[1]);
-  console.debug('Sign:hash', fields, values);
   // TODO: we might let lib users to pick their solidityKeccak256 library, eg. web3.soliditySha3()
   return ethers.utils.solidityKeccak256(fields, values);
 };

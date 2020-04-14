@@ -1,8 +1,9 @@
 {
   "name": "@idexio/idex-node",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Sample Node.js code for the IDEX API",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": "git@github.com:idexio/idex-node.git",
   "author": "dileepfrog <dileepfrog@gmail.com>",
   "license": "MIT",
@@ -15,6 +16,11 @@
     "lint:markdown": "markdownlint README.md",
     "start": "node dist/index.js"
   },
+  "files": [
+    "dist",
+    "contracts",
+    "tsconfig.json"
+  ],
   "dependencies": {
     "axios": "^0.19.2",
     "crypto-js": "^4.0.0",
