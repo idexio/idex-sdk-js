@@ -252,6 +252,7 @@ export default class AuthenticatedClient {
    *   orderObject, // See type
    *   sign: idex.getPrivateKeySigner(config.walletPrivateKey),
    * );
+   * ```
    *
    * @param {request.Order} order
    * @param {function} sign Sign hash function implementation. Possbile to use built-in  `getPrivateKeySigner('YourPrivateKey')`
