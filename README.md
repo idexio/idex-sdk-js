@@ -58,6 +58,8 @@
             -   [Parameters](#parameters-22)
         -   [withdraw](#withdraw)
             -   [Parameters](#parameters-23)
+    -   [WebsocketClient](#websocketclient)
+        -   [Parameters](#parameters-24)
 -   [Enums](#enums)
     -   [CandleInterval](#candleinterval)
         -   [1m](#1m)
@@ -172,10 +174,9 @@
         -   [Properties](#properties-29)
     -   [response.Withdrawal](#responsewithdrawal)
         -   [Properties](#properties-30)
--   [WebsocketClient](#websocketclient)
-    -   [Parameters](#parameters-24)
--   [response.Error](#responseerror)
-    -   [Properties](#properties-31)
+-   [Websocket Responses](#websocket-responses)
+    -   [websocketResponse.Error](#websocketresponseerror)
+        -   [Properties](#properties-31)
 -   [autoDispatchEnabled](#autodispatchenabled)
 
 ## Clients
@@ -527,6 +528,23 @@ Example:
 -   `sign` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Sign hash function implementation. Possbile to use built-in `getPrivateKeySigner('YourPrivateKey')`
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Withdrawal](#responsewithdrawal)>** 
+
+### WebsocketClient
+
+Websocket API client
+
+```typescript
+import * as idex from '@idexio/idex-node';
+
+const config = {
+  baseURL: 'wss://ws.idex.io',
+}
+const websocketClient = new idex.Websocket(config.baseURL);
+```
+
+#### Parameters
+
+-   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ## Enums
 
@@ -1240,30 +1258,18 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Ethereum transaction hash, if available
 -   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of receipt / processing
 
-## WebsocketClient
+## Websocket Responses
 
-Websocket API client
 
-```typescript
-import * as idex from '@idexio/idex-node';
 
-const config = {
-  baseURL: 'wss://ws.idex.io',
-}
-const websocketClient = new idex.Websocket(config.baseURL);
-```
 
-### Parameters
-
--   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-## response.Error
+### websocketResponse.Error
 
 Error Response
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
-### Properties
+#### Properties
 
 -   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** error
 -   `data` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
