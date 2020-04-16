@@ -1,5 +1,7 @@
 import WebSocket from 'ws';
 
+import * as types from '../types';
+
 /**
  * Websocket API client
  *
@@ -13,10 +15,6 @@ import WebSocket from 'ws';
  * ```
  */
 
-type WebsocketSubscriptionName = 'tickers';
-
-type WebsocketMethod = 'subscribe' | 'subscriptions' | 'unsubscribe';
-
 export default class WebsocketClient {
   private baseURL: string;
 
@@ -29,11 +27,11 @@ export default class WebsocketClient {
   }
 
   private registerWsEventHandlers() {
-    this.ws.on('error', error => {
+    this.ws.on('error', (error: Error) => {
       console.log(`Connection Error: ${error.toString()}`);
     });
 
-    this.ws.on('message', function(message) {
+    this.ws.on('message', (message: string) => {
       console.log('Incoming message: ', message);
     });
 
@@ -46,7 +44,7 @@ export default class WebsocketClient {
     this.ws.send(JSON.stringify(payload));
   }
 
-  public subscribe(name: WebsocketSubscriptionName, markets: string[]) {
+  public subscribe(name: types.websocket.SubscriptionName, markets: string[]) {
     this.sendMessage(
       {
         method: 'subscribe',
@@ -61,7 +59,7 @@ export default class WebsocketClient {
   }
 
   public unsubscribe(
-    subscriptionName: WebsocketSubscriptionName,
+    subscriptionName: types.websocket.SubscriptionName,
     markets: string[],
   ) {
     this.sendMessage(

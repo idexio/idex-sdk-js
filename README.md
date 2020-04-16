@@ -172,6 +172,8 @@
         -   [Properties](#properties-29)
     -   [response.Withdrawal](#responsewithdrawal)
         -   [Properties](#properties-30)
+-   [WebsocketClient](#websocketclient)
+    -   [Parameters](#parameters-24)
 -   [autoDispatchEnabled](#autodispatchenabled)
 
 ## Clients
@@ -1234,6 +1236,23 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Gas price in wei used to compute fee
 -   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Ethereum transaction hash, if available
 -   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of receipt / processing
+
+## WebsocketClient
+
+Websocket API client
+
+```typescript
+import * as idex from '@idexio/idex-node';
+
+const config = {
+  baseURL: 'wss://ws.idex.io',
+}
+const websocketClient = new idex.Websocket(config.baseURL);
+```
+
+### Parameters
+
+-   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ## autoDispatchEnabled
 
