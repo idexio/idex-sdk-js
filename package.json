@@ -1,6 +1,6 @@
 {
   "name": "@idexio/idex-node",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Sample Node.js code for the IDEX API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
