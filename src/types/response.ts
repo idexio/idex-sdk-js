@@ -96,6 +96,7 @@ export interface Deposit {
  * @property {string} usdVolume24h - 24h volume in USD
  * @property {string} makerFeeRate
  * @property {string} takerFeeRate
+ * @property {string} withdrawMinimum
  */
 export interface ExchangeInfo {
   timeZone: string;
@@ -106,6 +107,7 @@ export interface ExchangeInfo {
   usdVolume24h: string;
   makerFeeRate: string;
   takerFeeRate: string;
+  withdrawMinimum: string;
 }
 
 /**
