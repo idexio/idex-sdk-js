@@ -539,7 +539,7 @@ import * as idex from '@idexio/idex-node';
 const config = {
   baseURL: 'wss://ws.idex.io',
 }
-const webSocketClient = new idex.WebSocket(config.baseURL);
+const webSocketClient = new idex.WebSocketClient(config.baseURL);
 ```
 
 #### Parameters

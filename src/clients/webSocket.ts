@@ -11,7 +11,7 @@ import * as types from '../types';
  * const config = {
  *   baseURL: 'wss://ws.idex.io',
  * }
- * const webSocketClient = new idex.WebSocket(config.baseURL);
+ * const webSocketClient = new idex.WebSocketClient(config.baseURL);
  * ```
  */
 
