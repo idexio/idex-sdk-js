@@ -67,6 +67,10 @@ export default class WebSocketClient {
     });
   }
 
+  public on(event: 'connect', listener: () => void) {
+    this.ws.on(event, listener);
+  }
+
   public listSubscriptions() {
     this.sendMessage({ method: 'subscriptions' });
   }
