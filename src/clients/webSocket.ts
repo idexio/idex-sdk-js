@@ -67,7 +67,7 @@ export default class WebSocketClient {
     });
   }
 
-  public on(event: 'connect', listener: () => void) {
+  public on(event: 'open', listener: () => void) {
     this.ws.on(event, listener);
   }
 
