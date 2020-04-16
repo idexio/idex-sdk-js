@@ -31,16 +31,12 @@ export default class WebSocketClient {
       console.log(`Connection Error: ${error.toString()}`);
     });
 
-    this.ws.on('message', (message: string) => {
-      console.log('Incoming message: ', message);
-    });
-
     this.ws.on('close', () => {
       console.log('Connection Closed');
     });
   }
 
-  private sendMessage(payload: unknown) {
+  private sendMessage(payload: types.webSocket.Request) {
     this.ws.send(JSON.stringify(payload));
   }
 
@@ -67,7 +63,7 @@ export default class WebSocketClient {
     });
   }
 
-  public on(event: 'open', listener: () => void) {
+  public on(event: 'open' | 'message', listener: () => void) {
     this.ws.on(event, listener);
   }
 

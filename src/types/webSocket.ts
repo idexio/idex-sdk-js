@@ -23,6 +23,8 @@ interface SubscribeRequest {
 interface UnsubscribeRequest {
   cid?: string;
   method: 'unsubscribe';
+  markets: string[];
+  subscriptions: SubscriptionName[];
 }
 
 interface SubscriptionsRequest {
