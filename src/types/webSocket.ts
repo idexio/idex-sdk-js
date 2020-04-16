@@ -38,7 +38,7 @@ export type Request =
 /**
  * Error Response
  *
- * @typedef {Object} websocketResponse.Error
+ * @typedef {Object} webSocketResponse.Error
  * @property {string} type - error
  * @property {Object} data
  * @property {string} data.code - error short code

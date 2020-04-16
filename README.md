@@ -58,7 +58,7 @@
             -   [Parameters](#parameters-22)
         -   [withdraw](#withdraw)
             -   [Parameters](#parameters-23)
-    -   [WebsocketClient](#websocketclient)
+    -   [WebSocketClient](#websocketclient)
         -   [Parameters](#parameters-24)
 -   [Enums](#enums)
     -   [CandleInterval](#candleinterval)
@@ -174,8 +174,8 @@
         -   [Properties](#properties-29)
     -   [response.Withdrawal](#responsewithdrawal)
         -   [Properties](#properties-30)
--   [Websocket Responses](#websocket-responses)
-    -   [websocketResponse.Error](#websocketresponseerror)
+-   [WebSocket Responses](#websocket-responses)
+    -   [webSocketResponse.Error](#websocketresponseerror)
         -   [Properties](#properties-31)
 -   [autoDispatchEnabled](#autodispatchenabled)
 
@@ -529,9 +529,9 @@ Example:
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Withdrawal](#responsewithdrawal)>** 
 
-### WebsocketClient
+### WebSocketClient
 
-Websocket API client
+WebSocket API client
 
 ```typescript
 import * as idex from '@idexio/idex-node';
@@ -539,7 +539,7 @@ import * as idex from '@idexio/idex-node';
 const config = {
   baseURL: 'wss://ws.idex.io',
 }
-const websocketClient = new idex.Websocket(config.baseURL);
+const webSocketClient = new idex.WebSocket(config.baseURL);
 ```
 
 #### Parameters
@@ -1258,12 +1258,12 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Ethereum transaction hash, if available
 -   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of receipt / processing
 
-## Websocket Responses
+## WebSocket Responses
 
 
 
 
-### websocketResponse.Error
+### webSocketResponse.Error
 
 Error Response
 

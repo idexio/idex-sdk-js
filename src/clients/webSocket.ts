@@ -3,7 +3,7 @@ import WebSocket from 'ws';
 import * as types from '../types';
 
 /**
- * Websocket API client
+ * WebSocket API client
  *
  * ```typescript
  * import * as idex from '@idexio/idex-node';
@@ -11,11 +11,11 @@ import * as types from '../types';
  * const config = {
  *   baseURL: 'wss://ws.idex.io',
  * }
- * const websocketClient = new idex.Websocket(config.baseURL);
+ * const webSocketClient = new idex.WebSocket(config.baseURL);
  * ```
  */
 
-export default class WebsocketClient {
+export default class WebSocketClient {
   private baseURL: string;
 
   private ws: WebSocket;
@@ -44,7 +44,7 @@ export default class WebsocketClient {
     this.ws.send(JSON.stringify(payload));
   }
 
-  private subscribe(name: types.websocket.SubscriptionName, markets: string[]) {
+  private subscribe(name: types.webSocket.SubscriptionName, markets: string[]) {
     this.sendMessage({
       method: 'subscribe',
       subscriptions: [
@@ -57,7 +57,7 @@ export default class WebsocketClient {
   }
 
   private unsubscribe(
-    subscriptionName: types.websocket.SubscriptionName,
+    subscriptionName: types.webSocket.SubscriptionName,
     markets: string[],
   ) {
     this.sendMessage({
