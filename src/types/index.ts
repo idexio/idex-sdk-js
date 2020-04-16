@@ -3,4 +3,4 @@
 export * as enums from './enums';
 export * as request from './request';
 export * as response from './response';
-export * as websocket from './websocket';
+export * as webSocket from './webSocket';

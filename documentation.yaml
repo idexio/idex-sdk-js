@@ -3,7 +3,7 @@ toc:
     children:
       - PublicClient
       - AuthenticatedClient
-      - WebsocketClient
+      - WebSocketClient
   - name: Enums
     description: |
       Sets of named constants used as field types for several requests and responses
@@ -52,6 +52,6 @@ toc:
       - response.User
       - response.Wallet
       - response.Withdrawal
-  - name: Websocket Responses
+  - name: WebSocket Responses
     children:
-      - websocketResponse.Error
+      - webSocketResponse.Error
