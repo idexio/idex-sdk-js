@@ -174,6 +174,8 @@
         -   [Properties](#properties-30)
 -   [WebsocketClient](#websocketclient)
     -   [Parameters](#parameters-24)
+-   [response.Error](#responseerror)
+    -   [Properties](#properties-31)
 -   [autoDispatchEnabled](#autodispatchenabled)
 
 ## Clients
@@ -1254,6 +1256,19 @@ const websocketClient = new idex.Websocket(config.baseURL);
 ### Parameters
 
 -   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+## response.Error
+
+Error Response
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** error
+-   `data` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+    -   `data.code` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** error short code
+    -   `data.message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** human readable error message
 
 ## autoDispatchEnabled
 

@@ -1,5 +1,3 @@
-/** Requests */
-
 export type SubscriptionName =
   | 'balances'
   | 'candles'
@@ -32,17 +30,24 @@ interface SubscriptionsRequest {
   method: 'subscriptions';
 }
 
-export type IncomingMessage =
+export type Request =
   | SubscribeRequest
   | SubscriptionsRequest
   | UnsubscribeRequest;
 
-/** Responses */
-
+/**
+ * Error Response
+ *
+ * @typedef {Object} response.Error
+ * @property {string} type - error
+ * @property {Object} data
+ * @property {string} data.code - error short code
+ * @property {string} data.message - human readable error message
+ */
 export interface ErrorResponse {
   type: 'error';
   data: {
-    code: string; // TODO improve type of short code
+    code: string;
     message: string;
   };
 }
