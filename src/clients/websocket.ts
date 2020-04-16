@@ -44,30 +44,38 @@ export default class WebsocketClient {
     this.ws.send(JSON.stringify(payload));
   }
 
-  public subscribe(name: types.websocket.SubscriptionName, markets: string[]) {
-    this.sendMessage(
-      {
-        method: 'subscribe',
-        subscriptions: [
-          {
-            markets,
-            name,
-          },
-        ],
-      },
-    );
+  private subscribe(name: types.websocket.SubscriptionName, markets: string[]) {
+    this.sendMessage({
+      method: 'subscribe',
+      subscriptions: [
+        {
+          markets,
+          name,
+        },
+      ],
+    });
   }
 
-  public unsubscribe(
+  private unsubscribe(
     subscriptionName: types.websocket.SubscriptionName,
     markets: string[],
   ) {
-    this.sendMessage(
-      {
-        method: 'unsubscribe',
-        markets,
-        subscriptions: [subscriptionName],
-      }
-    );
+    this.sendMessage({
+      method: 'unsubscribe',
+      markets,
+      subscriptions: [subscriptionName],
+    });
+  }
+
+  public listSubscriptions() {
+    this.sendMessage({ method: 'subscriptions' });
+  }
+
+  public unsubscribeFromTickers(markets: string[]) {
+    this.unsubscribe('tickers', markets);
+  }
+
+  public subscribeToTickers(markets: string[]) {
+    this.subscribe('tickers', markets);
   }
 }
