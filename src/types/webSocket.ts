@@ -68,7 +68,7 @@ export interface ErrorResponse {
  */
 export interface SubscriptionsResponse {
   cid?: string;
-  method: 'subscriptions';
+  type: 'subscriptions';
   subscriptions: Subscription[];
 }
 
