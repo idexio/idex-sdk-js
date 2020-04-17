@@ -71,3 +71,5 @@ export interface SubscriptionsResponse {
   method: 'subscriptions';
   subscriptions: Subscription[];
 }
+
+export type Response = ErrorResponse | SubscriptionsResponse;
