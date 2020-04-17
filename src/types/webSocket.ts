@@ -9,7 +9,7 @@ export type SubscriptionName =
 
 export type Method = 'subscribe' | 'subscriptions' | 'unsubscribe';
 
-interface Subscription {
+export interface Subscription {
   name: SubscriptionName;
   markets: string[];
 }
