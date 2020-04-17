@@ -63,7 +63,11 @@ export default class WebSocketClient {
     });
   }
 
-  public on(event: 'open' | 'message', listener: () => void) {
+  public close() {
+    this.ws.close();
+  }
+
+  public on(event: 'open' | 'message', listener: (message?: string) => void) {
     this.ws.on(event, listener);
   }
 
