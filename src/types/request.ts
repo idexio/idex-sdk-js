@@ -1,6 +1,4 @@
 import * as enums from './enums';
-import { solidityHashOfParams } from './requestHash';
-import { uuidToBuffer } from '../utils';
 
 type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 type XOR<T, U> = T | U extends object
@@ -276,41 +274,3 @@ export interface WithdrawalByAddress extends WithdrawalBase {
  * @property {string} quantity - Withdrawal amount in asset terms, fees are taken from this value
  */
 export type Withdrawal = XOR<WithdrawalBySymbol, WithdrawalByAddress>;
-
-export const getOrderHash = (order: Order): string =>
-  solidityHashOfParams([
-    ['string', order.market],
-    ['uint8', enums.OrderSide[order.side]],
-    ['uint8', enums.OrderType[order.type]],
-    ['string', (order as OrderByBaseQuantity).quantity || ''],
-    ['string', (order as OrderByQuoteQuantity).quoteOrderQuantity || ''],
-    ['string', (order as OrderWithPrice).price || ''],
-    ['string', (order as OrderWithStopPrice).stopPrice || ''],
-    ['address', order.wallet],
-    ['uint128', uuidToBuffer(order.nonce)],
-  ]);
-
-export const getDeleteOrderHash = (
-  walletAddress: string,
-  nonce: string,
-  market?: string,
-  orderId?: string,
-): string =>
-  solidityHashOfParams([
-    ['string', 'deleteOrders'],
-    ['address', walletAddress],
-    ['string', market || ''],
-    ['string', orderId || ''],
-    ['uint128', uuidToBuffer(nonce)],
-  ]);
-
-export const getWithdrawalHash = (withdrawal: Withdrawal): string =>
-  solidityHashOfParams([
-    ['uint128', uuidToBuffer(withdrawal.nonce)],
-    ['address', withdrawal.wallet],
-    withdrawal.assetContractAddress
-      ? ['address', withdrawal.assetContractAddress]
-      : ['string', withdrawal.asset],
-    ['string', withdrawal.quantity],
-    ['bool', true], // Auto-dispatch
-  ]);

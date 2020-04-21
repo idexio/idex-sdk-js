@@ -1,4 +1,4 @@
-import WebSocket from 'ws';
+import WebSocket from 'isomorphic-ws';
 
 import * as types from '../types';
 
@@ -23,15 +23,16 @@ export default class WebSocketClient {
   constructor(baseURL: string) {
     this.baseURL = baseURL;
     this.ws = new WebSocket(baseURL);
+
     this.registerWsEventHandlers();
   }
 
   private registerWsEventHandlers() {
-    this.ws.on('error', (error: Error) => {
+    this.ws.addEventListener('error', error => {
       console.log(`Connection Error: ${error.toString()}`);
     });
 
-    this.ws.on('close', () => {
+    this.ws.addEventListener('close', () => {
       console.log('Connection Closed');
     });
   }
@@ -68,7 +69,7 @@ export default class WebSocketClient {
   }
 
   public on(event: 'open' | 'message', listener: (message?: string) => void) {
-    this.ws.on(event, listener);
+    this.ws.addEventListener(event, listener);
   }
 
   public listSubscriptions() {
