@@ -6,9 +6,9 @@
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "module": "commonjs",
-    "lib": ["es2017", "dom"],
+    "lib": ["es2017", "es2018", "dom"],
     "listEmittedFiles": true,
+    "module": "commonjs",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "outDir": "dist",
@@ -17,9 +17,9 @@
     "strict": true,
     "strictNullChecks": false,
     "strictPropertyInitialization": false,
-    "target": "es2017"
+    "target": "es2019",
+    "typeRoots": ["./node_modules/@types", "./types"]
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules"],
-  "typeRoots": ["./node_modules/@types", "./types"]
+  "exclude": ["node_modules"]
 }
