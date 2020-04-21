@@ -49,6 +49,15 @@ module.exports = {
         trailingComma: 'all',
       },
     ],
+    'sort-imports': [
+      'error',
+      {
+        ignoreCase: true,
+        ignoreDeclarationSort: false,
+        ignoreMemberSort: false,
+        memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'],
+      },
+    ],
     quotes: ['error', 'single'],
   },
   plugins: ['import', 'promise', 'prettier', '@typescript-eslint'],
