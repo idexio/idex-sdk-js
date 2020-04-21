@@ -4,6 +4,7 @@ import hmacSHA512 from 'crypto-js/hmac-sha512';
 import queryString from 'query-string';
 import sha256 from 'crypto-js/sha256';
 
+import * as ethers from '../ethers';
 import { request, response } from '../types';
 
 /**
@@ -69,7 +70,7 @@ export default class AuthenticatedClient {
       await this.delete('/orders', {
         parameters,
         signature: await sign(
-          request.getDeleteOrderHash(
+          ethers.getDeleteOrderHash(
             parameters.wallet,
             parameters.nonce,
             parameters.market,
@@ -246,7 +247,7 @@ export default class AuthenticatedClient {
     return (
       await this.post('/orders', {
         parameters: order,
-        signature: await sign(request.getOrderHash(order)),
+        signature: await sign(ethers.getOrderHash(order)),
       })
     ).data;
   }
@@ -273,7 +274,7 @@ export default class AuthenticatedClient {
     return (
       await this.post('/orders/test', {
         parameters: order,
-        signature: await sign(request.getOrderHash(order)),
+        signature: await sign(ethers.getOrderHash(order)),
       })
     ).data;
   }
@@ -299,7 +300,7 @@ export default class AuthenticatedClient {
     return (
       await this.post('/withdrawals', {
         parameters: withdrawal,
-        signature: await sign(request.getWithdrawalHash(withdrawal)),
+        signature: await sign(ethers.getWithdrawalHash(withdrawal)),
       })
     ).data;
   }

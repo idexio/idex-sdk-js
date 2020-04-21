@@ -4,7 +4,7 @@ import WebSocketClient from './clients/webSocket';
 // TODO eslint doesn't yet understand the syntax export * as ns
 /* eslint-disable-next-line */
 import { enums, request, response, webSocket } from './types';
-import { getPrivateKeySigner } from './ethers/sign';
+import { getPrivateKeySigner } from './ethers';
 
 export {
   AuthenticatedClient,
