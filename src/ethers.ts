@@ -1,7 +1,6 @@
 import { ethers } from 'ethers';
 
 import * as types from './types';
-import { uuidToBuffer } from './utils';
 
 export const getPrivateKeySigner = (walletPrivateKey: string) => (
   hashToSign: string,
@@ -23,7 +22,7 @@ export const getOrderHash = (order: types.request.Order): string =>
     ['string', (order as types.request.OrderWithPrice).price || ''],
     ['string', (order as types.request.OrderWithStopPrice).stopPrice || ''],
     ['address', order.wallet],
-    ['uint128', uuidToBuffer(order.nonce)],
+    ['uint128', uuidToUint8Array(order.nonce)],
   ]);
 
 export const getDeleteOrderHash = (
@@ -37,14 +36,14 @@ export const getDeleteOrderHash = (
     ['address', walletAddress],
     ['string', market || ''],
     ['string', orderId || ''],
-    ['uint128', uuidToBuffer(nonce)],
+    ['uint128', uuidToUint8Array(nonce)],
   ]);
 
 export const getWithdrawalHash = (
   withdrawal: types.request.Withdrawal,
 ): string =>
   solidityHashOfParams([
-    ['uint128', uuidToBuffer(withdrawal.nonce)],
+    ['uint128', uuidToUint8Array(withdrawal.nonce)],
     ['address', withdrawal.wallet],
     withdrawal.assetContractAddress
       ? ['address', withdrawal.assetContractAddress]
@@ -55,7 +54,7 @@ export const getWithdrawalHash = (
 
 type TypeValuePair =
   | ['string' | 'address', string]
-  | ['uint128', string | Buffer] // TODO: test Buffer support on frontend ?
+  | ['uint128', string | Uint8Array]
   | ['uint8' | 'uint64', number]
   | ['bool', boolean];
 
@@ -65,3 +64,6 @@ const solidityHashOfParams = (params: TypeValuePair[]): string => {
   // TODO: we might let lib users to pick their solidityKeccak256 library, eg. web3.soliditySha3()
   return ethers.utils.solidityKeccak256(fields, values);
 };
+
+const uuidToUint8Array = (uuid: string): Uint8Array =>
+  ethers.utils.arrayify(`0x${uuid.replace(/-/g, '')}`);
