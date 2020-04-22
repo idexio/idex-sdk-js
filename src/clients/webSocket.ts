@@ -9,9 +9,10 @@ import * as types from '../types';
  * import * as idex from '@idexio/idex-node';
  *
  * const config = {
- *   baseURL: 'webSockets://webSocket.idex.io',
+ *   baseURL: 'wss://ws.idex.io',
  * }
  * const webSocketClient = new idex.WebSocketClient(config.baseURL);
+ * await webSocketClient.connect();
  * ```
  */
 
@@ -22,6 +23,8 @@ export type ResponseListener = (response: types.webSocket.Response) => unknown;
 
 export default class WebSocketClient {
   private baseURL: string;
+
+  private shouldReconnectAutomatically: boolean;
 
   private reconnectAttempt: number;
 
@@ -35,9 +38,10 @@ export default class WebSocketClient {
 
   private webSocket: WebSocket;
 
-  constructor(baseURL: string) {
+  constructor(baseURL: string, shouldReconnectAutomatically = false) {
     this.baseURL = baseURL;
 
+    this.shouldReconnectAutomatically = shouldReconnectAutomatically;
     this.reconnectAttempt = 0;
 
     this.connectListeners = new Set();
@@ -49,31 +53,25 @@ export default class WebSocketClient {
   /* Connection management */
 
   public async connect(): Promise<void> {
-    try {
-      if (this.webSocket) {
-        // Sanity check, should never happen
-        if (!this.isConnected()) {
-          throw new Error('Unexpected internal state');
-        }
-
-        return; // Already connected
-      }
-
-      this.createWebSocket();
-
-      // Add a one-time listener for the open event
-      await new Promise(resolve => {
-        this.webSocket.onopen = (): void => {
-          this.webSocket.onopen = undefined;
-          resolve();
-        };
-      });
-    } finally {
-      if (this.isConnected()) {
-        this.resetReconnectionState();
-        this.connectListeners.forEach(listener => listener());
-      }
+    if (this.isConnected()) {
+      return;
     }
+
+    if (!this.webSocket) {
+      this.createWebSocket();
+    }
+
+    await new Promise(resolve => {
+      (function waitForOpen(ws: WebSocket): void {
+        if (ws.readyState === WebSocket.OPEN) {
+          return resolve();
+        }
+        setTimeout(() => waitForOpen(ws), 100);
+      })(this.webSocket);
+    });
+
+    this.resetReconnectionState();
+    this.connectListeners.forEach(listener => listener());
   }
 
   public disconnect(): void {
@@ -142,7 +140,9 @@ export default class WebSocketClient {
     this.webSocket = null;
     this.disconnectListeners.forEach(listener => listener());
 
-    this.reconnect();
+    if (this.shouldReconnectAutomatically) {
+      this.reconnect();
+    }
   }
 
   private handleWebSocketError(event: WebSocket.ErrorEvent): void {
