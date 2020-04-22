@@ -30,33 +30,33 @@
             -   [Parameters](#parameters-8)
         -   [getBalances](#getbalances)
             -   [Parameters](#parameters-9)
-        -   [getDatastreamToken](#getdatastreamtoken)
-            -   [Parameters](#parameters-10)
         -   [getFills](#getfills)
-            -   [Parameters](#parameters-11)
+            -   [Parameters](#parameters-10)
         -   [getDeposit](#getdeposit)
-            -   [Parameters](#parameters-12)
+            -   [Parameters](#parameters-11)
         -   [getDeposits](#getdeposits)
-            -   [Parameters](#parameters-13)
+            -   [Parameters](#parameters-12)
         -   [getOrder](#getorder)
-            -   [Parameters](#parameters-14)
+            -   [Parameters](#parameters-13)
         -   [getOrders](#getorders)
-            -   [Parameters](#parameters-15)
+            -   [Parameters](#parameters-14)
         -   [getOrdersIncludingInactive](#getordersincludinginactive)
-            -   [Parameters](#parameters-16)
+            -   [Parameters](#parameters-15)
         -   [getUser](#getuser)
-            -   [Parameters](#parameters-17)
+            -   [Parameters](#parameters-16)
         -   [getWallets](#getwallets)
-            -   [Parameters](#parameters-18)
+            -   [Parameters](#parameters-17)
         -   [getWithdrawal](#getwithdrawal)
-            -   [Parameters](#parameters-19)
+            -   [Parameters](#parameters-18)
         -   [getWithdrawals](#getwithdrawals)
-            -   [Parameters](#parameters-20)
+            -   [Parameters](#parameters-19)
         -   [placeOrder](#placeorder)
-            -   [Parameters](#parameters-21)
+            -   [Parameters](#parameters-20)
         -   [placeTestOrder](#placetestorder)
-            -   [Parameters](#parameters-22)
+            -   [Parameters](#parameters-21)
         -   [withdraw](#withdraw)
+            -   [Parameters](#parameters-22)
+        -   [getWToken](#getwtoken)
             -   [Parameters](#parameters-23)
     -   [WebSocketClient](#websocketclient)
         -   [Parameters](#parameters-24)
@@ -360,17 +360,6 @@ Get asset quantity data (positions) held by a wallet on the exchange
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;([response.Balance](#responsebalance) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Balance](#responsebalance)>)>** 
 
-#### getDatastreamToken
-
-Obtain a datastream API token
-
-##### Parameters
-
--   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum wallet address
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
-
 #### getFills
 
 Get private, detailed data about fills against orders placed by the calling user account
@@ -530,6 +519,17 @@ Example:
 -   `sign` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Sign hash function implementation. Possbile to use built-in `getPrivateKeySigner('YourPrivateKey')`
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Withdrawal](#responsewithdrawal)>** 
+
+#### getWToken
+
+Obtain a WebSocket API token
+
+##### Parameters
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum wallet address
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 
 ### WebSocketClient
 

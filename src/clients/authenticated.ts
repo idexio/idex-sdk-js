@@ -96,19 +96,6 @@ export default class AuthenticatedClient {
   }
 
   /**
-   * Obtain a datastream API token
-   *
-   * @param {string} nonce - UUIDv1
-   * @param {string} wallet - Ethereum wallet address
-   */
-  public async getDatastreamToken(
-    nonce: string,
-    wallet: string,
-  ): Promise<string> {
-    return (await this.get('/datastream', { nonce, wallet })).data.token;
-  }
-
-  /**
    * Get private, detailed data about fills against orders placed by the calling user account
    *
    * @param {request.FindFills} findFills
@@ -303,6 +290,16 @@ export default class AuthenticatedClient {
         signature: await sign(eth.getWithdrawalHash(withdrawal)),
       })
     ).data;
+  }
+
+  /**
+   * Obtain a WebSocket API token
+   *
+   * @param {string} nonce - UUIDv1
+   * @param {string} wallet - Ethereum wallet address
+   */
+  public async getWToken(nonce: string, wallet: string): Promise<string> {
+    return (await this.get('/wsToken', { nonce, wallet })).data.token;
   }
 
   private async get(
