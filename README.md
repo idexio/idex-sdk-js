@@ -56,7 +56,7 @@
             -   [Parameters](#parameters-21)
         -   [withdraw](#withdraw)
             -   [Parameters](#parameters-22)
-        -   [getWToken](#getwtoken)
+        -   [getWsToken](#getwstoken)
             -   [Parameters](#parameters-23)
     -   [WebSocketClient](#websocketclient)
         -   [Parameters](#parameters-24)
@@ -520,7 +520,7 @@ Example:
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Withdrawal](#responsewithdrawal)>** 
 
-#### getWToken
+#### getWsToken
 
 Obtain a WebSocket API token
 

@@ -298,7 +298,7 @@ export default class AuthenticatedClient {
    * @param {string} nonce - UUIDv1
    * @param {string} wallet - Ethereum wallet address
    */
-  public async getWToken(nonce: string, wallet: string): Promise<string> {
+  public async getWsToken(nonce: string, wallet: string): Promise<string> {
     return (await this.get('/wsToken', { nonce, wallet })).data.token;
   }
 
