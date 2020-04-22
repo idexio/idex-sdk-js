@@ -12,36 +12,173 @@ import * as types from '../types';
  *   baseURL: 'wss://ws.idex.io',
  * }
  * const webSocketClient = new idex.WebSocketClient(config.baseURL);
+ * await webSocketClient.connect();
  * ```
  */
+
+export type ConnectListener = () => unknown;
+export type DisconnectListener = () => unknown;
+export type ErrorListener = (errorEvent: WebSocket.ErrorEvent) => unknown;
+export type ResponseListener = (response: types.webSocket.Response) => unknown;
 
 export default class WebSocketClient {
   private baseURL: string;
 
-  private ws: WebSocket;
+  private shouldReconnectAutomatically: boolean;
 
-  constructor(baseURL: string) {
+  private reconnectAttempt: number;
+
+  private connectListeners: Set<ConnectListener>;
+
+  private disconnectListeners: Set<DisconnectListener>;
+
+  private errorListeners: Set<ErrorListener>;
+
+  private responseListeners: Set<ResponseListener>;
+
+  private webSocket: WebSocket;
+
+  constructor(baseURL: string, shouldReconnectAutomatically = false) {
     this.baseURL = baseURL;
-    this.ws = new WebSocket(baseURL);
 
-    this.registerWsEventHandlers();
+    this.shouldReconnectAutomatically = shouldReconnectAutomatically;
+    this.reconnectAttempt = 0;
+
+    this.connectListeners = new Set();
+    this.disconnectListeners = new Set();
+    this.errorListeners = new Set();
+    this.responseListeners = new Set();
   }
 
-  private registerWsEventHandlers() {
-    this.ws.addEventListener('error', error => {
-      console.log(`Connection Error: ${error.toString()}`);
+  /* Connection management */
+
+  public async connect(): Promise<void> {
+    if (this.isConnected()) {
+      return;
+    }
+
+    if (!this.webSocket) {
+      this.createWebSocket();
+    }
+
+    await new Promise(resolve => {
+      (function waitForOpen(ws: WebSocket): void {
+        if (ws.readyState === WebSocket.OPEN) {
+          return resolve();
+        }
+        setTimeout(() => waitForOpen(ws), 100);
+      })(this.webSocket);
     });
 
-    this.ws.addEventListener('close', () => {
-      console.log('Connection Closed');
-    });
+    this.resetReconnectionState();
+    this.connectListeners.forEach(listener => listener());
   }
 
-  private sendMessage(payload: types.webSocket.Request) {
-    this.ws.send(JSON.stringify(payload));
+  public disconnect(): void {
+    if (!this.webSocket) {
+      return; // Already disconnected
+    }
+
+    // TODO wait for buffer to flush
+    this.destroyWebSocket();
+    this.disconnectListeners.forEach(listener => listener());
   }
 
-  private subscribe(name: types.webSocket.SubscriptionName, markets: string[]) {
+  public isConnected(): boolean {
+    return this.webSocket && this.webSocket.readyState === WebSocket.OPEN;
+  }
+
+  /* Event listeners */
+
+  public onConnect(listener: ConnectListener): void {
+    this.connectListeners.add(listener);
+  }
+
+  public onDisconnect(listener: ConnectListener): void {
+    this.disconnectListeners.add(listener);
+  }
+
+  public onError(listener: ErrorListener): void {
+    this.errorListeners.add(listener);
+  }
+
+  public onResponse(listener: ResponseListener): void {
+    this.responseListeners.add(listener);
+  }
+
+  /* Subscription management */
+
+  public listSubscriptions(): void {
+    this.sendMessage({ method: 'subscriptions' });
+  }
+
+  public unsubscribeFromTickers(markets: string[]): void {
+    this.unsubscribe('tickers', markets);
+  }
+
+  public subscribeToTickers(markets: string[]): void {
+    this.subscribe('tickers', markets);
+  }
+
+  /* Private */
+
+  private createWebSocket(): void {
+    this.webSocket = new WebSocket(this.baseURL);
+    this.webSocket.onmessage = this.handleWebSocketMessage.bind(this);
+    this.webSocket.onclose = this.handleWebSocketClose.bind(this);
+    this.webSocket.onerror = this.handleWebSocketError.bind(this);
+  }
+
+  private destroyWebSocket(): void {
+    // TODO wait for buffer to flush
+    this.webSocket.onclose = null; // Do not reconnect
+    this.webSocket.close();
+    this.webSocket = null;
+  }
+
+  private handleWebSocketClose(): void {
+    this.webSocket = null;
+    this.disconnectListeners.forEach(listener => listener());
+
+    if (this.shouldReconnectAutomatically) {
+      this.reconnect();
+    }
+  }
+
+  private handleWebSocketError(event: WebSocket.ErrorEvent): void {
+    this.errorListeners.forEach(listener => listener(event));
+  }
+
+  private handleWebSocketMessage(event: WebSocket.MessageEvent): void {
+    if (typeof event.data !== 'string') {
+      throw new Error('Malformed response data'); // Shouldn't happen
+    }
+    const message = JSON.parse(event.data);
+    this.responseListeners.forEach(listener => listener(message));
+  }
+
+  private reconnect(): void {
+    // Reconnect with exponential backoff
+    const backoffSeconds = 2 ** this.reconnectAttempt;
+    this.reconnectAttempt += 1;
+    console.log(`Reconnecting after ${backoffSeconds} seconds...`);
+    setTimeout(this.connect.bind(this), backoffSeconds * 1000);
+  }
+
+  private resetReconnectionState(): void {
+    this.reconnectAttempt = 0;
+  }
+
+  private sendMessage(payload: types.webSocket.Request): void {
+    this.throwIfDisconnected();
+
+    this.webSocket.send(JSON.stringify(payload));
+  }
+
+  private subscribe(
+    name: types.webSocket.SubscriptionName,
+    markets: string[],
+  ): void {
     this.sendMessage({
       method: 'subscribe',
       subscriptions: [
@@ -53,34 +190,22 @@ export default class WebSocketClient {
     });
   }
 
+  private throwIfDisconnected(): void {
+    if (!this.isConnected()) {
+      throw new Error(
+        'Websocket not yet connected, await connect() method first',
+      );
+    }
+  }
+
   private unsubscribe(
     subscriptionName: types.webSocket.SubscriptionName,
     markets: string[],
-  ) {
+  ): void {
     this.sendMessage({
       method: 'unsubscribe',
       markets,
       subscriptions: [subscriptionName],
     });
-  }
-
-  public close() {
-    this.ws.close();
-  }
-
-  public on(event: 'open' | 'message', listener: (message?: string) => void) {
-    this.ws.addEventListener(event, listener);
-  }
-
-  public listSubscriptions() {
-    this.sendMessage({ method: 'subscriptions' });
-  }
-
-  public unsubscribeFromTickers(markets: string[]) {
-    this.unsubscribe('tickers', markets);
-  }
-
-  public subscribeToTickers(markets: string[]) {
-    this.subscribe('tickers', markets);
   }
 }
