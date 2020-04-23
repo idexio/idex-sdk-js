@@ -13,14 +13,22 @@ export type Method = 'subscribe' | 'subscriptions' | 'unsubscribe';
 export interface Subscription {
   markets: string[];
   name: keyof typeof SubscriptionName;
-  token?: string;
 }
 
-interface SubscribeRequest {
-  cid?: string;
-  method: 'subscribe';
-  subscriptions: Subscription[];
-}
+export type SubscribeRequest =
+  | {
+      cid?: string;
+      token?: string;
+      method: 'subscribe';
+      subscriptions: Subscription[];
+    }
+  | {
+      cid?: string;
+      token?: string;
+      method: 'subscribe';
+      markets: string[];
+      subscriptions: (keyof typeof SubscriptionName)[];
+    };
 
 interface UnsubscribeRequest {
   cid?: string;
