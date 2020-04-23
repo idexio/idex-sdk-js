@@ -18,20 +18,20 @@ export interface Subscription {
   interval?: keyof typeof CandleInterval;
 }
 
-export interface SubscribeRequestShort {
+export type SubscribeRequestShort = {
   cid?: string;
   token?: string;
   method: 'subscribe';
   markets: string[];
   subscriptions: (keyof typeof SubscriptionName)[];
-}
+};
 
-export interface SubscribeRequestLong {
+export type SubscribeRequestLong = {
   cid?: string;
   token?: string;
   method: 'subscribe';
   subscriptions: Subscription[];
-}
+};
 
 export type SubscribeRequest = SubscribeRequestLong | SubscribeRequestShort;
 
