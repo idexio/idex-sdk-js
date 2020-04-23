@@ -1,17 +1,19 @@
-export type SubscriptionName =
-  | 'balances'
-  | 'candles'
-  | 'l1orderbook'
-  | 'l2orderbook'
-  | 'orders'
-  | 'tickers'
-  | 'trades';
+export enum SubscriptionName {
+  balances = 'balances',
+  candles = 'candles',
+  l1orderbook = 'l1orderbook',
+  l2orderbook = 'l2orderbook',
+  orders = 'orders',
+  tickers = 'tickers',
+  trades = 'trades',
+}
 
 export type Method = 'subscribe' | 'subscriptions' | 'unsubscribe';
 
 export interface Subscription {
-  name: SubscriptionName;
   markets: string[];
+  name: keyof typeof SubscriptionName;
+  token?: string;
 }
 
 interface SubscribeRequest {
@@ -24,7 +26,7 @@ interface UnsubscribeRequest {
   cid?: string;
   method: 'unsubscribe';
   markets: string[];
-  subscriptions: SubscriptionName[];
+  subscriptions: (keyof typeof SubscriptionName)[];
 }
 
 interface SubscriptionsRequest {
