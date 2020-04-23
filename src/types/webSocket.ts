@@ -35,14 +35,14 @@ export type SubscribeRequestLong = {
 
 export type SubscribeRequest = SubscribeRequestLong | SubscribeRequestShort;
 
-interface UnsubscribeRequest {
+export interface UnsubscribeRequest {
   cid?: string;
   method: 'unsubscribe';
-  markets: string[];
-  subscriptions: (keyof typeof SubscriptionName)[];
+  markets?: string[];
+  subscriptions?: (keyof typeof SubscriptionName)[];
 }
 
-interface SubscriptionsRequest {
+export interface SubscriptionsRequest {
   cid?: string;
   method: 'subscriptions';
 }
