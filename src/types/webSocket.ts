@@ -67,39 +67,33 @@ export type UnauthenticatedSubscription =
   | TickersSubscription
   | TradesSubscription;
 
-export interface Subscription {
-  markets: string[];
-  name: SubscriptionName;
-  interval?: keyof typeof enums.CandleInterval;
-}
+export type Subscription =
+  | CandlesSubscription
+  | L1OrderBookSubscription
+  | L2OrderBookSubscription
+  | TickersSubscription
+  | TradesSubscription
+  | BalancesSubscription
+  | OrdersSubscription;
 
-export type SubscribeRequestShort = {
+export type SubscribeRequest = {
+  method: 'subscribe';
   cid?: string;
   token?: string;
-  method: 'subscribe';
-  markets: string[];
-  subscriptions: SubscriptionName[];
+  markets?: string[];
+  subscriptions: (Subscription | SubscriptionName)[];
 };
-
-export type SubscribeRequestLong = {
-  cid?: string;
-  token?: string;
-  method: 'subscribe';
-  subscriptions: Subscription[];
-};
-
-export type SubscribeRequest = SubscribeRequestLong | SubscribeRequestShort;
 
 export interface UnsubscribeRequest {
-  cid?: string;
   method: 'unsubscribe';
+  cid?: string;
   markets?: string[];
-  subscriptions?: SubscriptionName[];
+  subscriptions?: (Subscription | SubscriptionName)[];
 }
 
 export interface SubscriptionsRequest {
-  cid?: string;
   method: 'subscriptions';
+  cid?: string;
 }
 
 export type Request =
