@@ -123,7 +123,7 @@ export interface ErrorResponse {
 export interface ResponseSubscription {
   markets: string[];
   name: SubscriptionName;
-  interval?: keyof typeof CandleInterval;
+  interval?: keyof typeof enums.CandleInterval;
   wallet?: string;
 }
 
