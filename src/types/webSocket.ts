@@ -122,7 +122,7 @@ export interface ErrorResponse {
 
 export interface ResponseSubscription {
   markets: string[];
-  name: keyof typeof SubscriptionName;
+  name: SubscriptionName;
   interval?: keyof typeof CandleInterval;
   wallet?: string;
 }
