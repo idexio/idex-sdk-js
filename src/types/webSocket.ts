@@ -1,20 +1,27 @@
 import { CandleInterval } from './enums';
 
-export enum SubscriptionName {
+export enum AuthenticatedSubscriptionName {
   balances = 'balances',
+  orders = 'orders',
+}
+
+export enum UnauthenticatedSubscriptionName {
   candles = 'candles',
   l1orderbook = 'l1orderbook',
   l2orderbook = 'l2orderbook',
-  orders = 'orders',
   tickers = 'tickers',
   trades = 'trades',
 }
+
+export type SubscriptionName =
+  | keyof typeof UnauthenticatedSubscriptionName
+  | keyof typeof AuthenticatedSubscriptionName;
 
 export type Method = 'subscribe' | 'subscriptions' | 'unsubscribe';
 
 export interface Subscription {
   markets: string[];
-  name: keyof typeof SubscriptionName;
+  name: SubscriptionName;
   interval?: keyof typeof CandleInterval;
 }
 
@@ -23,7 +30,7 @@ export type SubscribeRequestShort = {
   token?: string;
   method: 'subscribe';
   markets: string[];
-  subscriptions: (keyof typeof SubscriptionName)[];
+  subscriptions: SubscriptionName[];
 };
 
 export type SubscribeRequestLong = {
@@ -39,7 +46,7 @@ export interface UnsubscribeRequest {
   cid?: string;
   method: 'unsubscribe';
   markets?: string[];
-  subscriptions?: (keyof typeof SubscriptionName)[];
+  subscriptions?: SubscriptionName[];
 }
 
 export interface SubscriptionsRequest {
@@ -73,7 +80,7 @@ export interface ErrorResponse {
 
 export interface ResponseSubscription {
   markets: string[];
-  name: keyof typeof SubscriptionName;
+  name: SubscriptionName;
   interval?: keyof typeof CandleInterval;
   wallet?: string;
 }
