@@ -2,6 +2,11 @@ import * as enums from './enums';
 
 export type Method = 'subscribe' | 'subscriptions' | 'unsubscribe';
 
+export enum AuthenticatedSubscriptionName {
+  balances = 'balances',
+  orders = 'orders',
+}
+
 export enum UnauthenticatedSubscriptionName {
   candles = 'candles',
   l1orderbook = 'l1orderbook',
@@ -9,13 +14,21 @@ export enum UnauthenticatedSubscriptionName {
   tickers = 'tickers',
   trades = 'trades',
 }
-export enum AuthenticatedSubscriptionName {
-  balances = 'balances',
-  orders = 'orders',
-}
+
 export type SubscriptionName =
   | keyof typeof UnauthenticatedSubscriptionName
   | keyof typeof AuthenticatedSubscriptionName;
+
+export interface BalancesSubscription {
+  name: 'balances';
+  wallet: string;
+}
+
+export interface OrdersSubscription {
+  name: 'orders';
+  markets: string[];
+  wallet: string;
+}
 
 export interface CandlesSubscription {
   name: 'candles';
@@ -43,17 +56,6 @@ export interface TradesSubscription {
   markets: string[];
 }
 
-export interface BalancesSubscription {
-  name: 'balances';
-  wallet: string;
-}
-
-export interface OrdersSubscription {
-  name: 'orders';
-  markets: string[];
-  wallet: string;
-}
-
 export type AuthenticatedSubscription =
   | BalancesSubscription
   | OrdersSubscription;
@@ -74,19 +76,33 @@ export type Subscription =
   | BalancesSubscription
   | OrdersSubscription;
 
-interface SubscribeRequest {
+export type SubscribeRequestShort = {
   cid?: string;
+  token?: string;
+  method: 'subscribe';
+  markets: string[];
+  subscriptions: SubscriptionName;
+};
+
+export type SubscribeRequestLong = {
+  cid?: string;
+  token?: string;
   method: 'subscribe';
   subscriptions: Subscription[];
-}
+};
 
-interface UnsubscribeRequest {
+// TODO Support mixed
+
+export type SubscribeRequest = SubscribeRequestLong | SubscribeRequestShort;
+
+export interface UnsubscribeRequest {
   cid?: string;
   method: 'unsubscribe';
-  subscriptions: Subscription[];
+  markets?: string[];
+  subscriptions?: Subscription[];
 }
 
-interface SubscriptionsRequest {
+export interface SubscriptionsRequest {
   cid?: string;
   method: 'subscriptions';
 }
@@ -100,7 +116,7 @@ export type Request =
  * Error Response
  *
  * @typedef {Object} webSocketResponse.Error
- * @property {string} cid
+ * @property {string} [cid]
  * @property {string} type - error
  * @property {Object} data
  * @property {string} data.code - error short code
@@ -119,7 +135,7 @@ export interface ErrorResponse {
  * Subscriptions Response
  *
  * @typedef {Object} webSocketResponse.Subscriptions
- * @property {string} cid
+ * @property {string} [cid]
  * @property {string} method - subscriptions
  * @property {Subscription[]} subscriptions
  * @property {string} Subscription.name - subscription name

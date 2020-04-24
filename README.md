@@ -58,8 +58,6 @@
             -   [Parameters](#parameters-22)
         -   [getWsToken](#getwstoken)
             -   [Parameters](#parameters-23)
-    -   [WebSocketClient](#websocketclient)
-        -   [Parameters](#parameters-24)
 -   [Enums](#enums)
     -   [CandleInterval](#candleinterval)
         -   [1m](#1m)
@@ -177,6 +175,7 @@
 -   [WebSocket Responses](#websocket-responses)
     -   [webSocketResponse.Error](#websocketresponseerror)
         -   [Properties](#properties-31)
+-   [ConnectListener](#connectlistener)
 -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
     -   [Properties](#properties-32)
 -   [autoDispatchEnabled](#autodispatchenabled)
@@ -530,23 +529,6 @@ Obtain a WebSocket API token
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum wallet address
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
-
-### WebSocketClient
-
-WebSocket API client
-
-```typescript
-import * as idex from '@idexio/idex-node';
-
-const config = {
-  baseURL: 'wss://ws.idex.io',
-}
-const webSocketClient = new idex.WebSocketClient(config.baseURL);
-```
-
-#### Parameters
-
--   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ## Enums
 
@@ -1273,11 +1255,27 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
--   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 -   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** error
 -   `data` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
     -   `data.code` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** error short code
     -   `data.message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** human readable error message
+
+## ConnectListener
+
+WebSocket API client
+
+```typescript
+import * as idex from '@idexio/idex-node';
+
+const config = {
+  baseURL: 'wss://ws.idex.io',
+}
+const webSocketClient = new idex.WebSocketClient(config.baseURL);
+await webSocketClient.connect();
+```
+
+Type: function (): any
 
 ## webSocketResponse.Subscriptions
 
@@ -1287,7 +1285,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### Properties
 
--   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 -   `method` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** subscriptions
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Subscription>** 
 
