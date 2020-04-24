@@ -176,7 +176,7 @@ export default class WebSocketClient {
   }
 
   private subscribe(
-    name: keyof typeof types.webSocket.SubscriptionName,
+    name: types.webSocket.SubscriptionName,
     markets: string[],
   ): void {
     this.sendMessage({
@@ -199,7 +199,7 @@ export default class WebSocketClient {
   }
 
   private unsubscribe(
-    subscriptionName: keyof typeof types.webSocket.SubscriptionName,
+    subscriptionName: types.webSocket.SubscriptionName,
     markets: string[],
   ): void {
     this.sendMessage({
