@@ -76,35 +76,24 @@ export type Subscription =
   | BalancesSubscription
   | OrdersSubscription;
 
-export type SubscribeRequestShort = {
+export type SubscribeRequest = {
+  method: 'subscribe';
   cid?: string;
   token?: string;
-  method: 'subscribe';
-  markets: string[];
-  subscriptions: SubscriptionName;
+  markets?: string[];
+  subscriptions: (Subscription | SubscriptionName)[];
 };
-
-export type SubscribeRequestLong = {
-  cid?: string;
-  token?: string;
-  method: 'subscribe';
-  subscriptions: Subscription[];
-};
-
-// TODO Support mixed
-
-export type SubscribeRequest = SubscribeRequestLong | SubscribeRequestShort;
 
 export interface UnsubscribeRequest {
-  cid?: string;
   method: 'unsubscribe';
+  cid?: string;
   markets?: string[];
-  subscriptions?: Subscription[];
+  subscriptions?: (Subscription | SubscriptionName)[];
 }
 
 export interface SubscriptionsRequest {
-  cid?: string;
   method: 'subscriptions';
+  cid?: string;
 }
 
 export type Request =
