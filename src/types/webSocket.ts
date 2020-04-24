@@ -120,6 +120,13 @@ export interface ErrorResponse {
   };
 }
 
+export interface ResponseSubscription {
+  markets: string[];
+  name: keyof typeof SubscriptionName;
+  interval?: keyof typeof CandleInterval;
+  wallet?: string;
+}
+
 /**
  * Subscriptions Response
  *
@@ -129,11 +136,13 @@ export interface ErrorResponse {
  * @property {Subscription[]} subscriptions
  * @property {string} Subscription.name - subscription name
  * @property {string} Subscription.markets - markets
+ * @property {string} [Subscription.interval] - candle interval
+ * @property {string} [Subscription.wallet] - wallet address
  */
 export interface SubscriptionsResponse {
   cid?: string;
   type: 'subscriptions';
-  subscriptions: Subscription[];
+  subscriptions: ResponseSubscription[];
 }
 
 export type Response = ErrorResponse | SubscriptionsResponse;
