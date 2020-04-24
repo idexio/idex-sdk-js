@@ -120,13 +120,6 @@ export interface ErrorResponse {
   };
 }
 
-export interface ResponseSubscription {
-  markets: string[];
-  name: SubscriptionName;
-  interval?: keyof typeof enums.CandleInterval;
-  wallet?: string;
-}
-
 /**
  * Subscriptions Response
  *
@@ -142,7 +135,7 @@ export interface ResponseSubscription {
 export interface SubscriptionsResponse {
   cid?: string;
   type: 'subscriptions';
-  subscriptions: ResponseSubscription[];
+  subscriptions: Subscription[];
 }
 
 export type Response = ErrorResponse | SubscriptionsResponse;
