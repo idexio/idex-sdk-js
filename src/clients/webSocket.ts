@@ -112,12 +112,32 @@ export default class WebSocketClient {
     this.sendMessage({ method: 'subscriptions' });
   }
 
-  public unsubscribeFromTickers(markets: string[]): void {
-    this.unsubscribe('tickers', markets);
+  public subscribe(
+    subscriptions: types.webSocket.Subscription[],
+    token?: string,
+  ): void {
+    if (
+      !token &&
+      subscriptions.some(s =>
+        Object.keys(types.webSocket.AuthenticatedSubscriptionName).includes(
+          s.name,
+        ),
+      )
+    ) {
+      throw new Error('Token required for authenticated subscriptions');
+    }
+
+    this.sendMessage({
+      method: 'subscribe',
+      subscriptions,
+    });
   }
 
-  public subscribeToTickers(markets: string[]): void {
-    this.subscribe('tickers', markets);
+  public unsubscribe(subscriptions: types.webSocket.Subscription[]): void {
+    this.sendMessage({
+      method: 'unsubscribe',
+      subscriptions,
+    });
   }
 
   /* Private */
@@ -175,37 +195,11 @@ export default class WebSocketClient {
     this.webSocket.send(JSON.stringify(payload));
   }
 
-  private subscribe(
-    name: types.webSocket.SubscriptionName,
-    markets: string[],
-  ): void {
-    this.sendMessage({
-      method: 'subscribe',
-      subscriptions: [
-        {
-          markets,
-          name,
-        },
-      ],
-    });
-  }
-
   private throwIfDisconnected(): void {
     if (!this.isConnected()) {
       throw new Error(
         'Websocket not yet connected, await connect() method first',
       );
     }
-  }
-
-  private unsubscribe(
-    subscriptionName: types.webSocket.SubscriptionName,
-    markets: string[],
-  ): void {
-    this.sendMessage({
-      method: 'unsubscribe',
-      markets,
-      subscriptions: [subscriptionName],
-    });
   }
 }
