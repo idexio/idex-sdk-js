@@ -1,10 +1,10 @@
 {
-  "name": "@idexio/idex-node",
-  "version": "0.1.33",
-  "description": "Sample Node.js code for the IDEX API",
+  "name": "@idexio/idex-sdk",
+  "version": "0.0.1",
+  "description": "IDEX SDK for Javascript in the browser and Node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "repository": "git@github.com:idexio/idex-node.git",
+  "repository": "git@github.com:idexio/idex-sdk-js.git",
   "author": "dileepfrog <dileepfrog@gmail.com>",
   "license": "MIT",
   "scripts": {
