@@ -10,8 +10,12 @@ import * as types from '../types';
  *
  * const config = {
  *   baseURL: 'wss://ws.idex.io',
+ *   shouldReconnectAutomatically: true,
  * }
- * const webSocketClient = new idex.WebSocketClient(config.baseURL);
+ * const webSocketClient = new idex.WebSocketClient(
+ *   config.baseURL,
+ *   config.shouldReconnectAutomatically,
+ * );
  * await webSocketClient.connect();
  * ```
  */
@@ -38,6 +42,10 @@ export default class WebSocketClient {
 
   private webSocket: WebSocket;
 
+  /**
+   * Create a WebSocket client
+   * @param {string} baseURL - Base URL of websocket API
+   * @param {boolean=false} shouldReconnectAutomatically - If true, automatically reconnects when connection is closed by the server or network errors  */
   constructor(baseURL: string, shouldReconnectAutomatically = false) {
     this.baseURL = baseURL;
 

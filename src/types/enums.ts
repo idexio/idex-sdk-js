@@ -101,7 +101,7 @@ export enum OrderSelfTradePrevention {
    */
   cancelOldest,
   /**
-   * Cancel the newer (taker) order in full
+   * Cancel the newer (taker) order in full. This is the only valid option when time-in-force is set to fill or kill
    * @type {string}
    */
   cancelNewest,
