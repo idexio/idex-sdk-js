@@ -222,13 +222,13 @@ export type OrderByQuoteQuantity = (
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
  * @property {OrderType} type
  * @property {OrderSide} side
- * @property {OrderTimeInForce} [timeInForce] - Defaults to gtc
+ * @property {OrderTimeInForce} [timeInForce=gtc] - Defaults to good until canceled
  * @property {string} [quantity] - Order quantity in base terms, exclusive with quoteOrderQuantity
  * @property {string} [quoteOrderQuantity] - Order quantity in quote terms, exclusive with quantity
  * @property {string} [price] - Price in quote terms, optional for market orders
  * @property {ustring} [clientOrderId] - Client-supplied order id
  * @property {string} [stopPrice] - Stop loss or take profit price, only if stop or take order
- * @property {OrderSelfTradePrevention} [selfTradePrevention] - Stop loss or take profit price, only if stop or take order
+ * @property {OrderSelfTradePrevention} [selfTradePrevention=decreaseAndCancel] - Defaults to decrease and cancel
  * @property {number} [cancelAfter] - Timestamp after which a standing limit order will be automatically cancelled; gtt tif only
  */
 export type Order = XOR<OrderByBaseQuantity, OrderByQuoteQuantity>;

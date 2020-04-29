@@ -11,18 +11,25 @@ export const getPrivateKeySigner = (walletPrivateKey: string) => (
 
 export const getOrderHash = (order: types.request.Order): string =>
   solidityHashOfParams([
+    ['uint128', uuidToUint8Array(order.nonce)],
+    ['address', order.wallet],
     ['string', order.market],
-    ['uint8', types.enums.OrderSide[order.side]],
     ['uint8', types.enums.OrderType[order.type]],
+    ['uint8', types.enums.OrderSide[order.side]],
+    ['uint8', types.enums.OrderTimeInForce[order.timeInForce] || 0],
     ['string', (order as types.request.OrderByBaseQuantity).quantity || ''],
     [
       'string',
       (order as types.request.OrderByQuoteQuantity).quoteOrderQuantity || '',
     ],
     ['string', (order as types.request.OrderWithPrice).price || ''],
+    ['string', order.customClientOrderId || ''],
     ['string', (order as types.request.OrderWithStopPrice).stopPrice || ''],
-    ['address', order.wallet],
-    ['uint128', uuidToUint8Array(order.nonce)],
+    [
+      'uint8',
+      types.enums.OrderSelfTradePrevention[order.selfTradePrevention] || 0,
+    ],
+    ['uint64', order.cancelAfter || 0],
   ]);
 
 export const getDeleteOrderHash = (
