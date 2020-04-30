@@ -217,19 +217,19 @@ export interface OrderFillLong {
 }
 
 export type SubscriptionMessageShort =
-  | TickerShort
-  | TradeShort
-  | CandleShort
-  | L1orderbookShort
-  | L2orderbookShort
-  | BalanceShort
-  | OrderShort;
+  | { type: 'tickers'; data: TickerShort }
+  | { type: 'trades'; data: TradeShort }
+  | { type: 'candles'; data: CandleShort }
+  | { type: 'l1orderbook'; data: L1orderbookShort }
+  | { type: 'l2orderbook'; data: L2orderbookShort }
+  | { type: 'balances'; data: BalanceShort }
+  | { type: 'orders'; data: OrderShort };
 
 export type SubscriptionMessageLong =
-  | TickerLong
-  | TradeLong
-  | CandleLong
-  | L1orderbookLong
-  | L2orderbookLong
-  | BalanceLong
-  | OrderLong;
+  | { type: 'tickers'; data: TickerLong }
+  | { type: 'trades'; data: TradeLong }
+  | { type: 'candles'; data: CandleLong }
+  | { type: 'l1orderbook'; data: L1orderbookLong }
+  | { type: 'l2orderbook'; data: L2orderbookLong }
+  | { type: 'balances'; data: BalanceLong }
+  | { type: 'orders'; data: OrderLong };

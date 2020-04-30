@@ -1,6 +1,7 @@
 import WebSocket from 'isomorphic-ws';
 
 import * as types from '../types';
+import * as utils from '../utils';
 
 /**
  * WebSocket API client
@@ -182,7 +183,9 @@ export default class WebSocketClient {
       throw new Error('Malformed response data'); // Shouldn't happen
     }
     const message = JSON.parse(event.data);
-    this.responseListeners.forEach(listener => listener(message));
+    this.responseListeners.forEach(listener =>
+      listener(utils.webSocket.transformMessage(message)),
+    );
   }
 
   private reconnect(): void {

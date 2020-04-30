@@ -1,4 +1,5 @@
 import * as enums from './enums';
+import * as webSocketSubscriptionMessages from './webSocketSubscriptionMessages';
 
 export type Method = 'subscribe' | 'subscriptions' | 'unsubscribe';
 
@@ -138,4 +139,7 @@ export interface SubscriptionsResponse {
   subscriptions: Subscription[];
 }
 
-export type Response = ErrorResponse | SubscriptionsResponse;
+export type Response =
+  | ErrorResponse
+  | SubscriptionsResponse
+  | webSocketSubscriptionMessages.SubscriptionMessageLong;

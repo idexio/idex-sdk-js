@@ -5,7 +5,7 @@ const transformBuyOrSellShort = (
 ): types.webSocketSubscriptionMessages.BuyOrSellLong =>
   buyOrSell === 's' ? 'sell' : 'buy';
 
-export const transformTickerMessage = (
+const transformTickersMessage = (
   ticker: types.webSocketSubscriptionMessages.TickerShort,
 ): types.webSocketSubscriptionMessages.TickerLong => ({
   market: ticker.m,
@@ -24,7 +24,7 @@ export const transformTickerMessage = (
   lastFillSequenceNumber: ticker.u,
 });
 
-export const transformTradeMessage = (
+const transformTradesMessage = (
   trade: types.webSocketSubscriptionMessages.TradeShort,
 ): types.webSocketSubscriptionMessages.TradeLong => ({
   market: trade.m,
@@ -37,7 +37,7 @@ export const transformTradeMessage = (
   sequenceNumber: trade.u,
 });
 
-export const transformCandleMessage = (
+const transformCandlesMessage = (
   candle: types.webSocketSubscriptionMessages.CandleShort,
 ): types.webSocketSubscriptionMessages.CandleLong => ({
   market: candle.m,
@@ -54,7 +54,7 @@ export const transformCandleMessage = (
   lastSequenceNumber: candle.u,
 });
 
-export const transformL1orderbookMessage = (
+const transformL1orderbooksMessage = (
   l1orderbook: types.webSocketSubscriptionMessages.L1orderbookShort,
 ): types.webSocketSubscriptionMessages.L1orderbookLong => ({
   market: l1orderbook.m,
@@ -65,7 +65,7 @@ export const transformL1orderbookMessage = (
   bestBidQuantity: l1orderbook.B,
 });
 
-export const transformL2orderbookMessage = (
+const transformL2orderbooksMessage = (
   l2orderbook: types.webSocketSubscriptionMessages.L2orderbookShort,
 ): types.webSocketSubscriptionMessages.L2orderbookLong => ({
   market: l2orderbook.m,
@@ -75,7 +75,7 @@ export const transformL2orderbookMessage = (
   ...(l2orderbook.a && { asks: l2orderbook.a }),
 });
 
-export const transformBalanceMessage = (
+const transformBalancesMessage = (
   balance: types.webSocketSubscriptionMessages.BalanceShort,
 ): types.webSocketSubscriptionMessages.BalanceLong => ({
   wallet: balance.w,
@@ -84,7 +84,7 @@ export const transformBalanceMessage = (
   lockedQuantity: balance.l,
 });
 
-export const transformOrderFill = (
+const transformOrderFill = (
   fill: types.webSocketSubscriptionMessages.OrderFillShort,
 ): types.webSocketSubscriptionMessages.OrderFillLong => ({
   fillId: fill.i,
@@ -102,7 +102,7 @@ export const transformOrderFill = (
   transactionStatus: fill.S,
 });
 
-export const transformOrderMessage = (
+const transformOrdersMessage = (
   order: types.webSocketSubscriptionMessages.OrderShort,
 ): types.webSocketSubscriptionMessages.OrderLong => ({
   market: order.m,
@@ -125,3 +125,33 @@ export const transformOrderMessage = (
   cumulativeAmountSpentQuote: order.Z,
   ...(order.F && { fills: order.F.map(transformOrderFill) }),
 });
+
+export const transformMessage = (
+  message:
+    | types.webSocket.ErrorResponse
+    | types.webSocket.SubscriptionsResponse
+    | types.webSocketSubscriptionMessages.SubscriptionMessageShort,
+): types.webSocket.Response => {
+  if (message.type === 'error' || message.type === 'subscriptions') {
+    return message;
+  }
+  switch (message.type) {
+    case 'candles':
+      return { ...message, data: transformCandlesMessage(message.data) };
+    case 'tickers':
+      return { ...message, data: transformTickersMessage(message.data) };
+    case 'l1orderbook':
+      return { ...message, data: transformL1orderbooksMessage(message.data) };
+    case 'l2orderbook':
+      return { ...message, data: transformL2orderbooksMessage(message.data) };
+    case 'trades':
+      return { ...message, data: transformTradesMessage(message.data) };
+    case 'balances':
+      return { ...message, data: transformBalancesMessage(message.data) };
+    case 'orders':
+      return { ...message, data: transformOrdersMessage(message.data) };
+
+    default:
+      return message;
+  }
+};
