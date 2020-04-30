@@ -9,19 +9,19 @@ const transformTickersMessage = (
   ticker: types.webSocketSubscriptionMessages.TickerShort,
 ): types.webSocketSubscriptionMessages.TickerLong => ({
   market: ticker.m,
-  timestamp: ticker.t,
-  openPrice: ticker.o,
-  highPrice: ticker.h,
-  lowPrice: ticker.l,
-  closePrice: ticker.c,
+  time: ticker.t,
+  open: ticker.o,
+  high: ticker.h,
+  low: ticker.l,
+  close: ticker.c,
   lastQuantity: ticker.Q,
-  totalTradedBaseAssetVolume: ticker.v,
-  totalTradedQuoteAssetVolume: ticker.q,
-  pricePercentChange: ticker.P,
-  numberOfTrades: ticker.n,
-  bestAskPrice: ticker.a,
-  bestBidPrice: ticker.b,
-  lastFillSequenceNumber: ticker.u,
+  baseVolume: ticker.v,
+  quoteVolume: ticker.q,
+  percentChange: ticker.P,
+  numTrades: ticker.n,
+  ask: ticker.a,
+  bid: ticker.b,
+  sequence: ticker.u,
 });
 
 const transformTradesMessage = (
@@ -32,45 +32,45 @@ const transformTradesMessage = (
   price: trade.p,
   quantity: trade.q,
   quoteQuantity: trade.Q,
-  timestamp: trade.t,
+  time: trade.t,
   makerSide: transformBuyOrSellShort(trade.s),
-  sequenceNumber: trade.u,
+  sequence: trade.u,
 });
 
 const transformCandlesMessage = (
   candle: types.webSocketSubscriptionMessages.CandleShort,
 ): types.webSocketSubscriptionMessages.CandleLong => ({
   market: candle.m,
-  timestamp: candle.t,
+  time: candle.t,
   interval: candle.i,
   startTime: candle.s,
   endTime: candle.e,
-  openFillPrice: candle.o,
-  highFillPrice: candle.h,
-  lowFillPrice: candle.l,
-  lastAvailableFillPrice: candle.c,
-  baseAssetVolume: candle.v,
+  open: candle.o,
+  high: candle.h,
+  low: candle.l,
+  close: candle.c,
+  volume: candle.v,
   numberOfFills: candle.n,
-  lastSequenceNumber: candle.u,
+  sequence: candle.u,
 });
 
 const transformL1orderbooksMessage = (
   l1orderbook: types.webSocketSubscriptionMessages.L1orderbookShort,
 ): types.webSocketSubscriptionMessages.L1orderbookLong => ({
   market: l1orderbook.m,
-  timestamp: l1orderbook.t,
-  bestAskPrice: l1orderbook.a,
-  bestAskQuantity: l1orderbook.A,
-  bestBidPrice: l1orderbook.b,
-  bestBidQuantity: l1orderbook.B,
+  time: l1orderbook.t,
+  askPrice: l1orderbook.a,
+  askQuantity: l1orderbook.A,
+  bidPrice: l1orderbook.b,
+  bidQuantity: l1orderbook.B,
 });
 
 const transformL2orderbooksMessage = (
   l2orderbook: types.webSocketSubscriptionMessages.L2orderbookShort,
 ): types.webSocketSubscriptionMessages.L2orderbookLong => ({
   market: l2orderbook.m,
-  timestamp: l2orderbook.t,
-  sequenceNumber: l2orderbook.u,
+  time: l2orderbook.t,
+  sequence: l2orderbook.u,
   ...(l2orderbook.b && { bids: l2orderbook.b }),
   ...(l2orderbook.a && { asks: l2orderbook.a }),
 });
@@ -80,8 +80,8 @@ const transformBalancesMessage = (
 ): types.webSocketSubscriptionMessages.BalanceLong => ({
   wallet: balance.w,
   asset: balance.a,
-  freeQuantity: balance.f,
-  lockedQuantity: balance.l,
+  availableForTrade: balance.f,
+  locked: balance.l,
 });
 
 const transformOrderFill = (
@@ -109,20 +109,20 @@ const transformOrdersMessage = (
   orderId: order.i,
   clientOrderId: order.c,
   wallet: order.w,
-  executionEventTime: order.t,
-  timestamp: order.T,
-  orderExecutionType: order.x,
+  time: order.t,
+  timeOfOriginalOrder: order.T,
+  executionType: order.x,
   currentOrderState: order.X,
   ...(order.u && { orderBookSequenceNumber: order.u }),
-  orderType: order.o,
-  orderSide: order.S,
-  orderTimeInForce: order.f,
+  type: order.o,
+  side: order.S,
+  timeInForce: order.f,
   ...(order.p && { limitOrderPrice: order.p }),
   ...(order.P && { stopOrderPrice: order.P }),
-  selfTradePreventionStrategy: order.V,
-  originalOrderQuantityBase: order.q,
-  executedQuantityBase: order.z,
-  cumulativeAmountSpentQuote: order.Z,
+  selfTradePrevention: order.V,
+  originalQuantity: order.q,
+  executedQuantity: order.z,
+  cumulativeQuoteQuantity: order.Z,
   ...(order.F && { fills: order.F.map(transformOrderFill) }),
 });
 
