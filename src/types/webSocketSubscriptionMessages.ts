@@ -1,10 +1,10 @@
 import * as enums from './enums';
 
-type BuyOrSellShort = 'b' | 's';
+export type BuyOrSellShort = 'b' | 's';
 
-type BuyOrSellLong = 'buy' | 'sell';
+export type BuyOrSellLong = 'buy' | 'sell';
 
-interface TickerShort {
+export interface TickerShort {
   m: string;
   t: number;
   o: string;
@@ -18,12 +18,12 @@ interface TickerShort {
   n: number;
   a: string;
   b: string;
-  u: number;
+  u: string;
 }
 
-interface TickerLong {
+export interface TickerLong {
   market: string; // m <eg IDEX-ETH>
-  timestamp: string; // t
+  timestamp: number; // t
   openPrice: string; // o
   highPrice: string; // h
   lowPrice: string; // l
@@ -35,10 +35,10 @@ interface TickerLong {
   numberOfTrades: number; // n
   bestAskPrice: string; // a
   bestBidPrice: string; // b
-  lastFillSequenceNumber: number; // u
+  lastFillSequenceNumber: string; // u
 }
 
-interface TradeShort {
+export interface TradeShort {
   m: string;
   i: string;
   p: string;
@@ -46,10 +46,10 @@ interface TradeShort {
   Q: string;
   t: number;
   s: BuyOrSellShort;
-  u: number;
+  u: string;
 }
 
-interface TradeLong {
+export interface TradeLong {
   market: string; // m
   fillId: string; // i
   price: string; // p
@@ -57,10 +57,10 @@ interface TradeLong {
   quoteQuantity: string; // Q
   timestamp: number; // t
   makerSide: BuyOrSellLong; // s
-  sequenceNumber: number; // u
+  sequenceNumber: string; // u
 }
 
-interface CandleShort {
+export interface CandleShort {
   m: string;
   t: number;
   i: enums.CandleInterval;
@@ -72,11 +72,11 @@ interface CandleShort {
   c: string;
   v: string;
   n: number;
-  u: number;
+  u: string;
 }
 
-interface CandleLong {
-  market: string; //m
+export interface CandleLong {
+  market: string; // m
   timestamp: number; // t
   interval: enums.CandleInterval; // i
   startTime: number; // s
@@ -87,10 +87,10 @@ interface CandleLong {
   lastAvailableFillPrice: string; // c
   baseAssetVolume: string; // v
   numberOfFills: number; // n
-  lastSequenceNumber: number; // u
+  lastSequenceNumber: string; // u
 }
 
-interface L1orderbookShort {
+export interface L1orderbookShort {
   m: string;
   t: number;
   a: string;
@@ -99,7 +99,7 @@ interface L1orderbookShort {
   B: string;
 }
 
-interface L1orderbookLong {
+export interface L1orderbookLong {
   market: string; // m
   timestamp: number; // t
   bestAskPrice: string; // a
@@ -110,37 +110,37 @@ interface L1orderbookLong {
 
 type L2orderbookChange = [string, string, number];
 
-interface L2orderbookShort {
+export interface L2orderbookShort {
   m: string;
   t: number;
-  u: number;
+  u: string;
   b?: L2orderbookChange[];
   a?: L2orderbookChange[];
 }
 
-interface L2orderbookLong {
+export interface L2orderbookLong {
   market: string; // m
   timestamp: number; // t
-  sequenceNumber: number; // u
+  sequenceNumber: string; // u
   bids?: L2orderbookChange[]; // b
   asks?: L2orderbookChange[]; // a
 }
 
-interface BalanceShort {
+export interface BalanceShort {
   w: string;
   a: string;
   f: string;
   l: string;
 }
 
-interface BalanceLong {
+export interface BalanceLong {
   wallet: string; // w
   asset: string; // a
   freeQuantity: string; // f
   lockedQuantity: string; // l
 }
 
-interface OrderShort {
+export interface OrderShort {
   m: string;
   i: string;
   c: string;
@@ -149,7 +149,7 @@ interface OrderShort {
   T: number;
   x: enums.OrderStateChange;
   X: enums.OrderStatus;
-  u: number;
+  u: string;
   o: enums.OrderType;
   S: enums.OrderSide;
   f: enums.OrderTimeInForce;
@@ -159,24 +159,10 @@ interface OrderShort {
   q: string;
   z: string;
   Z: string;
-  F?: {
-    i: string;
-    p: string;
-    q: string;
-    Q: string;
-    t: number;
-    s: BuyOrSellShort;
-    u: number;
-    f: string;
-    a: string;
-    g?: string;
-    l: enums.Liquidity;
-    T?: string;
-    S: enums.EthTransactionStatus;
-  }[];
+  F?: OrderFillShort[];
 }
 
-interface OrderLong {
+export interface OrderLong {
   market: string; // m
   orderId: string; // i
   clientOrderId: string; // c
@@ -185,7 +171,7 @@ interface OrderLong {
   timestamp: number; //T
   orderExecutionType: enums.OrderStateChange; // x
   currentOrderState: enums.OrderStatus; // X
-  orderBookSequenceNumber?: number; // u
+  orderBookSequenceNumber?: string; // u
   orderType: enums.OrderType; // o
   orderSide: enums.OrderSide; // S
   orderTimeInForce: enums.OrderTimeInForce; // f
@@ -195,22 +181,39 @@ interface OrderLong {
   originalOrderQuantityBase: string; // q
   executedQuantityBase: string; // z
   cumulativeAmountSpentQuote: string; // Z
-  // F
-  fills?: {
-    fillId: string; // i
-    price: string; // p
-    quantity: string; // q
-    quoteQuantity: string; // Q
-    timestamp: number; // t
-    side: BuyOrSellShort; // s
-    fillSequenceNumber: number; // u
-    feeAmount: string; // f
-    feeToken: string; // a
-    gas?: string; // g
-    liquidity: enums.Liquidity; // l
-    transactionId?: string; // T
-    transactionStatus: enums.EthTransactionStatus; // S
-  }[];
+  fills?: OrderFillLong[]; // F
+}
+
+export interface OrderFillShort {
+  i: string;
+  p: string;
+  q: string;
+  Q: string;
+  t: number;
+  s: BuyOrSellShort;
+  u: string;
+  f: string;
+  a: string;
+  g?: string;
+  l: enums.Liquidity;
+  T?: string;
+  S: enums.EthTransactionStatus;
+}
+
+export interface OrderFillLong {
+  fillId: string; // i
+  price: string; // p
+  quantity: string; // q
+  quoteQuantity: string; // Q
+  timestamp: number; // t
+  side: BuyOrSellLong; // s
+  fillSequenceNumber: string; // u
+  feeAmount: string; // f
+  feeToken: string; // a
+  gas?: string; // g
+  liquidity: enums.Liquidity; // l
+  transactionId?: string; // T
+  transactionStatus: enums.EthTransactionStatus; // S
 }
 
 export type SubscriptionMessageShort =
