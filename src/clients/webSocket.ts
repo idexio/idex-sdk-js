@@ -182,10 +182,8 @@ export default class WebSocketClient {
     if (typeof event.data !== 'string') {
       throw new Error('Malformed response data'); // Shouldn't happen
     }
-    const message = JSON.parse(event.data);
-    this.responseListeners.forEach(listener =>
-      listener(utils.webSocket.transformMessage(message)),
-    );
+    const message = utils.webSocket.transformMessage(JSON.parse(event.data));
+    this.responseListeners.forEach(listener => listener(message));
   }
 
   private reconnect(): void {
