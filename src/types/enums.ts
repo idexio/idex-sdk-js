@@ -49,6 +49,28 @@ export enum CandleInterval {
  * @readonly
  * @enum {string}
  */
+export enum EthTransactionStatus {
+  /**
+   * Either not yet submitted or not yet mined
+   * @type {string}
+   */
+  pending,
+  /**
+   * Mined, no need for any block confirmation delay
+   * @type {string}
+   */
+  mined,
+  /**
+   * Transaction reverted
+   * @type {string}
+   */
+  failed,
+}
+
+/**
+ * @readonly
+ * @enum {string}
+ */
 export enum Liquidity {
   /**
    * Maker provides liquidity
@@ -121,6 +143,41 @@ export enum OrderSide {
   buy,
   /** @type {string} */
   sell,
+}
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+export enum OrderStateChange {
+  /**
+   * An order without a stop has been accepted into the trading engine.
+   * Will not be sent as a discrete change event if the order matches on execution.
+   * @type {string}
+   */
+  new,
+  /**
+   * A stop order has accepted into the trading engine, once triggered,
+   * will go through other normal events starting with new
+   * @type {string}
+   */
+  activated,
+  /**
+   * An order has generated a fill, both on maker and taker sides.
+   * Will be the first change event sent if an order matches on execution.
+   * @type {string}
+   */
+  fill,
+  /**
+   * An order is cancelled by the user.
+   * @type {string}
+   */
+  cancelled,
+  /**
+   * LIMIT FOK orders with no fill, LIMIT IOC or MARKET orders that partially fill, GTT orders past time.
+   * @type {string}
+   */
+  expired,
 }
 
 /**

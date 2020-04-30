@@ -176,8 +176,20 @@
     -   [webSocketResponse.Error](#websocketresponseerror)
         -   [Properties](#properties-31)
 -   [ConnectListener](#connectlistener)
+-   [constructor](#constructor)
+    -   [Parameters](#parameters-24)
+-   [EthTransactionStatus](#ethtransactionstatus)
+    -   [pending](#pending)
+    -   [mined](#mined)
+    -   [failed](#failed)
 -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
     -   [Properties](#properties-32)
+-   [OrderStateChange](#orderstatechange)
+    -   [new](#new)
+    -   [activated](#activated)
+    -   [fill](#fill)
+    -   [cancelled](#cancelled-1)
+    -   [expired](#expired-1)
 -   [autoDispatchEnabled](#autodispatchenabled)
 
 ## Clients
@@ -624,7 +636,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### cancelNewest
 
-Cancel the newer (taker) order in full
+Cancel the newer (taker) order in full. This is the only valid option when time-in-force is set to fill or kill
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
@@ -911,13 +923,13 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
 -   `type` **[OrderType](#ordertype)** 
 -   `side` **[OrderSide](#orderside)** 
--   `timeInForce` **[OrderTimeInForce](#ordertimeinforce)?** Defaults to gtc
+-   `timeInForce` **[OrderTimeInForce](#ordertimeinforce)?** Defaults to good until canceled
 -   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Order quantity in base terms, exclusive with quoteOrderQuantity
 -   `quoteOrderQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Order quantity in quote terms, exclusive with quantity
 -   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Price in quote terms, optional for market orders
 -   `clientOrderId` **ustring?** Client-supplied order id
 -   `stopPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Stop loss or take profit price, only if stop or take order
--   `selfTradePrevention` **[OrderSelfTradePrevention](#orderselftradeprevention)?** Stop loss or take profit price, only if stop or take order
+-   `selfTradePrevention` **[OrderSelfTradePrevention](#orderselftradeprevention)?** Defaults to decrease and cancel
 -   `cancelAfter` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Timestamp after which a standing limit order will be automatically cancelled; gtt tif only
 
 ### request.Withdrawal
@@ -1270,12 +1282,47 @@ import * as idex from '@idexio/idex-node';
 
 const config = {
   baseURL: 'wss://ws.idex.io',
+  shouldReconnectAutomatically: true,
 }
-const webSocketClient = new idex.WebSocketClient(config.baseURL);
+const webSocketClient = new idex.WebSocketClient(
+  config.baseURL,
+  config.shouldReconnectAutomatically,
+);
 await webSocketClient.connect();
 ```
 
 Type: function (): any
+
+## constructor
+
+Create a WebSocket client
+
+### Parameters
+
+-   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
+-   `shouldReconnectAutomatically`   (optional, default `false`)
+
+## EthTransactionStatus
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### pending
+
+Either not yet submitted or not yet mined
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### mined
+
+Mined, no need for any block confirmation delay
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### failed
+
+Transaction reverted
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 ## webSocketResponse.Subscriptions
 
@@ -1288,6 +1335,43 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 -   `method` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** subscriptions
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Subscription>** 
+
+## OrderStateChange
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### new
+
+An order without a stop has been accepted into the trading engine.
+Will not be sent as a discrete change event if the order matches on execution.
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### activated
+
+A stop order has accepted into the trading engine, once triggered,
+will go through other normal events starting with new
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### fill
+
+An order has generated a fill, both on maker and taker sides.
+Will be the first change event sent if an order matches on execution.
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### cancelled
+
+An order is cancelled by the user.
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### expired
+
+LIMIT FOK orders with no fill, LIMIT IOC or MARKET orders that partially fill, GTT orders past time.
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 ## autoDispatchEnabled
 
