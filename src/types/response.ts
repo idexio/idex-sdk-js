@@ -368,7 +368,7 @@ export interface Trade {
   quoteQuantity: string;
   time: number;
   makerSide: keyof typeof enums.OrderSide;
-  sequence: number;
+  sequence: string;
 }
 
 /**

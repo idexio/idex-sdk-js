@@ -1,4 +1,5 @@
 import * as enums from './enums';
+import * as response from './response';
 
 export type BuyOrSellShort = 'b' | 's';
 
@@ -6,7 +7,7 @@ export type BuyOrSellLong = 'buy' | 'sell';
 
 export interface TickerShort {
   m: string;
-  t: number;
+  t: string;
   o: string;
   h: string;
   l: string;
@@ -15,27 +16,10 @@ export interface TickerShort {
   v: string;
   q: string;
   P: string;
-  n: number;
+  n: string;
   a: string;
   b: string;
   u: string;
-}
-
-export interface TickerLong {
-  market: string; // m <eg IDEX-ETH>
-  time: number; // t
-  open: string; // o
-  high: string; // h
-  low: string; // l
-  close: string; // c
-  lastQuantity: string; // Q
-  baseVolume: string; // v
-  quoteVolume: string; // q
-  percentChange: string; // P
-  numTrades: number; // n
-  ask: string; // a
-  bid: string; // b
-  sequence: string; // u
 }
 
 export interface TradeShort {
@@ -49,15 +33,8 @@ export interface TradeShort {
   u: string;
 }
 
-export interface TradeLong {
+export interface TradeLong extends response.Trade {
   market: string; // m
-  fillId: string; // i
-  price: string; // p
-  quantity: string; // q
-  quoteQuantity: string; // Q
-  time: number; // t
-  makerSide: BuyOrSellLong; // s
-  sequence: string; // u
 }
 
 export interface CandleShort {
@@ -75,22 +52,16 @@ export interface CandleShort {
   u: string;
 }
 
-export interface CandleLong {
+export interface CandleLong extends response.Candle {
   market: string; // m
-  time: number; // t
   interval: enums.CandleInterval; // i
   startTime: number; // s
   endTime: number; // e
-  open: string; // o
-  high: string; // h
-  low: string; // l
-  close: string; // c
-  volume: string; // v
   numberOfFills: number; // n
   sequence: string; // u
 }
 
-export interface L1orderbookShort {
+export interface L1OrderBookShort {
   m: string;
   t: number;
   a: string;
@@ -99,7 +70,7 @@ export interface L1orderbookShort {
   B: string;
 }
 
-export interface L1orderbookLong {
+export interface L1OrderBookLong {
   market: string; // m
   time: number; // t
   askPrice: string; // a
@@ -108,22 +79,22 @@ export interface L1orderbookLong {
   bidQuantity: string; // B
 }
 
-type L2orderbookChange = [string, string, number];
+type L2OrderBookChange = [response.OrderBookPriceLevel];
 
-export interface L2orderbookShort {
+export interface L2OrderBookShort {
   m: string;
   t: number;
   u: string;
-  b?: L2orderbookChange[];
-  a?: L2orderbookChange[];
+  b?: L2OrderBookChange[];
+  a?: L2OrderBookChange[];
 }
 
-export interface L2orderbookLong {
+export interface L2OrderBookLong {
   market: string; // m
   time: number; // t
   sequence: string; // u
-  bids?: L2orderbookChange[]; // b
-  asks?: L2orderbookChange[]; // a
+  bids?: L2OrderBookChange[]; // b
+  asks?: L2OrderBookChange[]; // a
 }
 
 export interface BalanceShort {
@@ -147,15 +118,15 @@ export interface OrderShort {
   w: string;
   t: number;
   T: number;
-  x: enums.OrderStateChange;
-  X: enums.OrderStatus;
+  x: keyof typeof enums.OrderStateChange;
+  X: keyof typeof enums.OrderStatus;
   u: string;
-  o: enums.OrderType;
-  S: enums.OrderSide;
-  f: enums.OrderTimeInForce;
+  o: keyof typeof enums.OrderType;
+  S: keyof typeof enums.OrderSide;
+  f: keyof typeof enums.OrderTimeInForce;
   p: string;
   P?: string;
-  V: enums.OrderSelfTradePrevention;
+  V: keyof typeof enums.OrderSelfTradePrevention;
   q: string;
   z: string;
   Z: string;
@@ -169,15 +140,15 @@ export interface OrderLong {
   wallet: string; // w
   time: number; // t
   timeOfOriginalOrder: number; // T
-  executionType: enums.OrderStateChange; // x
-  currentOrderState: enums.OrderStatus; // X
+  executionType: keyof typeof enums.OrderStateChange; // x
+  status: keyof typeof enums.OrderStatus; // X
   orderBookSequenceNumber?: string; // u
-  type: enums.OrderType; // o
-  side: enums.OrderSide; // S
-  timeInForce: enums.OrderTimeInForce; // f
+  type: keyof typeof enums.OrderType; // o
+  side: keyof typeof enums.OrderSide; // S
+  timeInForce: keyof typeof enums.OrderTimeInForce; // f
   price?: string; // p
   stopPrice?: string; // P
-  selfTradePrevention: enums.OrderSelfTradePrevention; // V
+  selfTradePrevention: keyof typeof enums.OrderSelfTradePrevention; // V
   originalQuantity: string; // q
   executedQuantity: string; // z
   cumulativeQuoteQuantity: string; // Z
@@ -220,16 +191,16 @@ export type SubscriptionMessageShort =
   | { type: 'tickers'; data: TickerShort }
   | { type: 'trades'; data: TradeShort }
   | { type: 'candles'; data: CandleShort }
-  | { type: 'l1orderbook'; data: L1orderbookShort }
-  | { type: 'l2orderbook'; data: L2orderbookShort }
+  | { type: 'l1orderbook'; data: L1OrderBookShort }
+  | { type: 'l2orderbook'; data: L2OrderBookShort }
   | { type: 'balances'; data: BalanceShort }
   | { type: 'orders'; data: OrderShort };
 
 export type SubscriptionMessageLong =
-  | { type: 'tickers'; data: TickerLong }
+  | { type: 'tickers'; data: response.Ticker }
   | { type: 'trades'; data: TradeLong }
   | { type: 'candles'; data: CandleLong }
-  | { type: 'l1orderbook'; data: L1orderbookLong }
-  | { type: 'l2orderbook'; data: L2orderbookLong }
+  | { type: 'l1orderbook'; data: L1OrderBookLong }
+  | { type: 'l2orderbook'; data: L2OrderBookLong }
   | { type: 'balances'; data: BalanceLong }
   | { type: 'orders'; data: OrderLong };

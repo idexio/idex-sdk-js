@@ -7,21 +7,22 @@ const transformBuyOrSellShort = (
 
 const transformTickersMessage = (
   ticker: types.webSocketSubscriptionMessages.TickerShort,
-): types.webSocketSubscriptionMessages.TickerLong => ({
+): types.response.Ticker => ({
   market: ticker.m,
   time: ticker.t,
   open: ticker.o,
   high: ticker.h,
   low: ticker.l,
   close: ticker.c,
+  last: ticker.c,
   lastQuantity: ticker.Q,
   baseVolume: ticker.v,
   quoteVolume: ticker.q,
   percentChange: ticker.P,
-  numTrades: ticker.n,
+  ...(ticker.n && { numTrades: ticker.n }),
   ask: ticker.a,
   bid: ticker.b,
-  sequence: ticker.u,
+  lastSequenceNumber: ticker.u,
 });
 
 const transformTradesMessage = (
@@ -55,8 +56,8 @@ const transformCandlesMessage = (
 });
 
 const transformL1orderbooksMessage = (
-  l1orderbook: types.webSocketSubscriptionMessages.L1orderbookShort,
-): types.webSocketSubscriptionMessages.L1orderbookLong => ({
+  l1orderbook: types.webSocketSubscriptionMessages.L1OrderBookShort,
+): types.webSocketSubscriptionMessages.L1OrderBookLong => ({
   market: l1orderbook.m,
   time: l1orderbook.t,
   askPrice: l1orderbook.a,
@@ -66,8 +67,8 @@ const transformL1orderbooksMessage = (
 });
 
 const transformL2orderbooksMessage = (
-  l2orderbook: types.webSocketSubscriptionMessages.L2orderbookShort,
-): types.webSocketSubscriptionMessages.L2orderbookLong => ({
+  l2orderbook: types.webSocketSubscriptionMessages.L2OrderBookShort,
+): types.webSocketSubscriptionMessages.L2OrderBookLong => ({
   market: l2orderbook.m,
   time: l2orderbook.t,
   sequence: l2orderbook.u,
@@ -112,7 +113,7 @@ const transformOrdersMessage = (
   time: order.t,
   timeOfOriginalOrder: order.T,
   executionType: order.x,
-  currentOrderState: order.X,
+  status: order.X,
   ...(order.u && { orderBookSequenceNumber: order.u }),
   type: order.o,
   side: order.S,
