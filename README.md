@@ -176,6 +176,8 @@
     -   [webSocketResponse.Error](#websocketresponseerror)
         -   [Properties](#properties-31)
 -   [ConnectListener](#connectlistener)
+-   [constructor](#constructor)
+    -   [Parameters](#parameters-24)
 -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
     -   [Properties](#properties-32)
 -   [autoDispatchEnabled](#autodispatchenabled)
@@ -624,7 +626,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### cancelNewest
 
-Cancel the newer (taker) order in full
+Cancel the newer (taker) order in full. This is the only valid option when time-in-force is set to fill or kill
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
@@ -911,13 +913,13 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
 -   `type` **[OrderType](#ordertype)** 
 -   `side` **[OrderSide](#orderside)** 
--   `timeInForce` **[OrderTimeInForce](#ordertimeinforce)?** Defaults to gtc
+-   `timeInForce` **[OrderTimeInForce](#ordertimeinforce)?** Defaults to good until canceled
 -   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Order quantity in base terms, exclusive with quoteOrderQuantity
 -   `quoteOrderQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Order quantity in quote terms, exclusive with quantity
 -   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Price in quote terms, optional for market orders
 -   `clientOrderId` **ustring?** Client-supplied order id
 -   `stopPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Stop loss or take profit price, only if stop or take order
--   `selfTradePrevention` **[OrderSelfTradePrevention](#orderselftradeprevention)?** Stop loss or take profit price, only if stop or take order
+-   `selfTradePrevention` **[OrderSelfTradePrevention](#orderselftradeprevention)?** Defaults to decrease and cancel
 -   `cancelAfter` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Timestamp after which a standing limit order will be automatically cancelled; gtt tif only
 
 ### request.Withdrawal
@@ -1270,12 +1272,25 @@ import * as idex from '@idexio/idex-node';
 
 const config = {
   baseURL: 'wss://ws.idex.io',
+  shouldReconnectAutomatically: true,
 }
-const webSocketClient = new idex.WebSocketClient(config.baseURL);
+const webSocketClient = new idex.WebSocketClient(
+  config.baseURL,
+  config.shouldReconnectAutomatically,
+);
 await webSocketClient.connect();
 ```
 
 Type: function (): any
+
+## constructor
+
+Create a WebSocket client
+
+### Parameters
+
+-   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
+-   `shouldReconnectAutomatically`   (optional, default `false`)
 
 ## webSocketResponse.Subscriptions
 
