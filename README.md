@@ -178,8 +178,18 @@
 -   [ConnectListener](#connectlistener)
 -   [constructor](#constructor)
     -   [Parameters](#parameters-24)
+-   [EthTransactionStatus](#ethtransactionstatus)
+    -   [pending](#pending)
+    -   [mined](#mined)
+    -   [failed](#failed)
 -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
     -   [Properties](#properties-32)
+-   [OrderStateChange](#orderstatechange)
+    -   [new](#new)
+    -   [activated](#activated)
+    -   [fill](#fill)
+    -   [cancelled](#cancelled-1)
+    -   [expired](#expired-1)
 -   [autoDispatchEnabled](#autodispatchenabled)
 
 ## Clients
@@ -1042,6 +1052,8 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `liquidity` **[Liquidity](#liquidity)** 
 -   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fill timestamp
 -   `sequence` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Last trade sequence number for the market
+-   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Ethereum transaction id, if available
+-   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Eth Tx Status
 
 ### response.Market
 
@@ -1088,7 +1100,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `executedQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of quantity that has been executed in base terms
 -   `cumulativeQuoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Represents the cumulative amount of the quote that has been spent (with a BUY order) or received (with a SELL order). Historical orders will have a value &lt; 0 in this field indicating the data is not available at this time
 -   `avgExecutionPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
--   `fills` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Fill](#responsefill)>** 
+-   `fills` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.OrderFill](#responseorderfill)>** 
 
 ### response.OrderBookLevel1
 
@@ -1155,11 +1167,19 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
+-   `fillId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of fill
 -   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed price of fill in quote terms
 -   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of fill in base terms
+-   `quoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of trade in quote terms
+-   `makerSide` **[OrderSide](#orderside)** Which side of the order the liquidity maker was on
 -   `fee` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fee amount on fill
 -   `feeAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Which token the fee was taken in
--   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
+-   `liquidity` **[Liquidity](#liquidity)** 
+-   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fill timestamp
+-   `sequence` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Last trade sequence number for the market
+-   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Ethereum transaction id, if available
+-   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Eth Tx Status
 
 ### response.Ticker
 
@@ -1292,6 +1312,28 @@ Create a WebSocket client
 -   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
 -   `shouldReconnectAutomatically`   (optional, default `false`)
 
+## EthTransactionStatus
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### pending
+
+Either not yet submitted or not yet mined
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### mined
+
+Mined, no need for any block confirmation delay
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### failed
+
+Transaction reverted
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
 ## webSocketResponse.Subscriptions
 
 Subscriptions Response
@@ -1303,6 +1345,43 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 -   `method` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** subscriptions
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Subscription>** 
+
+## OrderStateChange
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### new
+
+An order without a stop has been accepted into the trading engine.
+Will not be sent as a discrete change event if the order matches on execution.
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### activated
+
+A stop order has accepted into the trading engine, once triggered,
+will go through other normal events starting with new
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### fill
+
+An order has generated a fill, both on maker and taker sides.
+Will be the first change event sent if an order matches on execution.
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### cancelled
+
+An order is cancelled by the user.
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### expired
+
+LIMIT FOK orders with no fill, LIMIT IOC or MARKET orders that partially fill, GTT orders past time.
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 ## autoDispatchEnabled
 
