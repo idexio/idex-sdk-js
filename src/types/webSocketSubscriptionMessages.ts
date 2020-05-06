@@ -3,8 +3,6 @@ import * as response from './response';
 
 export type BuyOrSellShort = 'b' | 's';
 
-export type BuyOrSellLong = 'buy' | 'sell';
-
 export interface TickerShort {
   m: string;
   t: string;
@@ -40,7 +38,7 @@ export interface TradeLong extends response.Trade {
 export interface CandleShort {
   m: string;
   t: number;
-  i: enums.CandleInterval;
+  i: keyof typeof enums.CandleInterval;
   s: number;
   e: number;
   o: string;
@@ -54,7 +52,7 @@ export interface CandleShort {
 
 export interface CandleLong extends response.Candle {
   market: string; // m
-  interval: enums.CandleInterval; // i
+  interval: keyof typeof enums.CandleInterval; // i
   startTime: number; // s
   endTime: number; // e
   numberOfFills: number; // n
@@ -152,7 +150,7 @@ export interface OrderLong {
   originalQuantity: string; // q
   executedQuantity: string; // z
   cumulativeQuoteQuantity: string; // Z
-  fills?: OrderFillLong[]; // F
+  fills?: response.OrderFill[]; // F
 }
 
 export interface OrderFillShort {
@@ -166,25 +164,9 @@ export interface OrderFillShort {
   f: string;
   a: string;
   g?: string;
-  l: enums.Liquidity;
+  l: keyof typeof enums.Liquidity;
   T?: string;
-  S: enums.EthTransactionStatus;
-}
-
-export interface OrderFillLong {
-  fillId: string; // i
-  price: string; // p
-  quantity: string; // q
-  quoteQuantity: string; // Q
-  timestamp: number; // t
-  side: BuyOrSellLong; // s
-  fillSequenceNumber: string; // u
-  feeAmount: string; // f
-  feeToken: string; // a
-  gas?: string; // g
-  liquidity: enums.Liquidity; // l
-  transactionId?: string; // T
-  transactionStatus: enums.EthTransactionStatus; // S
+  S: keyof typeof enums.EthTransactionStatus;
 }
 
 export type SubscriptionMessageShort =

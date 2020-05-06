@@ -129,41 +129,48 @@ export interface ExchangeInfo {
  * @property {Liquidity} liquidity
  * @property {string} time - Fill timestamp
  * @property {string} sequence - Last trade sequence number for the market
+ * @property {string} [txId] - Ethereum transaction id, if available
+ * @property {string} txStatus - Eth Tx Status
  */
 export interface Fill extends OrderFill {
-  fillId: string;
   orderId: string;
   clientOrderId: string;
   market: string;
-  price: string;
-  quantity: string;
-  quoteQuantity: string;
-  makerSide: keyof typeof enums.OrderSide;
-  fee: string;
-  feeAsset: string;
-  gas: string;
   side: keyof typeof enums.OrderSide;
-  liquidity: keyof typeof enums.Liquidity;
-  time: number;
-  sequence: number;
 }
 
 /**
  * OrderFill
  *
  * @typedef {Object} response.OrderFill
+ * @property {string} fillId - Internal ID of fill
  * @property {string} price - Executed price of fill in quote terms
  * @property {string} quantity - Executed quantity of fill in base terms
+ * @property {string} quoteQuantity - Executed quantity of trade in quote terms
+ * @property {OrderSide} makerSide - Which side of the order the liquidity maker was on
  * @property {string} fee - Fee amount on fill
  * @property {string} feeAsset - Which token the fee was taken in
- * @property {string} gas
+ * @property {string} [gas]
+ * @property {Liquidity} liquidity
+ * @property {string} time - Fill timestamp
+ * @property {string} sequence - Last trade sequence number for the market
+ * @property {string} [txId] - Ethereum transaction id, if available
+ * @property {string} txStatus - Eth Tx Status
  */
 export interface OrderFill {
+  fillId: string;
   price: string;
   quantity: string;
+  quoteQuantity: string;
+  time: number;
+  makerSide: keyof typeof enums.OrderSide;
+  sequence: string;
   fee: string;
   feeAsset: string;
-  gas: string;
+  gas?: string;
+  liquidity: keyof typeof enums.Liquidity;
+  txId?: string;
+  txStatus: keyof typeof enums.EthTransactionStatus;
 }
 
 /**
@@ -216,7 +223,7 @@ export interface Market {
  * @property {string} executedQuantity - Amount of quantity that has been executed in base terms
  * @property {string} cumulativeQuoteQuantity - Represents the cumulative amount of the quote that has been spent (with a BUY order) or received (with a SELL order). Historical orders will have a value < 0 in this field indicating the data is not available at this time
  * @property {string} [avgExecutionPrice]
- * @property {response.Fill[]} fills
+ * @property {response.OrderFill[]} fills
  */
 export interface Order {
   market: string;
