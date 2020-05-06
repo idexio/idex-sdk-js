@@ -77,7 +77,7 @@ export interface L1OrderBookLong {
   bidQuantity: string; // B
 }
 
-type L2OrderBookChange = [response.OrderBookPriceLevel];
+type L2OrderBookChange = response.OrderBookPriceLevel;
 
 export interface L2OrderBookShort {
   m: string;

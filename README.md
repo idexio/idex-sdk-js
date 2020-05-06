@@ -175,9 +175,13 @@
 -   [WebSocket Responses](#websocket-responses)
     -   [webSocketResponse.Error](#websocketresponseerror)
         -   [Properties](#properties-31)
--   [ConnectListener](#connectlistener)
--   [constructor](#constructor)
+-   [pipToDecimal](#piptodecimal)
     -   [Parameters](#parameters-24)
+-   [ConnectListener](#connectlistener)
+-   [decimalToPip](#decimaltopip)
+    -   [Parameters](#parameters-25)
+-   [constructor](#constructor)
+    -   [Parameters](#parameters-26)
 -   [EthTransactionStatus](#ethtransactionstatus)
     -   [pending](#pending)
     -   [mined](#mined)
@@ -1283,6 +1287,22 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
     -   `data.code` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** error short code
     -   `data.message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** human readable error message
 
+## pipToDecimal
+
+Returns the given number of pips as a floating point number with 8 decimals.
+Examples:
+BigInt(12345678) => '0.12345678'
+BigInt(123456789) => '1.23456789'
+BigInt(100000000) => '1.00000000'
+BigInt(120000000) => '1.20000000'
+BigInt(1) => '0.00000001'
+
+### Parameters
+
+-   `pips` **JSBI** 
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
 ## ConnectListener
 
 WebSocket API client
@@ -1302,6 +1322,16 @@ await webSocketClient.connect();
 ```
 
 Type: function (): any
+
+## decimalToPip
+
+The exact inverse of pipToDecimal. Truncates anything beyond 8 decimals.
+
+### Parameters
+
+-   `decimal` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+Returns **JSBI** 
 
 ## constructor
 

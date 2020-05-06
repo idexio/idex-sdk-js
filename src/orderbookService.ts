@@ -3,198 +3,137 @@ import JSBI from 'jsbi';
 import PublicClient from './clients/public';
 import WebSocketClient from './clients/webSocket';
 import { OrderBookPriceLevel } from './types/response';
-import * as numbers from './numbers';
+import * as webSocketSubscriptionMessages from './types/webSocketSubscriptionMessages';
+import * as numbers from './utils/numbers';
 
-export interface L2OrderBookRowTransformed {
+export interface L2OrderBookLevelWithPips {
   price: string;
   pricePip: JSBI;
-  quantity: string;
-  quantityPip: JSBI;
+  size: string;
+  sizePip: JSBI;
 }
 
-type L2OrderBook = any; // TODO
+interface L2OrderBook {
+  bids: L2OrderBookLevelWithPips[];
+  asks: L2OrderBookLevelWithPips[];
+  sequenceNumber: string;
+}
 
 export class OrderBookService {
   // api clients
   private publicClient: PublicClient;
   private webSocketClient: WebSocketClient;
 
-  private cachedChanges: L2OrderBook[] = [];
+  private fetchOrderBookInterval: NodeJS.Timeout;
+  private cachedL2OrderBookEvents: webSocketSubscriptionMessages.L2OrderBookLong[] = [];
   private isRebuildingOrderBook?: boolean;
+
   private marketSymbol: string;
-  private level2Orderbook: {
-    bids: L2OrderBookRowTransformed[];
-    asks: L2OrderBookRowTransformed[];
-    sequenceNumber: string;
-  };
+  private l2OrderBook: L2OrderBook;
 
   constructor(publicClient: PublicClient, webSocketClient: WebSocketClient) {
     this.publicClient = publicClient;
     this.webSocketClient = webSocketClient;
   }
 
-  /*
-
-  private transformApiOrderBookRowChange(
-    row: ApiLevelTwoOrderBookRow,
-  ): LevelTwoOrderBookRowChange {
-    return {
-      price: row[0],
-      pricePip: numbers.decimalToPip(row[0]),
-      delta: row[1],
-      deltaPip: numbers.decimalToPip(row[1]),
-    };
-  }
-  */
-
   private updateOrderBookPriceLevel(
-    levelTwoOrders: LevelTwoOrderBookRow[],
-    rowChange: LevelTwoOrderBookRowChange,
-  ) {
-    const levelTwoOrder = levelTwoOrders.find(
-      (levelTwoOrder: LevelTwoOrderBookRow) =>
-        JSBI.equal(levelTwoOrder.pricePip, rowChange.pricePip),
+    bidsOrAsks: L2OrderBookLevelWithPips[],
+    priceLevelChange: L2OrderBookLevelWithPips,
+  ): void {
+    const bidOrAsk = bidsOrAsks.find(bidOrAsk =>
+      JSBI.equal(bidOrAsk.pricePip, priceLevelChange.pricePip),
     );
-    if (!levelTwoOrder) {
-      levelTwoOrders.push({
-        price: rowChange.price,
-        pricePip: rowChange.pricePip,
-        quantity: rowChange.delta,
-        quantityPip: rowChange.deltaPip,
+    if (!bidOrAsk) {
+      bidsOrAsks.push({
+        price: priceLevelChange.price,
+        pricePip: priceLevelChange.pricePip,
+        size: priceLevelChange.size,
+        sizePip: priceLevelChange.sizePip,
       });
       return;
     }
-    // update the quantity
+    // update the size
     const updatedQuantityPip = JSBI.add(
-      levelTwoOrder.quantityPip,
-      rowChange.deltaPip,
+      bidOrAsk.sizePip,
+      priceLevelChange.sizePip,
     );
-    levelTwoOrder.quantity = numbers.pipToDecimal(updatedQuantityPip);
-    levelTwoOrder.quantityPip = updatedQuantityPip;
+    bidOrAsk.size = numbers.pipToDecimal(updatedQuantityPip);
+    bidOrAsk.sizePip = updatedQuantityPip;
   }
 
   private applyChangesToOrderBook(
-    changes: OrderBookChanges,
-    sequenceNumber: number,
+    changes: {
+      asks: OrderBookPriceLevel[];
+      bids: OrderBookPriceLevel[];
+    },
+    sequenceNumber: string,
   ) {
-    const bids = this.bids;
-    const asks = this.asks;
+    const bids = this.l2OrderBook.bids.slice(0);
+    const asks = this.l2OrderBook.asks.slice(0);
+
+    // TODO remove price levels with 0 size
 
     // bids
     if (changes.bids) {
-      changes.bids.forEach(rowChange => {
-        this.updateOrderBookPriceLevel(bids, rowChange);
+      changes.bids.forEach(priceLevelChange => {
+        this.updateOrderBookPriceLevel(
+          bids,
+          this.transformL2OrderBookPriceLevel(priceLevelChange),
+        );
       });
 
-      // remove zero quantities
-      const updatedBids = bids.filter(bid =>
-        JSBI.greaterThan(bid.quantityPip, numbers.decimalToPip('0')),
-      );
-
-      this.sortRows(updatedBids);
-      this.setBids(updatedBids, sequenceNumber);
+      this.sortRows(bids);
     }
 
     // asks
     if (changes.asks) {
-      changes.asks.forEach(rowChange => {
-        this.updateOrderBookPriceLevel(asks, rowChange);
+      changes.asks.forEach(priceLevelChange => {
+        this.updateOrderBookPriceLevel(
+          asks,
+          this.transformL2OrderBookPriceLevel(priceLevelChange),
+        );
       });
 
-      // remove zero quantities
-      const updatedAsks = asks.filter(ask =>
-        JSBI.greaterThan(ask.quantityPip, numbers.decimalToPip('0')),
-      );
-      this.sortRows(updatedAsks);
-      this.setAsks(updatedAsks, sequenceNumber);
+      this.sortRows(asks);
     }
+
+    this.setL2OrderBook(asks, bids, sequenceNumber);
   }
 
-  private applyCachedOrderBookChanges(cachedChanges: CachedChange[]) {
-    this.cachedChanges = [];
-    if (!cachedChanges || !cachedChanges.length) {
+  private applyCachedOrderBookChanges() {
+    const changes: {
+      asks: OrderBookPriceLevel[];
+      bids: OrderBookPriceLevel[];
+    } = { bids: [], asks: [] };
+    let sequenceNumber: string;
+
+    if (!this.cachedL2OrderBookEvents.length) {
       return;
     }
 
-    const changes: OrderBookChanges = { bids: [], asks: [] };
-    let sequenceNumber = 0;
-    cachedChanges.forEach(cachedChange => {
-      changes.bids = [...changes.bids, ...cachedChange.changes.bids];
-      changes.asks = [...changes.asks, ...cachedChange.changes.asks];
-      sequenceNumber = cachedChange.sequenceNumber;
+    this.cachedL2OrderBookEvents.forEach(l2OrderBookEvent => {
+      changes.asks = [...changes.asks, ...l2OrderBookEvent.asks];
+      changes.bids = [...changes.bids, ...l2OrderBookEvent.bids];
+      sequenceNumber = l2OrderBookEvent.sequence;
     });
     this.applyChangesToOrderBook(changes, sequenceNumber);
   }
 
-  public async buildInitialOrderBook(marketSymbol?: string) {
-    this.cachedChanges = [];
-    this.isRebuildingOrderBook = true;
-    if (marketSymbol) {
-      this.marketSymbol = marketSymbol;
-    }
-    if (this.fetchOrderBookInterval) {
-      clearInterval(this.fetchOrderBookInterval);
-    }
-    if (this.applyCachedOrderBookChangesInterval) {
-      clearInterval(this.applyCachedOrderBookChangesInterval);
-    }
-
-    // The order book changes are being cached by the datastream event handler.
-    // This function will loop until the sequence number of the fetched order book
-    // matches a sequence number of a cached order book change.
-
-    this.sequenceNumberOfLastEvent = 0;
-    this.resetOrderbook();
-    try {
-      if (this.marketSymbol) {
-        await this.fetchAndSaveOrderBook(this.marketSymbol);
-      }
-    } catch (error) {
-      console.warn(error);
-    }
-
-    this.fetchOrderBookInterval = setInterval(async () => {
-      try {
-        if (this.marketSymbol) {
-          await this.fetchAndSaveOrderBook(this.marketSymbol);
-        }
-      } catch (error) {
-        console.warn(error);
-      }
-      const matchingSequenceNumberIndex = this.cachedChanges.findIndex(
-        (change: { changes: OrderBookChanges; sequenceNumber: number }) =>
-          change.sequenceNumber === this.sequenceNumber,
-      );
-      if (matchingSequenceNumberIndex < 0) {
-        return;
-      }
-      clearInterval(this.fetchOrderBookInterval);
-
-      this.applyCachedOrderBookChanges(
-        this.cachedChanges.slice(matchingSequenceNumberIndex + 1),
-      );
-      this.isRebuildingOrderBook = false;
-      this.applyCachedOrderBookChangesInterval = setInterval(() => {
-        this.applyCachedOrderBookChanges(this.cachedChanges.slice(0));
-      }, 1000);
-    }, 5 * 1000);
-  }
-
-  /** ******************* updated ****************** */
-
-  private transformOrderBookRow(
-    row: OrderBookPriceLevel,
-  ): L2OrderBookRowTransformed {
+  private transformL2OrderBookPriceLevel(
+    priceLevel: OrderBookPriceLevel,
+  ): L2OrderBookLevelWithPips {
     return {
-      price: row[0],
-      pricePip: numbers.decimalToPip(row[0]),
-      quantity: row[1],
-      quantityPip: numbers.decimalToPip(row[1]),
+      price: priceLevel.price,
+      pricePip: numbers.decimalToPip(priceLevel.price),
+      size: String(priceLevel.size),
+      sizePip: numbers.decimalToPip(String(priceLevel.size)),
     };
   }
 
-  private sortRows(rows: LevelTwoOrderBookRow[]) {
-    return rows.sort((a: LevelTwoOrderBookRow, b: LevelTwoOrderBookRow) => {
+  private sortRows(
+    priceLevels: L2OrderBookLevelWithPips[],
+  ): L2OrderBookLevelWithPips[] {
+    return priceLevels.sort((a, b) => {
       if (JSBI.greaterThan(a.pricePip, b.pricePip)) {
         return -1;
       } else if (JSBI.equal(a.pricePip, b.pricePip)) {
@@ -204,41 +143,115 @@ export class OrderBookService {
     });
   }
 
-  private setOrderBook(
-    asks: L2OrderBook[],
-    bids: L2OrderBook[],
+  private setL2OrderBook(
+    asks: L2OrderBookLevelWithPips[],
+    bids: L2OrderBookLevelWithPips[],
     sequenceNumber: string,
   ): void {
-    this.level2Orderbook = {
+    this.l2OrderBook = {
       asks,
       bids,
       sequenceNumber,
     };
   }
 
-  private async fetchAndSaveOrderBook(marketSymbol: string): Promise<void> {
-    const orderBook = await this.publicClient.getOrderBookLevel2(marketSymbol);
-    this.setOrderBook(orderBook.asks, orderBook.bids, orderBook.sequence);
+  private resetOrderbook(): void {
+    this.setL2OrderBook([], [], '0');
   }
 
-  private cacheOrderBookChanges(orderBookEvent: L2OrderBook) {
-    this.cachedChanges = this.cachedChanges.concat(orderBookEvent);
+  private async fetchAndSaveOrderBook(): Promise<void> {
+    const orderBook = await this.publicClient.getOrderBookLevel2(
+      this.marketSymbol,
+    );
+    this.setL2OrderBook(
+      orderBook.asks.map(this.transformL2OrderBookPriceLevel),
+      orderBook.bids.map(this.transformL2OrderBookPriceLevel),
+      orderBook.sequence,
+    );
   }
 
-  public handleL2OrderBookWebSocketEvent(orderBookEvent: L2OrderBook) {
-    const { market, sequence, bids, asks } = orderBookEvent;
+  private cacheOrderBookChanges(
+    l2OrderBookEvent: webSocketSubscriptionMessages.L2OrderBookLong,
+  ): void {
+    this.cachedL2OrderBookEvents = this.cachedL2OrderBookEvents.concat(
+      l2OrderBookEvent,
+    );
+  }
+
+  private setMarket(marketSymbol: string): void {
+    this.marketSymbol = marketSymbol;
+  }
+
+  private reset(): void {
+    this.cachedL2OrderBookEvents = [];
+    this.resetOrderbook();
+    this.webSocketClient.unsubscribe([{ name: 'l2orderbook', markets: [] }]);
+    if (this.fetchOrderBookInterval) {
+      clearInterval(this.fetchOrderBookInterval);
+    }
+  }
+
+  private handleL2OrderBookWebSocketEvent(
+    l2OrderBookEvent: webSocketSubscriptionMessages.L2OrderBookLong,
+  ): void {
+    if (l2OrderBookEvent.market !== this.marketSymbol) {
+      return;
+    }
+    // TODO check if the sequence number is sequential
     if (!this.isRebuildingOrderBook) {
-      // TODO apply the incoming event if the sequence number is sequential
+      this.applyChangesToOrderBook(
+        { asks: l2OrderBookEvent.asks, bids: l2OrderBookEvent.bids },
+        l2OrderBookEvent.sequence,
+      );
+      return;
     }
 
-    this.cacheOrderBookChanges(orderBookEvent);
+    this.cacheOrderBookChanges(l2OrderBookEvent);
   }
 
-  private resetOrderbook() {
-    this.setOrderBook([], [], '0');
+  public getOrderBook(): L2OrderBook {
+    return this.l2OrderBook;
   }
 
-  private changeMarket(marketSymbol: string) {
-    this.marketSymbol = marketSymbol;
+  public async buildAndMaintainOrderBook(marketSymbol: string): Promise<void> {
+    this.reset();
+    this.isRebuildingOrderBook = true;
+    this.setMarket(marketSymbol);
+
+    this.webSocketClient.subscribe([
+      {
+        name: 'l2orderbook',
+        markets: [marketSymbol],
+      },
+    ]);
+    this.webSocketClient.onResponse(response => {
+      if (response.type !== 'l2orderbook') {
+        return;
+      }
+      this.handleL2OrderBookWebSocketEvent(response.data);
+    });
+
+    await this.fetchAndSaveOrderBook();
+
+    this.fetchOrderBookInterval = setInterval(async () => {
+      try {
+        await this.fetchAndSaveOrderBook();
+
+        const matchingSequenceNumberIndex = this.cachedL2OrderBookEvents.findIndex(
+          l2OrderBookEvent =>
+            l2OrderBookEvent.sequence === this.l2OrderBook.sequenceNumber,
+        );
+        if (matchingSequenceNumberIndex < 0) {
+          return;
+        }
+
+        clearInterval(this.fetchOrderBookInterval);
+
+        this.applyCachedOrderBookChanges();
+        this.isRebuildingOrderBook = false;
+      } catch (error) {
+        console.error(error);
+      }
+    }, 5 * 1000);
   }
 }

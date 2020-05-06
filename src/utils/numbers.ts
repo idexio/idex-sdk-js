@@ -1,4 +1,5 @@
 import JSBI from 'jsbi';
+
 import { BigNumber, BigNumberClass } from './BigNumber';
 
 const exchangeDecimals = 8;
