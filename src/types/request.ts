@@ -245,7 +245,7 @@ export type OrderWithStopPrice =
   | TakeProfitLimitOrder;
 
 export interface CreateOrderRequest {
-  order: Order;
+  parameters: Order;
   signature: string;
 }
 
