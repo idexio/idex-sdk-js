@@ -23,9 +23,11 @@
   ],
   "dependencies": {
     "axios": "^0.19.2",
+    "bignumber.js": "^9.0.0",
     "crypto-js": "^4.0.0",
     "ethers": "^4.0.44",
     "isomorphic-ws": "^4.0.1",
+    "jsbi": "^3.1.2",
     "query-string": "^6.11.1",
     "ws": "^7.2.3"
   },

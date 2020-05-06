@@ -270,7 +270,7 @@ export interface OrderBookOrder {
 }
 
 interface OrderBook {
-  sequence: number;
+  sequence: string;
   bids: unknown[];
   asks: unknown[];
 }
