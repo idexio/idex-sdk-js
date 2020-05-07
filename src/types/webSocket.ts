@@ -142,4 +142,5 @@ export interface SubscriptionsResponse {
 export type Response =
   | ErrorResponse
   | SubscriptionsResponse
+  | webSocketSubscriptionMessages.SubscriptionMessageShort
   | webSocketSubscriptionMessages.SubscriptionMessageLong;
