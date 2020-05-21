@@ -2,6 +2,8 @@ import { ethers } from 'ethers';
 
 import * as types from './types';
 
+const orderSignatureHashVersion = 1;
+
 export const getPrivateKeySigner = (walletPrivateKey: string) => (
   hashToSign: string,
 ): Promise<string> =>
@@ -11,20 +13,21 @@ export const getPrivateKeySigner = (walletPrivateKey: string) => (
 
 export const getOrderHash = (order: types.request.Order): string =>
   solidityHashOfParams([
+    ['uint8', orderSignatureHashVersion],
     ['uint128', uuidToUint8Array(order.nonce)],
     ['address', order.wallet],
     ['string', order.market],
     ['uint8', types.enums.OrderType[order.type]],
     ['uint8', types.enums.OrderSide[order.side]],
-    ['uint8', types.enums.OrderTimeInForce[order.timeInForce] || 0],
     ['string', (order as types.request.OrderByBaseQuantity).quantity || ''],
     [
       'string',
       (order as types.request.OrderByQuoteQuantity).quoteOrderQuantity || '',
     ],
     ['string', (order as types.request.OrderWithPrice).price || ''],
-    ['string', order.customClientOrderId || ''],
     ['string', (order as types.request.OrderWithStopPrice).stopPrice || ''],
+    ['string', order.customClientOrderId || ''],
+    ['uint8', types.enums.OrderTimeInForce[order.timeInForce] || 0],
     [
       'uint8',
       types.enums.OrderSelfTradePrevention[order.selfTradePrevention] || 0,
@@ -32,32 +35,55 @@ export const getOrderHash = (order: types.request.Order): string =>
     ['uint64', order.cancelAfter || 0],
   ]);
 
-export const getDeleteOrderHash = (
-  walletAddress: string,
-  nonce: string,
-  market?: string,
-  orderId?: string,
-): string =>
-  solidityHashOfParams([
-    ['string', 'deleteOrders'],
-    ['address', walletAddress],
-    ['string', market || ''],
-    ['string', orderId || ''],
-    ['uint128', uuidToUint8Array(nonce)],
+export const getCancelOrderHash = (
+  parameters: types.request.XOR<
+    types.request.CancelOrder,
+    types.request.CancelOrders
+  >,
+): string => {
+  if (
+    [
+      parameters.orderId,
+      parameters.clientOrderId,
+      (parameters as types.request.CancelOrders).market,
+    ].filter(val => !!val).length > 1
+  ) {
+    throw new Error(
+      'Cancel orders may specify at most one of orderId, clientOrderId, or market',
+    );
+  }
+  return solidityHashOfParams([
+    ['uint128', uuidToUint8Array(parameters.nonce)],
+    ['address', parameters.wallet],
+    ['string', parameters.orderId || parameters.clientOrderId || ''],
+    ['string', (parameters as types.request.CancelOrders).market || ''],
   ]);
+};
 
 export const getWithdrawalHash = (
   withdrawal: types.request.Withdrawal,
-): string =>
-  solidityHashOfParams([
+): string => {
+  if (
+    (withdrawal.asset && withdrawal.assetContractAddress) ||
+    (!withdrawal.asset && !withdrawal.assetContractAddress)
+  ) {
+    throw new Error(
+      'Withdrawal must specify exactly one of asset or assetContractAddress',
+    );
+  }
+
+  return solidityHashOfParams([
     ['uint128', uuidToUint8Array(withdrawal.nonce)],
     ['address', withdrawal.wallet],
-    withdrawal.assetContractAddress
-      ? ['address', withdrawal.assetContractAddress]
-      : ['string', withdrawal.asset],
+    ['string', withdrawal.asset || ''],
+    [
+      'address',
+      withdrawal.assetContractAddress || ethers.constants.AddressZero,
+    ],
     ['string', withdrawal.quantity],
     ['bool', true], // Auto-dispatch
   ]);
+};
 
 type TypeValuePair =
   | ['string' | 'address', string]

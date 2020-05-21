@@ -53,30 +53,35 @@ export default class AuthenticatedClient {
   }
 
   /**
-   * Cancel orders
+   * Cancel a single order
    *
    * @param {string} order
    */
-  public async cancelOrders(
-    parameters: {
-      wallet: string;
-      nonce: string;
-      market?: string;
-      orderId?: string;
-    },
+  public async cancelOrder(
+    cancelOrder: request.CancelOrder,
     sign: (hash: string) => Promise<string>,
   ): Promise<response.Order> {
     return (
       await this.delete('/orders', {
-        parameters,
-        signature: await sign(
-          eth.getDeleteOrderHash(
-            parameters.wallet,
-            parameters.nonce,
-            parameters.market,
-            parameters.orderId,
-          ),
-        ),
+        cancelOrder,
+        signature: await sign(eth.getCancelOrderHash(cancelOrder)),
+      })
+    ).data[0];
+  }
+
+  /**
+   * Cancel multiple orders
+   *
+   * @param {string} order
+   */
+  public async cancelOrders(
+    cancelOrders: request.CancelOrders,
+    sign: (hash: string) => Promise<string>,
+  ): Promise<response.Order[]> {
+    return (
+      await this.delete('/orders', {
+        cancelOrders,
+        signature: await sign(eth.getCancelOrderHash(cancelOrders)),
       })
     ).data;
   }
