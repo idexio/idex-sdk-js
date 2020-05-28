@@ -205,25 +205,26 @@ export interface Market {
  * Order
  *
  * @typedef {Object} response.Order
- * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
- * @property {string} orderId - IDEX-assigned order id
- * @property {string} [clientOrderId] - If provided by the client
- * @property {string} wallet
- * @property {string} time - Timestamp of initial trading engine processing
- * @property {OrderStatus} status
- * @property {string} [rejectionCode] - Error code capturing reason for rejection
- * @property {string} [rejectionReason] - Human readable rejection error message
- * @property {OrderType} type
- * @property {OrderSide} side
- * @property {OrderTimeInForce} [timeInForce] - Defaults to gtc
- * @property {string} [price] - Price in quote terms, optional for market orders
- * @property {string} [stopPrice] - Stop loss or take profit price, only if stop or take order
- * @property {OrderSelfTradePrevention} [selfTradePrevention] - Stop loss or take profit price, only if stop or take order
- * @property {string} originalQuantity - Original quantity specified by the order in base terms
- * @property {string} executedQuantity - Amount of quantity that has been executed in base terms
- * @property {string} cumulativeQuoteQuantity - Represents the cumulative amount of the quote that has been spent (with a BUY order) or received (with a SELL order). Historical orders will have a value < 0 in this field indicating the data is not available at this time
- * @property {string} [avgExecutionPrice]
- * @property {response.OrderFill[]} fills
+ * @property {string} market - Market symbol as base-quote pair e.g. 'IDEX-ETH'
+ * @property {string} orderId - Exchange-assigned order identifier
+ * @property {string} [clientOrderId] - Client-specified order identifier
+ * @property {string} wallet - Ethereum address of placing wallet
+ * @property {string} time - Time of initial order processing by the matching engine
+ * @property {OrderStatus} status - Current order status
+ * @property {string} [rejectionCode] - Error short code explaining order rejection or failed batch cancel
+ * @property {string} [rejectionReason] - Error description explaining order rejection or failed batch cancel
+ * @property {OrderType} type - Order type
+ * @property {OrderSide} side - Order side
+ * @property {string} [originalQuantity] - Original quantity specified by the order in base terms, omitted for market orders specified in quote terms
+ * @property {string} [originalQuoteQuantity] - Original quantity specified by the order in quote terms, only present for market orders specified in quote terms
+ * @property {string} executedQuantity - Quantity that has been executed in base terms
+ * @property {string} cumulativeQuoteQuantity - Cumulative quantity that has been spent (buy orders) or received (sell orders) in quote terms, omitted if unavailable for historical orders
+ * @property {string} [avgExecutionPrice] - Weighted average price of fills associated with the order; only present with fills
+ * @property {string} [price] -	Original price specified by the order in quote terms, omitted for all market orders
+ * @property {string} [stopPrice] - Stop loss or take profit price, only present for stopLoss, stopLossLimit, takeProfit, and takeProfitLimit orders
+ * @property {OrderTimeInForce} [timeInForce] - Time in force policy, see values, only present for all limit orders specifying a non-default (gtc) policy
+ * @property {OrderSelfTradePrevention} [selfTradePrevention] - Self-trade prevention policy, see values, only present for orders specifying a non-default (dc) policy
+ * @property {response.OrderFill[]} - Array of order fill objects
  */
 export interface Order {
   market: string;
@@ -236,14 +237,15 @@ export interface Order {
   rejectionReason?: string;
   type: keyof typeof enums.OrderType;
   side: keyof typeof enums.OrderSide;
-  timeInForce: keyof typeof enums.OrderTimeInForce;
-  price?: string;
-  stopPrice?: string;
-  selfTradePrevention: keyof typeof enums.OrderSelfTradePrevention;
-  originalQuantity: string;
+  originalQuantity?: string;
+  originalQuoteQuantity?: string;
   executedQuantity: string;
   cumulativeQuoteQuantity: string;
   avgExecutionPrice?: string;
+  price?: string;
+  stopPrice?: string;
+  timeInForce: keyof typeof enums.OrderTimeInForce;
+  selfTradePrevention: keyof typeof enums.OrderSelfTradePrevention;
   fills: OrderFill[];
 }
 
