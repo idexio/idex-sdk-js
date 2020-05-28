@@ -1,9 +1,33 @@
 import * as enums from './enums';
 
 type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
-type XOR<T, U> = T | U extends object
+export type XOR<T, U> = T | U extends object
   ? (Without<T, U> & U) | (Without<U, T> & T)
   : T | U;
+
+interface CancelOrdersBase {
+  nonce: string;
+  wallet: string;
+}
+
+export interface CancelOrderByOrderId extends CancelOrdersBase {
+  orderId: string;
+}
+
+export interface CancelOrderByClientOrderId extends CancelOrdersBase {
+  clientOrderId: string;
+}
+
+export type CancelOrder = XOR<CancelOrderByOrderId, CancelOrderByClientOrderId>;
+
+export interface CancelOrders extends CancelOrdersBase {
+  market?: string;
+}
+
+export interface CancelOrdersBody {
+  parameters: XOR<CancelOrder, CancelOrders>;
+  signature: string;
+}
 
 interface FindByWallet {
   nonce: string;
@@ -215,6 +239,17 @@ export type OrderByQuoteQuantity = (
   | TakeProfitLimitOrder
 ) & { quoteOrderQuantity: string };
 
+export type OrderWithPrice =
+  | LimitOrder
+  | StopLossLimitOrder
+  | TakeProfitLimitOrder;
+
+export type OrderWithStopPrice =
+  | StopLossOrder
+  | StopLossLimitOrder
+  | TakeProfitLimitOrder
+  | TakeProfitLimitOrder;
+
 /**
  * @typedef {Object} request.Order
  * @property {string} nonce - UUIDv1
@@ -233,18 +268,7 @@ export type OrderByQuoteQuantity = (
  */
 export type Order = XOR<OrderByBaseQuantity, OrderByQuoteQuantity>;
 
-export type OrderWithPrice =
-  | LimitOrder
-  | StopLossLimitOrder
-  | TakeProfitLimitOrder;
-
-export type OrderWithStopPrice =
-  | StopLossOrder
-  | StopLossLimitOrder
-  | TakeProfitLimitOrder
-  | TakeProfitLimitOrder;
-
-export interface CreateOrderRequest {
+export interface CreateOrderBody {
   parameters: Order;
   signature: string;
 }
@@ -274,3 +298,8 @@ export interface WithdrawalByAddress extends WithdrawalBase {
  * @property {string} quantity - Withdrawal amount in asset terms, fees are taken from this value
  */
 export type Withdrawal = XOR<WithdrawalBySymbol, WithdrawalByAddress>;
+
+export interface CreateWithdrawal {
+  parameters: Withdrawal;
+  signature: string;
+}

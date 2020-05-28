@@ -112,26 +112,28 @@ export enum MarketStatus {
  */
 export enum OrderSelfTradePrevention {
   /**
-   * When two orders from the same user cross, the smaller order will be canceled and the larger order size will be
-   * decremented by the smaller order size. If the two orders are the same size, both will be canceled.
+   * Decrement And Cancel (DC) - When two orders from the same user cross, the smaller order will
+   * be canceled and the larger order size will be decremented by the smaller order size. If the two
+   * orders are the same size, both will be canceled.
    * @type {string}
    */
-  decreaseAndCancel,
+  dc,
   /**
-   * Cancel the older (maker) order in full
+   * Cancel Oldest (CO) - Cancel the older (maker) order in full
    * @type {string}
    */
-  cancelOldest,
+  co,
   /**
-   * Cancel the newer (taker) order in full. This is the only valid option when time-in-force is set to fill or kill
+   * Cancel Newest (CN) - Cancel the newer, taker order and leave the older, resting order on the
+   * order book. This is the only valid option when time-in-force is set to fill or kill
    * @type {string}
    */
-  cancelNewest,
+  cn,
   /**
-   * Cancel both orders
+   * Cancel Both (CB) - Cancel both orders
    * @type {string}
    */
-  cancelBoth,
+  cb,
 }
 
 /**
