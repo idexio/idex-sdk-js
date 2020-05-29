@@ -13,15 +13,14 @@ const transformTickersMessage = (
   high: ticker.h,
   low: ticker.l,
   close: ticker.c,
-  last: ticker.c,
-  lastQuantity: ticker.Q,
+  closeQuantity: ticker.Q,
   baseVolume: ticker.v,
   quoteVolume: ticker.q,
   percentChange: ticker.P,
   ...(ticker.n && { numTrades: ticker.n }),
   ask: ticker.a,
   bid: ticker.b,
-  lastSequenceNumber: ticker.u,
+  sequence: ticker.u,
 });
 
 const transformTradesMessage = (
@@ -43,8 +42,8 @@ const transformCandlesMessage = (
   market: candle.m,
   time: candle.t,
   interval: candle.i,
-  startTime: candle.s,
-  endTime: candle.e,
+  start: candle.s,
+  end: candle.e,
   open: candle.o,
   high: candle.h,
   low: candle.l,
