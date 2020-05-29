@@ -47,16 +47,15 @@ export interface CandleShort {
   c: string;
   v: string;
   n: number;
-  u: string;
+  u: number;
 }
 
 export interface CandleLong extends response.Candle {
   market: string; // m
+  time: number; // t
   interval: keyof typeof enums.CandleInterval; // i
-  startTime: number; // s
-  endTime: number; // e
+  end: number; // e
   numberOfFills: number; // n
-  sequence: string; // u
 }
 
 export interface L1OrderBookShort {

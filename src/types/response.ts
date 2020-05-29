@@ -43,23 +43,25 @@ export interface Balance {
 }
 
 /**
- * OHLCV data points aggregated by time interval
+ * Candle (OHLCV) data points aggregated by time interval
  *
  * @typedef {Object} response.Candle
- * @property {number} time - Timestamp of the datapoint
+ * @property {number} start - Time of the start of the interval
  * @property {string} open - Price of the first fill of the interval in quote terms
  * @property {string} high - Price of the highest fill of the interval in quote terms
  * @property {string} low - Price of the lowest fill of the interval in quote terms
  * @property {string} close - Price of the last fill of the interval in quote terms
  * @property {string} volume - Total volume of the period in base terms
+ * @property {number} sequence - Fill sequence number of the last trade in the interval
  */
 export interface Candle {
-  time: number;
+  start: number;
   open: string;
   high: string;
   low: string;
   close: string;
   volume: string;
+  sequence: number;
 }
 
 /**
