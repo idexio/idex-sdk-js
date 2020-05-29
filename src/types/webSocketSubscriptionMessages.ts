@@ -5,7 +5,7 @@ export type BuyOrSellShort = 'b' | 's';
 
 export interface TickerShort {
   m: string;
-  t: string;
+  t: number;
   o: string;
   h: string;
   l: string;
@@ -17,7 +17,7 @@ export interface TickerShort {
   n: string;
   a: string;
   b: string;
-  u: string;
+  u: number;
 }
 
 export interface TradeShort {

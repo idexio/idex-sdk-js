@@ -335,9 +335,9 @@ export interface OrderBookLevel3 extends OrderBook {
  * @property {string} open - Price of the first trade for the period in quote terms
  * @property {string} close - Same as last
  * @property {string} closeQuantity - Quantity of the last period in base terms
- * @property {string} time - Time when data was calculated, open and change is assumed to be trailing 24h
+ * @property {number} time - Time when data was calculated, open and change is assumed to be trailing 24h
  * @property {string} numTrades - Number of fills for the market in the period
- * @property {string} sequence - Last trade sequence number for the market
+ * @property {number} sequence - Last trade sequence number for the market
  */
 export interface Ticker {
   market: string;
@@ -351,9 +351,9 @@ export interface Ticker {
   open: string;
   close: string;
   closeQuantity: string;
-  time: string;
+  time: number;
   numTrades: string;
-  sequence: string;
+  sequence: number;
 }
 
 /**
