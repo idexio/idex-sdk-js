@@ -419,6 +419,14 @@ export interface Wallet {
 }
 
 /**
+ * @typedef {Object} response.WebSocketToken
+ * @property {string} token - WebSocket subscription authentication token
+ */
+export interface WebSocketToken {
+  token: string;
+}
+
+/**
  * @typedef {Object} response.Withdrawal
  * @property {string} withdrawalId - IDEX-issued withdrawal identifier
  * @property {string} asset - Asset by symbol
