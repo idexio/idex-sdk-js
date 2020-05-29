@@ -328,34 +328,32 @@ export interface OrderBookLevel3 extends OrderBook {
  * @property {string} percentChange - % change from open to close
  * @property {string} baseVolume - 24h volume in base terms
  * @property {string} quoteVolume - 24h volume in quote terms
- * @property {string} last - Price of the last trade for the period in quote terms
  * @property {string} low - Lowest traded price in the period in quote terms
  * @property {string} high - Highest traded price in the period in quote terms
  * @property {string} bid - Best bid price on the order book
  * @property {string} ask - Best ask price on the order book
  * @property {string} open - Price of the first trade for the period in quote terms
  * @property {string} close - Same as last
- * @property {string} lastQuantity - Quantity of the last period in base terms
+ * @property {string} closeQuantity - Quantity of the last period in base terms
  * @property {string} time - Time when data was calculated, open and change is assumed to be trailing 24h
- * @property {string} [numTrades] - Number of fills for the market in the period
- * @property {string} [lastSequenceNumber] - Last trade sequence number for the market
+ * @property {string} numTrades - Number of fills for the market in the period
+ * @property {string} sequence - Last trade sequence number for the market
  */
 export interface Ticker {
   market: string;
-  percentChange: string; // TODO: number ?
+  percentChange: string;
   baseVolume: string;
   quoteVolume: string;
-  last: string;
   low: string;
   high: string;
   bid: string;
   ask: string;
   open: string;
   close: string;
-  lastQuantity: string;
+  closeQuantity: string;
   time: string;
-  numTrades?: string;
-  lastSequenceNumber?: string;
+  numTrades: string;
+  sequence: string;
 }
 
 /**
