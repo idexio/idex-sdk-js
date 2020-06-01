@@ -143,7 +143,7 @@ export default class AuthenticatedClient {
    * @return {Promise<response.Order>}
    */
   public async getOrder(findOrder: request.FindOrder): Promise<response.Order> {
-    return (await this.get('/orders', findOrder)).data[0];
+    return (await this.get('/orders', findOrder)).data;
   }
 
   /**
@@ -156,23 +156,6 @@ export default class AuthenticatedClient {
     findOrders: request.FindOrders,
   ): Promise<response.Order[]> {
     return (await this.get('/orders', findOrders)).data;
-  }
-
-  /**
-   * Get multiple orders including inactive ones
-   *
-   * @param {request.FindOrders} findOrders
-   * @return {Promise<response.Order[]>}
-   */
-  public async getOrdersIncludingInactive(
-    findOrders: request.FindOrdersIncludingInactive,
-  ): Promise<response.Order[]> {
-    return (
-      await this.get('/orders', {
-        ...findOrders,
-        includeInactiveOrders: true,
-      })
-    ).data;
   }
 
   /**
