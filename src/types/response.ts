@@ -246,7 +246,7 @@ export interface Order {
   stopPrice?: string;
   timeInForce: keyof typeof enums.OrderTimeInForce;
   selfTradePrevention: keyof typeof enums.OrderSelfTradePrevention;
-  fills: OrderFill[];
+  fills?: OrderFill[];
 }
 
 /**
