@@ -165,10 +165,12 @@ export interface FindWithdrawal extends FindByWallet {
  * @property {number} [start] - Starting timestamp (inclusive)
  * @property {number} [end] - Ending timestamp (inclusive)
  * @property {number} [limit=50] - Max results to return from 1-1000
+ * @property {string} [fromId] - Withdrawals created after the fromId
  */
 export interface FindWithdrawals extends FindByWallet, FindWithPagination {
   asset?: string;
   assetContractAddress?: string;
+  fromId?: string;
 }
 
 export interface AllOrderParameters {
