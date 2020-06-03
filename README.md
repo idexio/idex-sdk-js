@@ -42,24 +42,22 @@
             -   [Parameters](#parameters-14)
         -   [getOrders](#getorders)
             -   [Parameters](#parameters-15)
-        -   [getOrdersIncludingInactive](#getordersincludinginactive)
-            -   [Parameters](#parameters-16)
         -   [getUser](#getuser)
-            -   [Parameters](#parameters-17)
+            -   [Parameters](#parameters-16)
         -   [getWallets](#getwallets)
-            -   [Parameters](#parameters-18)
+            -   [Parameters](#parameters-17)
         -   [getWithdrawal](#getwithdrawal)
-            -   [Parameters](#parameters-19)
+            -   [Parameters](#parameters-18)
         -   [getWithdrawals](#getwithdrawals)
-            -   [Parameters](#parameters-20)
+            -   [Parameters](#parameters-19)
         -   [placeOrder](#placeorder)
-            -   [Parameters](#parameters-21)
+            -   [Parameters](#parameters-20)
         -   [placeTestOrder](#placetestorder)
-            -   [Parameters](#parameters-22)
+            -   [Parameters](#parameters-21)
         -   [withdraw](#withdraw)
-            -   [Parameters](#parameters-23)
+            -   [Parameters](#parameters-22)
         -   [getWsToken](#getwstoken)
-            -   [Parameters](#parameters-24)
+            -   [Parameters](#parameters-23)
 -   [Enums](#enums)
     -   [CandleInterval](#candleinterval)
         -   [1m](#1m)
@@ -123,69 +121,67 @@
         -   [Properties](#properties-4)
     -   [request.FindOrders](#requestfindorders)
         -   [Properties](#properties-5)
-    -   [request.FindOrdersIncludingInactive](#requestfindordersincludinginactive)
-        -   [Properties](#properties-6)
     -   [request.FindTrades](#requestfindtrades)
-        -   [Properties](#properties-7)
+        -   [Properties](#properties-6)
     -   [request.FindWithdrawal](#requestfindwithdrawal)
-        -   [Properties](#properties-8)
+        -   [Properties](#properties-7)
     -   [request.FindWithdrawals](#requestfindwithdrawals)
-        -   [Properties](#properties-9)
+        -   [Properties](#properties-8)
     -   [request.Order](#requestorder)
-        -   [Properties](#properties-10)
+        -   [Properties](#properties-9)
     -   [request.Withdrawal](#requestwithdrawal)
-        -   [Properties](#properties-11)
+        -   [Properties](#properties-10)
 -   [Responses](#responses)
     -   [response.Asset](#responseasset)
-        -   [Properties](#properties-12)
+        -   [Properties](#properties-11)
     -   [response.Balance](#responsebalance)
-        -   [Properties](#properties-13)
+        -   [Properties](#properties-12)
     -   [response.Candle](#responsecandle)
-        -   [Properties](#properties-14)
+        -   [Properties](#properties-13)
     -   [response.Deposit](#responsedeposit)
-        -   [Properties](#properties-15)
+        -   [Properties](#properties-14)
     -   [response.ExchangeInfo](#responseexchangeinfo)
-        -   [Properties](#properties-16)
+        -   [Properties](#properties-15)
     -   [response.Fill](#responsefill)
-        -   [Properties](#properties-17)
+        -   [Properties](#properties-16)
     -   [response.Market](#responsemarket)
-        -   [Properties](#properties-18)
+        -   [Properties](#properties-17)
     -   [response.Order](#responseorder)
-        -   [Properties](#properties-19)
+        -   [Properties](#properties-18)
     -   [response.OrderBookLevel1](#responseorderbooklevel1)
-        -   [Properties](#properties-20)
+        -   [Properties](#properties-19)
     -   [response.OrderBookLevel2](#responseorderbooklevel2)
-        -   [Properties](#properties-21)
+        -   [Properties](#properties-20)
     -   [response.OrderBookLevel3](#responseorderbooklevel3)
-        -   [Properties](#properties-22)
+        -   [Properties](#properties-21)
     -   [response.OrderBookOrder](#responseorderbookorder)
-        -   [Properties](#properties-23)
+        -   [Properties](#properties-22)
     -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
-        -   [Properties](#properties-24)
+        -   [Properties](#properties-23)
     -   [response.OrderFill](#responseorderfill)
-        -   [Properties](#properties-25)
+        -   [Properties](#properties-24)
     -   [response.Ticker](#responseticker)
-        -   [Properties](#properties-26)
+        -   [Properties](#properties-25)
     -   [response.Trade](#responsetrade)
-        -   [Properties](#properties-27)
+        -   [Properties](#properties-26)
     -   [response.User](#responseuser)
-        -   [Properties](#properties-28)
+        -   [Properties](#properties-27)
     -   [response.Wallet](#responsewallet)
-        -   [Properties](#properties-29)
+        -   [Properties](#properties-28)
     -   [response.Withdrawal](#responsewithdrawal)
-        -   [Properties](#properties-30)
+        -   [Properties](#properties-29)
 -   [WebSocket Responses](#websocket-responses)
     -   [webSocketResponse.Error](#websocketresponseerror)
-        -   [Properties](#properties-31)
+        -   [Properties](#properties-30)
 -   [ConnectListener](#connectlistener)
 -   [constructor](#constructor)
-    -   [Parameters](#parameters-25)
+    -   [Parameters](#parameters-24)
 -   [EthTransactionStatus](#ethtransactionstatus)
     -   [pending](#pending)
     -   [mined](#mined)
     -   [failed](#failed)
 -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
-    -   [Properties](#properties-32)
+    -   [Properties](#properties-31)
 -   [OrderStateChange](#orderstatechange)
     -   [new](#new)
     -   [activated](#activated)
@@ -193,6 +189,9 @@
     -   [cancelled](#cancelled-1)
     -   [expired](#expired-1)
 -   [autoDispatchEnabled](#autodispatchenabled)
+-   [response.Ping](#responseping)
+-   [response.Time](#responsetime)
+    -   [Properties](#properties-32)
 -   [response.WebSocketToken](#responsewebsockettoken)
     -   [Properties](#properties-33)
 
@@ -430,16 +429,6 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 #### getOrders
 
 Get multiple orders
-
-##### Parameters
-
--   `findOrders` **[request.FindOrders](#requestfindorders)** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Order](#responseorder)>>** 
-
-#### getOrdersIncludingInactive
-
-Get multiple orders including inactive ones
 
 ##### Parameters
 
@@ -868,8 +857,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Exclusive with clientOrderId
--   `clientOrderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Exclusive with orderId
+-   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ### request.FindOrders
 
@@ -880,19 +868,11 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Base-quote pair e.g. 'IDEX-ETH'
-
-### request.FindOrdersIncludingInactive
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-#### Properties
-
--   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Base-quote pair e.g. 'IDEX-ETH'
+-   `closed` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** false only returns active orders on the order book; true only returns orders that are no longer on the order book and resulted in at least one fill; only applies if orderId is absent
 -   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
 -   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
+-   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** orderId of the earliest (oldest) order, only applies if orderId is absent
 
 ### request.FindTrades
 
@@ -1407,6 +1387,22 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 Currently has no effect
 
 Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+
+## response.Ping
+
+Ping
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+## response.Time
+
+Time
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Current server time
 
 ## response.WebSocketToken
 
