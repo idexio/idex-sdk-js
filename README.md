@@ -16,48 +16,46 @@
             -   [Parameters](#parameters-1)
         -   [getOrderBookLevel2](#getorderbooklevel2)
             -   [Parameters](#parameters-2)
-        -   [getOrderBookLevel3](#getorderbooklevel3)
-            -   [Parameters](#parameters-3)
         -   [getTickers](#gettickers)
-            -   [Parameters](#parameters-4)
+            -   [Parameters](#parameters-3)
         -   [getCandles](#getcandles)
-            -   [Parameters](#parameters-5)
+            -   [Parameters](#parameters-4)
         -   [getTrades](#gettrades)
-            -   [Parameters](#parameters-6)
+            -   [Parameters](#parameters-5)
     -   [AuthenticatedClient](#authenticatedclient)
-        -   [Parameters](#parameters-7)
+        -   [Parameters](#parameters-6)
         -   [cancelOrder](#cancelorder)
-            -   [Parameters](#parameters-8)
+            -   [Parameters](#parameters-7)
         -   [cancelOrders](#cancelorders)
-            -   [Parameters](#parameters-9)
+            -   [Parameters](#parameters-8)
         -   [getBalances](#getbalances)
-            -   [Parameters](#parameters-10)
+            -   [Parameters](#parameters-9)
         -   [getFills](#getfills)
-            -   [Parameters](#parameters-11)
+            -   [Parameters](#parameters-10)
         -   [getDeposit](#getdeposit)
-            -   [Parameters](#parameters-12)
+            -   [Parameters](#parameters-11)
         -   [getDeposits](#getdeposits)
-            -   [Parameters](#parameters-13)
+            -   [Parameters](#parameters-12)
         -   [getOrder](#getorder)
-            -   [Parameters](#parameters-14)
+            -   [Parameters](#parameters-13)
         -   [getOrders](#getorders)
-            -   [Parameters](#parameters-15)
+            -   [Parameters](#parameters-14)
         -   [getUser](#getuser)
-            -   [Parameters](#parameters-16)
+            -   [Parameters](#parameters-15)
         -   [getWallets](#getwallets)
-            -   [Parameters](#parameters-17)
+            -   [Parameters](#parameters-16)
         -   [getWithdrawal](#getwithdrawal)
-            -   [Parameters](#parameters-18)
+            -   [Parameters](#parameters-17)
         -   [getWithdrawals](#getwithdrawals)
-            -   [Parameters](#parameters-19)
+            -   [Parameters](#parameters-18)
         -   [placeOrder](#placeorder)
-            -   [Parameters](#parameters-20)
+            -   [Parameters](#parameters-19)
         -   [placeTestOrder](#placetestorder)
-            -   [Parameters](#parameters-21)
+            -   [Parameters](#parameters-20)
         -   [withdraw](#withdraw)
-            -   [Parameters](#parameters-22)
+            -   [Parameters](#parameters-21)
         -   [getWsToken](#getwstoken)
-            -   [Parameters](#parameters-23)
+            -   [Parameters](#parameters-22)
 -   [Enums](#enums)
     -   [CandleInterval](#candleinterval)
         -   [1m](#1m)
@@ -152,36 +150,32 @@
         -   [Properties](#properties-19)
     -   [response.OrderBookLevel2](#responseorderbooklevel2)
         -   [Properties](#properties-20)
-    -   [response.OrderBookLevel3](#responseorderbooklevel3)
-        -   [Properties](#properties-21)
-    -   [response.OrderBookOrder](#responseorderbookorder)
-        -   [Properties](#properties-22)
     -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
-        -   [Properties](#properties-23)
+        -   [Properties](#properties-21)
     -   [response.OrderFill](#responseorderfill)
-        -   [Properties](#properties-24)
+        -   [Properties](#properties-22)
     -   [response.Ticker](#responseticker)
-        -   [Properties](#properties-25)
+        -   [Properties](#properties-23)
     -   [response.Trade](#responsetrade)
-        -   [Properties](#properties-26)
+        -   [Properties](#properties-24)
     -   [response.User](#responseuser)
-        -   [Properties](#properties-27)
+        -   [Properties](#properties-25)
     -   [response.Wallet](#responsewallet)
-        -   [Properties](#properties-28)
+        -   [Properties](#properties-26)
     -   [response.Withdrawal](#responsewithdrawal)
-        -   [Properties](#properties-29)
+        -   [Properties](#properties-27)
 -   [WebSocket Responses](#websocket-responses)
     -   [webSocketResponse.Error](#websocketresponseerror)
-        -   [Properties](#properties-30)
+        -   [Properties](#properties-28)
 -   [ConnectListener](#connectlistener)
 -   [constructor](#constructor)
-    -   [Parameters](#parameters-24)
+    -   [Parameters](#parameters-23)
 -   [EthTransactionStatus](#ethtransactionstatus)
     -   [pending](#pending)
     -   [mined](#mined)
     -   [failed](#failed)
 -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
-    -   [Properties](#properties-31)
+    -   [Properties](#properties-29)
 -   [OrderStateChange](#orderstatechange)
     -   [new](#new)
     -   [activated](#activated)
@@ -191,9 +185,9 @@
 -   [autoDispatchEnabled](#autodispatchenabled)
 -   [response.Ping](#responseping)
 -   [response.Time](#responsetime)
-    -   [Properties](#properties-32)
+    -   [Properties](#properties-30)
 -   [response.WebSocketToken](#responsewebsockettoken)
-    -   [Properties](#properties-33)
+    -   [Properties](#properties-31)
 
 ## Clients
 
@@ -279,17 +273,6 @@ Get current order book price levels for a market
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Number of bids and asks to return. Default is 50, 0 returns the entire book (optional, default `50`)
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.OrderBookLevel2](#responseorderbooklevel2)>** 
-
-#### getOrderBookLevel3
-
-Get current order book entries for a market
-
-##### Parameters
-
--   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
--   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Number of bids and asks to return. Value of 0 returns the entire book (optional, default `50`)
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.OrderBookLevel3](#responseorderbooklevel3)>** 
 
 #### getTickers
 
@@ -1124,29 +1107,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `bids` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.OrderBookPriceLevel](#responseorderbookpricelevel)>** 
 -   `asks` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.OrderBookPriceLevel](#responseorderbookpricelevel)>** 
 
-### response.OrderBookLevel3
-
-OrderBookLevel3
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-#### Properties
-
--   `bids` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.OrderBookOrder](#responseorderbookorder)>** 
--   `asks` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.OrderBookOrder](#responseorderbookorder)>** 
-
-### response.OrderBookOrder
-
-OrderBookOrder
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-#### Properties
-
--   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `size` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
--   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
 ### response.OrderBookPriceLevel
 
 OrderBookPriceLevel
@@ -1156,7 +1116,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 #### Properties
 
 -   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `size` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+-   `size` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `numOrders` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** 
 
 ### response.OrderFill
