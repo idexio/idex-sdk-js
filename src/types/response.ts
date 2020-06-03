@@ -118,7 +118,7 @@ export interface ExchangeInfo {
  * @typedef {Object} response.Fill
  * @property {string} fillId - Internal ID of fill
  * @property {string} orderId - Internal ID of order
- * @property {string} clientOrderId - Client-provided ID of order
+ * @property {string} [clientOrderId] - Client-provided ID of order
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
  * @property {string} price - Executed price of fill in quote terms
  * @property {string} quantity - Executed quantity of fill in base terms
@@ -136,7 +136,7 @@ export interface ExchangeInfo {
  */
 export interface Fill extends OrderFill {
   orderId: string;
-  clientOrderId: string;
+  clientOrderId?: string;
   market: string;
   side: keyof typeof enums.OrderSide;
 }

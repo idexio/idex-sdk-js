@@ -77,6 +77,16 @@ export interface FindDeposits extends FindByWallet, FindWithPagination {
 }
 
 /**
+ * @typedef {Object} request.FindFill
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ * @property {string} fillId
+ */
+export interface FindFill extends FindByWallet {
+  fillId: string;
+}
+
+/**
  * @typedef {Object} request.FindFills
  * @property {string} nonce - UUIDv1
  * @property {string} wallet - Ethereum wallet address

@@ -101,18 +101,6 @@ export default class AuthenticatedClient {
   }
 
   /**
-   * Get private, detailed data about fills against orders placed by the calling user account
-   *
-   * @param {request.FindFills} findFills
-   * @return {Promise<response.Fill[]>}
-   */
-  public async getFills(
-    findFills: request.FindFills,
-  ): Promise<response.Fill[]> {
-    return (await this.get('/fills', findFills)).data;
-  }
-
-  /**
    * Get a deposit
    *
    * @param {request.FindDeposit} findDeposit
@@ -134,6 +122,28 @@ export default class AuthenticatedClient {
     findDeposits: request.FindDeposits,
   ): Promise<response.Deposit[]> {
     return (await this.get('/deposits', findDeposits)).data;
+  }
+
+  /**
+   * Get a fill
+   *
+   * @param {request.FindFill} findFill
+   * @return {Promise<response.Fill>}
+   */
+  public async getFill(findFill: request.FindFill): Promise<response.Fill> {
+    return (await this.get('/fills', findFill)).data;
+  }
+
+  /**
+   * Get multiple fills
+   *
+   * @param {request.FindFills} findFills
+   * @return {Promise<response.Fill[]>}
+   */
+  public async getFills(
+    findFills: request.FindFills,
+  ): Promise<response.Fill[]> {
+    return (await this.get('/fills', findFills)).data;
   }
 
   /**
