@@ -183,8 +183,11 @@
     -   [cancelled](#cancelled-1)
     -   [expired](#expired-1)
 -   [autoDispatchEnabled](#autodispatchenabled)
--   [response.WebSocketToken](#responsewebsockettoken)
+-   [response.Ping](#responseping)
+-   [response.Time](#responsetime)
     -   [Properties](#properties-30)
+-   [response.WebSocketToken](#responsewebsockettoken)
+    -   [Properties](#properties-31)
 
 ## Clients
 
@@ -1344,6 +1347,22 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 Currently has no effect
 
 Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+
+## response.Ping
+
+Ping
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+## response.Time
+
+Time
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Current server time
 
 ## response.WebSocketToken
 
