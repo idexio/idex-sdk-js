@@ -323,6 +323,13 @@ export interface OrderBookLevel3 extends OrderBook {
 }
 
 /**
+ * Ping
+ *
+ * @typedef {Object} response.Ping
+ */
+export interface Ping {}
+
+/**
  * Ticker
  *
  * @typedef {Object} response.Ticker
@@ -356,6 +363,16 @@ export interface Ticker {
   time: number;
   numTrades: string;
   sequence: number;
+}
+
+/**
+ * Time
+ *
+ * @typedef {Object} response.Time
+ * @property {number} time - Current server time
+ */
+export interface Time {
+  serverTime: number;
 }
 
 /**
