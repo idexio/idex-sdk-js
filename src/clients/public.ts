@@ -112,20 +112,6 @@ export default class PublicClient {
   }
 
   /**
-   * Get current order book entries for a market
-   *
-   * @param {string} market - Base-quote pair e.g. 'IDEX-ETH'
-   * @param {number} [limit=50] - Number of bids and asks to return. Value of 0 returns the entire book
-   * @return {Promise<response.OrderBookLevel3>}
-   */
-  public async getOrderBookLevel3(
-    market: string,
-    limit = 50,
-  ): Promise<response.OrderBookLevel3> {
-    return (await this.get('/orderbook', { level: 3, market, limit })).data;
-  }
-
-  /**
    * Get currently listed markets
    *
    * @param {string} [market] - Base-quote pair e.g. 'IDEX-ETH', if provided limits ticker data to a single market

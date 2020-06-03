@@ -256,28 +256,13 @@ export interface Order {
  *
  * @typedef {Object} response.OrderBookPriceLevel
  * @property {string} price
- * @property {number} size
+ * @property {string} size
  * @property {number} [numOrders]
  */
 export interface OrderBookPriceLevel {
   price: string;
-  size: number;
+  size: string;
   numOrders?: number;
-}
-
-/**
- * OrderBookOrder
- *
- * @typedef {Object} response.OrderBookOrder
- * @property {string} price
- * @property {number} size
- * @property {string} orderId
- */
-
-export interface OrderBookOrder {
-  price: string;
-  size: number;
-  orderId: string;
 }
 
 interface OrderBook {
@@ -308,18 +293,6 @@ export interface OrderBookLevel1 extends OrderBook {
 export interface OrderBookLevel2 extends OrderBook {
   bids: OrderBookPriceLevel[];
   asks: OrderBookPriceLevel[];
-}
-
-/**
- * OrderBookLevel3
- *
- * @typedef {Object} response.OrderBookLevel3
- * @property {response.OrderBookOrder[]} bids
- * @property {response.OrderBookOrder[]} asks
- */
-export interface OrderBookLevel3 extends OrderBook {
-  bids: OrderBookOrder[];
-  asks: OrderBookOrder[];
 }
 
 /**
