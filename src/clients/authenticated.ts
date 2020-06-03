@@ -121,7 +121,7 @@ export default class AuthenticatedClient {
   public async getDeposit(
     findDeposit: request.FindDeposit,
   ): Promise<response.Deposit> {
-    return (await this.get('/deposits', findDeposit)).data[0];
+    return (await this.get('/deposits', findDeposit)).data;
   }
 
   /**
@@ -185,7 +185,7 @@ export default class AuthenticatedClient {
   public async getWithdrawal(
     findWithdrawal: request.FindWithdrawal,
   ): Promise<response.Withdrawal> {
-    return (await this.get('/withdrawals', findWithdrawal)).data[0];
+    return (await this.get('/withdrawals', findWithdrawal)).data;
   }
 
   /**
