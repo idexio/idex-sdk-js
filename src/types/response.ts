@@ -374,24 +374,28 @@ export interface Trade {
  * User
  *
  * @typedef {Object} response.User
- * @property {UserStatus} depositStatus
- * @property {UserStatus} orderStatus
- * @property {UserStatus} cancelStatus
- * @property {UserStatus} withdrawStatus
+ * @property {boolean} depositEnabled
+ * @property {boolean} orderEnabled
+ * @property {boolean} cancelEnabled
+ * @property {boolean} withdrawEnabled
  * @property {number} kycTier
  * @property {string} totalPortfolioValue - Total value of all holdings of all wallets on the exchange, denominated in USD
  * @property {string} withdrawalLimit - 24h withdrawal limit for the user account denominated in USD (non-negative integer or “unlimited”)
  * @property {string} withdrawalRemaining - Remaining 24h withdrawal amount for the user account denominated in USD (non-negative integer or “unlimited”)
+ * @property {string} makerFeeRate - user-specific maker fee rate
+ * @property {string} takerFeeRate - user-specific taker fee rate
  */
 export interface User {
-  depositStatus: enums.UserStatus;
-  orderStatus: enums.UserStatus;
-  cancelStatus: enums.UserStatus;
-  withdrawStatus: enums.UserStatus;
+  depositEnabled: boolean;
+  orderEnabled: boolean;
+  cancelEnabled: boolean;
+  withdrawEnabled: boolean;
   kycTier: 0 | 1 | 2;
   totalPortfolioValue: string;
   withdrawalLimit: string;
   withdrawalRemaining: string;
+  markerFeeRate: string;
+  takerFeeRate: string;
 }
 
 /**

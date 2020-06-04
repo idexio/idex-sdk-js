@@ -105,9 +105,6 @@
         -   [stopLossLimit](#stoplosslimit)
         -   [takeProfit](#takeprofit)
         -   [takeProfitLimit](#takeprofitlimit)
-    -   [UserStatus](#userstatus)
-        -   [active](#active-2)
-        -   [inactive](#inactive-1)
 -   [Requests](#requests)
     -   [request.FindCandles](#requestfindcandles)
         -   [Properties](#properties)
@@ -780,18 +777,6 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-### UserStatus
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-#### active
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-#### inactive
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
 ## Requests
 
 
@@ -1202,14 +1187,16 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
--   `depositStatus` **[UserStatus](#userstatus)** 
--   `orderStatus` **[UserStatus](#userstatus)** 
--   `cancelStatus` **[UserStatus](#userstatus)** 
--   `withdrawStatus` **[UserStatus](#userstatus)** 
+-   `depositEnabled` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
+-   `orderEnabled` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
+-   `cancelEnabled` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
+-   `withdrawEnabled` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
 -   `kycTier` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 -   `totalPortfolioValue` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of all holdings of all wallets on the exchange, denominated in USD
 -   `withdrawalLimit` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 24h withdrawal limit for the user account denominated in USD (non-negative integer or “unlimited”)
 -   `withdrawalRemaining` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Remaining 24h withdrawal amount for the user account denominated in USD (non-negative integer or “unlimited”)
+-   `makerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** user-specific maker fee rate
+-   `takerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** user-specific taker fee rate
 
 ### response.Wallet
 

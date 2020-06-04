@@ -1,6 +1,6 @@
 {
   "name": "@idexio/idex-sdk",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "IDEX SDK for Javascript in the browser and Node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
