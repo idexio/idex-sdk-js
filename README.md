@@ -30,32 +30,34 @@
             -   [Parameters](#parameters-8)
         -   [getBalances](#getbalances)
             -   [Parameters](#parameters-9)
-        -   [getFills](#getfills)
-            -   [Parameters](#parameters-10)
         -   [getDeposit](#getdeposit)
-            -   [Parameters](#parameters-11)
+            -   [Parameters](#parameters-10)
         -   [getDeposits](#getdeposits)
+            -   [Parameters](#parameters-11)
+        -   [getFill](#getfill)
             -   [Parameters](#parameters-12)
-        -   [getOrder](#getorder)
+        -   [getFills](#getfills)
             -   [Parameters](#parameters-13)
-        -   [getOrders](#getorders)
+        -   [getOrder](#getorder)
             -   [Parameters](#parameters-14)
-        -   [getUser](#getuser)
+        -   [getOrders](#getorders)
             -   [Parameters](#parameters-15)
-        -   [getWallets](#getwallets)
+        -   [getUser](#getuser)
             -   [Parameters](#parameters-16)
-        -   [getWithdrawal](#getwithdrawal)
+        -   [getWallets](#getwallets)
             -   [Parameters](#parameters-17)
-        -   [getWithdrawals](#getwithdrawals)
+        -   [getWithdrawal](#getwithdrawal)
             -   [Parameters](#parameters-18)
-        -   [placeOrder](#placeorder)
+        -   [getWithdrawals](#getwithdrawals)
             -   [Parameters](#parameters-19)
-        -   [placeTestOrder](#placetestorder)
+        -   [placeOrder](#placeorder)
             -   [Parameters](#parameters-20)
-        -   [withdraw](#withdraw)
+        -   [placeTestOrder](#placetestorder)
             -   [Parameters](#parameters-21)
-        -   [getWsToken](#getwstoken)
+        -   [withdraw](#withdraw)
             -   [Parameters](#parameters-22)
+        -   [getWsToken](#getwstoken)
+            -   [Parameters](#parameters-23)
 -   [Enums](#enums)
     -   [CandleInterval](#candleinterval)
         -   [1m](#1m)
@@ -169,13 +171,15 @@
         -   [Properties](#properties-28)
 -   [ConnectListener](#connectlistener)
 -   [constructor](#constructor)
-    -   [Parameters](#parameters-23)
+    -   [Parameters](#parameters-24)
 -   [EthTransactionStatus](#ethtransactionstatus)
     -   [pending](#pending)
     -   [mined](#mined)
     -   [failed](#failed)
--   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
+-   [request.FindFill](#requestfindfill)
     -   [Properties](#properties-29)
+-   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
+    -   [Properties](#properties-30)
 -   [OrderStateChange](#orderstatechange)
     -   [new](#new)
     -   [activated](#activated)
@@ -185,9 +189,9 @@
 -   [autoDispatchEnabled](#autodispatchenabled)
 -   [response.Ping](#responseping)
 -   [response.Time](#responsetime)
-    -   [Properties](#properties-30)
--   [response.WebSocketToken](#responsewebsockettoken)
     -   [Properties](#properties-31)
+-   [response.WebSocketToken](#responsewebsockettoken)
+    -   [Properties](#properties-32)
 
 ## Clients
 
@@ -369,16 +373,6 @@ Get asset quantity data (positions) held by a wallet on the exchange
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;([response.Balance](#responsebalance) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Balance](#responsebalance)>)>** 
 
-#### getFills
-
-Get private, detailed data about fills against orders placed by the calling user account
-
-##### Parameters
-
--   `findFills` **[request.FindFills](#requestfindfills)** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Fill](#responsefill)>>** 
-
 #### getDeposit
 
 Get a deposit
@@ -398,6 +392,26 @@ Get multiple deposits
 -   `findDeposits` **[request.FindDeposits](#requestfinddeposits)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Deposit](#responsedeposit)>>** 
+
+#### getFill
+
+Get a fill
+
+##### Parameters
+
+-   `findFill` **[request.FindFill](#requestfindfill)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Fill](#responsefill)>** 
+
+#### getFills
+
+Get multiple fills
+
+##### Parameters
+
+-   `findFills` **[request.FindFills](#requestfindfills)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Fill](#responsefill)>>** 
 
 #### getOrder
 
@@ -1021,7 +1035,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 -   `fillId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of fill
 -   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of order
--   `clientOrderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Client-provided ID of order
+-   `clientOrderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Client-provided ID of order
 -   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
 -   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed price of fill in quote terms
 -   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of fill in base terms
@@ -1292,6 +1306,16 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 Transaction reverted
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## request.FindFill
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `fillId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ## webSocketResponse.Subscriptions
 
