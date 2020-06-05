@@ -98,7 +98,9 @@ export interface Deposit {
  * @property {string} usdVolume24h - 24h volume in USD
  * @property {string} makerFeeRate
  * @property {string} takerFeeRate
- * @property {string} withdrawMinimum
+ * @property {string} makerTradeMinimum
+ * @property {string} takerTradeMinimum
+ * @property {string} withdraw - Minimum Minimum withdrawal amount in ETH, applies to both ETH and tokens
  */
 export interface ExchangeInfo {
   timeZone: string;
@@ -109,6 +111,8 @@ export interface ExchangeInfo {
   usdVolume24h: string;
   makerFeeRate: string;
   takerFeeRate: string;
+  makerTradeMinimum: string;
+  takerTradeMinimum: string;
   withdrawMinimum: string;
 }
 
