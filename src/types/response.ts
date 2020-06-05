@@ -404,13 +404,11 @@ export interface User {
 
 /**
  * @typedef {Object} response.Wallet
- * @property {string} walletId - Internal ID of the wallet
  * @property {string} address - Ethereum address of the wallet
  * @property {string} totalPortfolioValue - Total value of all holdings of the wallet on the exchange, denominated in USD
  * @property {number} time - Timestamp of wallet association with the user account
  */
 export interface Wallet {
-  walletId?: string;
   address: string;
   totalPortfolioValue: string;
   time: string;
