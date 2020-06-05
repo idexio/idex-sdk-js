@@ -411,7 +411,7 @@ export interface User {
 export interface Wallet {
   address: string;
   totalPortfolioValue: string;
-  time: string;
+  time: number;
 }
 
 /**
