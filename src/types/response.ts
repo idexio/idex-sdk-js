@@ -281,7 +281,7 @@ type NumOrders = number;
  *
  * @typedef {[OrderBookPrice, OrderBookSize, OrderBookNumOrders]} response.OrderBookPriceLevel
  */
-type OrderBookPriceLevel = [Price, Size, NumOrders];
+export type OrderBookPriceLevel = [Price, Size, NumOrders];
 
 interface OrderBook {
   sequence: number;
