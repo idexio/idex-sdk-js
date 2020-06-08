@@ -256,18 +256,32 @@ export interface Order {
 }
 
 /**
+ * OrderBookPrice
+ *
+ * @typedef {string} OrderBookPrice
+ */
+type Price = string;
+
+/**
+ * OrderBookSize
+ *
+ * @typedef {string} OrderBookSize
+ */
+type Size = string;
+
+/**
+ * OrderBookNumOrders
+ *
+ * @typedef {string} OrderBookNumOrders
+ */
+type NumOrders = number;
+
+/**
  * OrderBookPriceLevel
  *
- * @typedef {Object} response.OrderBookPriceLevel
- * @property {string} price
- * @property {string} size
- * @property {number} [numOrders]
+ * @typedef {[OrderBookPrice, OrderBookSize, OrderBookNumOrders]} response.OrderBookPriceLevel
  */
-export interface OrderBookPriceLevel {
-  price: string;
-  size: string;
-  numOrders?: number;
-}
+type OrderBookPriceLevel = [Price, Size, NumOrders];
 
 interface OrderBook {
   sequence: number;
