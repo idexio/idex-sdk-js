@@ -150,22 +150,21 @@
     -   [response.OrderBookLevel2](#responseorderbooklevel2)
         -   [Properties](#properties-20)
     -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
-        -   [Properties](#properties-21)
     -   [response.OrderFill](#responseorderfill)
-        -   [Properties](#properties-22)
+        -   [Properties](#properties-21)
     -   [response.Ticker](#responseticker)
-        -   [Properties](#properties-23)
+        -   [Properties](#properties-22)
     -   [response.Trade](#responsetrade)
-        -   [Properties](#properties-24)
+        -   [Properties](#properties-23)
     -   [response.User](#responseuser)
-        -   [Properties](#properties-25)
+        -   [Properties](#properties-24)
     -   [response.Wallet](#responsewallet)
-        -   [Properties](#properties-26)
+        -   [Properties](#properties-25)
     -   [response.Withdrawal](#responsewithdrawal)
-        -   [Properties](#properties-27)
+        -   [Properties](#properties-26)
 -   [WebSocket Responses](#websocket-responses)
     -   [webSocketResponse.Error](#websocketresponseerror)
-        -   [Properties](#properties-28)
+        -   [Properties](#properties-27)
 -   [ConnectListener](#connectlistener)
 -   [constructor](#constructor)
     -   [Parameters](#parameters-24)
@@ -174,21 +173,24 @@
     -   [mined](#mined)
     -   [failed](#failed)
 -   [request.FindFill](#requestfindfill)
-    -   [Properties](#properties-29)
+    -   [Properties](#properties-28)
 -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
-    -   [Properties](#properties-30)
+    -   [Properties](#properties-29)
 -   [OrderStateChange](#orderstatechange)
     -   [new](#new)
     -   [activated](#activated)
     -   [fill](#fill)
     -   [cancelled](#cancelled-1)
     -   [expired](#expired-1)
+-   [OrderBookPrice](#orderbookprice)
+-   [OrderBookSize](#orderbooksize)
 -   [autoDispatchEnabled](#autodispatchenabled)
+-   [OrderBookNumOrders](#orderbooknumorders)
 -   [response.Ping](#responseping)
 -   [response.Time](#responsetime)
-    -   [Properties](#properties-31)
+    -   [Properties](#properties-30)
 -   [response.WebSocketToken](#responsewebsockettoken)
-    -   [Properties](#properties-32)
+    -   [Properties](#properties-31)
 
 ## Clients
 
@@ -1112,13 +1114,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 OrderBookPriceLevel
 
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-#### Properties
-
--   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `size` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `numOrders` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** 
+Type: \[[OrderBookPrice](#orderbookprice), [OrderBookSize](#orderbooksize), [OrderBookNumOrders](#orderbooknumorders)]
 
 ### response.OrderFill
 
@@ -1354,11 +1350,29 @@ LIMIT FOK orders with no fill, LIMIT IOC or MARKET orders that partially fill, G
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
+## OrderBookPrice
+
+OrderBookPrice
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## OrderBookSize
+
+OrderBookSize
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
 ## autoDispatchEnabled
 
 Currently has no effect
 
 Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+
+## OrderBookNumOrders
+
+OrderBookNumOrders
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 ## response.Ping
 
