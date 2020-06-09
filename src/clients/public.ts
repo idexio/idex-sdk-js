@@ -145,14 +145,18 @@ export default class PublicClient {
     return (await this.get('/trades', findTrades)).data;
   }
 
+  // Internal methods exposed for advanced usage
+
   private async get(
     endpoint: string,
-    requestParams: Record<string, any> = {},
+    requestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    additionalHeaders?: Record<string, string | number>,
   ): Promise<AxiosResponse> {
     return this.axios({
       method: 'GET',
       url: `${this.baseURL}${endpoint}`,
       params: requestParams,
+      headers: additionalHeaders,
     });
   }
 }
