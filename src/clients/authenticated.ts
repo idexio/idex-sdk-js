@@ -98,14 +98,7 @@ export default class AuthenticatedClient {
     wallet: string,
     asset?: string,
   ): Promise<response.Balance | response.Balance[]> {
-    return (
-      await this.get(
-        '/balances',
-        this.isUsingSessionCredentials
-          ? { wallet, asset }
-          : { wallet, asset, nonce },
-      )
-    ).data;
+    return (await this.get('/balances', { wallet, asset, nonce })).data;
   }
 
   /**
@@ -182,12 +175,7 @@ export default class AuthenticatedClient {
    * @param {string} nonce - UUIDv1
    */
   public async getUser(nonce: string): Promise<response.User> {
-    return (
-      await this.get(
-        '/user',
-        this.isUsingSessionCredentials ? undefined : { nonce },
-      )
-    ).data;
+    return (await this.get('/user', { nonce })).data;
   }
 
   /**
@@ -196,12 +184,7 @@ export default class AuthenticatedClient {
    * @param {string} nonce - UUIDv1
    */
   public async getWallets(nonce: string): Promise<response.Wallet[]> {
-    return (
-      await this.get(
-        '/wallets',
-        this.isUsingSessionCredentials ? undefined : { nonce },
-      )
-    ).data;
+    return (await this.get('/wallets', { nonce })).data;
   }
 
   /**
@@ -327,13 +310,17 @@ export default class AuthenticatedClient {
     endpoint: string,
     requestParams: Record<string, any> = {},
   ): Promise<AxiosResponse> {
+    const params = requestParams;
+    if (this.isUsingSessionCredentials && requestParams) {
+      delete params.nonce;
+    }
     return this.axios({
       method: 'GET',
       url: `${this.baseURL}${endpoint}`,
       headers: this.createHmacRequestSignatureHeader(
         queryString.stringify(requestParams),
       ),
-      params: requestParams,
+      params,
     });
   }
 
