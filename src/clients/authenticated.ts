@@ -98,7 +98,7 @@ export default class AuthenticatedClient {
     wallet: string,
     asset?: string,
   ): Promise<response.Balance | response.Balance[]> {
-    return (await this.get('/balances', { wallet, asset, nonce })).data;
+    return (await this.get('/balances', { nonce, wallet, asset })).data;
   }
 
   /**
@@ -298,12 +298,7 @@ export default class AuthenticatedClient {
    * @param {string} wallet - Ethereum wallet address
    */
   public async getWsToken(nonce: string, wallet: string): Promise<string> {
-    return (
-      await this.get(
-        '/wsToken',
-        this.isUsingSessionCredentials ? { wallet } : { wallet, nonce },
-      )
-    ).data.token;
+    return (await this.get('/wsToken', { nonce, wallet })).data.token;
   }
 
   private async get(
