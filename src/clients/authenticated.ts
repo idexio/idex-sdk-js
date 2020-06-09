@@ -43,6 +43,7 @@ export default class AuthenticatedClient {
     this.baseURL = baseURL;
     this.apiSecret = apiSecret;
     // Magic api key "withCredentials" to enable internal session cookie authentication method
+    // In this case, all `nonce`s are ignored (not sent to the API)
     this.isUsingSessionCredentials = apiKey === 'withCredentials';
 
     this.axios = Axios.create(
@@ -97,7 +98,14 @@ export default class AuthenticatedClient {
     wallet: string,
     asset?: string,
   ): Promise<response.Balance | response.Balance[]> {
-    return (await this.get('/balances', { nonce, wallet, asset })).data;
+    return (
+      await this.get(
+        '/balances',
+        this.isUsingSessionCredentials
+          ? { wallet, asset }
+          : { wallet, asset, nonce },
+      )
+    ).data;
   }
 
   /**
@@ -174,7 +182,12 @@ export default class AuthenticatedClient {
    * @param {string} nonce - UUIDv1
    */
   public async getUser(nonce: string): Promise<response.User> {
-    return (await this.get('/user', { nonce })).data;
+    return (
+      await this.get(
+        '/user',
+        this.isUsingSessionCredentials ? undefined : { nonce },
+      )
+    ).data;
   }
 
   /**
@@ -183,7 +196,12 @@ export default class AuthenticatedClient {
    * @param {string} nonce - UUIDv1
    */
   public async getWallets(nonce: string): Promise<response.Wallet[]> {
-    return (await this.get('/wallets', { nonce })).data;
+    return (
+      await this.get(
+        '/wallets',
+        this.isUsingSessionCredentials ? undefined : { nonce },
+      )
+    ).data;
   }
 
   /**
@@ -297,7 +315,12 @@ export default class AuthenticatedClient {
    * @param {string} wallet - Ethereum wallet address
    */
   public async getWsToken(nonce: string, wallet: string): Promise<string> {
-    return (await this.get('/wsToken', { nonce, wallet })).data.token;
+    return (
+      await this.get(
+        '/wsToken',
+        this.isUsingSessionCredentials ? { wallet } : { wallet, nonce },
+      )
+    ).data.token;
   }
 
   private async get(
