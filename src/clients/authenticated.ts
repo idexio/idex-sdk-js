@@ -300,46 +300,60 @@ export default class AuthenticatedClient {
     return (await this.get('/wsToken', { nonce, wallet })).data.token;
   }
 
-  private async get(
+  // Internal methods exposed for advanced usage
+
+  public async get(
     endpoint: string,
-    requestParams: Record<string, any> = {},
+    requestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    additionalHeaders: Record<string, string | number> = {},
   ): Promise<AxiosResponse> {
     return this.axios({
       method: 'GET',
       url: `${this.baseURL}${endpoint}`,
-      headers: this.createHmacRequestSignatureHeader(
-        queryString.stringify(requestParams),
-      ),
+      headers: {
+        ...this.createHmacRequestSignatureHeader(
+          queryString.stringify(requestParams),
+        ),
+        ...additionalHeaders,
+      },
       params: requestParams,
     });
   }
 
-  private async post(
+  public async post(
     endpoint: string,
-    requestParams: Record<string, any>,
+    requestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    additionalHeaders: Record<string, string | number> = {},
   ): Promise<AxiosResponse> {
     return this.axios({
       method: 'POST',
       url: `${this.baseURL}${endpoint}`,
-      headers: this.createHmacRequestSignatureHeader(requestParams),
+      headers: {
+        ...this.createHmacRequestSignatureHeader(requestParams),
+        ...additionalHeaders,
+      },
       data: requestParams,
     });
   }
 
-  private async delete(
+  public async delete(
     endpoint: string,
-    requestParams: Record<string, any>,
+    requestParams: Record<string, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+    additionalHeaders: Record<string, string | number> = {},
   ): Promise<AxiosResponse> {
     return this.axios({
       method: 'DELETE',
       url: `${this.baseURL}${endpoint}`,
-      headers: this.createHmacRequestSignatureHeader(requestParams),
+      headers: {
+        ...this.createHmacRequestSignatureHeader(requestParams),
+        ...additionalHeaders,
+      },
       data: requestParams,
     });
   }
 
-  private createHmacRequestSignatureHeader(
-    payload: string | Record<string, any>,
+  public createHmacRequestSignatureHeader(
+    payload: string | Record<string, unknown>,
   ): { 'hmac-request-signature': string } {
     if (this.isUsingSessionCredentials) {
       return;

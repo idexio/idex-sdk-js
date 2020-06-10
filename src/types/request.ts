@@ -10,16 +10,17 @@ interface CancelOrdersBase {
   wallet: string;
 }
 
-export interface CancelOrderByOrderId extends CancelOrdersBase {
+export interface CancelOrder extends CancelOrdersBase {
   orderId: string;
 }
 
-export interface CancelOrderByClientOrderId extends CancelOrdersBase {
-  clientOrderId: string;
-}
-
-export type CancelOrder = XOR<CancelOrderByOrderId, CancelOrderByClientOrderId>;
-
+/**
+ * @typedef {Object} request.CancelOrders
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ * @property {string} [orderId] - Single orderId or clientOrderId to cancel; prefix client-provided ids with client:
+ * @property {string} [market] - Base-quote pair e.g. 'IDEX-ETH'
+ */
 export interface CancelOrders extends CancelOrdersBase {
   market?: string;
 }
@@ -105,7 +106,7 @@ export interface FindFills extends FindByWallet, FindWithPagination {
  * @typedef {Object} request.FindOrder
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
- * @property {string} orderId
+ * @property {string} orderId - Single orderId or clientOrderId to cancel; prefix client-provided ids with client:
  */
 export interface FindOrder extends FindByWallet {
   orderId: string;
