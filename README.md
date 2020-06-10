@@ -192,8 +192,6 @@
 -   [OrderBookPrice](#orderbookprice)
 -   [OrderBookSize](#orderbooksize)
 -   [OrderBookNumOrders](#orderbooknumorders)
--   [request.User](#requestuser)
-    -   [Properties](#properties-33)
 -   [autoDispatchEnabled](#autodispatchenabled)
 
 ## Clients
@@ -1408,14 +1406,6 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 OrderBookNumOrders
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-## request.User
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
--   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
 
 ## autoDispatchEnabled
 
