@@ -442,18 +442,20 @@ export interface WebSocketToken {
  * @property {string} asset - Asset by symbol
  * @property {string} assetContractAddress - Asset by contract address
  * @property {string} quantity - Withdrawal amount in asset terms, fees are taken from this value
+ * @property {number} time - Timestamp of receipt / processing
  * @property {string} fee - Amount in asset deducted from withdrawal to cover gas
  * @property {string} gas - Gas price in wei used to compute fee
  * @property {string} [txId] - Ethereum transaction hash, if available
- * @property {number} time - Timestamp of receipt / processing
+ * @property {string} txStatus - Eth Tx Status
  */
 export interface Withdrawal {
   withdrawalId: string;
   asset: string;
   assetContractAddress: string;
   quantity: string;
+  time: number;
   fee: string;
   gas: string;
-  txId: string | null;
-  time: number;
+  txId?: string;
+  txStatus: keyof typeof enums.EthTransactionStatus;
 }
