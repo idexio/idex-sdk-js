@@ -271,6 +271,19 @@ export interface CreateOrderBody {
   signature: string;
 }
 
+/**
+ * @typedef {Object} request.User
+ * @property {string} nonce - UUIDv1
+ */
+export interface User {
+  nonce: string;
+}
+
+export interface FindUser {
+  parameters: User;
+  signature: string;
+}
+
 interface WithdrawalBase {
   nonce: string;
   wallet: string;
