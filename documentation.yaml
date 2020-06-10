@@ -8,23 +8,25 @@ toc:
       Sets of named constants used as field types for several requests and responses
     children:
       - CandleInterval
+      - EthTransactionStatus
       - Liquidity
       - MarketStatus
       - OrderSelfTradePrevention
       - OrderSide
+      - OrderStateChange
       - OrderStatus
       - OrderTimeInForce
       - OrderType
-      - UserStatus
   - name: Requests
     children:
+      - request.CancelOrders
       - request.FindCandles
       - request.FindDeposit
       - request.FindDeposits
+      - request.FindFill
       - request.FindFills
       - request.FindOrder
       - request.FindOrders
-      - request.FindOrdersIncludingInactive
       - request.FindTrades
       - request.FindWithdrawal
       - request.FindWithdrawals
@@ -42,14 +44,15 @@ toc:
       - response.Order
       - response.OrderBookLevel1
       - response.OrderBookLevel2
-      - response.OrderBookLevel3
-      - response.OrderBookOrder
       - response.OrderBookPriceLevel
       - response.OrderFill
+      - response.Ping
       - response.Ticker
+      - response.Time
       - response.Trade
       - response.User
       - response.Wallet
+      - response.WebSocketToken
       - response.Withdrawal
   - name: WebSocket Responses
     children:

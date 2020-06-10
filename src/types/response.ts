@@ -98,7 +98,9 @@ export interface Deposit {
  * @property {string} usdVolume24h - 24h volume in USD
  * @property {string} makerFeeRate
  * @property {string} takerFeeRate
- * @property {string} withdrawMinimum
+ * @property {string} makerTradeMinimum
+ * @property {string} takerTradeMinimum
+ * @property {string} withdraw - Minimum Minimum withdrawal amount in ETH, applies to both ETH and tokens
  */
 export interface ExchangeInfo {
   timeZone: string;
@@ -109,6 +111,8 @@ export interface ExchangeInfo {
   usdVolume24h: string;
   makerFeeRate: string;
   takerFeeRate: string;
+  makerTradeMinimum: string;
+  takerTradeMinimum: string;
   withdrawMinimum: string;
 }
 
@@ -118,7 +122,7 @@ export interface ExchangeInfo {
  * @typedef {Object} response.Fill
  * @property {string} fillId - Internal ID of fill
  * @property {string} orderId - Internal ID of order
- * @property {string} clientOrderId - Client-provided ID of order
+ * @property {string} [clientOrderId] - Client-provided ID of order
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
  * @property {string} price - Executed price of fill in quote terms
  * @property {string} quantity - Executed quantity of fill in base terms
@@ -136,7 +140,7 @@ export interface ExchangeInfo {
  */
 export interface Fill extends OrderFill {
   orderId: string;
-  clientOrderId: string;
+  clientOrderId?: string;
   market: string;
   side: keyof typeof enums.OrderSide;
 }
@@ -248,37 +252,36 @@ export interface Order {
   stopPrice?: string;
   timeInForce: keyof typeof enums.OrderTimeInForce;
   selfTradePrevention: keyof typeof enums.OrderSelfTradePrevention;
-  fills: OrderFill[];
+  fills?: OrderFill[];
 }
+
+/**
+ * OrderBookPrice
+ *
+ * @typedef {string} OrderBookPrice
+ */
+type Price = string;
+
+/**
+ * OrderBookSize
+ *
+ * @typedef {string} OrderBookSize
+ */
+type Size = string;
+
+/**
+ * OrderBookNumOrders
+ *
+ * @typedef {string} OrderBookNumOrders
+ */
+type NumOrders = number;
 
 /**
  * OrderBookPriceLevel
  *
- * @typedef {Object} response.OrderBookPriceLevel
- * @property {string} price
- * @property {number} size
- * @property {number} [numOrders]
+ * @typedef {[OrderBookPrice, OrderBookSize, OrderBookNumOrders]} response.OrderBookPriceLevel
  */
-export interface OrderBookPriceLevel {
-  price: string;
-  size: number;
-  numOrders?: number;
-}
-
-/**
- * OrderBookOrder
- *
- * @typedef {Object} response.OrderBookOrder
- * @property {string} price
- * @property {number} size
- * @property {string} orderId
- */
-
-export interface OrderBookOrder {
-  price: string;
-  size: number;
-  orderId: string;
-}
+export type OrderBookPriceLevel = [Price, Size, NumOrders];
 
 interface OrderBook {
   sequence: number;
@@ -311,16 +314,11 @@ export interface OrderBookLevel2 extends OrderBook {
 }
 
 /**
- * OrderBookLevel3
+ * Ping
  *
- * @typedef {Object} response.OrderBookLevel3
- * @property {response.OrderBookOrder[]} bids
- * @property {response.OrderBookOrder[]} asks
+ * @typedef {Object} response.Ping
  */
-export interface OrderBookLevel3 extends OrderBook {
-  bids: OrderBookOrder[];
-  asks: OrderBookOrder[];
-}
+export interface Ping {}
 
 /**
  * Ticker
@@ -359,6 +357,16 @@ export interface Ticker {
 }
 
 /**
+ * Time
+ *
+ * @typedef {Object} response.Time
+ * @property {number} time - Current server time
+ */
+export interface Time {
+  serverTime: number;
+}
+
+/**
  * Trade
  *
  * @typedef {Object} response.Trade
@@ -384,38 +392,40 @@ export interface Trade {
  * User
  *
  * @typedef {Object} response.User
- * @property {UserStatus} depositStatus
- * @property {UserStatus} orderStatus
- * @property {UserStatus} cancelStatus
- * @property {UserStatus} withdrawStatus
+ * @property {boolean} depositEnabled
+ * @property {boolean} orderEnabled
+ * @property {boolean} cancelEnabled
+ * @property {boolean} withdrawEnabled
  * @property {number} kycTier
  * @property {string} totalPortfolioValue - Total value of all holdings of all wallets on the exchange, denominated in USD
  * @property {string} withdrawalLimit - 24h withdrawal limit for the user account denominated in USD (non-negative integer or “unlimited”)
  * @property {string} withdrawalRemaining - Remaining 24h withdrawal amount for the user account denominated in USD (non-negative integer or “unlimited”)
+ * @property {string} makerFeeRate - user-specific maker fee rate
+ * @property {string} takerFeeRate - user-specific taker fee rate
  */
 export interface User {
-  depositStatus: enums.UserStatus;
-  orderStatus: enums.UserStatus;
-  cancelStatus: enums.UserStatus;
-  withdrawStatus: enums.UserStatus;
+  depositEnabled: boolean;
+  orderEnabled: boolean;
+  cancelEnabled: boolean;
+  withdrawEnabled: boolean;
   kycTier: 0 | 1 | 2;
   totalPortfolioValue: string;
   withdrawalLimit: string;
   withdrawalRemaining: string;
+  markerFeeRate: string;
+  takerFeeRate: string;
 }
 
 /**
  * @typedef {Object} response.Wallet
- * @property {string} walletId - Internal ID of the wallet
  * @property {string} address - Ethereum address of the wallet
  * @property {string} totalPortfolioValue - Total value of all holdings of the wallet on the exchange, denominated in USD
  * @property {number} time - Timestamp of wallet association with the user account
  */
 export interface Wallet {
-  walletId?: string;
   address: string;
   totalPortfolioValue: string;
-  time: string;
+  time: number;
 }
 
 /**

@@ -112,20 +112,6 @@ export default class PublicClient {
   }
 
   /**
-   * Get current order book entries for a market
-   *
-   * @param {string} market - Base-quote pair e.g. 'IDEX-ETH'
-   * @param {number} [limit=50] - Number of bids and asks to return. Value of 0 returns the entire book
-   * @return {Promise<response.OrderBookLevel3>}
-   */
-  public async getOrderBookLevel3(
-    market: string,
-    limit = 50,
-  ): Promise<response.OrderBookLevel3> {
-    return (await this.get('/orderbook', { level: 3, market, limit })).data;
-  }
-
-  /**
    * Get currently listed markets
    *
    * @param {string} [market] - Base-quote pair e.g. 'IDEX-ETH', if provided limits ticker data to a single market
@@ -159,14 +145,18 @@ export default class PublicClient {
     return (await this.get('/trades', findTrades)).data;
   }
 
+  // Internal methods exposed for advanced usage
+
   private async get(
     endpoint: string,
-    requestParams: Record<string, any> = {},
+    requestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    additionalHeaders?: Record<string, string | number>,
   ): Promise<AxiosResponse> {
     return this.axios({
       method: 'GET',
       url: `${this.baseURL}${endpoint}`,
       params: requestParams,
+      headers: additionalHeaders,
     });
   }
 }

@@ -10,16 +10,17 @@ interface CancelOrdersBase {
   wallet: string;
 }
 
-export interface CancelOrderByOrderId extends CancelOrdersBase {
+export interface CancelOrder extends CancelOrdersBase {
   orderId: string;
 }
 
-export interface CancelOrderByClientOrderId extends CancelOrdersBase {
-  clientOrderId: string;
-}
-
-export type CancelOrder = XOR<CancelOrderByOrderId, CancelOrderByClientOrderId>;
-
+/**
+ * @typedef {Object} request.CancelOrders
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ * @property {string} [orderId] - Single orderId or clientOrderId to cancel; prefix client-provided ids with client:
+ * @property {string} [market] - Base-quote pair e.g. 'IDEX-ETH'
+ */
 export interface CancelOrders extends CancelOrdersBase {
   market?: string;
 }
@@ -77,6 +78,16 @@ export interface FindDeposits extends FindByWallet, FindWithPagination {
 }
 
 /**
+ * @typedef {Object} request.FindFill
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ * @property {string} fillId
+ */
+export interface FindFill extends FindByWallet {
+  fillId: string;
+}
+
+/**
  * @typedef {Object} request.FindFills
  * @property {string} nonce - UUIDv1
  * @property {string} wallet - Ethereum wallet address
@@ -91,47 +102,32 @@ export interface FindFills extends FindByWallet, FindWithPagination {
   fromId?: string;
 }
 
-interface FindOrdersByMarket extends FindByWallet {
-  market?: string;
-}
-
-interface FindOrderByOrderId extends FindByWallet {
-  orderId: string;
-}
-
-interface FindOrderByClientOrderId extends FindByWallet {
-  clientOrderId: string;
-}
-
 /**
  * @typedef {Object} request.FindOrder
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
- * @property {string} [orderId] - Exclusive with clientOrderId
- * @property {string} [clientOrderId] - Exclusive with orderId
+ * @property {string} orderId - Single orderId or clientOrderId to cancel; prefix client-provided ids with client:
  */
-export type FindOrder = XOR<FindOrderByOrderId, FindOrderByClientOrderId>;
+export interface FindOrder extends FindByWallet {
+  orderId: string;
+}
 
 /**
  * @typedef {Object} request.FindOrders
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} [market] - Base-quote pair e.g. 'IDEX-ETH'
- */
-export type FindOrders = FindOrdersByMarket;
-
-/**
- * @typedef {Object} request.FindOrdersIncludingInactive
- * @property {string} nonce - UUIDv1
- * @property {string} wallet
- * @property {string} [market] - Base-quote pair e.g. 'IDEX-ETH'
+ * @property {boolean} [closed] - false only returns active orders on the order book; true only returns orders that are no longer on the order book and resulted in at least one fill; only applies if orderId is absent
  * @property {number} [start] - Starting timestamp (inclusive)
  * @property {number} [end] - Ending timestamp (inclusive)
  * @property {number} [limit=50] - Max results to return from 1-1000
+ * @property {string} [fromId] - orderId of the earliest (oldest) order, only applies if orderId is absent
  */
-export interface FindOrdersIncludingInactive
-  extends FindOrdersByMarket,
-    FindWithPagination {}
+export interface FindOrders extends FindByWallet, FindWithPagination {
+  market?: string;
+  closed: boolean;
+  fromId?: string;
+}
 
 /**
  * @typedef {Object} request.FindTrades

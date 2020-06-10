@@ -101,18 +101,6 @@ export default class AuthenticatedClient {
   }
 
   /**
-   * Get private, detailed data about fills against orders placed by the calling user account
-   *
-   * @param {request.FindFills} findFills
-   * @return {Promise<response.Fill[]>}
-   */
-  public async getFills(
-    findFills: request.FindFills,
-  ): Promise<response.Fill[]> {
-    return (await this.get('/fills', findFills)).data;
-  }
-
-  /**
    * Get a deposit
    *
    * @param {request.FindDeposit} findDeposit
@@ -121,7 +109,7 @@ export default class AuthenticatedClient {
   public async getDeposit(
     findDeposit: request.FindDeposit,
   ): Promise<response.Deposit> {
-    return (await this.get('/deposits', findDeposit)).data[0];
+    return (await this.get('/deposits', findDeposit)).data;
   }
 
   /**
@@ -137,13 +125,35 @@ export default class AuthenticatedClient {
   }
 
   /**
+   * Get a fill
+   *
+   * @param {request.FindFill} findFill
+   * @return {Promise<response.Fill>}
+   */
+  public async getFill(findFill: request.FindFill): Promise<response.Fill> {
+    return (await this.get('/fills', findFill)).data;
+  }
+
+  /**
+   * Get multiple fills
+   *
+   * @param {request.FindFills} findFills
+   * @return {Promise<response.Fill[]>}
+   */
+  public async getFills(
+    findFills: request.FindFills,
+  ): Promise<response.Fill[]> {
+    return (await this.get('/fills', findFills)).data;
+  }
+
+  /**
    * Get an order
    *
    * @param {request.FindOrder} findOrder
    * @return {Promise<response.Order>}
    */
   public async getOrder(findOrder: request.FindOrder): Promise<response.Order> {
-    return (await this.get('/orders', findOrder)).data[0];
+    return (await this.get('/orders', findOrder)).data;
   }
 
   /**
@@ -156,23 +166,6 @@ export default class AuthenticatedClient {
     findOrders: request.FindOrders,
   ): Promise<response.Order[]> {
     return (await this.get('/orders', findOrders)).data;
-  }
-
-  /**
-   * Get multiple orders including inactive ones
-   *
-   * @param {request.FindOrders} findOrders
-   * @return {Promise<response.Order[]>}
-   */
-  public async getOrdersIncludingInactive(
-    findOrders: request.FindOrdersIncludingInactive,
-  ): Promise<response.Order[]> {
-    return (
-      await this.get('/orders', {
-        ...findOrders,
-        includeInactiveOrders: true,
-      })
-    ).data;
   }
 
   /**
@@ -202,7 +195,7 @@ export default class AuthenticatedClient {
   public async getWithdrawal(
     findWithdrawal: request.FindWithdrawal,
   ): Promise<response.Withdrawal> {
-    return (await this.get('/withdrawals', findWithdrawal)).data[0];
+    return (await this.get('/withdrawals', findWithdrawal)).data;
   }
 
   /**
@@ -307,46 +300,60 @@ export default class AuthenticatedClient {
     return (await this.get('/wsToken', { nonce, wallet })).data.token;
   }
 
-  private async get(
+  // Internal methods exposed for advanced usage
+
+  public async get(
     endpoint: string,
-    requestParams: Record<string, any> = {},
+    requestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    additionalHeaders: Record<string, string | number> = {},
   ): Promise<AxiosResponse> {
     return this.axios({
       method: 'GET',
       url: `${this.baseURL}${endpoint}`,
-      headers: this.createHmacRequestSignatureHeader(
-        queryString.stringify(requestParams),
-      ),
+      headers: {
+        ...this.createHmacRequestSignatureHeader(
+          queryString.stringify(requestParams),
+        ),
+        ...additionalHeaders,
+      },
       params: requestParams,
     });
   }
 
-  private async post(
+  public async post(
     endpoint: string,
-    requestParams: Record<string, any>,
+    requestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    additionalHeaders: Record<string, string | number> = {},
   ): Promise<AxiosResponse> {
     return this.axios({
       method: 'POST',
       url: `${this.baseURL}${endpoint}`,
-      headers: this.createHmacRequestSignatureHeader(requestParams),
+      headers: {
+        ...this.createHmacRequestSignatureHeader(requestParams),
+        ...additionalHeaders,
+      },
       data: requestParams,
     });
   }
 
-  private async delete(
+  public async delete(
     endpoint: string,
-    requestParams: Record<string, any>,
+    requestParams: Record<string, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+    additionalHeaders: Record<string, string | number> = {},
   ): Promise<AxiosResponse> {
     return this.axios({
       method: 'DELETE',
       url: `${this.baseURL}${endpoint}`,
-      headers: this.createHmacRequestSignatureHeader(requestParams),
+      headers: {
+        ...this.createHmacRequestSignatureHeader(requestParams),
+        ...additionalHeaders,
+      },
       data: requestParams,
     });
   }
 
-  private createHmacRequestSignatureHeader(
-    payload: string | Record<string, any>,
+  public createHmacRequestSignatureHeader(
+    payload: string | Record<string, unknown>,
   ): { 'hmac-request-signature': string } {
     if (this.isUsingSessionCredentials) {
       return;

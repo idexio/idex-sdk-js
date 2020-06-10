@@ -11,8 +11,8 @@ export const getPrivateKeySigner = (walletPrivateKey: string) => (
     ethers.utils.arrayify(hashToSign),
   );
 
-export const getOrderHash = (order: types.request.Order): string =>
-  solidityHashOfParams([
+export const getOrderHash = (order: types.request.Order): string => {
+  return solidityHashOfParams([
     ['uint8', orderSignatureHashVersion],
     ['uint128', uuidToUint8Array(order.nonce)],
     ['address', order.wallet],
@@ -34,6 +34,7 @@ export const getOrderHash = (order: types.request.Order): string =>
     ],
     ['uint64', order.cancelAfter || 0],
   ]);
+};
 
 export const getCancelOrderHash = (
   parameters: types.request.XOR<
@@ -44,18 +45,17 @@ export const getCancelOrderHash = (
   if (
     [
       parameters.orderId,
-      parameters.clientOrderId,
       (parameters as types.request.CancelOrders).market,
     ].filter(val => !!val).length > 1
   ) {
     throw new Error(
-      'Cancel orders may specify at most one of orderId, clientOrderId, or market',
+      'Cancel orders may specify at most one of orderId or market',
     );
   }
   return solidityHashOfParams([
     ['uint128', uuidToUint8Array(parameters.nonce)],
     ['address', parameters.wallet],
-    ['string', parameters.orderId || parameters.clientOrderId || ''],
+    ['string', parameters.orderId || ''],
     ['string', (parameters as types.request.CancelOrders).market || ''],
   ]);
 };
