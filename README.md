@@ -208,7 +208,7 @@ import * as idex from '@idexio/idex-node';
 
 // Edit the values below for your environment
 const config = {
-  baseURL: 'https://api-sandbox.idex.io/api/v1',
+  baseURL: 'https://api-sandbox.idex.io/v1',
   apiKey:
     'MTQxMA==.MQ==.TlRnM01qSmtPVEF0TmpJNFpDMHhNV1ZoTFRrMU5HVXROMlJrTWpRMVpEUmlNRFU0',
 };
@@ -318,7 +318,7 @@ import * as idex from '@idexio/idex-node';
 
 // Edit the values below for your environment
 const config = {
-  baseURL: 'https://api-sandbox.idex.io/api/v1',
+  baseURL: 'https://api-sandbox.idex.io/v1',
   apiKey:
     'MTQxMA==.MQ==.TlRnM01qSmtPVEF0TmpJNFpDMHhNV1ZoTFRrMU5HVXROMlJrTWpRMVpEUmlNRFU0',
   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
