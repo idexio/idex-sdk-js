@@ -208,7 +208,7 @@ import * as idex from '@idexio/idex-node';
 
 // Edit the values below for your environment
 const config = {
-  baseURL: 'https://api-sandbox.idex/v1',
+  baseURL: 'https://api-sandbox.idex.io/v1',
   apiKey:
     'MTQxMA==.MQ==.TlRnM01qSmtPVEF0TmpJNFpDMHhNV1ZoTFRrMU5HVXROMlJrTWpRMVpEUmlNRFU0',
 };
