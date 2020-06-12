@@ -37,7 +37,7 @@ export const getOrderHash = (order: types.request.Order): string => {
 };
 
 export const getCancelOrderHash = (
-  parameters: types.request.XOR<
+  parameters: types.utils.XOR<
     types.request.CancelOrder,
     types.request.CancelOrders
   >,
