@@ -185,16 +185,16 @@
     -   [webSocketResponse.Error](#websocketresponseerror)
         -   [Properties](#properties-31)
 -   [ConnectListener](#connectlistener)
--   [constructor](#constructor)
-    -   [Parameters](#parameters-24)
 -   [request.FindBalances](#requestfindbalances)
     -   [Properties](#properties-32)
+-   [constructor](#constructor)
+    -   [Parameters](#parameters-24)
 -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
     -   [Properties](#properties-33)
 -   [OrderBookPrice](#orderbookprice)
 -   [OrderBookSize](#orderbooksize)
--   [autoDispatchEnabled](#autodispatchenabled)
 -   [OrderBookNumOrders](#orderbooknumorders)
+-   [autoDispatchEnabled](#autodispatchenabled)
 
 ## Clients
 
@@ -1370,15 +1370,6 @@ await webSocketClient.connect();
 
 Type: function (): any
 
-## constructor
-
-Create a WebSocket client
-
-### Parameters
-
--   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
--   `shouldReconnectAutomatically`   (optional, default `false`)
-
 ## request.FindBalances
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -1388,6 +1379,15 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `asset[]` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset symbols
+
+## constructor
+
+Create a WebSocket client
+
+### Parameters
+
+-   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
+-   `shouldReconnectAutomatically`   (optional, default `false`)
 
 ## webSocketResponse.Subscriptions
 
@@ -1413,17 +1413,17 @@ OrderBookSize
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-## autoDispatchEnabled
-
-Currently has no effect
-
-Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
-
 ## OrderBookNumOrders
 
 OrderBookNumOrders
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## autoDispatchEnabled
+
+Currently has no effect
+
+Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
 
 # Contracts
 
