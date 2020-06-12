@@ -174,7 +174,7 @@ export interface AllOrderParameters {
   type: keyof typeof enums.OrderType;
   side: keyof typeof enums.OrderSide;
   timeInForce?: keyof typeof enums.OrderTimeInForce;
-  customClientOrderId?: string;
+  clientOrderId?: string;
   selfTradePrevention?: keyof typeof enums.OrderSelfTradePrevention;
   cancelAfter?: number;
 }

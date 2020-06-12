@@ -63,10 +63,10 @@ export default class AuthenticatedClient {
   ): Promise<response.Order> {
     return (
       await this.delete('/orders', {
-        cancelOrder,
+        parameters: cancelOrder,
         signature: await sign(eth.getCancelOrderHash(cancelOrder)),
       })
-    ).data[0];
+    ).data;
   }
 
   /**
@@ -80,7 +80,7 @@ export default class AuthenticatedClient {
   ): Promise<response.Order[]> {
     return (
       await this.delete('/orders', {
-        cancelOrders,
+        parameters: cancelOrders,
         signature: await sign(eth.getCancelOrderHash(cancelOrders)),
       })
     ).data;
