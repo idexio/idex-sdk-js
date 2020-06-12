@@ -1,5 +1,7 @@
 import * as enums from './enums';
 
+import { XOR } from './utils';
+
 /**
  * Asset
  *
@@ -436,24 +438,34 @@ export interface WebSocketToken {
   token: string;
 }
 
+interface WithdrawalBase {
+  withdrawalId: string;
+  quantity: string;
+  time: number;
+  fee: string;
+  gas: string;
+  txId?: string;
+  txStatus: keyof typeof enums.EthTransactionStatus;
+}
+
+export interface WithdrawalBySymbol extends WithdrawalBase {
+  asset: string;
+}
+
+export interface WithdrawalByAddress extends WithdrawalBase {
+  assetContractAddress: string;
+}
+
 /**
  * @typedef {Object} response.Withdrawal
  * @property {string} withdrawalId - IDEX-issued withdrawal identifier
- * @property {string} asset - Asset by symbol
- * @property {string} assetContractAddress - Asset by contract address
+ * @property {string} [asset] - Asset by symbol
+ * @property {string} [assetContractAddress] - Asset by contract address
  * @property {string} quantity - Withdrawal amount in asset terms, fees are taken from this value
+ * @property {number} time - Timestamp of receipt / processing
  * @property {string} fee - Amount in asset deducted from withdrawal to cover gas
  * @property {string} gas - Gas price in wei used to compute fee
  * @property {string} [txId] - Ethereum transaction hash, if available
- * @property {number} time - Timestamp of receipt / processing
+ * @property {string} txStatus - Eth Tx Status
  */
-export interface Withdrawal {
-  withdrawalId: string;
-  asset: string;
-  assetContractAddress: string;
-  quantity: string;
-  fee: string;
-  gas: string;
-  txId: string | null;
-  time: number;
-}
+export type Withdrawal = XOR<WithdrawalBySymbol, WithdrawalByAddress>;

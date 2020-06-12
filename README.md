@@ -208,7 +208,7 @@ import * as idex from '@idexio/idex-node';
 
 // Edit the values below for your environment
 const config = {
-  baseURL: 'https://api-sandbox.idex.io/api/v1',
+  baseURL: 'https://api-sandbox.idex.io/v1',
   apiKey:
     'MTQxMA==.MQ==.TlRnM01qSmtPVEF0TmpJNFpDMHhNV1ZoTFRrMU5HVXROMlJrTWpRMVpEUmlNRFU0',
 };
@@ -318,7 +318,7 @@ import * as idex from '@idexio/idex-node';
 
 // Edit the values below for your environment
 const config = {
-  baseURL: 'https://api-sandbox.idex.io/api/v1',
+  baseURL: 'https://api-sandbox.idex.io/v1',
   apiKey:
     'MTQxMA==.MQ==.TlRnM01qSmtPVEF0TmpJNFpDMHhNV1ZoTFRrMU5HVXROMlJrTWpRMVpEUmlNRFU0',
   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
@@ -975,6 +975,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
 -   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
+-   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Withdrawals created after the fromId
 
 ### request.Order
 
@@ -1319,13 +1320,14 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 #### Properties
 
 -   `withdrawalId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** IDEX-issued withdrawal identifier
--   `asset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by symbol
--   `assetContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by contract address
+-   `asset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset by symbol
+-   `assetContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset by contract address
 -   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Withdrawal amount in asset terms, fees are taken from this value
+-   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of receipt / processing
 -   `fee` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount in asset deducted from withdrawal to cover gas
 -   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Gas price in wei used to compute fee
 -   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Ethereum transaction hash, if available
--   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of receipt / processing
+-   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Eth Tx Status
 
 ## WebSocket Responses
 
