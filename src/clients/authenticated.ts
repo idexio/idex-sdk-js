@@ -304,7 +304,7 @@ export default class AuthenticatedClient {
 
   protected async get(
     endpoint: string,
-    requestParams: Record<string, unknown> = {},
+    requestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
     additionalHeaders: Record<string, string | number> = {},
   ): Promise<AxiosResponse> {
     return this.axios({
@@ -322,7 +322,7 @@ export default class AuthenticatedClient {
 
   protected async post(
     endpoint: string,
-    requestParams: Record<string, unknown> = {},
+    requestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
     additionalHeaders: Record<string, string | number> = {},
   ): Promise<AxiosResponse> {
     return this.axios({
@@ -338,7 +338,7 @@ export default class AuthenticatedClient {
 
   protected async delete(
     endpoint: string,
-    requestParams: Record<string, unknown>,
+    requestParams: Record<string, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
     additionalHeaders: Record<string, string | number> = {},
   ): Promise<AxiosResponse> {
     return this.axios({
