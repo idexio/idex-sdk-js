@@ -16,14 +16,11 @@ import { XOR } from './utils';
  * @property {string} withdrawalMinimum
  */
 export interface Asset {
-  id: number;
   name: string;
   symbol: string;
   contractAddress: string;
-  decimals: string;
-  depositMinimum: string;
-  tradeMinimum: string;
-  withdrawalMinimum: string;
+  assetDecimals: number;
+  exchangeDecimals: 8; // this is hardcoded everywhere and should not be changed
 }
 
 /**
@@ -33,15 +30,15 @@ export interface Asset {
  * @property {string} asset - Balance symbol
  * @property {string} quantity - Total quantity of the asset held by the wallet on the exchange
  * @property {string} availableForTrade - Quantity of the asset available for trading, ie quantity - locked
- * @property {string} availableForWithdrawal - Quantity of the asset available for withdrawal, similar to availableForTrade, but subject to the KYC tier withdrawal limit of the user
  * @property {string} locked - Quantity of the asset locked in trades on the order book
+ * @property {string} usdValue - current value of the asset in USD
  */
 export interface Balance {
-  asset: number;
+  asset: string;
   quantity: string;
   availableForTrade: string;
-  availableForWithdrawal: string;
   locked: string;
+  usdValue: string;
 }
 
 /**
@@ -203,10 +200,6 @@ export interface Market {
   baseAssetPrecision: number;
   quoteAsset: string;
   quoteAssetPrecision: number;
-  makerFeeRate: string;
-  takerFeeRate: string;
-  orderTypes: (keyof typeof enums.OrderType)[];
-  tradeMinimum: string;
 }
 
 /**

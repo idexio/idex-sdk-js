@@ -26,7 +26,7 @@ export const getOrderHash = (order: types.request.Order): string => {
     ],
     ['string', (order as types.request.OrderWithPrice).price || ''],
     ['string', (order as types.request.OrderWithStopPrice).stopPrice || ''],
-    ['string', order.customClientOrderId || ''],
+    ['string', order.clientOrderId || ''],
     ['uint8', types.enums.OrderTimeInForce[order.timeInForce] || 0],
     [
       'uint8',
