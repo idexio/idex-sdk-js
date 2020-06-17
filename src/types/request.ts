@@ -39,6 +39,16 @@ export interface FindWithPagination {
 }
 
 /**
+ * @typedef {Object} request.FindBalances
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ * @property {string} [asset[]] - Asset symbols
+ */
+export interface FindBalances extends FindByWallet {
+  asset?: string[];
+}
+
+/**
  * @typedef {Object} request.FindCandles
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
  * @property {CandleInterval} [interval] - Time interval for data

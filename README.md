@@ -185,14 +185,16 @@
     -   [webSocketResponse.Error](#websocketresponseerror)
         -   [Properties](#properties-31)
 -   [ConnectListener](#connectlistener)
+-   [request.FindBalances](#requestfindbalances)
+    -   [Properties](#properties-32)
 -   [constructor](#constructor)
     -   [Parameters](#parameters-24)
 -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
-    -   [Properties](#properties-32)
+    -   [Properties](#properties-33)
 -   [OrderBookPrice](#orderbookprice)
 -   [OrderBookSize](#orderbooksize)
--   [autoDispatchEnabled](#autodispatchenabled)
 -   [OrderBookNumOrders](#orderbooknumorders)
+-   [autoDispatchEnabled](#autodispatchenabled)
 
 ## Clients
 
@@ -1042,8 +1044,8 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `asset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Balance symbol
 -   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total quantity of the asset held by the wallet on the exchange
 -   `availableForTrade` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of the asset available for trading, ie quantity - locked
--   `availableForWithdrawal` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of the asset available for withdrawal, similar to availableForTrade, but subject to the KYC tier withdrawal limit of the user
 -   `locked` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of the asset locked in trades on the order book
+-   `usdValue` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** current value of the asset in USD
 
 ### response.Candle
 
@@ -1368,6 +1370,16 @@ await webSocketClient.connect();
 
 Type: function (): any
 
+## request.FindBalances
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `asset[]` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset symbols
+
 ## constructor
 
 Create a WebSocket client
@@ -1401,17 +1413,17 @@ OrderBookSize
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-## autoDispatchEnabled
-
-Currently has no effect
-
-Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
-
 ## OrderBookNumOrders
 
 OrderBookNumOrders
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## autoDispatchEnabled
+
+Currently has no effect
+
+Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
 
 # Contracts
 
