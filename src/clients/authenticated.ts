@@ -302,7 +302,7 @@ export default class AuthenticatedClient {
 
   // Internal methods exposed for advanced usage
 
-  public async get(
+  protected async get(
     endpoint: string,
     requestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
     additionalHeaders: Record<string, string | number> = {},
@@ -320,7 +320,7 @@ export default class AuthenticatedClient {
     });
   }
 
-  public async post(
+  protected async post(
     endpoint: string,
     requestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
     additionalHeaders: Record<string, string | number> = {},
@@ -336,7 +336,7 @@ export default class AuthenticatedClient {
     });
   }
 
-  public async delete(
+  protected async delete(
     endpoint: string,
     requestParams: Record<string, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
     additionalHeaders: Record<string, string | number> = {},

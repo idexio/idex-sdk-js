@@ -147,7 +147,7 @@ export default class PublicClient {
 
   // Internal methods exposed for advanced usage
 
-  private async get(
+  protected async get(
     endpoint: string,
     requestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
     additionalHeaders?: Record<string, string | number>,
