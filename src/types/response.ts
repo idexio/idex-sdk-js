@@ -212,8 +212,8 @@ export interface Market {
  * @property {string} wallet - Ethereum address of placing wallet
  * @property {string} time - Time of initial order processing by the matching engine
  * @property {OrderStatus} status - Current order status
- * @property {string} [rejectionCode] - Error short code explaining order rejection or failed batch cancel
- * @property {string} [rejectionReason] - Error description explaining order rejection or failed batch cancel
+ * @property {string} [errorCode] - Error short code explaining order error or failed batch cancel
+ * @property {string} [errorReason] - Error description explaining order error or failed batch cancel
  * @property {OrderType} type - Order type
  * @property {OrderSide} side - Order side
  * @property {string} [originalQuantity] - Original quantity specified by the order in base terms, omitted for market orders specified in quote terms
@@ -234,8 +234,8 @@ export interface Order {
   wallet: string;
   time: number;
   status: keyof typeof enums.OrderStatus;
-  rejectionCode?: string;
-  rejectionReason?: string;
+  errorCode?: string;
+  errorReason?: string;
   type: keyof typeof enums.OrderType;
   side: keyof typeof enums.OrderSide;
   originalQuantity?: string;
