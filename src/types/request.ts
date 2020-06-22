@@ -2,6 +2,11 @@ import * as enums from './enums';
 
 import { XOR } from './utils';
 
+export interface FindMarkets {
+  market?: string;
+  regionOnly?: boolean;
+}
+
 interface CancelOrdersBase {
   nonce: string;
   wallet: string;
