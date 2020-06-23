@@ -79,10 +79,13 @@ export default class PublicClient {
   /**
    * Get currently listed markets
    *
+   * @param {FindMarkets} findMarkets
    * @return {Promise<response.Market[]>}
    */
-  public async getMarkets(): Promise<response.Market[]> {
-    return (await this.get('/markets')).data;
+  public async getMarkets(
+    findMarkets: request.FindMarkets,
+  ): Promise<response.Market[]> {
+    return (await this.get('/markets', findMarkets)).data;
   }
 
   /**
