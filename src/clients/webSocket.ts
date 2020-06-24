@@ -142,6 +142,27 @@ export default class WebSocketClient {
     });
   }
 
+  /**
+   * Strictly typed subscribe which only can be used on authenticated subscriptions
+   *
+   * @param token See `/wsToken` {@link https://docs.idex.io/#get-authentication-token|API specification}
+   */
+  public subscribeAuthenticated(
+    subscriptions: types.webSocket.AuthenticatedSubscription[],
+    token: string,
+  ): void {
+    this.subscribe(subscriptions, token);
+  }
+
+  /**
+   * Subscribe which only can be used on non-authenticated subscriptions
+   */
+  public subscribeUnauthenticated(
+    subscriptions: types.webSocket.UnauthenticatedSubscription[],
+  ): void {
+    this.subscribe(subscriptions);
+  }
+
   public unsubscribe(subscriptions: types.webSocket.Subscription[]): void {
     this.sendMessage({
       method: 'unsubscribe',
@@ -170,6 +191,7 @@ export default class WebSocketClient {
     this.disconnectListeners.forEach(listener => listener());
 
     if (this.shouldReconnectAutomatically) {
+      // TODO: exponential backoff
       this.reconnect();
     }
   }

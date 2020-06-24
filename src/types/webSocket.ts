@@ -20,39 +20,50 @@ export type SubscriptionName =
   | keyof typeof UnauthenticatedSubscriptionName
   | keyof typeof AuthenticatedSubscriptionName;
 
-export interface BalancesSubscription {
+/**
+ * Every subscription have to implement `name` field,
+ * and optionally might require other fields like wallet, markets, etc
+ */
+export interface SubscriptionShape {
+  name: string;
+  wallet?: string;
+  markets?: string[];
+  interval?: unknown;
+}
+
+export interface BalancesSubscription extends SubscriptionShape {
   name: 'balances';
   wallet: string;
 }
 
-export interface OrdersSubscription {
+export interface OrdersSubscription extends SubscriptionShape {
   name: 'orders';
   markets: string[];
   wallet: string;
 }
 
-export interface CandlesSubscription {
+export interface CandlesSubscription extends SubscriptionShape {
   name: 'candles';
   markets: string[];
   interval: keyof typeof enums.CandleInterval;
 }
 
-export interface L1OrderBookSubscription {
+export interface L1OrderBookSubscription extends SubscriptionShape {
   name: 'l1orderbook';
   markets: string[];
 }
 
-export interface L2OrderBookSubscription {
+export interface L2OrderBookSubscription extends SubscriptionShape {
   name: 'l2orderbook';
   markets: string[];
 }
 
-export interface TickersSubscription {
+export interface TickersSubscription extends SubscriptionShape {
   name: 'tickers';
   markets: string[];
 }
 
-export interface TradesSubscription {
+export interface TradesSubscription extends SubscriptionShape {
   name: 'trades';
   markets: string[];
 }
