@@ -313,7 +313,7 @@ export interface OrderBookLevel2 extends OrderBook {
  *
  * @typedef {Object} response.Ping
  */
-export interface Ping {}
+export interface Ping { }
 
 /**
  * Ticker
@@ -407,7 +407,7 @@ export interface User {
   totalPortfolioValue: string;
   withdrawalLimit: string;
   withdrawalRemaining: string;
-  markerFeeRate: string;
+  makerFeeRate: string;
   takerFeeRate: string;
 }
 
