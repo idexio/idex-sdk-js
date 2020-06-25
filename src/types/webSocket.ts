@@ -96,11 +96,13 @@ export type SubscribeRequest = {
   subscriptions: (Subscription | SubscriptionName)[];
 };
 
+export type UnsubscribeSubscription = Partial<Subscription>;
+
 export interface UnsubscribeRequest {
   method: 'unsubscribe';
   cid?: string;
   markets?: string[];
-  subscriptions?: (Subscription | SubscriptionName)[];
+  subscriptions?: (UnsubscribeSubscription | SubscriptionName)[];
 }
 
 export interface SubscriptionsRequest {

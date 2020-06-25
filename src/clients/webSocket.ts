@@ -163,7 +163,9 @@ export default class WebSocketClient {
     this.subscribe(subscriptions);
   }
 
-  public unsubscribe(subscriptions: types.webSocket.Subscription[]): void {
+  public unsubscribe(
+    subscriptions: types.webSocket.UnsubscribeSubscription[],
+  ): void {
     this.sendMessage({
       method: 'unsubscribe',
       subscriptions,
