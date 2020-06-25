@@ -31,39 +31,39 @@ export interface SubscriptionShape {
   interval?: unknown;
 }
 
-export interface BalancesSubscription extends SubscriptionShape {
+export interface BalancesSubscription {
   name: 'balances';
   wallet: string;
 }
 
-export interface OrdersSubscription extends SubscriptionShape {
+export interface OrdersSubscription {
   name: 'orders';
   markets: string[];
   wallet: string;
 }
 
-export interface CandlesSubscription extends SubscriptionShape {
+export interface CandlesSubscription {
   name: 'candles';
   markets: string[];
   interval: keyof typeof enums.CandleInterval;
 }
 
-export interface L1OrderBookSubscription extends SubscriptionShape {
+export interface L1OrderBookSubscription {
   name: 'l1orderbook';
   markets: string[];
 }
 
-export interface L2OrderBookSubscription extends SubscriptionShape {
+export interface L2OrderBookSubscription {
   name: 'l2orderbook';
   markets: string[];
 }
 
-export interface TickersSubscription extends SubscriptionShape {
+export interface TickersSubscription {
   name: 'tickers';
   markets: string[];
 }
 
-export interface TradesSubscription extends SubscriptionShape {
+export interface TradesSubscription {
   name: 'trades';
   markets: string[];
 }
@@ -153,5 +153,4 @@ export interface SubscriptionsResponse {
 export type Response =
   | ErrorResponse
   | SubscriptionsResponse
-  | webSocketSubscriptionMessages.SubscriptionMessageShort
   | webSocketSubscriptionMessages.SubscriptionMessageLong;
