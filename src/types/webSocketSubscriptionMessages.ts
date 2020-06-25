@@ -81,7 +81,7 @@ type L2OrderBookChange = response.OrderBookPriceLevel;
 export interface L2OrderBookShort {
   m: string;
   t: number;
-  u: string;
+  u: number;
   b?: L2OrderBookChange[];
   a?: L2OrderBookChange[];
 }
@@ -89,7 +89,7 @@ export interface L2OrderBookShort {
 export interface L2OrderBookLong {
   market: string; // m
   time: number; // t
-  sequence: string; // u
+  sequence: number; // u
   bids?: L2OrderBookChange[]; // b
   asks?: L2OrderBookChange[]; // a
 }
