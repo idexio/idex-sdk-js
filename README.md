@@ -12,52 +12,53 @@
         -   [getExchangeInfo](#getexchangeinfo)
         -   [getAssets](#getassets)
         -   [getMarkets](#getmarkets)
-        -   [getOrderBookLevel1](#getorderbooklevel1)
             -   [Parameters](#parameters-1)
-        -   [getOrderBookLevel2](#getorderbooklevel2)
+        -   [getOrderBookLevel1](#getorderbooklevel1)
             -   [Parameters](#parameters-2)
-        -   [getTickers](#gettickers)
+        -   [getOrderBookLevel2](#getorderbooklevel2)
             -   [Parameters](#parameters-3)
-        -   [getCandles](#getcandles)
+        -   [getTickers](#gettickers)
             -   [Parameters](#parameters-4)
-        -   [getTrades](#gettrades)
+        -   [getCandles](#getcandles)
             -   [Parameters](#parameters-5)
+        -   [getTrades](#gettrades)
+            -   [Parameters](#parameters-6)
     -   [AuthenticatedClient](#authenticatedclient)
-        -   [Parameters](#parameters-6)
+        -   [Parameters](#parameters-7)
         -   [cancelOrder](#cancelorder)
-            -   [Parameters](#parameters-7)
-        -   [cancelOrders](#cancelorders)
             -   [Parameters](#parameters-8)
-        -   [getBalances](#getbalances)
+        -   [cancelOrders](#cancelorders)
             -   [Parameters](#parameters-9)
-        -   [getDeposit](#getdeposit)
+        -   [getBalances](#getbalances)
             -   [Parameters](#parameters-10)
-        -   [getDeposits](#getdeposits)
+        -   [getDeposit](#getdeposit)
             -   [Parameters](#parameters-11)
-        -   [getFill](#getfill)
+        -   [getDeposits](#getdeposits)
             -   [Parameters](#parameters-12)
-        -   [getFills](#getfills)
+        -   [getFill](#getfill)
             -   [Parameters](#parameters-13)
-        -   [getOrder](#getorder)
+        -   [getFills](#getfills)
             -   [Parameters](#parameters-14)
-        -   [getOrders](#getorders)
+        -   [getOrder](#getorder)
             -   [Parameters](#parameters-15)
-        -   [getUser](#getuser)
+        -   [getOrders](#getorders)
             -   [Parameters](#parameters-16)
-        -   [getWallets](#getwallets)
+        -   [getUser](#getuser)
             -   [Parameters](#parameters-17)
-        -   [getWithdrawal](#getwithdrawal)
+        -   [getWallets](#getwallets)
             -   [Parameters](#parameters-18)
-        -   [getWithdrawals](#getwithdrawals)
+        -   [getWithdrawal](#getwithdrawal)
             -   [Parameters](#parameters-19)
-        -   [placeOrder](#placeorder)
+        -   [getWithdrawals](#getwithdrawals)
             -   [Parameters](#parameters-20)
-        -   [placeTestOrder](#placetestorder)
+        -   [placeOrder](#placeorder)
             -   [Parameters](#parameters-21)
-        -   [withdraw](#withdraw)
+        -   [placeTestOrder](#placetestorder)
             -   [Parameters](#parameters-22)
-        -   [getWsToken](#getwstoken)
+        -   [withdraw](#withdraw)
             -   [Parameters](#parameters-23)
+        -   [getWsToken](#getwstoken)
+            -   [Parameters](#parameters-24)
 -   [Enums](#enums)
     -   [CandleInterval](#candleinterval)
         -   [1m](#1m)
@@ -185,10 +186,10 @@
     -   [webSocketResponse.Error](#websocketresponseerror)
         -   [Properties](#properties-31)
 -   [ConnectListener](#connectlistener)
+-   [constructor](#constructor)
+    -   [Parameters](#parameters-25)
 -   [request.FindBalances](#requestfindbalances)
     -   [Properties](#properties-32)
--   [constructor](#constructor)
-    -   [Parameters](#parameters-24)
 -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
     -   [Properties](#properties-33)
 -   [OrderBookPrice](#orderbookprice)
@@ -257,6 +258,10 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 #### getMarkets
 
 Get currently listed markets
+
+##### Parameters
+
+-   `findMarkets` **FindMarkets** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Market](#responsemarket)>>** 
 
@@ -1370,6 +1375,15 @@ await webSocketClient.connect();
 
 Type: function (): any
 
+## constructor
+
+Create a WebSocket client
+
+### Parameters
+
+-   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
+-   `shouldReconnectAutomatically`   (optional, default `false`)
+
 ## request.FindBalances
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -1379,15 +1393,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `asset[]` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset symbols
-
-## constructor
-
-Create a WebSocket client
-
-### Parameters
-
--   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
--   `shouldReconnectAutomatically`   (optional, default `false`)
 
 ## webSocketResponse.Subscriptions
 
