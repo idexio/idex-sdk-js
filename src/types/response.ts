@@ -158,7 +158,7 @@ export interface Fill extends OrderFill {
  * @property {string} [gas]
  * @property {Liquidity} liquidity
  * @property {string} time - Fill timestamp
- * @property {string} sequence - Last trade sequence number for the market
+ * @property {number} sequence - Last trade sequence number for the market
  * @property {string} [txId] - Ethereum transaction id, if available
  * @property {string} txStatus - Eth Tx Status
  */
@@ -169,7 +169,7 @@ export interface OrderFill {
   quoteQuantity: string;
   time: number;
   makerSide: keyof typeof enums.OrderSide;
-  sequence: string;
+  sequence: number;
   fee: string;
   feeAsset: string;
   gas?: string;
@@ -313,7 +313,7 @@ export interface OrderBookLevel2 extends OrderBook {
  *
  * @typedef {Object} response.Ping
  */
-export interface Ping { }
+export type Ping = {};
 
 /**
  * Ticker
@@ -371,7 +371,7 @@ export interface Time {
  * @property {string} quoteQuantity - Executed quantity of trade in quote terms
  * @property {number} time - Fill timestamp
  * @property {OrderSide} makerSide - Which side of the order the liquidity maker was on
- * @property {string} sequence - Last trade sequence number for the market
+ * @property {number} sequence - Last trade sequence number for the market
  */
 export interface Trade {
   fillId: string;
@@ -380,7 +380,7 @@ export interface Trade {
   quoteQuantity: string;
   time: number;
   makerSide: keyof typeof enums.OrderSide;
-  sequence: string;
+  sequence: number;
 }
 
 /**
