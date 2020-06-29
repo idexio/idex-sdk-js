@@ -2,11 +2,6 @@ import * as enums from './enums';
 
 import { XOR } from './utils';
 
-export interface FindMarkets {
-  market?: string;
-  regionOnly?: boolean;
-}
-
 interface CancelOrdersBase {
   nonce: string;
   wallet: string;
@@ -112,6 +107,17 @@ export interface FindFill extends FindByWallet {
 export interface FindFills extends FindByWallet, FindWithPagination {
   market?: string;
   fromId?: string;
+}
+
+/**
+ * @typedef {Object} request.FindMarkets
+ * @property {string} market - Target market, all markets are returned if omitted
+ * @property {boolean} [regionOnly=false] - true only returns markets available in the geographic region of the request
+ * @property {string} depositId
+ */
+export interface FindMarkets {
+  market?: string;
+  regionOnly?: boolean;
 }
 
 /**
