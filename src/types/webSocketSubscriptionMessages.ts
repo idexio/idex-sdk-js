@@ -28,7 +28,7 @@ export interface TradeShort {
   Q: string;
   t: number;
   s: BuyOrSellShort;
-  u: string;
+  u: number;
 }
 
 export interface TradeLong extends response.Trade {
@@ -159,7 +159,7 @@ export interface OrderFillShort {
   Q: string;
   t: number;
   s: BuyOrSellShort;
-  u: string;
+  u: number;
   f: string;
   a: string;
   g?: string;
