@@ -156,3 +156,8 @@ export type Response =
   | ErrorResponse
   | SubscriptionsResponse
   | webSocketSubscriptionMessages.SubscriptionMessageLong;
+
+/**
+ * Response message without transformation to human readable form
+ */
+export type RawResponseMessage = webSocketSubscriptionMessages.SubscriptionMessageShort;
