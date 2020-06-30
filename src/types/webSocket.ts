@@ -20,17 +20,6 @@ export type SubscriptionName =
   | keyof typeof UnauthenticatedSubscriptionName
   | keyof typeof AuthenticatedSubscriptionName;
 
-/**
- * Every subscription have to implement `name` field,
- * and optionally might require other fields like wallet, markets, etc
- */
-export interface SubscriptionShape {
-  name: string;
-  wallet?: string;
-  markets?: string[];
-  interval?: unknown;
-}
-
 export interface BalancesSubscription {
   name: 'balances';
   wallet: string;

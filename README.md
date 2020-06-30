@@ -186,7 +186,6 @@
     -   [webSocketResponse.Error](#websocketresponseerror)
         -   [Properties](#properties-31)
 -   [ConnectListener](#connectlistener)
--   [SubscriptionShape](#subscriptionshape)
 -   [request.FindBalances](#requestfindbalances)
     -   [Properties](#properties-32)
 -   [constructor](#constructor)
@@ -199,6 +198,7 @@
     -   [Properties](#properties-33)
 -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
     -   [Properties](#properties-34)
+-   [RawResponseMessage](#rawresponsemessage)
 -   [OrderBookPrice](#orderbookprice)
 -   [OrderBookSize](#orderbooksize)
 -   [OrderBookNumOrders](#orderbooknumorders)
@@ -1382,11 +1382,6 @@ await webSocketClient.connect();
 
 Type: function (): any
 
-## SubscriptionShape
-
-Every subscription have to implement `name` field,
-and optionally might require other fields like wallet, markets, etc
-
 ## request.FindBalances
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -1448,6 +1443,12 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 -   `method` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** subscriptions
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Subscription>** 
+
+## RawResponseMessage
+
+Response message without transformation to human readable form
+
+Type: webSocketSubscriptionMessages.SubscriptionMessageShort
 
 ## OrderBookPrice
 
