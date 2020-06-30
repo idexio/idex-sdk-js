@@ -186,12 +186,19 @@
     -   [webSocketResponse.Error](#websocketresponseerror)
         -   [Properties](#properties-31)
 -   [ConnectListener](#connectlistener)
--   [constructor](#constructor)
-    -   [Parameters](#parameters-25)
+-   [SubscriptionShape](#subscriptionshape)
 -   [request.FindBalances](#requestfindbalances)
     -   [Properties](#properties-32)
--   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
+-   [constructor](#constructor)
+    -   [Parameters](#parameters-25)
+-   [subscribeAuthenticated](#subscribeauthenticated)
+    -   [Parameters](#parameters-26)
+-   [subscribeUnauthenticated](#subscribeunauthenticated)
+    -   [Parameters](#parameters-27)
+-   [request.FindMarkets](#requestfindmarkets)
     -   [Properties](#properties-33)
+-   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
+    -   [Properties](#properties-34)
 -   [OrderBookPrice](#orderbookprice)
 -   [OrderBookSize](#orderbooksize)
 -   [OrderBookNumOrders](#orderbooknumorders)
@@ -1224,7 +1231,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 -   `liquidity` **[Liquidity](#liquidity)** 
 -   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fill timestamp
--   `sequence` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Last trade sequence number for the market
+-   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Last trade sequence number for the market
 -   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Ethereum transaction id, if available
 -   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Eth Tx Status
 
@@ -1281,7 +1288,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `quoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of trade in quote terms
 -   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Fill timestamp
 -   `makerSide` **[OrderSide](#orderside)** Which side of the order the liquidity maker was on
--   `sequence` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Last trade sequence number for the market
+-   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Last trade sequence number for the market
 
 ### response.User
 
@@ -1375,14 +1382,10 @@ await webSocketClient.connect();
 
 Type: function (): any
 
-## constructor
+## SubscriptionShape
 
-Create a WebSocket client
-
-### Parameters
-
--   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
--   `shouldReconnectAutomatically`   (optional, default `false`)
+Every subscription have to implement `name` field,
+and optionally might require other fields like wallet, markets, etc
 
 ## request.FindBalances
 
@@ -1393,6 +1396,46 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `asset[]` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset symbols
+
+## constructor
+
+Create a WebSocket client
+
+### Parameters
+
+-   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
+-   `shouldReconnectAutomatically`   (optional, default `false`)
+
+## subscribeAuthenticated
+
+Strictly typed subscribe which only can be used on authenticated subscriptions
+
+### Parameters
+
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.webSocket.AuthenticatedSubscription>** 
+-   `token` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** See `/wsToken` [API specification](https://docs.idex.io/#get-authentication-token)
+
+Returns **void** 
+
+## subscribeUnauthenticated
+
+Subscribe which only can be used on non-authenticated subscriptions
+
+### Parameters
+
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.webSocket.UnauthenticatedSubscription>** 
+
+Returns **void** 
+
+## request.FindMarkets
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Target market, all markets are returned if omitted
+-   `regionOnly` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** true only returns markets available in the geographic region of the request
+-   `depositId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ## webSocketResponse.Subscriptions
 
