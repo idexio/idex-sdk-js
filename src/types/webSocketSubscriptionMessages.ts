@@ -14,7 +14,7 @@ export interface TickerShort {
   v: string;
   q: string;
   P: string;
-  n: string;
+  n: number;
   a: string;
   b: string;
   u: number;
