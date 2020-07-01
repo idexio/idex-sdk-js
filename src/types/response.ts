@@ -213,7 +213,7 @@ export interface Market {
  * @property {string} time - Time of initial order processing by the matching engine
  * @property {OrderStatus} status - Current order status
  * @property {string} [errorCode] - Error short code explaining order error or failed batch cancel
- * @property {string} [errorReason] - Error description explaining order error or failed batch cancel
+ * @property {string} [errorMessage] - Error description explaining order error or failed batch cancel
  * @property {OrderType} type - Order type
  * @property {OrderSide} side - Order side
  * @property {string} [originalQuantity] - Original quantity specified by the order in base terms, omitted for market orders specified in quote terms
@@ -235,7 +235,7 @@ export interface Order {
   time: number;
   status: keyof typeof enums.OrderStatus;
   errorCode?: string;
-  errorReason?: string;
+  errorMessage?: string;
   type: keyof typeof enums.OrderType;
   side: keyof typeof enums.OrderSide;
   originalQuantity?: string;
