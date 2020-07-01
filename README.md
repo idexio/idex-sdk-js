@@ -1171,7 +1171,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Time of initial order processing by the matching engine
 -   `status` **[OrderStatus](#orderstatus)** Current order status
 -   `errorCode` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Error short code explaining order error or failed batch cancel
--   `errorReason` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Error description explaining order error or failed batch cancel
+-   `errorMessage` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Error description explaining order error or failed batch cancel
 -   `type` **[OrderType](#ordertype)** Order type
 -   `side` **[OrderSide](#orderside)** Order side
 -   `originalQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Original quantity specified by the order in base terms, omitted for market orders specified in quote terms

@@ -1,8 +1,6 @@
+import crypto from 'crypto';
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
-import Base64 from 'crypto-js/enc-base64';
-import hmacSHA512 from 'crypto-js/hmac-sha512';
 import queryString from 'query-string';
-import sha256 from 'crypto-js/sha256';
 
 import * as eth from '../eth';
 import { request, response } from '../types';
@@ -358,12 +356,12 @@ export default class AuthenticatedClient {
     if (this.isUsingSessionCredentials) {
       return;
     }
-    const hashDigest = sha256(
-      typeof payload === 'string' ? payload : JSON.stringify(payload),
-    );
-    const hmacRequestSignature = Base64.stringify(
-      hmacSHA512(hashDigest.toString(), this.apiSecret),
-    );
+
+    const hmacRequestSignature = crypto
+      .createHmac('sha256', this.apiSecret)
+      .update(typeof payload === 'string' ? payload : JSON.stringify(payload))
+      .digest('hex');
+
     return { 'hmac-request-signature': hmacRequestSignature };
   }
 }
