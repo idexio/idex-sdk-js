@@ -331,7 +331,7 @@ export type Ping = {};
  * @property {string} close - Same as last
  * @property {string} closeQuantity - Quantity of the last period in base terms
  * @property {number} time - Time when data was calculated, open and change is assumed to be trailing 24h
- * @property {string} numTrades - Number of fills for the market in the period
+ * @property {number} numTrades - Number of fills for the market in the period
  * @property {number} sequence - Last trade sequence number for the market
  */
 export interface Ticker {
