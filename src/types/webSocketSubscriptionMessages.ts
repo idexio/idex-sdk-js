@@ -14,7 +14,7 @@ export interface TickerShort {
   v: string;
   q: string;
   P: string;
-  n: string;
+  n: number;
   a: string;
   b: string;
   u: number;
@@ -76,7 +76,7 @@ export interface L1OrderBookLong {
   bidQuantity: string; // B
 }
 
-type L2OrderBookChange = [response.OrderBookPriceLevel];
+type L2OrderBookChange = response.OrderBookPriceLevel;
 
 export interface L2OrderBookShort {
   m: string;

@@ -190,10 +190,15 @@
     -   [Properties](#properties-32)
 -   [constructor](#constructor)
     -   [Parameters](#parameters-25)
+-   [subscribeAuthenticated](#subscribeauthenticated)
+    -   [Parameters](#parameters-26)
+-   [subscribeUnauthenticated](#subscribeunauthenticated)
+    -   [Parameters](#parameters-27)
 -   [request.FindMarkets](#requestfindmarkets)
     -   [Properties](#properties-33)
 -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
     -   [Properties](#properties-34)
+-   [RawResponseMessage](#rawresponsemessage)
 -   [OrderBookPrice](#orderbookprice)
 -   [OrderBookSize](#orderbooksize)
 -   [OrderBookNumOrders](#orderbooknumorders)
@@ -1396,6 +1401,27 @@ Create a WebSocket client
 -   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
 -   `shouldReconnectAutomatically`   (optional, default `false`)
 
+## subscribeAuthenticated
+
+Strictly typed subscribe which only can be used on authenticated subscriptions
+
+### Parameters
+
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.webSocket.AuthenticatedSubscription>** 
+-   `token` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** See `/wsToken` [API specification](https://docs.idex.io/#get-authentication-token)
+
+Returns **void** 
+
+## subscribeUnauthenticated
+
+Subscribe which only can be used on non-authenticated subscriptions
+
+### Parameters
+
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.webSocket.UnauthenticatedSubscription>** 
+
+Returns **void** 
+
 ## request.FindMarkets
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -1417,6 +1443,12 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 -   `method` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** subscriptions
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Subscription>** 
+
+## RawResponseMessage
+
+Response message without transformation to human readable form
+
+Type: webSocketSubscriptionMessages.SubscriptionMessageShort
 
 ## OrderBookPrice
 

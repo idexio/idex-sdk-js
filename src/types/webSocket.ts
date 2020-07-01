@@ -85,11 +85,13 @@ export type SubscribeRequest = {
   subscriptions: (Subscription | SubscriptionName)[];
 };
 
+export type UnsubscribeSubscription = Partial<Subscription>;
+
 export interface UnsubscribeRequest {
   method: 'unsubscribe';
   cid?: string;
   markets?: string[];
-  subscriptions?: (Subscription | SubscriptionName)[];
+  subscriptions?: (UnsubscribeSubscription | SubscriptionName)[];
 }
 
 export interface SubscriptionsRequest {
@@ -142,5 +144,9 @@ export interface SubscriptionsResponse {
 export type Response =
   | ErrorResponse
   | SubscriptionsResponse
-  | webSocketSubscriptionMessages.SubscriptionMessageShort
   | webSocketSubscriptionMessages.SubscriptionMessageLong;
+
+/**
+ * Response message without transformation to human readable form
+ */
+export type RawResponseMessage = webSocketSubscriptionMessages.SubscriptionMessageShort;
