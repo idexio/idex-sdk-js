@@ -186,12 +186,14 @@
     -   [webSocketResponse.Error](#websocketresponseerror)
         -   [Properties](#properties-31)
 -   [ConnectListener](#connectlistener)
--   [constructor](#constructor)
-    -   [Parameters](#parameters-25)
 -   [request.FindBalances](#requestfindbalances)
     -   [Properties](#properties-32)
--   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
+-   [constructor](#constructor)
+    -   [Parameters](#parameters-25)
+-   [request.FindMarkets](#requestfindmarkets)
     -   [Properties](#properties-33)
+-   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
+    -   [Properties](#properties-34)
 -   [OrderBookPrice](#orderbookprice)
 -   [OrderBookSize](#orderbooksize)
 -   [OrderBookNumOrders](#orderbooknumorders)
@@ -1164,7 +1166,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Time of initial order processing by the matching engine
 -   `status` **[OrderStatus](#orderstatus)** Current order status
 -   `errorCode` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Error short code explaining order error or failed batch cancel
--   `errorReason` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Error description explaining order error or failed batch cancel
+-   `errorMessage` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Error description explaining order error or failed batch cancel
 -   `type` **[OrderType](#ordertype)** Order type
 -   `side` **[OrderSide](#orderside)** Order side
 -   `originalQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Original quantity specified by the order in base terms, omitted for market orders specified in quote terms
@@ -1224,7 +1226,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 -   `liquidity` **[Liquidity](#liquidity)** 
 -   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fill timestamp
--   `sequence` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Last trade sequence number for the market
+-   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Last trade sequence number for the market
 -   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Ethereum transaction id, if available
 -   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Eth Tx Status
 
@@ -1281,7 +1283,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `quoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of trade in quote terms
 -   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Fill timestamp
 -   `makerSide` **[OrderSide](#orderside)** Which side of the order the liquidity maker was on
--   `sequence` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Last trade sequence number for the market
+-   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Last trade sequence number for the market
 
 ### response.User
 
@@ -1375,15 +1377,6 @@ await webSocketClient.connect();
 
 Type: function (): any
 
-## constructor
-
-Create a WebSocket client
-
-### Parameters
-
--   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
--   `shouldReconnectAutomatically`   (optional, default `false`)
-
 ## request.FindBalances
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -1393,6 +1386,25 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `asset[]` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset symbols
+
+## constructor
+
+Create a WebSocket client
+
+### Parameters
+
+-   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
+-   `shouldReconnectAutomatically`   (optional, default `false`)
+
+## request.FindMarkets
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Target market, all markets are returned if omitted
+-   `regionOnly` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** true only returns markets available in the geographic region of the request
+-   `depositId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ## webSocketResponse.Subscriptions
 
