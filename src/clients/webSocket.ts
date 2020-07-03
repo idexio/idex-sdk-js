@@ -2,6 +2,8 @@ import WebSocket from 'isomorphic-ws';
 
 import * as types from '../types';
 import * as utils from '../utils';
+import AuthenticatedClient from './authenticated';
+import WebsocketTokenManager from './webSocketTokenManager';
 
 /**
  * WebSocket API client
@@ -43,11 +45,24 @@ export default class WebSocketClient {
 
   private webSocket: WebSocket;
 
+  private webSocketTokenManager?: WebsocketTokenManager;
+
   /**
    * Create a WebSocket client
    * @param {string} baseURL - Base URL of websocket API
+   * @param {object} authenticator - Authenticated client instance and nonce generator.
+   *  Client is required to automatically handle Websocket token generation and refresh.
+   *  You can omit this when using only public websocket subscription.
+   *  See https://docs.idex.io/#websocket-authentication-endpoints
    * @param {boolean=false} shouldReconnectAutomatically - If true, automatically reconnects when connection is closed by the server or network errors  */
-  constructor(baseURL: string, shouldReconnectAutomatically = false) {
+  constructor(
+    baseURL: string,
+    authenticator?: {
+      client: AuthenticatedClient;
+      getNonce: () => string;
+    },
+    shouldReconnectAutomatically = false,
+  ) {
     this.baseURL = baseURL;
 
     this.shouldReconnectAutomatically = shouldReconnectAutomatically;
@@ -57,6 +72,12 @@ export default class WebSocketClient {
     this.disconnectListeners = new Set();
     this.errorListeners = new Set();
     this.responseListeners = new Set();
+    if (authenticator) {
+      this.webSocketTokenManager = new WebsocketTokenManager(
+        authenticator.client,
+        authenticator.getNonce,
+      );
+    }
   }
 
   /* Connection management */
@@ -125,6 +146,9 @@ export default class WebSocketClient {
     subscriptions: types.webSocket.Subscription[],
     token?: string,
   ): void {
+    // TODO: we need to use
+    // this.webSocketTokenManager.getToken('0xwallet');
+    // But what about case when user want to watch more wallets
     if (
       !token &&
       subscriptions.some(s =>
