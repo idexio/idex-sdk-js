@@ -93,7 +93,7 @@ export interface Deposit {
  * @property {number} serverTime - UNIX epoch time in ms
  * @property {string} ethereumDepositContractAddress
  * @property {string} ethUsdPrice
- * @property {string} gasPrice - In gwei
+ * @property {number} gasPrice - In gwei
  * @property {string} usdVolume24h - 24h volume in USD
  * @property {string} makerFeeRate
  * @property {string} takerFeeRate
@@ -106,7 +106,7 @@ export interface ExchangeInfo {
   serverTime: number;
   ethereumDepositContractAddress: string;
   ethUsdPrice: string;
-  gasPrice: string;
+  gasPrice: number;
   usdVolume24h: string;
   makerFeeRate: string;
   takerFeeRate: string;
