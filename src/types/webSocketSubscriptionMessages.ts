@@ -1,8 +1,6 @@
 import * as enums from './enums';
 import * as response from './response';
 
-export type BuyOrSellShort = 'b' | 's';
-
 export interface TickerShort {
   m: string;
   t: number;
@@ -27,7 +25,7 @@ export interface TradeShort {
   q: string;
   Q: string;
   t: number;
-  s: BuyOrSellShort;
+  s: response.Fill['makerSide'];
   u: number;
 }
 
@@ -158,7 +156,7 @@ export interface OrderFillShort {
   q: string;
   Q: string;
   t: number;
-  s: BuyOrSellShort;
+  s: response.Fill['makerSide'];
   u: number;
   f: string;
   a: string;
