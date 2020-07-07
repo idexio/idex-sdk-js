@@ -181,6 +181,7 @@ export default class WebSocketClient {
         subscriptions,
         token: this.webSocketTokenManager.getLastCachedToken(uniqueWallets[0]),
       });
+      return;
     }
 
     // For more wallets we need to split subscriptions
