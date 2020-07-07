@@ -185,15 +185,17 @@
 -   [WebSocket Responses](#websocket-responses)
     -   [webSocketResponse.Error](#websocketresponseerror)
         -   [Properties](#properties-31)
+-   [WebsocketTokenManager](#websockettokenmanager)
+    -   [Parameters](#parameters-25)
 -   [ConnectListener](#connectlistener)
 -   [request.FindBalances](#requestfindbalances)
     -   [Properties](#properties-32)
 -   [constructor](#constructor)
-    -   [Parameters](#parameters-25)
--   [subscribeAuthenticated](#subscribeauthenticated)
     -   [Parameters](#parameters-26)
--   [subscribeUnauthenticated](#subscribeunauthenticated)
+-   [subscribeAuthenticated](#subscribeauthenticated)
     -   [Parameters](#parameters-27)
+-   [subscribeUnauthenticated](#subscribeunauthenticated)
+    -   [Parameters](#parameters-28)
 -   [request.FindMarkets](#requestfindmarkets)
     -   [Properties](#properties-33)
 -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
@@ -1362,6 +1364,18 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
     -   `data.code` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** error short code
     -   `data.message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** human readable error message
 
+## WebsocketTokenManager
+
+<https://docs.idex.io/#websocket-authentication-endpoints>
+
+    const wsTokenStore = new WebsocketTokenManager(wallet => client.getWsToken(uuidv1(), wallet))
+    const token = await wsTokenStore.getToken("0x123abc...");
+    wsClient.subscribe([{ name: 'balance', wallet: '0x0'}], token);
+
+### Parameters
+
+-   `websocketAuthTokenFetch` **WebsocketTokenFetch** 
+
 ## ConnectListener
 
 WebSocket API client
@@ -1375,6 +1389,8 @@ const config = {
 }
 const webSocketClient = new idex.WebSocketClient(
   config.baseURL,
+  // Optional, but required for authenticated wallet subscriptions
+  wallet => authenticatedClient.getWsToken(uuidv1(), wallet),
   config.shouldReconnectAutomatically,
 );
 await webSocketClient.connect();
@@ -1399,16 +1415,25 @@ Create a WebSocket client
 ### Parameters
 
 -   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
+-   `websocketAuthTokenFetch` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Authenticated Rest API client fetch token call (`/wsToken`)
+     SDK Websocket client will then automatically handle Websocket token generation and refresh.
+     You can omit this when using only public websocket subscription.
+     Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
+     See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
 -   `shouldReconnectAutomatically`   (optional, default `false`)
 
 ## subscribeAuthenticated
 
-Strictly typed subscribe which only can be used on authenticated subscriptions
+Strictly typed subscribe which only can be used on authenticated subscriptions.
+
+For this methods you need to pass `websocketAuthTokenFetch` to the websocket constructor.
+Library will automatically refresh user's wallet auth tokens for you.
+
+See [API specification](https://docs.idex.io/#get-authentication-token)
 
 ### Parameters
 
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.webSocket.AuthenticatedSubscription>** 
--   `token` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** See `/wsToken` [API specification](https://docs.idex.io/#get-authentication-token)
 
 Returns **void** 
 

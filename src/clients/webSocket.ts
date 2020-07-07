@@ -17,6 +17,8 @@ import WebsocketTokenManager from './webSocketTokenManager';
  * }
  * const webSocketClient = new idex.WebSocketClient(
  *   config.baseURL,
+ *   // Optional, but required for authenticated wallet subscriptions
+ *   wallet => authenticatedClient.getWsToken(uuidv1(), wallet),
  *   config.shouldReconnectAutomatically,
  * );
  * await webSocketClient.connect();
@@ -50,12 +52,11 @@ export default class WebSocketClient {
   /**
    * Create a WebSocket client
    * @param {string} baseURL - Base URL of websocket API
-   * TODO: update docs here
-   *  websocketAuthTokenFetch = `wallet => client.getWsToken(uuidv1(), wallet)`
-   * @param {object} authenticator - Authenticated client instance and nonce generator.
-   *  Client is required to automatically handle Websocket token generation and refresh.
+   * @param {function} websocketAuthTokenFetch - Authenticated Rest API client fetch token call (`/wsToken`)
+   *  SDK Websocket client will then automatically handle Websocket token generation and refresh.
    *  You can omit this when using only public websocket subscription.
-   *  See https://docs.idex.io/#websocket-authentication-endpoints
+   *  Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
+   *  See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
    * @param {boolean=false} shouldReconnectAutomatically - If true, automatically reconnects when connection is closed by the server or network errors  */
   constructor(
     baseURL: string,
@@ -144,9 +145,6 @@ export default class WebSocketClient {
   public async subscribe(
     subscriptions: types.webSocket.Subscription[],
   ): Promise<void> {
-    // TODO: we need to use
-    // this.webSocketTokenManager.getToken('0xwallet');
-    // But what about case when user want to watch more wallets
     const authSubscriptions = subscriptions.filter(isAuthenticatedSubscription);
     const uniqueWallets = Array.from(
       new Set(
@@ -155,6 +153,12 @@ export default class WebSocketClient {
           .map(subscription => (subscription as any).wallet),
       ),
     );
+
+    if (authSubscriptions.length && !this.webSocketTokenManager) {
+      throw new Error(
+        '`websocketAuthTokenFetch` is required for authenticated subscriptions',
+      );
+    }
 
     if (authSubscriptions.length && !uniqueWallets.length) {
       throw new Error(
