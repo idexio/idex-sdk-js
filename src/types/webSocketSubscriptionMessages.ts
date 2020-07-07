@@ -1,8 +1,6 @@
 import * as enums from './enums';
 import * as response from './response';
 
-export type BuyOrSellShort = 'b' | 's';
-
 export interface TickerShort {
   m: string;
   t: number;
@@ -27,7 +25,7 @@ export interface TradeShort {
   q: string;
   Q: string;
   t: number;
-  s: BuyOrSellShort;
+  s: keyof typeof enums.OrderSide;
   u: number;
 }
 
@@ -61,19 +59,19 @@ export interface CandleLong extends response.Candle {
 export interface L1OrderBookShort {
   m: string;
   t: number;
-  a: string;
-  A: string;
   b: string;
   B: string;
+  a: string;
+  A: string;
 }
 
 export interface L1OrderBookLong {
   market: string; // m
   time: number; // t
-  askPrice: string; // a
-  askQuantity: string; // A
   bidPrice: string; // b
   bidQuantity: string; // B
+  askPrice: string; // a
+  askQuantity: string; // A
 }
 
 type L2OrderBookChange = response.OrderBookPriceLevel;
@@ -158,7 +156,7 @@ export interface OrderFillShort {
   q: string;
   Q: string;
   t: number;
-  s: BuyOrSellShort;
+  s: keyof typeof enums.OrderSide;
   u: number;
   f: string;
   a: string;
