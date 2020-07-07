@@ -27,11 +27,11 @@ export interface Asset {
  * Balance
  *
  * @typedef {Object} response.Balance
- * @property {string} asset - Balance symbol
+ * @property {string} asset - Asset symbol
  * @property {string} quantity - Total quantity of the asset held by the wallet on the exchange
- * @property {string} availableForTrade - Quantity of the asset available for trading, ie quantity - locked
- * @property {string} locked - Quantity of the asset locked in trades on the order book
- * @property {string} usdValue - current value of the asset in USD
+ * @property {string} availableForTrade - Quantity of the asset available for trading; quantity - locked
+ * @property {string} locked - Quantity of the asset held in trades on the order book
+ * @property {string} usdValue - Total value of the asset held by the wallet on the exchange in USD
  */
 export interface Balance {
   asset: string;
@@ -89,25 +89,25 @@ export interface Deposit {
  * Basic exchange info
  *
  * @typedef {Object} response.ExchangeInfo
- * @property {string} timeZone - UTC
- * @property {number} serverTime - UNIX epoch time in ms
- * @property {string} ethereumDepositContractAddress
- * @property {string} ethUsdPrice
- * @property {string} gasPrice - In gwei
- * @property {string} usdVolume24h - 24h volume in USD
- * @property {string} makerFeeRate
- * @property {string} takerFeeRate
- * @property {string} makerTradeMinimum
- * @property {string} takerTradeMinimum
- * @property {string} withdraw - Minimum Minimum withdrawal amount in ETH, applies to both ETH and tokens
+ * @property {string} timeZone - Server time zone, always UTC
+ * @property {number} serverTime - Current server time
+ * @property {string} ethereumDepositContractAddress - Ethereum address of the exchange custody contract for deposits
+ * @property {string} ethUsdPrice - Current price of ETH in USD
+ * @property {number} gasPrice - Current gas price used by the exchange for trade settlement and withdrawal transactions in Gwei
+ * @property {string} volume24hUsd - Total exchange trading volume for the trailing 24 hours in USD
+ * @property {string} makerFeeRate - Maker trade fee rate
+ * @property {string} takerFeeRate - Taker trade fee rate
+ * @property {string} makerTradeMinimum - Minimum size of an order that can rest on the order book in ETH, applies to both ETH and tokens
+ * @property {string} takerTradeMinimum - Minimum order size that is accepted by the matching engine for execution in ETH, applies to both ETH and tokens
+ * @property {string} withdrawMinimum - Minimum withdrawal amount in ETH, applies to both ETH and tokens
  */
 export interface ExchangeInfo {
   timeZone: string;
   serverTime: number;
   ethereumDepositContractAddress: string;
   ethUsdPrice: string;
-  gasPrice: string;
-  usdVolume24h: string;
+  gasPrice: number;
+  volume24hUsd: string;
   makerFeeRate: string;
   takerFeeRate: string;
   makerTradeMinimum: string;
@@ -387,16 +387,16 @@ export interface Trade {
  * User
  *
  * @typedef {Object} response.User
- * @property {boolean} depositEnabled
- * @property {boolean} orderEnabled
- * @property {boolean} cancelEnabled
- * @property {boolean} withdrawEnabled
- * @property {number} kycTier
- * @property {string} totalPortfolioValue - Total value of all holdings of all wallets on the exchange, denominated in USD
- * @property {string} withdrawalLimit - 24h withdrawal limit for the user account denominated in USD (non-negative integer or “unlimited”)
- * @property {string} withdrawalRemaining - Remaining 24h withdrawal amount for the user account denominated in USD (non-negative integer or “unlimited”)
- * @property {string} makerFeeRate - user-specific maker fee rate
- * @property {string} takerFeeRate - user-specific taker fee rate
+ * @property {boolean} depositEnabled - Deposits are enabled for the user account
+ * @property {boolean} orderEnabled - Placing orders is enabled for the user account
+ * @property {boolean} cancelEnabled - Cancelling orders is enabled for the user account
+ * @property {boolean} withdrawEnabled - Withdrawals are enabled for the user account
+ * @property {number} kycTier - Approved KYC tier; 0, 1, 2
+ * @property {string} totalPortfolioValueUsd - Total value of all holdings deposited on the exchange, for all wallets associated with the user account, in USD
+ * @property {string} withdrawalLimit - 24-hour withdrawal limit in USD, or unlimited, determined by KYC tier
+ * @property {string} withdrawalRemaining - Currently withdrawable amount in USD, or unlimited, based on trailing 24 hour withdrawals and KYC tier
+ * @property {string} makerFeeRate - User-specific maker trade fee rate
+ * @property {string} takerFeeRate - User-specific taker trade fee rate
  */
 export interface User {
   depositEnabled: boolean;
@@ -404,7 +404,7 @@ export interface User {
   cancelEnabled: boolean;
   withdrawEnabled: boolean;
   kycTier: 0 | 1 | 2;
-  totalPortfolioValue: string;
+  totalPortfolioValueUsd: string;
   withdrawalLimit: string;
   withdrawalRemaining: string;
   makerFeeRate: string;
@@ -414,12 +414,12 @@ export interface User {
 /**
  * @typedef {Object} response.Wallet
  * @property {string} address - Ethereum address of the wallet
- * @property {string} totalPortfolioValue - Total value of all holdings of the wallet on the exchange, denominated in USD
- * @property {number} time - Timestamp of wallet association with the user account
+ * @property {string} totalPortfolioValueUsd - Total value of all holdings deposited on the exchange for the wallet in USD
+ * @property {number} time - Timestamp of association of the wallet with the user account
  */
 export interface Wallet {
   address: string;
-  totalPortfolioValue: string;
+  totalPortfolioValueUsd: string;
   time: number;
 }
 
