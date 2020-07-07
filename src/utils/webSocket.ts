@@ -1,9 +1,5 @@
 import * as types from '../types';
 
-const transformBuyOrSellShort = (
-  buyOrSell: types.webSocketSubscriptionMessages.BuyOrSellShort,
-): keyof typeof types.enums.OrderSide => (buyOrSell === 's' ? 'sell' : 'buy');
-
 const transformTickersMessage = (
   ticker: types.webSocketSubscriptionMessages.TickerShort,
 ): types.response.Ticker => ({
@@ -32,7 +28,7 @@ const transformTradesMessage = (
   quantity: trade.q,
   quoteQuantity: trade.Q,
   time: trade.t,
-  makerSide: transformBuyOrSellShort(trade.s),
+  makerSide: trade.s,
   sequence: trade.u,
 });
 
@@ -91,7 +87,7 @@ const transformOrderFill = (
   quantity: fill.q,
   quoteQuantity: fill.Q,
   time: fill.t,
-  makerSide: transformBuyOrSellShort(fill.s),
+  makerSide: fill.s,
   sequence: fill.u,
   fee: fill.f,
   feeAsset: fill.a,
