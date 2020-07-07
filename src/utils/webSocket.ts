@@ -154,3 +154,10 @@ export const transformMessage = (
       return message;
   }
 };
+
+export const isAuthenticatedSubscription = (
+  subscription: types.webSocket.Subscription,
+): boolean =>
+  Object.keys(types.webSocket.AuthenticatedSubscriptionName).includes(
+    subscription.name,
+  );

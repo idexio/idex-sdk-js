@@ -2,7 +2,7 @@ import WebSocket from 'isomorphic-ws';
 
 import * as types from '../types';
 import * as utils from '../utils';
-import AuthenticatedClient from './authenticated';
+import { isAuthenticatedSubscription } from '../utils/webSocket';
 import WebsocketTokenManager from './webSocketTokenManager';
 
 /**
@@ -50,6 +50,8 @@ export default class WebSocketClient {
   /**
    * Create a WebSocket client
    * @param {string} baseURL - Base URL of websocket API
+   * TODO: update docs here
+   *  websocketAuthTokenFetch = `wallet => client.getWsToken(uuidv1(), wallet)`
    * @param {object} authenticator - Authenticated client instance and nonce generator.
    *  Client is required to automatically handle Websocket token generation and refresh.
    *  You can omit this when using only public websocket subscription.
@@ -57,10 +59,7 @@ export default class WebSocketClient {
    * @param {boolean=false} shouldReconnectAutomatically - If true, automatically reconnects when connection is closed by the server or network errors  */
   constructor(
     baseURL: string,
-    authenticator?: {
-      client: AuthenticatedClient;
-      getNonce: () => string;
-    },
+    websocketAuthTokenFetch?: (wallet: string) => Promise<string>,
     shouldReconnectAutomatically = false,
   ) {
     this.baseURL = baseURL;
@@ -72,10 +71,10 @@ export default class WebSocketClient {
     this.disconnectListeners = new Set();
     this.errorListeners = new Set();
     this.responseListeners = new Set();
-    if (authenticator) {
+
+    if (websocketAuthTokenFetch) {
       this.webSocketTokenManager = new WebsocketTokenManager(
-        authenticator.client,
-        authenticator.getNonce,
+        websocketAuthTokenFetch,
       );
     }
   }
@@ -142,40 +141,74 @@ export default class WebSocketClient {
     this.sendMessage({ method: 'subscriptions' });
   }
 
-  public subscribe(
+  public async subscribe(
     subscriptions: types.webSocket.Subscription[],
-    token?: string,
-  ): void {
+  ): Promise<void> {
     // TODO: we need to use
     // this.webSocketTokenManager.getToken('0xwallet');
     // But what about case when user want to watch more wallets
-    if (
-      !token &&
-      subscriptions.some(s =>
-        Object.keys(types.webSocket.AuthenticatedSubscriptionName).includes(
-          s.name,
-        ),
-      )
-    ) {
-      throw new Error('Token required for authenticated subscriptions');
+    const authSubscriptions = subscriptions.filter(isAuthenticatedSubscription);
+    const uniqueWallets = Array.from(
+      new Set(
+        authSubscriptions
+          .filter(subscription => (subscription as any).wallet)
+          .map(subscription => (subscription as any).wallet),
+      ),
+    );
+
+    if (authSubscriptions.length && !uniqueWallets.length) {
+      throw new Error(
+        'WebSocket: Missing wallet for authenticated subscription',
+      );
     }
 
-    this.sendMessage({
-      method: 'subscribe',
-      subscriptions,
+    if (authSubscriptions.length === 0) {
+      this.sendMessage({
+        method: 'subscribe',
+        subscriptions,
+      });
+      return;
+    }
+
+    // Prepare all auth tokens for subscriptions
+    await Promise.all(
+      uniqueWallets.map(wallet => this.webSocketTokenManager.getToken(wallet)),
+    );
+
+    if (uniqueWallets.length === 1) {
+      this.sendMessage({
+        method: 'subscribe',
+        subscriptions,
+        token: this.webSocketTokenManager.getLastCachedToken(uniqueWallets[0]),
+      });
+    }
+
+    // For more wallets we need to split subscriptions
+    subscriptions.forEach(subscription => {
+      this.sendMessage({
+        method: 'subscribe',
+        subscriptions: [subscription],
+        token: isAuthenticatedSubscription(subscription)
+          ? this.webSocketTokenManager.getLastCachedToken(
+              (subscription as any).wallet,
+            )
+          : undefined,
+      });
     });
   }
 
   /**
-   * Strictly typed subscribe which only can be used on authenticated subscriptions
+   * Strictly typed subscribe which only can be used on authenticated subscriptions.
    *
-   * @param token See `/wsToken` {@link https://docs.idex.io/#get-authentication-token|API specification}
+   * For this methods you need to pass `websocketAuthTokenFetch` to the websocket constructor.
+   * Library will automatically refresh user's wallet auth tokens for you.
+   *
+   * See {@link https://docs.idex.io/#get-authentication-token|API specification}
    */
   public subscribeAuthenticated(
     subscriptions: types.webSocket.AuthenticatedSubscription[],
-    token: string,
   ): void {
-    this.subscribe(subscriptions, token);
+    this.subscribe(subscriptions);
   }
 
   /**
