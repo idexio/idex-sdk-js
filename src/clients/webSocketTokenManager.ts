@@ -44,19 +44,24 @@ export default class WebsocketTokenManager {
         return tokenRef.token;
       }
     }
+
     // In case we requesting wallet token first time,
     // or token already expired (~15 mins),
     // we need to generate fresh one.
-    tokenRef.expiration = new Date().getTime() + TOKEN_EXPIRATION_MS;
-    tokenRef.fetching = this.websocketAuthTokenFetch(walletAddress);
-    tokenRef.token = '';
 
-    const token = await tokenRef.fetching;
+    const tokenUpdate = (this.walletTokens[walletAddress] = {
+      expiration: new Date().getTime() + TOKEN_EXPIRATION_MS,
+      fetching: this.websocketAuthTokenFetch(walletAddress),
+      token: '',
+    });
 
-    tokenRef.token = token;
-    tokenRef.fetching = undefined;
-
-    return token;
+    try {
+      const token = await tokenUpdate.fetching;
+      tokenUpdate.token = token;
+      return token;
+    } finally {
+      tokenUpdate.fetching = undefined;
+    }
   };
 
   public getLastCachedToken = (walletAddress: string): string => {
