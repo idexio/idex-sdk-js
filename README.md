@@ -328,7 +328,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 Authenticated API client
 
 ```typescript
-import * as idex from '@idexio/idex-node';
+import * as idex from '@idexio/idex-sdk';
 
 // Edit the values below for your environment
 const config = {
