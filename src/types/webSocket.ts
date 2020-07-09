@@ -69,13 +69,8 @@ export type UnauthenticatedSubscription =
   | TradesSubscription;
 
 export type Subscription =
-  | CandlesSubscription
-  | L1OrderBookSubscription
-  | L2OrderBookSubscription
-  | TickersSubscription
-  | TradesSubscription
-  | BalancesSubscription
-  | OrdersSubscription;
+  | AuthenticatedSubscription
+  | UnauthenticatedSubscription;
 
 export type SubscribeRequest = {
   method: 'subscribe';
