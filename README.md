@@ -216,7 +216,7 @@
 Public API client
 
 ```typescript
-import * as idex from '@idexio/idex-sdk';
+import * as idex from '@idexio/idex-node';
 
 // Edit the values below for your environment
 const config = {
@@ -330,7 +330,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 Authenticated API client
 
 ```typescript
-import * as idex from '@idexio/idex-sdk';
+import * as idex from '@idexio/idex-node';
 
 // Edit the values below for your environment
 const config = {
@@ -1087,7 +1087,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 -   `depositId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** IDEX-issued deposit identifier
 -   `asset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by symbol
--   `assetContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by contract address
 -   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Deposit amount in asset terms
 -   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum transaction hash
 -   `txTime` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of the Ethereum deposit tx
