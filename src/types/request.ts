@@ -79,9 +79,11 @@ export interface FindDeposit extends FindByWallet {
  * @property {number} [start] - Starting timestamp (inclusive)
  * @property {number} [end] - Ending timestamp (inclusive)
  * @property {number} [limit=50] - Max results to return from 1-1000
+ * @property {string} [fromId] - Fills created at the same timestamp or after fillId
  */
 export interface FindDeposits extends FindByWallet, FindWithPagination {
   asset?: string;
+  fromId?: string;
 }
 
 /**
