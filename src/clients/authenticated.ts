@@ -89,17 +89,22 @@ export default class AuthenticatedClient {
    *
    * @param {string} nonce - UUIDv1
    * @param {string} wallet - Ethereum wallet address
-   * @param {string | string[]} asset - One or more balances to get
+   * @param {string | string[]} asset - One or more assets to filter for
    */
   public async getBalances(
     nonce: string,
     wallet: string,
     asset?: string | string[],
   ): Promise<response.Balance | response.Balance[]> {
-    if (Array.isArray(asset)) {
-      asset = asset.map(a => a.trim()).join(',');
-    }
-    return (await this.get('/balances', { nonce, wallet, asset })).data;
+    return (
+      await this.get('/balances', {
+        nonce,
+        wallet,
+        asset: Array.isArray(asset)
+          ? asset.map(a => a.trim()).join(',')
+          : asset,
+      })
+    ).data;
   }
 
   /**
