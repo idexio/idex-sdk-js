@@ -51,7 +51,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit_DISABLED": "yarn lint && yarn lint:markdown"
+      "pre-commit": "yarn build:documentation"
     }
   }
 }
