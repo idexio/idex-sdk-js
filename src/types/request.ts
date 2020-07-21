@@ -145,7 +145,7 @@ export interface FindOrder extends FindByWallet {
  */
 export interface FindOrders extends FindByWallet, FindWithPagination {
   market?: string;
-  closed: boolean;
+  closed?: boolean;
   fromId?: string;
 }
 
