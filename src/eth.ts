@@ -75,11 +75,9 @@ export const getWithdrawalHash = (
   return solidityHashOfParams([
     ['uint128', uuidToUint8Array(withdrawal.nonce)],
     ['address', withdrawal.wallet],
-    ['string', withdrawal.asset || ''],
-    [
-      'address',
-      withdrawal.assetContractAddress || ethers.constants.AddressZero,
-    ],
+    withdrawal.asset
+      ? ['string', withdrawal.asset]
+      : ['address', withdrawal.assetContractAddress],
     ['string', withdrawal.quantity],
     ['bool', true], // Auto-dispatch
   ]);
