@@ -51,14 +51,14 @@ export interface FindBalances extends FindByWallet {
 /**
  * @typedef {Object} request.FindCandles
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
- * @property {CandleInterval} [interval] - Time interval for data
+ * @property {CandleInterval} interval - Time interval for data
  * @property {number} [start] - Starting timestamp (inclusive)
  * @property {number} [end] - Ending timestamp (inclusive)
  * @property {number} [limit=50] - Max results to return from 1-1000
  */
 export interface FindCandles extends FindWithPagination {
-  market?: string;
-  interval?: enums.CandleInterval;
+  market: string;
+  interval: keyof typeof enums.CandleInterval;
 }
 
 /**
