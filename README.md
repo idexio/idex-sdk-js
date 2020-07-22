@@ -879,7 +879,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 #### Properties
 
 -   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
--   `interval` **[CandleInterval](#candleinterval)?** Time interval for data
+-   `interval` **[CandleInterval](#candleinterval)** Time interval for data
 -   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
 -   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
