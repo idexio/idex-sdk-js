@@ -317,7 +317,7 @@ export interface WithdrawalByAddress extends WithdrawalBase {
  */
 export type Withdrawal = XOR<WithdrawalBySymbol, WithdrawalByAddress>;
 
-export interface CreateWithdrawal {
+export interface CreateWithdrawalBody {
   parameters: Withdrawal;
   signature: string;
 }
