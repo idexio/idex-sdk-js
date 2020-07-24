@@ -95,15 +95,19 @@ export interface L2OrderBookLong {
 export interface BalanceShort {
   w: string;
   a: string;
+  q: string;
   f: string;
   l: string;
+  d: string;
 }
 
 export interface BalanceLong {
   wallet: string; // w
   asset: string; // a
+  quantity: string;
   availableForTrade: string; // f
   locked: string; // l
+  usdValue: string;
 }
 
 export interface OrderShort {
@@ -118,13 +122,15 @@ export interface OrderShort {
   u: string;
   o: keyof typeof enums.OrderType;
   S: keyof typeof enums.OrderSide;
-  f: keyof typeof enums.OrderTimeInForce;
-  p: string;
-  P?: string;
-  V: keyof typeof enums.OrderSelfTradePrevention;
   q: string;
+  Q?: string;
   z: string;
-  Z: string;
+  Z?: string;
+  v?: string;
+  p?: string;
+  P?: string;
+  f: keyof typeof enums.OrderTimeInForce;
+  V: keyof typeof enums.OrderSelfTradePrevention;
   F?: OrderFillShort[];
 }
 
