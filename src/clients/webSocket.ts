@@ -144,6 +144,7 @@ export default class WebSocketClient {
 
   public async subscribe(
     subscriptions: types.webSocket.Subscription[],
+    cid?: string,
   ): Promise<void> {
     const authSubscriptions = subscriptions.filter(isAuthenticatedSubscription);
     const uniqueWallets = Array.from(
@@ -191,12 +192,13 @@ export default class WebSocketClient {
     // For more wallets we need to split subscriptions
     subscriptions.forEach(subscription => {
       this.sendMessage({
+        cid,
         method: 'subscribe',
         subscriptions: [subscription],
         token: isAuthenticatedSubscription(subscription)
           ? this.webSocketTokenManager.getLastCachedToken(
-              (subscription as any).wallet,
-            )
+            (subscription as any).wallet,
+          )
           : undefined,
       });
     });
