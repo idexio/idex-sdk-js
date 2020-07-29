@@ -5,6 +5,8 @@ import * as utils from '../utils';
 import { isAuthenticatedSubscription } from '../utils/webSocket';
 import WebsocketTokenManager from './webSocketTokenManager';
 
+const userAgent = 'idex-sdk-js';
+
 /**
  * WebSocket API client
  *
@@ -199,8 +201,8 @@ export default class WebSocketClient {
         subscriptions: [subscription],
         token: isAuthenticatedSubscription(subscription)
           ? this.webSocketTokenManager.getLastCachedToken(
-              (subscription as any).wallet,
-            )
+            (subscription as any).wallet,
+          )
           : undefined,
       });
     });
@@ -241,7 +243,9 @@ export default class WebSocketClient {
   /* Private */
 
   private createWebSocket(): void {
-    this.webSocket = new WebSocket(this.baseURL);
+    this.webSocket = new WebSocket(this.baseURL, {
+      headers: { 'User-Agent': userAgent },
+    });
     this.webSocket.onmessage = this.handleWebSocketMessage.bind(this);
     this.webSocket.onclose = this.handleWebSocketClose.bind(this);
     this.webSocket.onerror = this.handleWebSocketError.bind(this);
