@@ -169,6 +169,7 @@ export default class WebSocketClient {
 
     if (authSubscriptions.length === 0) {
       this.sendMessage({
+        cid,
         method: 'subscribe',
         subscriptions,
       });
@@ -182,6 +183,7 @@ export default class WebSocketClient {
 
     if (uniqueWallets.length === 1) {
       this.sendMessage({
+        cid,
         method: 'subscribe',
         subscriptions,
         token: this.webSocketTokenManager.getLastCachedToken(uniqueWallets[0]),
@@ -197,8 +199,8 @@ export default class WebSocketClient {
         subscriptions: [subscription],
         token: isAuthenticatedSubscription(subscription)
           ? this.webSocketTokenManager.getLastCachedToken(
-            (subscription as any).wallet,
-          )
+              (subscription as any).wallet,
+            )
           : undefined,
       });
     });
