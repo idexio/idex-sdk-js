@@ -29,6 +29,7 @@
     "ethers": "^4.0.44",
     "isomorphic-ws": "^4.0.1",
     "query-string": "^6.11.1",
+    "tslib": "^2.0.0",
     "ws": "^7.2.3"
   },
   "devDependencies": {

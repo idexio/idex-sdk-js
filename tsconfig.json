@@ -6,6 +6,7 @@
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
+    "importHelpers": true,
     "lib": ["es2017", "es2018", "dom"],
     "listEmittedFiles": true,
     "module": "commonjs",
