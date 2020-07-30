@@ -148,11 +148,14 @@ export default class WebSocketClient {
     subscriptions: types.webSocket.Subscription[],
     cid?: string,
   ): Promise<void> {
+    // TODO: Do these need to be any?
     const authSubscriptions = subscriptions.filter(isAuthenticatedSubscription);
     const uniqueWallets = Array.from(
       new Set(
         authSubscriptions
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           .filter(subscription => (subscription as any).wallet)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           .map(subscription => (subscription as any).wallet),
       ),
     );
@@ -195,14 +198,16 @@ export default class WebSocketClient {
 
     // For more wallets we need to split subscriptions
     subscriptions.forEach(subscription => {
+      // TODO: Does this need to be any?
       this.sendMessage({
         cid,
         method: 'subscribe',
         subscriptions: [subscription],
         token: isAuthenticatedSubscription(subscription)
           ? this.webSocketTokenManager.getLastCachedToken(
-            (subscription as any).wallet,
-          )
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (subscription as any).wallet,
+            )
           : undefined,
       });
     });

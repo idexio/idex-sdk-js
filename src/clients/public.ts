@@ -45,7 +45,7 @@ export default class PublicClient {
   /**
    * Test connectivity to the REST API
    */
-  public async ping(): Promise<{}> {
+  public async ping(): Promise<{ [key: string]: never }> {
     return (await this.get('/ping')).data;
   }
 

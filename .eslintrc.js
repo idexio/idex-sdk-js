@@ -1,11 +1,12 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: './tsconfig.json',
+    project: './tsconfig.eslint.json',
   },
   extends: [
     'airbnb-base',
     'plugin:@typescript-eslint/recommended',
+    'plugin:import/typescript',
     'prettier',
     'prettier/@typescript-eslint',
     'plugin:prettier/recommended',
@@ -13,9 +14,6 @@ module.exports = {
   globals: { BigInt: true },
   rules: {
     '@typescript-eslint/no-use-before-define': 'off',
-    // cant handle Category$Name at the moment, although
-    // pascal case should be enforced.
-    '@typescript-eslint/class-name-casing': 'off',
     'comma-dangle': ['error', 'always-multiline'],
     'consistent-return': 'off',
     curly: ['error', 'all'],
@@ -24,6 +22,7 @@ module.exports = {
     'no-use-before-define': 'off',
     'no-console': 'off',
     'no-underscore-dangle': 'off',
+
     'import/extensions': [
       'error',
       'ignorePackages',
@@ -41,25 +40,17 @@ module.exports = {
         devDependencies: ['dev/**'],
       },
     ],
-    'prettier/prettier': [
-      'error',
-      {
-        bracketSpacing: true,
-        singleQuote: true,
-        trailingComma: 'all',
-      },
-    ],
+    'prettier/prettier': ['error'],
     quotes: ['error', 'single'],
   },
   plugins: ['import', 'promise', 'prettier', '@typescript-eslint'],
   settings: {
-    'import/extensions': ['.ts'],
     'import/parsers': {
-      '@typescript-eslint/parser': ['.ts'],
+      '@typescript-eslint/parser': ['.ts', '.tsx'],
     },
     'import/resolver': {
-      node: {
-        extensions: ['.js', '.ts'],
+      typescript: {
+        project: './tsconfig.eslint.json',
       },
     },
   },

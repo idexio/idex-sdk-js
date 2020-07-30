@@ -311,7 +311,7 @@ export interface OrderBookLevel2 extends OrderBook {
  *
  * @typedef {Object} response.Ping
  */
-export type Ping = {};
+export type Ping = { [key: string]: never };
 
 /**
  * Ticker
