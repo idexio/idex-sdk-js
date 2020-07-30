@@ -93,7 +93,7 @@ export default class WebSocketClient {
       this.createWebSocket();
     }
 
-    await new Promise(resolve => {
+    await new Promise((resolve) => {
       (function waitForOpen(ws: WebSocket): void {
         if (ws.readyState === WebSocket.OPEN) {
           return resolve();
@@ -103,7 +103,7 @@ export default class WebSocketClient {
     });
 
     this.resetReconnectionState();
-    this.connectListeners.forEach(listener => listener());
+    this.connectListeners.forEach((listener) => listener());
   }
 
   public disconnect(): void {
@@ -113,7 +113,7 @@ export default class WebSocketClient {
 
     // TODO wait for buffer to flush
     this.destroyWebSocket();
-    this.disconnectListeners.forEach(listener => listener());
+    this.disconnectListeners.forEach((listener) => listener());
   }
 
   public isConnected(): boolean {
@@ -154,9 +154,9 @@ export default class WebSocketClient {
       new Set(
         authSubscriptions
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .filter(subscription => (subscription as any).wallet)
+          .filter((subscription) => (subscription as any).wallet)
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .map(subscription => (subscription as any).wallet),
+          .map((subscription) => (subscription as any).wallet),
       ),
     );
 
@@ -183,7 +183,9 @@ export default class WebSocketClient {
 
     // Prepare all auth tokens for subscriptions
     await Promise.all(
-      uniqueWallets.map(wallet => this.webSocketTokenManager.getToken(wallet)),
+      uniqueWallets.map((wallet) =>
+        this.webSocketTokenManager.getToken(wallet),
+      ),
     );
 
     if (uniqueWallets.length === 1) {
@@ -197,7 +199,7 @@ export default class WebSocketClient {
     }
 
     // For more wallets we need to split subscriptions
-    subscriptions.forEach(subscription => {
+    subscriptions.forEach((subscription) => {
       // TODO: Does this need to be any?
       this.sendMessage({
         cid,
@@ -265,7 +267,7 @@ export default class WebSocketClient {
 
   private handleWebSocketClose(): void {
     this.webSocket = null;
-    this.disconnectListeners.forEach(listener => listener());
+    this.disconnectListeners.forEach((listener) => listener());
 
     if (this.shouldReconnectAutomatically) {
       // TODO: exponential backoff
@@ -274,7 +276,7 @@ export default class WebSocketClient {
   }
 
   private handleWebSocketError(event: WebSocket.ErrorEvent): void {
-    this.errorListeners.forEach(listener => listener(event));
+    this.errorListeners.forEach((listener) => listener(event));
   }
 
   private handleWebSocketMessage(event: WebSocket.MessageEvent): void {
@@ -282,7 +284,7 @@ export default class WebSocketClient {
       throw new Error('Malformed response data'); // Shouldn't happen
     }
     const message = utils.webSocket.transformMessage(JSON.parse(event.data));
-    this.responseListeners.forEach(listener => listener(message));
+    this.responseListeners.forEach((listener) => listener(message));
   }
 
   private reconnect(): void {
