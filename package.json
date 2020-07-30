@@ -59,8 +59,8 @@
   "types": "dist/index.d.ts",
   "husky": {
     "hooks": {
-      "pre-commit_disabled": "npm-run-all -p lint:fix:*",
-      "pre-push_disabled": "npm-run-all -p lint:markdown build"
+      "pre-commit": "npm-run-all -p lint:fix:*",
+      "pre-push": "npm-run-all -p lint:markdown build"
     }
   },
   "lint-staged": {
