@@ -15,7 +15,6 @@
     "lint:fix": "eslint 'src/**/*.ts' --ext .ts --fix",
     "lint:fix:package": "pretty-quick --pattern package.json",
     "lint:fix:staged": "lint-staged",
-    "lint:markdown": "markdownlint README.md",
     "lint:types": "tsc --noEmit",
     "rebuild": "npx tsc",
     "start": "node dist/index.js"
@@ -60,7 +59,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "npm-run-all -p lint:fix:*",
-      "pre-push": "npm-run-all -p lint:markdown build"
+      "pre-push": "npm-run-all build"
     }
   },
   "lint-staged": {
