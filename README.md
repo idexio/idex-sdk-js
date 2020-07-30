@@ -244,7 +244,7 @@ const publicClientWithApiKey = new idex.PublicClient(
 
 Test connectivity to the REST API
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{}>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{: never}>** 
 
 #### getServerTime
 
