@@ -346,7 +346,7 @@ export interface Ticker {
   closeQuantity: string | null;
   time: number;
   numTrades: number;
-  sequence: number;
+  sequence: number | null;
 }
 
 /**
