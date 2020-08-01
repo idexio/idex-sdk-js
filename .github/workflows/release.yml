@@ -6,12 +6,6 @@ on:
       - beta
       - alpha
 jobs:
-  example:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: bradennapier@transition-pr
-        with:
-          title: Release 
   pr:
     name: Create Release PR
     runs-on: ubuntu-latest
