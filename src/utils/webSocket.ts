@@ -54,10 +54,10 @@ const transformL1orderbooksMessage = (
 ): types.webSocketSubscriptionMessages.L1OrderBookLong => ({
   market: l1orderbook.m,
   time: l1orderbook.t,
-  askPrice: l1orderbook.a,
-  askQuantity: l1orderbook.A,
   bidPrice: l1orderbook.b,
   bidQuantity: l1orderbook.B,
+  askPrice: l1orderbook.a,
+  askQuantity: l1orderbook.A,
 });
 
 const transformL2orderbooksMessage = (
@@ -75,8 +75,10 @@ const transformBalancesMessage = (
 ): types.webSocketSubscriptionMessages.BalanceLong => ({
   wallet: balance.w,
   asset: balance.a,
+  quantity: balance.q,
   availableForTrade: balance.f,
   locked: balance.l,
+  usdValue: balance.d,
 });
 
 const transformOrderFill = (
@@ -111,13 +113,15 @@ const transformOrdersMessage = (
   ...(order.u && { orderBookSequenceNumber: order.u }),
   type: order.o,
   side: order.S,
-  timeInForce: order.f,
-  ...(order.p && { limitOrderPrice: order.p }),
-  ...(order.P && { stopOrderPrice: order.P }),
-  selfTradePrevention: order.V,
   originalQuantity: order.q,
+  ...(order.Q && { originalQuoteQuantity: order.Q }),
   executedQuantity: order.z,
   cumulativeQuoteQuantity: order.Z,
+  ...(order.v && { avgExecutionPrice: order.v }),
+  ...(order.p && { limitOrderPrice: order.p }),
+  ...(order.P && { stopOrderPrice: order.P }),
+  timeInForce: order.f,
+  selfTradePrevention: order.V,
   ...(order.F && { fills: order.F.map(transformOrderFill) }),
 });
 

@@ -46,7 +46,7 @@ export const getCancelOrderHash = (
     [
       parameters.orderId,
       (parameters as types.request.CancelOrders).market,
-    ].filter(val => !!val).length > 1
+    ].filter((val) => !!val).length > 1
   ) {
     throw new Error(
       'Cancel orders may specify at most one of orderId or market',
@@ -75,11 +75,9 @@ export const getWithdrawalHash = (
   return solidityHashOfParams([
     ['uint128', uuidToUint8Array(withdrawal.nonce)],
     ['address', withdrawal.wallet],
-    ['string', withdrawal.asset || ''],
-    [
-      'address',
-      withdrawal.assetContractAddress || ethers.constants.AddressZero,
-    ],
+    withdrawal.asset
+      ? ['string', withdrawal.asset]
+      : ['address', withdrawal.assetContractAddress],
     ['string', withdrawal.quantity],
     ['bool', true], // Auto-dispatch
   ]);
@@ -92,8 +90,8 @@ type TypeValuePair =
   | ['bool', boolean];
 
 const solidityHashOfParams = (params: TypeValuePair[]): string => {
-  const fields = params.map(param => param[0]);
-  const values = params.map(param => param[1]);
+  const fields = params.map((param) => param[0]);
+  const values = params.map((param) => param[1]);
   // TODO: we might let lib users to pick their solidityKeccak256 library, eg. web3.soliditySha3()
   return ethers.utils.solidityKeccak256(fields, values);
 };

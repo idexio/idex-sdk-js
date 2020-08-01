@@ -1,8 +1,11 @@
 import crypto from 'crypto';
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
+import http from 'http';
+import https from 'https';
 import queryString from 'query-string';
 
 import * as eth from '../eth';
+import { isNode } from '../utils';
 import { request, response } from '../types';
 
 /**
@@ -35,19 +38,19 @@ export default class AuthenticatedClient {
 
   private apiSecret: string;
 
-  private isUsingSessionCredentials: boolean;
-
   public constructor(baseURL: string, apiKey: string, apiSecret: string) {
     this.baseURL = baseURL;
     this.apiSecret = apiSecret;
-    // Magic api key "withCredentials" to enable internal session cookie authentication method
-    this.isUsingSessionCredentials = apiKey === 'withCredentials';
 
-    this.axios = Axios.create(
-      this.isUsingSessionCredentials
-        ? { withCredentials: true }
-        : { headers: { Authorization: `Bearer ${apiKey}` } },
-    );
+    this.axios = isNode
+      ? Axios.create({
+          headers: { Authorization: `Bearer ${apiKey}` },
+          httpAgent: new http.Agent({ keepAlive: true }),
+          httpsAgent: new https.Agent({ keepAlive: true }),
+        })
+      : Axios.create({
+          headers: { Authorization: `Bearer ${apiKey}` },
+        });
   }
 
   /**
@@ -312,17 +315,13 @@ export default class AuthenticatedClient {
   protected async get(
     endpoint: string,
     requestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
-    additionalHeaders: Record<string, string | number> = {},
   ): Promise<AxiosResponse> {
     return this.axios({
       method: 'GET',
       url: `${this.baseURL}${endpoint}`,
-      headers: {
-        ...this.createHmacRequestSignatureHeader(
-          queryString.stringify(requestParams),
-        ),
-        ...additionalHeaders,
-      },
+      headers: this.createHmacRequestSignatureHeader(
+        queryString.stringify(requestParams),
+      ),
       params: requestParams,
     });
   }
@@ -330,15 +329,11 @@ export default class AuthenticatedClient {
   protected async post(
     endpoint: string,
     requestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
-    additionalHeaders: Record<string, string | number> = {},
   ): Promise<AxiosResponse> {
     return this.axios({
       method: 'POST',
       url: `${this.baseURL}${endpoint}`,
-      headers: {
-        ...this.createHmacRequestSignatureHeader(requestParams),
-        ...additionalHeaders,
-      },
+      headers: this.createHmacRequestSignatureHeader(requestParams),
       data: requestParams,
     });
   }
@@ -346,26 +341,18 @@ export default class AuthenticatedClient {
   protected async delete(
     endpoint: string,
     requestParams: Record<string, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
-    additionalHeaders: Record<string, string | number> = {},
   ): Promise<AxiosResponse> {
     return this.axios({
       method: 'DELETE',
       url: `${this.baseURL}${endpoint}`,
-      headers: {
-        ...this.createHmacRequestSignatureHeader(requestParams),
-        ...additionalHeaders,
-      },
+      headers: this.createHmacRequestSignatureHeader(requestParams),
       data: requestParams,
     });
   }
 
-  public createHmacRequestSignatureHeader(
+  protected createHmacRequestSignatureHeader(
     payload: string | Record<string, unknown>,
   ): { 'hmac-request-signature': string } {
-    if (this.isUsingSessionCredentials) {
-      return;
-    }
-
     const hmacRequestSignature = crypto
       .createHmac('sha256', this.apiSecret)
       .update(typeof payload === 'string' ? payload : JSON.stringify(payload))

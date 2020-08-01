@@ -1,0 +1,28 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+      - beta
+      - alpha
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2.1.1
+        with:
+          node-version: '12'
+          check-latest: true
+      - name: Install dependencies
+        run: yarn
+      - name: Build Library
+        run: yarn build
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release

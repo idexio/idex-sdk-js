@@ -5,6 +5,8 @@ import * as utils from '../utils';
 import { isAuthenticatedSubscription } from '../utils/webSocket';
 import WebsocketTokenManager from './webSocketTokenManager';
 
+const userAgent = 'idex-sdk-js';
+
 /**
  * WebSocket API client
  *
@@ -91,7 +93,7 @@ export default class WebSocketClient {
       this.createWebSocket();
     }
 
-    await new Promise(resolve => {
+    await new Promise((resolve) => {
       (function waitForOpen(ws: WebSocket): void {
         if (ws.readyState === WebSocket.OPEN) {
           return resolve();
@@ -101,7 +103,7 @@ export default class WebSocketClient {
     });
 
     this.resetReconnectionState();
-    this.connectListeners.forEach(listener => listener());
+    this.connectListeners.forEach((listener) => listener());
   }
 
   public disconnect(): void {
@@ -111,7 +113,7 @@ export default class WebSocketClient {
 
     // TODO wait for buffer to flush
     this.destroyWebSocket();
-    this.disconnectListeners.forEach(listener => listener());
+    this.disconnectListeners.forEach((listener) => listener());
   }
 
   public isConnected(): boolean {
@@ -144,13 +146,17 @@ export default class WebSocketClient {
 
   public async subscribe(
     subscriptions: types.webSocket.Subscription[],
+    cid?: string,
   ): Promise<void> {
+    // TODO: Do these need to be any?
     const authSubscriptions = subscriptions.filter(isAuthenticatedSubscription);
     const uniqueWallets = Array.from(
       new Set(
         authSubscriptions
-          .filter(subscription => (subscription as any).wallet)
-          .map(subscription => (subscription as any).wallet),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .filter((subscription) => (subscription as any).wallet)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .map((subscription) => (subscription as any).wallet),
       ),
     );
 
@@ -168,6 +174,7 @@ export default class WebSocketClient {
 
     if (authSubscriptions.length === 0) {
       this.sendMessage({
+        cid,
         method: 'subscribe',
         subscriptions,
       });
@@ -176,11 +183,14 @@ export default class WebSocketClient {
 
     // Prepare all auth tokens for subscriptions
     await Promise.all(
-      uniqueWallets.map(wallet => this.webSocketTokenManager.getToken(wallet)),
+      uniqueWallets.map((wallet) =>
+        this.webSocketTokenManager.getToken(wallet),
+      ),
     );
 
     if (uniqueWallets.length === 1) {
       this.sendMessage({
+        cid,
         method: 'subscribe',
         subscriptions,
         token: this.webSocketTokenManager.getLastCachedToken(uniqueWallets[0]),
@@ -189,12 +199,15 @@ export default class WebSocketClient {
     }
 
     // For more wallets we need to split subscriptions
-    subscriptions.forEach(subscription => {
+    subscriptions.forEach((subscription) => {
+      // TODO: Does this need to be any?
       this.sendMessage({
+        cid,
         method: 'subscribe',
         subscriptions: [subscription],
         token: isAuthenticatedSubscription(subscription)
           ? this.webSocketTokenManager.getLastCachedToken(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (subscription as any).wallet,
             )
           : undefined,
@@ -237,7 +250,9 @@ export default class WebSocketClient {
   /* Private */
 
   private createWebSocket(): void {
-    this.webSocket = new WebSocket(this.baseURL);
+    this.webSocket = new WebSocket(this.baseURL, {
+      headers: { 'User-Agent': userAgent },
+    });
     this.webSocket.onmessage = this.handleWebSocketMessage.bind(this);
     this.webSocket.onclose = this.handleWebSocketClose.bind(this);
     this.webSocket.onerror = this.handleWebSocketError.bind(this);
@@ -252,7 +267,7 @@ export default class WebSocketClient {
 
   private handleWebSocketClose(): void {
     this.webSocket = null;
-    this.disconnectListeners.forEach(listener => listener());
+    this.disconnectListeners.forEach((listener) => listener());
 
     if (this.shouldReconnectAutomatically) {
       // TODO: exponential backoff
@@ -261,7 +276,7 @@ export default class WebSocketClient {
   }
 
   private handleWebSocketError(event: WebSocket.ErrorEvent): void {
-    this.errorListeners.forEach(listener => listener(event));
+    this.errorListeners.forEach((listener) => listener(event));
   }
 
   private handleWebSocketMessage(event: WebSocket.MessageEvent): void {
@@ -269,7 +284,7 @@ export default class WebSocketClient {
       throw new Error('Malformed response data'); // Shouldn't happen
     }
     const message = utils.webSocket.transformMessage(JSON.parse(event.data));
-    this.responseListeners.forEach(listener => listener(message));
+    this.responseListeners.forEach((listener) => listener(message));
   }
 
   private reconnect(): void {
