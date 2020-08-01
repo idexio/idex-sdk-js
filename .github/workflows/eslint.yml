@@ -10,7 +10,7 @@ on:
   # schedule:
   #   - cron: '*/60 * * * *'
   pull_request:
-    branches: [ master, beta, alpha ]
+    branches: [ main, beta, alpha ]
     types:
       - opened
       - synchronize
