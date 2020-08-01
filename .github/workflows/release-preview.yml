@@ -2,7 +2,7 @@ name: Release Notes Preview
 
 on:
   pull_request:
-    branches: [ main, beta, alpha ]
+    branches: [ main ]
   issue_comment:
     types: [ edited ]
 
@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        ref: main
     - run: |
         git fetch --prune --unshallow --tags
     - uses: snyk/release-notes-preview@v1.6.1
