@@ -23,7 +23,7 @@ jobs:
           BASE: main
         run: |
           BRANCH=${GITHUB_REF##*/}
-          [[ "$BRANCH" == "main" ]] && exit 0;
+          [[ "$BRANCH" == "$BASE" ]] && exit 0;
           if [[ "$BRANCH" == "alpha" ]]; then
             BASE="beta"
           fi
