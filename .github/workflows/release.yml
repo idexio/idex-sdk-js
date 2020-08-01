@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Check For PR
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           REF: ${{ env.GITHUB_BASE_REF }}
           BASE: main
         run: |
@@ -20,7 +20,7 @@ jobs:
           echo "Check If PR exists for $BRANCH --> $BASE"
           if [[ "$(gh pr list -R "$GITHUB_REPOSITORY" --base "$BASE" --state open --label "Release $BRANCH")" == "" ]]; then
             echo "Creating PR $BRANCH --> $BASE"
-            RESULT=$(gh api repos/"${GITHUB_REPOSITORY}"/pulls -F head="$BRANCH" -F base="$BASE" -F title="Release $BRANCH")
+            RESULT=$(gh api repos/"${GITHUB_REPOSITORY}"/pulls -F head="$BRANCH" -F base="$BASE" -F title="Release $BRANCH" -F body="This PR was automatically created.  Merging it will release the $BRANCH contents into $BASE")
             PR_NUM=$(echo $RESULT | jq -r '.number')
             printf '{"labels": ["Release %s"]}' $BRANCH | gh api repos/"${GITHUB_REPOSITORY}"/issues/"${PR_NUM}"/labels --input -
           fi
