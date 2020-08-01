@@ -26,3 +26,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
+  pr:
+    name: Create Release PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check For PR
+        run: |
+          echo "Check If PR exists for $GITHUB_BASE_REF"
+          gh pr list --base "$GITHUB_BASE_REF" --state open --label "Release $GITHUB_BASE_REF"
+          if [[ "$(gh pr list --base "$GITHUB_BASE_REF" --state open --label "Release $GITHUB_BASE_REF")" == "" ]]; then
+            echo "Creating PR"
+            gh pr create --base beta --label "Release GITHUB_BASE_REF" --title "Release $GITHUB_BASE_REF"
+          fi
