@@ -1,5 +1,8 @@
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
+import http from 'http';
+import https from 'https';
 
+import { isNode } from '../utils';
 import { request, response } from '../types';
 
 /**
@@ -35,11 +38,16 @@ export default class PublicClient {
   public constructor(baseURL: string, apiKey?: string) {
     this.baseURL = baseURL;
 
-    this.axios = apiKey
-      ? (this.axios = Axios.create({
-          headers: { Authorization: `Bearer ${apiKey}` },
-        }))
-      : Axios.create({});
+    const headers = apiKey ? { Authorization: `Bearer ${apiKey}` } : null;
+    this.axios = isNode
+      ? Axios.create({
+          headers,
+          httpAgent: new http.Agent({ keepAlive: true }),
+          httpsAgent: new https.Agent({ keepAlive: true }),
+        })
+      : Axios.create({
+          headers,
+        });
   }
 
   /**
