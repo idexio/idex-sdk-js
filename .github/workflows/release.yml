@@ -6,6 +6,12 @@ on:
       - beta
       - alpha
 jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: bradennapier@transition-pr
+        with:
+          title: Release 
   pr:
     name: Create Release PR
     runs-on: ubuntu-latest
@@ -17,6 +23,10 @@ jobs:
           BASE: main
         run: |
           BRANCH=${GITHUB_REF##*/}
+          [[ "$BRANCH" == "main" ]] && exit 0;
+          if [[ "$BRANCH" == "alpha" ]]; then
+            BASE="beta"
+          fi
           echo "Check If PR exists for $BRANCH --> $BASE"
           if [[ "$(gh pr list -R "$GITHUB_REPOSITORY" --base "$BASE" --state open --label "Release $BRANCH")" == "" ]]; then
             echo "Creating PR $BRANCH --> $BASE"
