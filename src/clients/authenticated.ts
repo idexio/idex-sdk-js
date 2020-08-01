@@ -97,7 +97,7 @@ export default class AuthenticatedClient {
     nonce: string,
     wallet: string,
     asset?: string,
-  ): Promise<response.Balance | response.Balance[]> {
+  ): Promise<response.Balance[]> {
     return (await this.get('/balances', { nonce, wallet, asset })).data;
   }
 
