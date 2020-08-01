@@ -6,6 +6,28 @@ on:
       - beta
       - alpha
 jobs:
+  pr:
+    name: Create Release PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check For PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          REF: ${{ env.GITHUB_BASE_REF }}
+          BASE: main
+        run: |
+          BRANCH=${GITHUB_REF##*/}
+          [[ "$BRANCH" == "$BASE" ]] && exit 0;
+          if [[ "$BRANCH" == "alpha" ]]; then
+            BASE="beta"
+          fi
+          echo "Check If PR exists for $BRANCH --> $BASE"
+          if [[ "$(gh pr list -R "$GITHUB_REPOSITORY" --base "$BASE" --state open --label "Release $BRANCH")" == "" ]]; then
+            echo "Creating PR $BRANCH --> $BASE"
+            RESULT=$(gh api repos/"${GITHUB_REPOSITORY}"/pulls -F head="$BRANCH" -F base="$BASE" -F title="Release $BRANCH" -F body="This PR was automatically created.  Merging it will release the $BRANCH contents into $BASE")
+            PR_NUM=$(echo $RESULT | jq -r '.number')
+            printf '{"labels": ["Release %s"]}' $BRANCH | gh api repos/"${GITHUB_REPOSITORY}"/issues/"${PR_NUM}"/labels --input -
+          fi
   release:
     name: Release
     runs-on: ubuntu-latest
