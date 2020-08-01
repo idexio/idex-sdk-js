@@ -44,3 +44,4 @@ data/*
 !.eslintrc.js
 !.env-cmdrc.js
 !.prettierrc.js
+!release.config.js
