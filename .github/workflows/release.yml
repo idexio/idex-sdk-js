@@ -24,12 +24,12 @@ jobs:
           echo "Check If PR exists for $BRANCH --> $BASE"
           if [[ "$(gh pr list -R "$GITHUB_REPOSITORY" --base "$BASE" --state open --label "Release $BRANCH")" == "" ]]; then
             echo "Creating PR $BRANCH --> $BASE"
-            RESULT=$(gh api repos/"${GITHUB_REPOSITORY}"/pulls -F head="$BRANCH" -F base="$BASE" -F title="Release $BRANCH" -F body="This PR was automatically created.  Merging it will release the $BRANCH contents into $BASE")
+            RESULT=$(gh api repos/"${GITHUB_REPOSITORY}"/pulls -F head="$BRANCH" -F base="$BASE" -F title="Release $BRANCH" -F body="This PR was generated automatically.  Merging it will transition $BRANCH into ${BASE}.")
             PR_NUM=$(echo $RESULT | jq -r '.number')
             printf '{"labels": ["Release %s"]}' $BRANCH | gh api repos/"${GITHUB_REPOSITORY}"/issues/"${PR_NUM}"/labels --input -
           fi
   release:
-    name: Release
+    name: Release 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -43,7 +43,7 @@ jobs:
         run: yarn
       - name: Build Library
         run: yarn build
-      - name: Release
+      - name: Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
