@@ -92,7 +92,7 @@ export default class AuthenticatedClient {
   // Orders & Trade Endpoints
 
   /**
-   * Place a new order
+   * Create and submit an order to the matching engine.
    *
    * @example
    * const order = await authenticatedClient.createOrder(
@@ -126,7 +126,7 @@ export default class AuthenticatedClient {
   }
 
   /**
-   * Test new order creation, validation, and trading engine acceptance, but no order is placed or executed
+   * Tests order creation and validation without submitting an order to the matching engine
    *
    * @example
    * const order = await authenticatedClient.createTestOrder(
@@ -203,7 +203,7 @@ export default class AuthenticatedClient {
    * Cancel multiple orders
    *
    * @example
-   * const allOrders = users.trader1().client.cancelOrders(
+   * const allOrders = authenticatedClient.cancelOrders(
    *   {
    *     nonce: uuidv1(),
    *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
@@ -211,7 +211,7 @@ export default class AuthenticatedClient {
    *   idex.signatures.privateKeySigner(config.walletPrivateKey),
    * );
    *
-   * const ordersfForMarket = users.trader1().client.cancelOrders(
+   * const ordersForMarket = authenticatedClient.cancelOrders(
    *   {
    *     nonce: uuidv1(),
    *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
@@ -334,7 +334,7 @@ export default class AuthenticatedClient {
    *
    * @example
    *
-   * const withdrawal = await trader1.client.withdraw(
+   * const withdrawal = await authenticatedClient.withdraw(
    *   {
    *     nonce: uuidv1(),
    *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',

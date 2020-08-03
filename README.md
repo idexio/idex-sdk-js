@@ -439,7 +439,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 -   **See: <https://docs.idex.io/#create-order>
     **
 
-Place a new order
+Create and submit an order to the matching engine.
 
 ##### Parameters
 
@@ -470,7 +470,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 -   **See: <https://docs.idex.io/#test-create-order>
     **
 
-Test new order creation, validation, and trading engine acceptance, but no order is placed or executed
+Tests order creation and validation without submitting an order to the matching engine
 
 ##### Parameters
 
@@ -549,7 +549,7 @@ Cancel multiple orders
 ##### Examples
 
 ```javascript
-const allOrders = users.trader1().client.cancelOrders(
+const allOrders = authenticatedClient.cancelOrders(
   {
     nonce: uuidv1(),
     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
@@ -557,7 +557,7 @@ const allOrders = users.trader1().client.cancelOrders(
   idex.signatures.privateKeySigner(config.walletPrivateKey),
 );
 
-const ordersfForMarket = users.trader1().client.cancelOrders(
+const ordersForMarket = authenticatedClient.cancelOrders(
   {
     nonce: uuidv1(),
     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
@@ -677,7 +677,7 @@ Create a new withdrawal
 ##### Examples
 
 ```javascript
-const withdrawal = await trader1.client.withdraw(
+const withdrawal = await authenticatedClient.withdraw(
   {
     nonce: uuidv1(),
     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
