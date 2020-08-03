@@ -5,6 +5,8 @@ on:
       - main
       - beta
       - alpha
+env:
+  GITHUB_TOKEN: ${{ secrets.BOT_GIT_TOKEN }}
 jobs:
   pr:
     name: Create Release PR
@@ -12,7 +14,6 @@ jobs:
     steps:
       - name: Check For PR
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           REF: ${{ env.GITHUB_BASE_REF }}
           BASE: main
         run: |
@@ -45,6 +46,5 @@ jobs:
         run: yarn build
       - name: Semantic Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release

@@ -45,7 +45,7 @@ const transformCandlesMessage = (
   low: candle.l,
   close: candle.c,
   volume: candle.v,
-  numberOfFills: candle.n,
+  numTrades: candle.n,
   sequence: candle.u,
 });
 
