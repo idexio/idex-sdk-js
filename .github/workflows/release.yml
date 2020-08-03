@@ -15,7 +15,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           REF: ${{ env.GITHUB_BASE_REF }}
           BASE: main
+          GIT_AUTHOR_NAME: idex-bot
+          GIT_AUTHOR_EMAIL: support@idex.io
         run: |
+          git config user.name "idex-bot"
           BRANCH=${GITHUB_REF##*/}
           [[ "$BRANCH" == "$BASE" ]] && exit 0;
           if [[ "$BRANCH" == "alpha" ]]; then
@@ -47,4 +50,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GIT_AUTHOR_NAME: idex-bot
+          GIT_AUTHOR_EMAIL: support@idex.io
         run: npx semantic-release
