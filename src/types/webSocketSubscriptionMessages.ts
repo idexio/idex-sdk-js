@@ -53,7 +53,7 @@ export interface CandleLong extends response.Candle {
   time: number; // t
   interval: keyof typeof enums.CandleInterval; // i
   end: number; // e
-  numberOfFills: number; // n
+  numTrades: number; // n
 }
 
 export interface L1OrderBookShort {
