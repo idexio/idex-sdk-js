@@ -54,7 +54,7 @@ export interface CandleLong extends restResponse.Candle {
   time: number; // t
   interval: keyof typeof enums.CandleInterval; // i
   end: number; // e
-  numberOfFills: number; // n
+  numTrades: number; // n
 }
 
 export interface L1OrderBookShort {
@@ -81,16 +81,16 @@ export interface L2OrderBookShort {
   m: string;
   t: number;
   u: number;
-  b?: L2OrderBookChange[];
-  a?: L2OrderBookChange[];
+  b: L2OrderBookChange[];
+  a: L2OrderBookChange[];
 }
 
 export interface L2OrderBookLong {
   market: string; // m
   time: number; // t
   sequence: number; // u
-  bids?: L2OrderBookChange[]; // b
-  asks?: L2OrderBookChange[]; // a
+  bids: L2OrderBookChange[]; // b
+  asks: L2OrderBookChange[]; // a
 }
 
 export interface BalanceShort {
