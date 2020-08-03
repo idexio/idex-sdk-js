@@ -162,6 +162,26 @@ export default class AuthenticatedClient {
   /**
    * Cancel a single order
    *
+   * @example
+   * const responseByOrderId = await authenticatedClient.cancelOrder(
+   *   {
+   *     nonce: uuidv1(),
+   *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+   *     orderId: 'f077a010-ce18-11ea-9557-a9d3f954788d',
+   *   },
+   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   * );
+   *
+   * const clientOrderId = '0001_23234_18863_IDEX_ETH';
+   * const responseByClientId = await authenticatedClient.cancelOrder(
+   *   {
+   *     nonce: uuidv1(),
+   *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+   *     orderId: `client:${clientOrderId}`,
+   *   },
+   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   * );
+   *
    * @see https://docs.idex.io/#cancel-order
    *
    * @param {string} cancelOrder
@@ -181,6 +201,24 @@ export default class AuthenticatedClient {
 
   /**
    * Cancel multiple orders
+   *
+   * @example
+   * const allOrders = users.trader1().client.cancelOrders(
+   *   {
+   *     nonce: uuidv1(),
+   *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+   *   },
+   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   * );
+   *
+   * const ordersfForMarket = users.trader1().client.cancelOrders(
+   *   {
+   *     nonce: uuidv1(),
+   *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+   *     market: 'IDEX-ETH'
+   *   },
+   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   * );
    *
    * @see https://docs.idex.io/#cancel-order
    *
@@ -296,7 +334,7 @@ export default class AuthenticatedClient {
    *
    * @example
    *
-   * const response = await trader1.client.withdraw(
+   * const withdrawal = await trader1.client.withdraw(
    *   {
    *     nonce: uuidv1(),
    *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',

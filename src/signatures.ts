@@ -4,6 +4,11 @@ import * as types from './types';
 
 const orderSignatureHashVersion = 1;
 
+/**
+ * A function that accepts a string and returns a Promise resolving on its ECDSA signature
+ *
+ * @typedef {Function} signatures.MessageSigner
+ */
 export type MessageSigner = (message: string) => Promise<string>;
 
 export const privateKeySigner = function getPrivateKeyMessageSigner(
