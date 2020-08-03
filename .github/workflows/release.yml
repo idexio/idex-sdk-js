@@ -6,6 +6,7 @@ on:
       - beta
       - alpha
 env:
+  GITHUB_USER: idex-bot
   GIT_AUTHOR_NAME: idex-bot
   GIT_AUTHOR_EMAIL: support@idex.io
   GIT_COMMITTER_NAME: idex-bot
@@ -20,6 +21,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           REF: ${{ env.GITHUB_BASE_REF }}
           BASE: main
+          GITHUB_USER: idex-bot
+          GIT_AUTHOR_NAME: idex-bot
+          GIT_AUTHOR_EMAIL: support@idex.io
+          GIT_COMMITTER_NAME: idex-bot
+          GIT_COMMITTER_EMAIL: support@idex.io
         run: |
           BRANCH=${GITHUB_REF##*/}
           [[ "$BRANCH" == "$BASE" ]] && exit 0;
