@@ -1,9 +1,10 @@
-import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 import http from 'http';
 import https from 'https';
+import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 
-import { isNode } from '../utils';
-import { request, response } from '../types';
+import * as request from '../../types/rest/request';
+import * as response from '../../types/rest/response';
+import { isNode } from '../../utils';
 
 /**
  * Public API client

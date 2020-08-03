@@ -1,6 +1,5 @@
-import * as enums from './enums';
-
-import { XOR } from './utils';
+import * as enums from '../enums';
+import { XOR } from '../utils';
 
 interface CancelOrdersBase {
   nonce: string;

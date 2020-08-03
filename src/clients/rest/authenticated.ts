@@ -1,12 +1,13 @@
 import crypto from 'crypto';
-import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 import http from 'http';
 import https from 'https';
 import queryString from 'query-string';
+import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 
-import * as signatures from '../signatures';
-import { isNode } from '../utils';
-import { request, response } from '../types';
+import * as request from '../../types/rest/request';
+import * as response from '../../types/rest/response';
+import * as signatures from '../../signatures';
+import { isNode } from '../../utils';
 
 /**
  * Authenticated API client
@@ -29,7 +30,6 @@ import { request, response } from '../types';
  *   config.apiSecret,
  * );
  */
-
 export default class AuthenticatedClient {
   public baseURL: string;
 

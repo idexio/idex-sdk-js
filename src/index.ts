@@ -1,23 +1,19 @@
-import * as signatures from './signatures';
-import AuthenticatedClient from './clients/authenticated';
-import PublicClient from './clients/public';
+import AuthenticatedClient from './clients/rest/authenticated';
+import PublicClient from './clients/rest/public';
 import WebSocketClient from './clients/webSocket';
-import {
-  enums,
-  request,
-  response,
-  webSocket,
-  webSocketSubscriptionMessages,
-} from './types';
+import { enums, rest as restTypes, webSocket as webSocketTypes } from './types';
 
-export {
-  AuthenticatedClient,
-  PublicClient,
-  WebSocketClient,
-  enums,
-  signatures,
-  request,
-  response,
-  webSocket,
-  webSocketSubscriptionMessages,
-};
+const rest = Object.freeze({
+  client: {
+    AuthenticatedClient,
+    PublicClient,
+  },
+  types: restTypes,
+} as const);
+
+const webSocket = Object.freeze({
+  Client: WebSocketClient,
+  types: webSocketTypes,
+} as const);
+
+export { enums, rest, webSocket };

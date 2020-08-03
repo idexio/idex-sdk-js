@@ -1,16 +1,21 @@
 import WebSocket from 'isomorphic-ws';
 
-import * as types from '../types';
-import * as utils from '../utils';
-import { isAuthenticatedSubscription } from '../utils/webSocket';
-import WebsocketTokenManager from './webSocketTokenManager';
+import * as request from '../../types/webSocket/request';
+import * as response from '../../types/webSocket/response';
+import WebsocketTokenManager from './tokenManager';
+import { transformMessage } from './transform';
 
 const userAgent = 'idex-sdk-js';
+
+export type ConnectListener = () => unknown;
+export type DisconnectListener = () => unknown;
+export type ErrorListener = (errorEvent: WebSocket.ErrorEvent) => unknown;
+export type ResponseListener = (response: response.Response) => unknown;
 
 /**
  * WebSocket API client
  *
- * ```typescript
+ * @example
  * import * as idex from '@idexio/idex-node';
  *
  * const config = {
@@ -24,14 +29,7 @@ const userAgent = 'idex-sdk-js';
  *   config.shouldReconnectAutomatically,
  * );
  * await webSocketClient.connect();
- * ```
  */
-
-export type ConnectListener = () => unknown;
-export type DisconnectListener = () => unknown;
-export type ErrorListener = (errorEvent: WebSocket.ErrorEvent) => unknown;
-export type ResponseListener = (response: types.webSocket.Response) => unknown;
-
 export default class WebSocketClient {
   private baseURL: string;
 
@@ -145,7 +143,7 @@ export default class WebSocketClient {
   }
 
   public async subscribe(
-    subscriptions: types.webSocket.Subscription[],
+    subscriptions: request.Subscription[],
     cid?: string,
   ): Promise<void> {
     // TODO: Do these need to be any?
@@ -224,7 +222,7 @@ export default class WebSocketClient {
    * See {@link https://docs.idex.io/#get-authentication-token|API specification}
    */
   public subscribeAuthenticated(
-    subscriptions: types.webSocket.AuthenticatedSubscription[],
+    subscriptions: request.AuthenticatedSubscription[],
   ): void {
     this.subscribe(subscriptions);
   }
@@ -233,14 +231,12 @@ export default class WebSocketClient {
    * Subscribe which only can be used on non-authenticated subscriptions
    */
   public subscribeUnauthenticated(
-    subscriptions: types.webSocket.UnauthenticatedSubscription[],
+    subscriptions: request.UnauthenticatedSubscription[],
   ): void {
     this.subscribe(subscriptions);
   }
 
-  public unsubscribe(
-    subscriptions: types.webSocket.UnsubscribeSubscription[],
-  ): void {
+  public unsubscribe(subscriptions: request.UnsubscribeSubscription[]): void {
     this.sendMessage({
       method: 'unsubscribe',
       subscriptions,
@@ -283,7 +279,7 @@ export default class WebSocketClient {
     if (typeof event.data !== 'string') {
       throw new Error('Malformed response data'); // Shouldn't happen
     }
-    const message = utils.webSocket.transformMessage(JSON.parse(event.data));
+    const message = transformMessage(JSON.parse(event.data));
     this.responseListeners.forEach((listener) => listener(message));
   }
 
@@ -299,7 +295,7 @@ export default class WebSocketClient {
     this.reconnectAttempt = 0;
   }
 
-  private sendMessage(payload: types.webSocket.Request): void {
+  private sendMessage(payload: request.Request): void {
     this.throwIfDisconnected();
 
     this.webSocket.send(JSON.stringify(payload));
@@ -312,4 +308,12 @@ export default class WebSocketClient {
       );
     }
   }
+}
+
+function isAuthenticatedSubscription(
+  subscription: request.Subscription,
+): boolean {
+  return Object.keys(request.AuthenticatedSubscriptionName).includes(
+    subscription.name,
+  );
 }
