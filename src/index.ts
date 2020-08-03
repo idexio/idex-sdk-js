@@ -1,4 +1,4 @@
-import * as eth from './eth';
+import * as signatures from './signatures';
 import AuthenticatedClient from './clients/authenticated';
 import PublicClient from './clients/public';
 import WebSocketClient from './clients/webSocket';
@@ -15,7 +15,7 @@ export {
   PublicClient,
   WebSocketClient,
   enums,
-  eth,
+  signatures,
   request,
   response,
   webSocket,

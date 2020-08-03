@@ -43,7 +43,7 @@
     "commitizen": "^4.1.2",
     "conventional-changelog-conventionalcommits": "^4.3.0",
     "cz-conventional-changelog": "^3.2.0",
-    "documentation": "^12.1.4",
+    "documentation": "13.0.2",
     "eslint": "^7.5.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-config-prettier": "^6.11.0",

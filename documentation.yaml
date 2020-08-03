@@ -20,6 +20,7 @@ toc:
   - name: Requests
     children:
       - request.CancelOrders
+      - request.FindBalances
       - request.FindCandles
       - request.FindDeposit
       - request.FindDeposits
