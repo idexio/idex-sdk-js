@@ -197,13 +197,13 @@
 -   [signatures.MessageSigner](#signaturesmessagesigner)
 -   [WebsocketTokenManager](#websockettokenmanager)
     -   [Parameters](#parameters-25)
--   [ConnectListener](#connectlistener)
--   [constructor](#constructor)
+-   [WebSocketClient](#websocketclient)
     -   [Parameters](#parameters-26)
--   [subscribeAuthenticated](#subscribeauthenticated)
-    -   [Parameters](#parameters-27)
--   [subscribeUnauthenticated](#subscribeunauthenticated)
-    -   [Parameters](#parameters-28)
+    -   [Examples](#examples-7)
+    -   [subscribeAuthenticated](#subscribeauthenticated)
+        -   [Parameters](#parameters-27)
+    -   [subscribeUnauthenticated](#subscribeunauthenticated)
+        -   [Parameters](#parameters-28)
 -   [request.FindMarkets](#requestfindmarkets)
     -   [Properties](#properties-33)
 -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
@@ -1547,11 +1547,23 @@ Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Sta
 
 -   `websocketAuthTokenFetch` **WebsocketTokenFetch** 
 
-## ConnectListener
+## WebSocketClient
 
 WebSocket API client
 
-```typescript
+### Parameters
+
+-   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
+-   `websocketAuthTokenFetch` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Authenticated Rest API client fetch token call (`/wsToken`)
+     SDK Websocket client will then automatically handle Websocket token generation and refresh.
+     You can omit this when using only public websocket subscription.
+     Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
+     See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
+-   `shouldReconnectAutomatically`   (optional, default `false`)
+
+### Examples
+
+```javascript
 import * as idex from '@idexio/idex-node';
 
 const config = {
@@ -1567,23 +1579,7 @@ const webSocketClient = new idex.WebSocketClient(
 await webSocketClient.connect();
 ```
 
-Type: function (): any
-
-## constructor
-
-Create a WebSocket client
-
-### Parameters
-
--   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
--   `websocketAuthTokenFetch` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Authenticated Rest API client fetch token call (`/wsToken`)
-     SDK Websocket client will then automatically handle Websocket token generation and refresh.
-     You can omit this when using only public websocket subscription.
-     Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
-     See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
--   `shouldReconnectAutomatically`   (optional, default `false`)
-
-## subscribeAuthenticated
+### subscribeAuthenticated
 
 Strictly typed subscribe which only can be used on authenticated subscriptions.
 
@@ -1592,19 +1588,19 @@ Library will automatically refresh user's wallet auth tokens for you.
 
 See [API specification](https://docs.idex.io/#get-authentication-token)
 
-### Parameters
+#### Parameters
 
--   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.webSocket.AuthenticatedSubscription>** 
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;request.AuthenticatedSubscription>** 
 
 Returns **void** 
 
-## subscribeUnauthenticated
+### subscribeUnauthenticated
 
 Subscribe which only can be used on non-authenticated subscriptions
 
-### Parameters
+#### Parameters
 
--   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.webSocket.UnauthenticatedSubscription>** 
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;request.UnauthenticatedSubscription>** 
 
 Returns **void** 
 
@@ -1634,7 +1630,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 Response message without transformation to human readable form
 
-Type: webSocketSubscriptionMessages.SubscriptionMessageShort
+Type: SubscriptionMessageShort
 
 ## OrderBookPrice
 
