@@ -4,14 +4,20 @@ import * as types from './types';
 
 const orderSignatureHashVersion = 1;
 
-export const getPrivateKeySigner = (walletPrivateKey: string) => (
-  hashToSign: string,
-): Promise<string> =>
-  new ethers.Wallet(walletPrivateKey).signMessage(
-    ethers.utils.arrayify(hashToSign),
-  );
+export type MessageSigner = (message: string) => Promise<string>;
 
-export const getOrderHash = (order: types.request.Order): string => {
+export const privateKeySigner = function getPrivateKeyMessageSigner(
+  walletPrivateKey: string,
+): MessageSigner {
+  return (message: string) =>
+    new ethers.Wallet(walletPrivateKey).signMessage(
+      ethers.utils.arrayify(message),
+    );
+};
+
+export const orderHash = function getPlaceOrderWalletHash(
+  order: types.request.Order,
+): string {
   return solidityHashOfParams([
     ['uint8', orderSignatureHashVersion],
     ['uint128', uuidToUint8Array(order.nonce)],
@@ -36,12 +42,13 @@ export const getOrderHash = (order: types.request.Order): string => {
   ]);
 };
 
-export const getCancelOrderHash = (
+export const cancelOrderHash = function getCancelOrderWalletHash(
   parameters: types.utils.XOR<
     types.request.CancelOrder,
     types.request.CancelOrders
   >,
-): string => {
+): string {
+  // Validate either single order or multiple orders
   if (
     [
       parameters.orderId,
@@ -52,6 +59,7 @@ export const getCancelOrderHash = (
       'Cancel orders may specify at most one of orderId or market',
     );
   }
+
   return solidityHashOfParams([
     ['uint128', uuidToUint8Array(parameters.nonce)],
     ['address', parameters.wallet],
@@ -60,9 +68,9 @@ export const getCancelOrderHash = (
   ]);
 };
 
-export const getWithdrawalHash = (
+export const withdrawalHash = function getWithdrawalWalletHash(
   withdrawal: types.request.Withdrawal,
-): string => {
+): string {
   if (
     (withdrawal.asset && withdrawal.assetContractAddress) ||
     (!withdrawal.asset && !withdrawal.assetContractAddress)
@@ -89,12 +97,13 @@ type TypeValuePair =
   | ['uint8' | 'uint64', number]
   | ['bool', boolean];
 
-const solidityHashOfParams = (params: TypeValuePair[]): string => {
+function solidityHashOfParams(params: TypeValuePair[]): string {
   const fields = params.map((param) => param[0]);
   const values = params.map((param) => param[1]);
-  // TODO: we might let lib users to pick their solidityKeccak256 library, eg. web3.soliditySha3()
-  return ethers.utils.solidityKeccak256(fields, values);
-};
 
-const uuidToUint8Array = (uuid: string): Uint8Array =>
-  ethers.utils.arrayify(`0x${uuid.replace(/-/g, '')}`);
+  return ethers.utils.solidityKeccak256(fields, values);
+}
+
+function uuidToUint8Array(uuid: string): Uint8Array {
+  return ethers.utils.arrayify(`0x${uuid.replace(/-/g, '')}`);
+}

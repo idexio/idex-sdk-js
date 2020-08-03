@@ -8,14 +8,15 @@ import { request, response } from '../types';
 /**
  * Public API client
  *
+ * @example
  * ```typescript
- * import * as idex from '@idexio/idex-node';
+ * import * as idex from '@idexio/idex-sdk-js';
  *
  * // Edit the values below for your environment
  * const config = {
  *   baseURL: 'https://api-sandbox.idex.io/v1',
  *   apiKey:
- *     'MTQxMA==.MQ==.TlRnM01qSmtPVEF0TmpJNFpDMHhNV1ZoTFRrMU5HVXROMlJrTWpRMVpEUmlNRFU0',
+ *     '1f7c4f52-4af7-4e1b-aa94-94fac8d931aa',
  * };
  *
  * const publicClient = new idex.PublicClient(config.baseURL);

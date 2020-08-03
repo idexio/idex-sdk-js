@@ -4,21 +4,21 @@ import http from 'http';
 import https from 'https';
 import queryString from 'query-string';
 
-import * as eth from '../eth';
+import * as signatures from '../signatures';
 import { isNode } from '../utils';
 import { request, response } from '../types';
 
 /**
  * Authenticated API client
  *
- * ```typescript
- * import * as idex from '@idexio/idex-node';
+ * @example
+ * import { v1 as uuidv1 } from 'uuid';
+ * import * as idex from '@idexio/idex-sdk-js';
  *
  * // Edit the values below for your environment
  * const config = {
  *   baseURL: 'https://api-sandbox.idex.io/v1',
- *   apiKey:
- *     'MTQxMA==.MQ==.TlRnM01qSmtPVEF0TmpJNFpDMHhNV1ZoTFRrMU5HVXROMlJrTWpRMVpEUmlNRFU0',
+ *   apiKey: '1f7c4f52-4af7-4e1b-aa94-94fac8d931aa',
  *   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
  *   walletPrivateKey: '0x3141592653589793238462643383279502884197169399375105820974944592'
  * };
@@ -28,7 +28,6 @@ import { request, response } from '../types';
  *   config.apiKey,
  *   config.apiSecret,
  * );
- * ```
  */
 
 export default class AuthenticatedClient {
@@ -53,19 +52,129 @@ export default class AuthenticatedClient {
         });
   }
 
+  // User Data Endpoints
+
+  /**
+   * Get account details for the API key’s user
+   *
+   * @see https://docs.idex.io/#get-user-account
+   *
+   * @param {string} nonce - UUIDv1
+   */
+  public async getUser(nonce: string): Promise<response.User> {
+    return (await this.get('/user', { nonce })).data;
+  }
+
+  /**
+   * Get account details for the API key’s user
+   *
+   * @see https://docs.idex.io/#get-wallets
+   *
+   * @param {string} nonce - UUIDv1
+   */
+  public async getWallets(nonce: string): Promise<response.Wallet[]> {
+    return (await this.get('/wallets', { nonce })).data;
+  }
+
+  /**
+   * Get asset quantity data (positions) held by a wallet on the exchange
+   *
+   * @see https://docs.idex.io/#get-balances
+   *
+   * @param {request.FindBalances} findBalances
+   */
+  public async getBalances(
+    findBalances: request.FindBalances,
+  ): Promise<response.Balance[]> {
+    return (await this.get('/balances', findBalances)).data;
+  }
+
+  // Orders & Trade Endpoints
+
+  /**
+   * Place a new order
+   *
+   * @example
+   * const order = await authenticatedClient.createOrder(
+   *   {
+   *     nonce: uuidv1(),
+   *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+   *     market: 'IDEX-ETH',
+   *     type: 'limit',
+   *     side: 'sell',
+   *     price: '0.10000000',
+   *     quantity: '1.50000000",
+   *   },
+   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   * );
+   *
+   * @see https://docs.idex.io/#create-order
+   *
+   * @param {request.Order} order
+   * @param {signatures.MessageSigner} signer
+   */
+  public async createOrder(
+    order: request.Order,
+    signer: signatures.MessageSigner,
+  ): Promise<response.Order> {
+    return (
+      await this.post('/orders', {
+        parameters: order,
+        signature: await signer(signatures.orderHash(order)),
+      })
+    ).data;
+  }
+
+  /**
+   * Test new order creation, validation, and trading engine acceptance, but no order is placed or executed
+   *
+   * @example
+   * const order = await authenticatedClient.createTestOrder(
+   *   {
+   *     nonce: uuidv1(),
+   *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+   *     market: 'IDEX-ETH',
+   *     type: 'limit',
+   *     side: 'sell',
+   *     price: '0.10000000',
+   *     quantity: '1.50000000",
+   *   },
+   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   * );
+   *
+   * @see https://docs.idex.io/#test-create-order
+   *
+   * @param {request.Order} order
+   * @param {signatures.MessageSigner} signer
+   */
+  public async createTestOrder(
+    order: request.Order,
+    signer: signatures.MessageSigner,
+  ): Promise<response.Order> {
+    return (
+      await this.post('/orders/test', {
+        parameters: order,
+        signature: await signer(signatures.orderHash(order)),
+      })
+    ).data;
+  }
+
   /**
    * Cancel a single order
    *
-   * @param {string} order
+   * @see https://docs.idex.io/#cancel-order
+   *
+   * @param {string} cancelOrder
+   * @param {signatures.MessageSigner} signer
    */
   public async cancelOrder(
     cancelOrder: request.CancelOrder,
-    sign: (hash: string) => Promise<string>,
+    signer: signatures.MessageSigner,
   ): Promise<response.Order> {
     return (
       await this.delete('/orders', {
         parameters: cancelOrder,
-        signature: await sign(eth.getCancelOrderHash(cancelOrder)),
+        signature: await signer(signatures.cancelOrderHash(cancelOrder)),
       })
     ).data;
   }
@@ -73,36 +182,81 @@ export default class AuthenticatedClient {
   /**
    * Cancel multiple orders
    *
+   * @see https://docs.idex.io/#cancel-order
+   *
    * @param {string} order
+   * @param {signatures.MessageSigner} signer
    */
   public async cancelOrders(
     cancelOrders: request.CancelOrders,
-    sign: (hash: string) => Promise<string>,
+    signer: signatures.MessageSigner,
   ): Promise<response.Order[]> {
     return (
       await this.delete('/orders', {
         parameters: cancelOrders,
-        signature: await sign(eth.getCancelOrderHash(cancelOrders)),
+        signature: await signer(signatures.cancelOrderHash(cancelOrders)),
       })
     ).data;
   }
 
   /**
-   * Get asset quantity data (positions) held by a wallet on the exchange
+   * Get an order
    *
-   * @param {string} nonce - UUIDv1
-   * @param {string} wallet - Ethereum wallet address
+   * @see https://docs.idex.io/#get-orders
+   *
+   * @param {request.FindOrder} findOrder
+   * @return {Promise<response.Order>}
    */
-  public async getBalances(
-    nonce: string,
-    wallet: string,
-    asset?: string,
-  ): Promise<response.Balance[]> {
-    return (await this.get('/balances', { nonce, wallet, asset })).data;
+  public async getOrder(findOrder: request.FindOrder): Promise<response.Order> {
+    return (await this.get('/orders', findOrder)).data;
   }
 
   /**
+   * Get multiple orders
+   *
+   * @see https://docs.idex.io/#cancel-order
+   *
+   * @param {request.FindOrders} findOrders
+   * @return {Promise<response.Order[]>}
+   */
+  public async getOrders(
+    findOrders: request.FindOrders,
+  ): Promise<response.Order[]> {
+    return (await this.get('/orders', findOrders)).data;
+  }
+
+  /**
+   * Get a fill
+   *
+   * @see https://docs.idex.io/#get-fills
+   *
+   * @param {request.FindFill} findFill
+   * @return {Promise<response.Fill>}
+   */
+  public async getFill(findFill: request.FindFill): Promise<response.Fill> {
+    return (await this.get('/fills', findFill)).data;
+  }
+
+  /**
+   * Get multiple fills
+   *
+   * @see https://docs.idex.io/#get-fills
+   *
+   * @param {request.FindFills} findFills
+   * @return {Promise<response.Fill[]>}
+   */
+  public async getFills(
+    findFills: request.FindFills,
+  ): Promise<response.Fill[]> {
+    return (await this.get('/fills', findFills)).data;
+  }
+
+  // Deposit Endpoints
+
+  /**
    * Get a deposit
+   *
+   * @see https://docs.idex.io/#get-deposits
    *
    * @param {request.FindDeposit} findDeposit
    * @return {Promise<response.Deposit>}
@@ -116,6 +270,8 @@ export default class AuthenticatedClient {
   /**
    * Get multiple deposits
    *
+   * @see https://docs.idex.io/#get-deposits
+   *
    * @param {request.FindDeposits} findDeposits
    * @return {Promise<response.Deposit[]>}
    */
@@ -125,74 +281,48 @@ export default class AuthenticatedClient {
     return (await this.get('/deposits', findDeposits)).data;
   }
 
-  /**
-   * Get a fill
-   *
-   * @param {request.FindFill} findFill
-   * @return {Promise<response.Fill>}
-   */
-  public async getFill(findFill: request.FindFill): Promise<response.Fill> {
-    return (await this.get('/fills', findFill)).data;
-  }
-
-  /**
-   * Get multiple fills
-   *
-   * @param {request.FindFills} findFills
-   * @return {Promise<response.Fill[]>}
-   */
-  public async getFills(
-    findFills: request.FindFills,
-  ): Promise<response.Fill[]> {
-    return (await this.get('/fills', findFills)).data;
-  }
-
-  /**
-   * Get an order
-   *
-   * @param {request.FindOrder} findOrder
-   * @return {Promise<response.Order>}
-   */
-  public async getOrder(findOrder: request.FindOrder): Promise<response.Order> {
-    return (await this.get('/orders', findOrder)).data;
-  }
-
-  /**
-   * Get multiple orders
-   *
-   * @param {request.FindOrders} findOrders
-   * @return {Promise<response.Order[]>}
-   */
-  public async getOrders(
-    findOrders: request.FindOrders,
-  ): Promise<response.Order[]> {
-    return (await this.get('/orders', findOrders)).data;
-  }
-
-  /**
-   * Get account details for the API key’s user
-   *
-   * @param {string} nonce - UUIDv1
-   */
-  public async getUser(nonce: string): Promise<response.User> {
-    return (await this.get('/user', { nonce })).data;
-  }
-
-  /**
-   * Get account details for the API key’s user
-   *
-   * @param {string} nonce - UUIDv1
-   */
-  public async getWallets(nonce: string): Promise<response.Wallet[]> {
-    return (await this.get('/wallets', { nonce })).data;
-  }
-
+  // Withdrawal Endpoints
   /**
    * Get a withdrawal
+   *
+   * @see https://docs.idex.io/#get-withdrawals
    *
    * @param {request.FindWithdrawal} findWithdrawal
    * @return {Promise<response.Withdrawal>}
    */
+
+  /**
+   * Create a new withdrawal
+   *
+   * @example
+   *
+   * const response = await trader1.client.withdraw(
+   *   {
+   *     nonce: uuidv1(),
+   *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+   *     asset: 'ETH',
+   *     quantity: '0.04000000',
+   *   },
+   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   * );
+   *
+   * @see https://docs.idex.io/#withdraw-funds
+   *
+   * @param {request.Withdrawal} withdrawal
+   * @param {signatures.MessageSigner} signer
+   */
+  public async withdraw(
+    withdrawal: request.Withdrawal,
+    signer: signatures.MessageSigner,
+  ): Promise<response.Withdrawal> {
+    return (
+      await this.post('/withdrawals', {
+        parameters: withdrawal,
+        signature: await signer(signatures.withdrawalHash(withdrawal)),
+      })
+    ).data;
+  }
+
   public async getWithdrawal(
     findWithdrawal: request.FindWithdrawal,
   ): Promise<response.Withdrawal> {
@@ -201,6 +331,8 @@ export default class AuthenticatedClient {
 
   /**
    * Get multiple withdrawals
+   *
+   * @see https://docs.idex.io/#get-withdrawals
    *
    * @param {request.FindWithdrawals} findWithdrawals
    * @return {Promise<response.Withdrawal[]>}
@@ -211,88 +343,12 @@ export default class AuthenticatedClient {
     return (await this.get('/withdrawals', findWithdrawals)).data;
   }
 
-  /**
-   * Place a new order
-   *
-   * Example:
-   *
-   * ```typescript
-   *  await authenticatedClient.placeOrder(
-   *   orderObject, // See type
-   *   sign: idex.getPrivateKeySigner(config.walletPrivateKey),
-   * );
-   * ```
-   *
-   * @param {request.Order} order
-   * @param {function} sign Sign hash function implementation. Possbile to use built-in `getPrivateKeySigner('YourPrivateKey')`
-   */
-  public async placeOrder(
-    order: request.Order,
-    sign: (hash: string) => Promise<string>,
-  ): Promise<response.Order> {
-    return (
-      await this.post('/orders', {
-        parameters: order,
-        signature: await sign(eth.getOrderHash(order)),
-      })
-    ).data;
-  }
-
-  /**
-   * Test new order creation, validation, and trading engine acceptance, but no order is placed or executed
-   *
-   * Example:
-   *
-   * ```typescript
-   *  await authenticatedClient.placeTestOrder(
-   *   orderObject, // See type
-   *   sign: idex.getPrivateKeySigner(config.walletPrivateKey),
-   * );
-   * ```
-   *
-   * @param {request.Order} order
-   * @param {function} sign Sign hash function implementation. Possbile to use built-in  `getPrivateKeySigner('YourPrivateKey')`
-   */
-  public async placeTestOrder(
-    order: request.Order,
-    sign: (hash: string) => Promise<string>,
-  ): Promise<response.Order> {
-    return (
-      await this.post('/orders/test', {
-        parameters: order,
-        signature: await sign(eth.getOrderHash(order)),
-      })
-    ).data;
-  }
-
-  /**
-   * Create a new withdrawal
-   *
-   * Example:
-   *
-   * ```typescript
-   *  await authenticatedClient.withdraw(
-   *   withdrawalObject, // See type
-   *   sign: idex.getPrivateKeySigner(config.walletPrivateKey),
-   * );
-   *
-   * @param {request.Withdrawal} withdrawal
-   * @param {function} sign Sign hash function implementation. Possbile to use built-in `getPrivateKeySigner('YourPrivateKey')`
-   */
-  public async withdraw(
-    withdrawal: request.Withdrawal,
-    sign: (hash: string) => Promise<string>,
-  ): Promise<response.Withdrawal> {
-    return (
-      await this.post('/withdrawals', {
-        parameters: withdrawal,
-        signature: await sign(eth.getWithdrawalHash(withdrawal)),
-      })
-    ).data;
-  }
+  // WebSocket Authentication Endpoints
 
   /**
    * Obtain a WebSocket API token
+   *
+   * @see https://docs.idex.io/#get-authentication-token
    *
    * @param {string} nonce - UUIDv1
    * @param {string} wallet - Ethereum wallet address
