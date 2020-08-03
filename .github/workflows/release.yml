@@ -6,11 +6,7 @@ on:
       - beta
       - alpha
 env:
-  GITHUB_USER: idex-bot
-  GIT_AUTHOR_NAME: idex-bot
-  GIT_AUTHOR_EMAIL: support@idex.io
-  GIT_COMMITTER_NAME: idex-bot
-  GIT_COMMITTER_EMAIL: support@idex.io
+  GITHUB_TOKEN: ${{ secrets.BOT_GIT_TOKEN }}
 jobs:
   pr:
     name: Create Release PR
@@ -18,14 +14,8 @@ jobs:
     steps:
       - name: Check For PR
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           REF: ${{ env.GITHUB_BASE_REF }}
           BASE: main
-          GITHUB_USER: idex-bot
-          GIT_AUTHOR_NAME: idex-bot
-          GIT_AUTHOR_EMAIL: support@idex.io
-          GIT_COMMITTER_NAME: idex-bot
-          GIT_COMMITTER_EMAIL: support@idex.io
         run: |
           BRANCH=${GITHUB_REF##*/}
           [[ "$BRANCH" == "$BASE" ]] && exit 0;
@@ -56,6 +46,5 @@ jobs:
         run: yarn build
       - name: Semantic Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
