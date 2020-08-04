@@ -1,5 +1,6 @@
 import WebSocket from 'isomorphic-ws';
 
+import * as constants from '../../constants';
 import * as request from '../../types/webSocket/request';
 import * as response from '../../types/webSocket/response';
 import WebsocketTokenManager from './tokenManager';
@@ -11,6 +12,25 @@ export type ConnectListener = () => unknown;
 export type DisconnectListener = () => unknown;
 export type ErrorListener = (errorEvent: WebSocket.ErrorEvent) => unknown;
 export type ResponseListener = (response: response.Response) => unknown;
+
+/**
+ * WebSocket API client options
+ *
+ * @typedef {Object} WebSocketClientOptions
+ * @property {boolean} sandbox - Must be set to true
+ * @property {function} websocketAuthTokenFetch - Authenticated Rest API client fetch token call (`/wsToken`)
+ *  SDK Websocket client will then automatically handle Websocket token generation and refresh.
+ *  You can omit this when using only public websocket subscription.
+ *  Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
+ *  See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
+ * @property {boolean} shouldReconnectAutomatically - If true, automatically reconnects when connection is closed by the server or network errors
+ */
+export interface WebSocketClientOptions {
+  sandbox?: boolean;
+  baseURL?: string;
+  websocketAuthTokenFetch?: (wallet: string) => Promise<string>;
+  shouldReconnectAutomatically?: boolean;
+}
 
 /**
  * WebSocket API client
@@ -30,6 +50,7 @@ export type ResponseListener = (response: response.Response) => unknown;
  * );
  * await webSocketClient.connect();
  *
+ * @param {WebSocketClientOptions} options
  */
 export default class WebSocketClient {
   private baseURL: string;
@@ -50,23 +71,15 @@ export default class WebSocketClient {
 
   private webSocketTokenManager?: WebsocketTokenManager;
 
-  /**
-   * Create a WebSocket client
-   * @param {string} baseURL - Base URL of websocket API
-   * @param {function} websocketAuthTokenFetch - Authenticated Rest API client fetch token call (`/wsToken`)
-   *  SDK Websocket client will then automatically handle Websocket token generation and refresh.
-   *  You can omit this when using only public websocket subscription.
-   *  Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
-   *  See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
-   * @param {boolean=false} shouldReconnectAutomatically - If true, automatically reconnects when connection is closed by the server or network errors  */
-  constructor(
-    baseURL: string,
-    websocketAuthTokenFetch?: (wallet: string) => Promise<string>,
-    shouldReconnectAutomatically = false,
-  ) {
-    this.baseURL = baseURL;
+  constructor(options: WebSocketClientOptions) {
+    this.baseURL = options.sandbox
+      ? constants.SANDBOX_WEBSOCKET_API_BASE_URL
+      : options.baseURL;
+    if (!this.baseURL) {
+      throw new Error('Must set sandbox to true');
+    }
 
-    this.shouldReconnectAutomatically = shouldReconnectAutomatically;
+    this.shouldReconnectAutomatically = options.shouldReconnectAutomatically;
     this.reconnectAttempt = 0;
 
     this.connectListeners = new Set();
@@ -74,9 +87,9 @@ export default class WebSocketClient {
     this.errorListeners = new Set();
     this.responseListeners = new Set();
 
-    if (websocketAuthTokenFetch) {
+    if (options.websocketAuthTokenFetch) {
       this.webSocketTokenManager = new WebsocketTokenManager(
-        websocketAuthTokenFetch,
+        options.websocketAuthTokenFetch,
       );
     }
   }

@@ -44,9 +44,12 @@ export default class PublicRESTClient {
     this.baseURL = options.sandbox
       ? constants.SANDBOX_REST_API_BASE_URL
       : options.baseURL;
+    if (!this.baseURL) {
+      throw new Error('Must set sandbox to true');
+    }
 
     const headers = options.apiKey
-      ? { Authorization: `Bearer ${options.apiKey}` }
+      ? { [constants.REST_API_KEY_HEADER]: options.apiKey }
       : null;
     this.axios = isNode
       ? Axios.create({

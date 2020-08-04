@@ -6,6 +6,7 @@ toc:
       - PublicRESTClient
       - PublicRESTClientOptions
       - WebSocketClient
+      - WebSocketClientOptions
   - name: Enums
     description: |
       Sets of named constants used as field types for several requests and responses

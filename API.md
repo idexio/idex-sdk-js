@@ -77,6 +77,8 @@
             -   [Parameters](#parameters-26)
         -   [subscribeUnauthenticated](#subscribeunauthenticated)
             -   [Parameters](#parameters-27)
+    -   [WebSocketClientOptions](#websocketclientoptions)
+        -   [Properties](#properties-2)
 -   [Enums](#enums)
     -   [CandleInterval](#candleinterval)
         -   [1m](#1m)
@@ -136,79 +138,79 @@
         -   [takeProfitLimit](#takeprofitlimit)
 -   [REST Requests](#rest-requests)
     -   [request.CancelOrders](#requestcancelorders)
-        -   [Properties](#properties-2)
-    -   [request.FindBalances](#requestfindbalances)
         -   [Properties](#properties-3)
-    -   [request.FindCandles](#requestfindcandles)
+    -   [request.FindBalances](#requestfindbalances)
         -   [Properties](#properties-4)
-    -   [request.FindDeposit](#requestfinddeposit)
+    -   [request.FindCandles](#requestfindcandles)
         -   [Properties](#properties-5)
-    -   [request.FindDeposits](#requestfinddeposits)
+    -   [request.FindDeposit](#requestfinddeposit)
         -   [Properties](#properties-6)
-    -   [request.FindFill](#requestfindfill)
+    -   [request.FindDeposits](#requestfinddeposits)
         -   [Properties](#properties-7)
-    -   [request.FindFills](#requestfindfills)
+    -   [request.FindFill](#requestfindfill)
         -   [Properties](#properties-8)
-    -   [request.FindMarkets](#requestfindmarkets)
+    -   [request.FindFills](#requestfindfills)
         -   [Properties](#properties-9)
-    -   [request.FindOrder](#requestfindorder)
+    -   [request.FindMarkets](#requestfindmarkets)
         -   [Properties](#properties-10)
-    -   [request.FindOrders](#requestfindorders)
+    -   [request.FindOrder](#requestfindorder)
         -   [Properties](#properties-11)
-    -   [request.FindTrades](#requestfindtrades)
+    -   [request.FindOrders](#requestfindorders)
         -   [Properties](#properties-12)
-    -   [request.FindWithdrawal](#requestfindwithdrawal)
+    -   [request.FindTrades](#requestfindtrades)
         -   [Properties](#properties-13)
-    -   [request.FindWithdrawals](#requestfindwithdrawals)
+    -   [request.FindWithdrawal](#requestfindwithdrawal)
         -   [Properties](#properties-14)
-    -   [request.Order](#requestorder)
+    -   [request.FindWithdrawals](#requestfindwithdrawals)
         -   [Properties](#properties-15)
-    -   [request.Withdrawal](#requestwithdrawal)
+    -   [request.Order](#requestorder)
         -   [Properties](#properties-16)
+    -   [request.Withdrawal](#requestwithdrawal)
+        -   [Properties](#properties-17)
 -   [REST Responses](#rest-responses)
     -   [response.Asset](#responseasset)
-        -   [Properties](#properties-17)
-    -   [response.Balance](#responsebalance)
         -   [Properties](#properties-18)
-    -   [response.Candle](#responsecandle)
+    -   [response.Balance](#responsebalance)
         -   [Properties](#properties-19)
-    -   [response.Deposit](#responsedeposit)
+    -   [response.Candle](#responsecandle)
         -   [Properties](#properties-20)
-    -   [response.ExchangeInfo](#responseexchangeinfo)
+    -   [response.Deposit](#responsedeposit)
         -   [Properties](#properties-21)
-    -   [response.Fill](#responsefill)
+    -   [response.ExchangeInfo](#responseexchangeinfo)
         -   [Properties](#properties-22)
-    -   [response.Market](#responsemarket)
+    -   [response.Fill](#responsefill)
         -   [Properties](#properties-23)
-    -   [response.Order](#responseorder)
+    -   [response.Market](#responsemarket)
         -   [Properties](#properties-24)
-    -   [response.OrderBookLevel1](#responseorderbooklevel1)
+    -   [response.Order](#responseorder)
         -   [Properties](#properties-25)
-    -   [response.OrderBookLevel2](#responseorderbooklevel2)
+    -   [response.OrderBookLevel1](#responseorderbooklevel1)
         -   [Properties](#properties-26)
+    -   [response.OrderBookLevel2](#responseorderbooklevel2)
+        -   [Properties](#properties-27)
     -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
     -   [response.OrderFill](#responseorderfill)
-        -   [Properties](#properties-27)
+        -   [Properties](#properties-28)
     -   [response.Ping](#responseping)
     -   [response.Ticker](#responseticker)
-        -   [Properties](#properties-28)
-    -   [response.Time](#responsetime)
         -   [Properties](#properties-29)
-    -   [response.Trade](#responsetrade)
+    -   [response.Time](#responsetime)
         -   [Properties](#properties-30)
-    -   [response.User](#responseuser)
+    -   [response.Trade](#responsetrade)
         -   [Properties](#properties-31)
-    -   [response.Wallet](#responsewallet)
+    -   [response.User](#responseuser)
         -   [Properties](#properties-32)
-    -   [response.WebSocketToken](#responsewebsockettoken)
+    -   [response.Wallet](#responsewallet)
         -   [Properties](#properties-33)
-    -   [response.Withdrawal](#responsewithdrawal)
+    -   [response.WebSocketToken](#responsewebsockettoken)
         -   [Properties](#properties-34)
+    -   [response.Withdrawal](#responsewithdrawal)
+        -   [Properties](#properties-35)
 -   [WebSocket Responses](#websocket-responses)
     -   [webSocketResponse.Error](#websocketresponseerror)
-        -   [Properties](#properties-35)
-    -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
         -   [Properties](#properties-36)
+    -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
+        -   [Properties](#properties-37)
 -   [ECDSA Signatures](#ecdsa-signatures)
     -   [signatures.MessageSigner](#signaturesmessagesigner)
 
@@ -729,13 +731,7 @@ WebSocket API client
 
 #### Parameters
 
--   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
--   `websocketAuthTokenFetch` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Authenticated Rest API client fetch token call (`/wsToken`)
-     SDK Websocket client will then automatically handle Websocket token generation and refresh.
-     You can omit this when using only public websocket subscription.
-     Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
-     See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
--   `shouldReconnectAutomatically`   (optional, default `false`)
+-   `options` **[WebSocketClientOptions](#websocketclientoptions)** 
 
 #### Examples
 
@@ -779,6 +775,22 @@ Subscribe which only can be used on non-authenticated subscriptions
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;request.UnauthenticatedSubscription>** 
 
 Returns **void** 
+
+### WebSocketClientOptions
+
+WebSocket API client options
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Must be set to true
+-   `websocketAuthTokenFetch` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Authenticated Rest API client fetch token call (`/wsToken`)
+     SDK Websocket client will then automatically handle Websocket token generation and refresh.
+     You can omit this when using only public websocket subscription.
+     Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
+     See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
+-   `shouldReconnectAutomatically` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** If true, automatically reconnects when connection is closed by the server or network errors
 
 ## Enums
 
