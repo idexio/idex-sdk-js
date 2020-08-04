@@ -450,9 +450,12 @@ export default class AuthenticatedRESTClient {
       method: 'GET',
       url: `${this.baseURL}${endpoint}`,
       headers: this.createHmacRequestSignatureHeader(
+        // The query serializer for HMAC must be the same as that used to send the request so the
+        // signature can deterministically be computed on the other side
         queryString.stringify(requestParams),
       ),
       params: requestParams,
+      paramsSerializer: queryString.stringify,
     });
   }
 
@@ -463,7 +466,9 @@ export default class AuthenticatedRESTClient {
     return this.axios({
       method: 'POST',
       url: `${this.baseURL}${endpoint}`,
-      headers: this.createHmacRequestSignatureHeader(requestParams),
+      headers: this.createHmacRequestSignatureHeader(
+        JSON.stringify(requestParams),
+      ),
       data: requestParams,
     });
   }
@@ -475,17 +480,22 @@ export default class AuthenticatedRESTClient {
     return this.axios({
       method: 'DELETE',
       url: `${this.baseURL}${endpoint}`,
-      headers: this.createHmacRequestSignatureHeader(requestParams),
-      data: requestParams,
+      headers: this.createHmacRequestSignatureHeader(
+        queryString.stringify(requestParams),
+      ),
+      params: requestParams,
+      // The query serializer for HMAC must be the same as that used to send the request so the
+      // signature can deterministically be computed on the other side
+      paramsSerializer: queryString.stringify,
     });
   }
 
   protected createHmacRequestSignatureHeader(
-    payload: string | Record<string, unknown>,
+    payload: string,
   ): { [constants.REST_HMAC_SIGNATURE_HEADER]: string } {
     const hmacRequestSignature = crypto
       .createHmac('sha256', this.apiSecret)
-      .update(typeof payload === 'string' ? payload : JSON.stringify(payload))
+      .update(payload)
       .digest('hex');
 
     return { [constants.REST_HMAC_SIGNATURE_HEADER]: hmacRequestSignature };
