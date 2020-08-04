@@ -2,9 +2,23 @@ import http from 'http';
 import https from 'https';
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 
+import * as constants from '../../constants';
 import * as request from '../../types/rest/request';
 import * as response from '../../types/rest/response';
 import { isNode } from '../../utils';
+
+/**
+ * PublicClientOptions
+ *
+ * @typedef {Object} PublicClientOptions
+ * @property {boolean} sandbox - Must be set to true
+ * @property {string} [apiKey] - Increases rate limits if provided
+ */
+export interface PublicRESTClientOptions {
+  sandbox?: boolean;
+  baseURL?: string;
+  apiKey?: string;
+}
 
 /**
  * Public API client
@@ -29,15 +43,19 @@ import { isNode } from '../../utils';
  * @param {string} baseUrl
  * @param {string} [apiKey] Increases rate limits if provided
  */
-export default class PublicClient {
+export default class PublicRESTClient {
   public baseURL: string;
 
   private axios: AxiosInstance;
 
-  public constructor(baseURL: string, apiKey?: string) {
-    this.baseURL = baseURL;
+  public constructor(options: PublicRESTClientOptions) {
+    this.baseURL = options.sandbox
+      ? constants.SANDBOX_REST_API_BASE_URL
+      : options.baseURL;
 
-    const headers = apiKey ? { Authorization: `Bearer ${apiKey}` } : null;
+    const headers = options.apiKey
+      ? { Authorization: `Bearer ${options.apiKey}` }
+      : null;
     this.axios = isNode
       ? Axios.create({
           headers,

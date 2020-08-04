@@ -24,6 +24,8 @@
             -   [Parameters](#parameters-5)
         -   [getOrderBookLevel2](#getorderbooklevel2)
             -   [Parameters](#parameters-6)
+    -   [AuthenticatedClientOptions](#authenticatedclientoptions)
+        -   [Properties](#properties)
     -   [AuthenticatedClient](#authenticatedclient)
         -   [Parameters](#parameters-7)
         -   [Examples](#examples-1)
@@ -125,76 +127,75 @@
         -   [takeProfitLimit](#takeprofitlimit)
 -   [Requests](#requests)
     -   [request.CancelOrders](#requestcancelorders)
-        -   [Properties](#properties)
-    -   [request.FindBalances](#requestfindbalances)
         -   [Properties](#properties-1)
-    -   [request.FindCandles](#requestfindcandles)
+    -   [request.FindBalances](#requestfindbalances)
         -   [Properties](#properties-2)
-    -   [request.FindDeposit](#requestfinddeposit)
+    -   [request.FindCandles](#requestfindcandles)
         -   [Properties](#properties-3)
-    -   [request.FindDeposits](#requestfinddeposits)
+    -   [request.FindDeposit](#requestfinddeposit)
         -   [Properties](#properties-4)
-    -   [request.FindFill](#requestfindfill)
+    -   [request.FindDeposits](#requestfinddeposits)
         -   [Properties](#properties-5)
-    -   [request.FindFills](#requestfindfills)
+    -   [request.FindFill](#requestfindfill)
         -   [Properties](#properties-6)
-    -   [request.FindOrder](#requestfindorder)
+    -   [request.FindFills](#requestfindfills)
         -   [Properties](#properties-7)
-    -   [request.FindOrders](#requestfindorders)
+    -   [request.FindOrder](#requestfindorder)
         -   [Properties](#properties-8)
-    -   [request.FindTrades](#requestfindtrades)
+    -   [request.FindOrders](#requestfindorders)
         -   [Properties](#properties-9)
-    -   [request.FindWithdrawal](#requestfindwithdrawal)
+    -   [request.FindTrades](#requestfindtrades)
         -   [Properties](#properties-10)
-    -   [request.FindWithdrawals](#requestfindwithdrawals)
+    -   [request.FindWithdrawal](#requestfindwithdrawal)
         -   [Properties](#properties-11)
-    -   [request.Order](#requestorder)
+    -   [request.FindWithdrawals](#requestfindwithdrawals)
         -   [Properties](#properties-12)
-    -   [request.Withdrawal](#requestwithdrawal)
+    -   [request.Order](#requestorder)
         -   [Properties](#properties-13)
+    -   [request.Withdrawal](#requestwithdrawal)
+        -   [Properties](#properties-14)
 -   [Responses](#responses)
     -   [response.Asset](#responseasset)
-        -   [Properties](#properties-14)
-    -   [response.Balance](#responsebalance)
         -   [Properties](#properties-15)
-    -   [response.Candle](#responsecandle)
+    -   [response.Balance](#responsebalance)
         -   [Properties](#properties-16)
-    -   [response.Deposit](#responsedeposit)
+    -   [response.Candle](#responsecandle)
         -   [Properties](#properties-17)
-    -   [response.ExchangeInfo](#responseexchangeinfo)
+    -   [response.Deposit](#responsedeposit)
         -   [Properties](#properties-18)
-    -   [response.Fill](#responsefill)
+    -   [response.ExchangeInfo](#responseexchangeinfo)
         -   [Properties](#properties-19)
-    -   [response.Market](#responsemarket)
+    -   [response.Fill](#responsefill)
         -   [Properties](#properties-20)
-    -   [response.Order](#responseorder)
+    -   [response.Market](#responsemarket)
         -   [Properties](#properties-21)
-    -   [response.OrderBookLevel1](#responseorderbooklevel1)
+    -   [response.Order](#responseorder)
         -   [Properties](#properties-22)
-    -   [response.OrderBookLevel2](#responseorderbooklevel2)
+    -   [response.OrderBookLevel1](#responseorderbooklevel1)
         -   [Properties](#properties-23)
+    -   [response.OrderBookLevel2](#responseorderbooklevel2)
+        -   [Properties](#properties-24)
     -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
     -   [response.OrderFill](#responseorderfill)
-        -   [Properties](#properties-24)
+        -   [Properties](#properties-25)
     -   [response.Ping](#responseping)
     -   [response.Ticker](#responseticker)
-        -   [Properties](#properties-25)
-    -   [response.Time](#responsetime)
         -   [Properties](#properties-26)
-    -   [response.Trade](#responsetrade)
+    -   [response.Time](#responsetime)
         -   [Properties](#properties-27)
-    -   [response.User](#responseuser)
+    -   [response.Trade](#responsetrade)
         -   [Properties](#properties-28)
-    -   [response.Wallet](#responsewallet)
+    -   [response.User](#responseuser)
         -   [Properties](#properties-29)
-    -   [response.WebSocketToken](#responsewebsockettoken)
+    -   [response.Wallet](#responsewallet)
         -   [Properties](#properties-30)
-    -   [response.Withdrawal](#responsewithdrawal)
+    -   [response.WebSocketToken](#responsewebsockettoken)
         -   [Properties](#properties-31)
+    -   [response.Withdrawal](#responsewithdrawal)
+        -   [Properties](#properties-32)
 -   [WebSocket Responses](#websocket-responses)
     -   [webSocketResponse.Error](#websocketresponseerror)
-        -   [Properties](#properties-32)
--   [signatures.MessageSigner](#signaturesmessagesigner)
+        -   [Properties](#properties-33)
 -   [WebsocketTokenManager](#websockettokenmanager)
     -   [Parameters](#parameters-25)
 -   [WebSocketClient](#websocketclient)
@@ -205,9 +206,9 @@
     -   [subscribeUnauthenticated](#subscribeunauthenticated)
         -   [Parameters](#parameters-28)
 -   [request.FindMarkets](#requestfindmarkets)
-    -   [Properties](#properties-33)
--   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
     -   [Properties](#properties-34)
+-   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
+    -   [Properties](#properties-35)
 -   [RawResponseMessage](#rawresponsemessage)
 -   [OrderBookPrice](#orderbookprice)
 -   [OrderBookSize](#orderbooksize)
@@ -364,15 +365,26 @@ Get current order book price levels for a market
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.OrderBookLevel2](#responseorderbooklevel2)>** 
 
+### AuthenticatedClientOptions
+
+AuthenticatedClientOptions
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Must be set to true
+-   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to authenticate user
+-   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to compute HMAC signature
+-   `privateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, used to create ECDSA signatures
+
 ### AuthenticatedClient
 
 Authenticated API client
 
 #### Parameters
 
--   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `options` **[AuthenticatedClientOptions](#authenticatedclientoptions)** 
 
 #### Examples
 
@@ -444,7 +456,7 @@ Create and submit an order to the matching engine.
 ##### Parameters
 
 -   `order` **[request.Order](#requestorder)** 
--   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)** 
+-   `signer` **signatures.MessageSigner?**  (optional, default `this.signer`)
 
 ##### Examples
 
@@ -475,7 +487,7 @@ Tests order creation and validation without submitting an order to the matching 
 ##### Parameters
 
 -   `order` **[request.Order](#requestorder)** 
--   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)** 
+-   `signer` **signatures.MessageSigner?**  (optional, default `this.signer`)
 
 ##### Examples
 
@@ -506,7 +518,7 @@ Cancel a single order
 ##### Parameters
 
 -   `cancelOrder` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)** 
+-   `signer` **signatures.MessageSigner?**  (optional, default `this.signer`)
 
 ##### Examples
 
@@ -543,7 +555,7 @@ Cancel multiple orders
 ##### Parameters
 
 -   `cancelOrders` **[request.CancelOrders](#requestcancelorders)** 
--   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)** 
+-   `signer` **signatures.MessageSigner?**  (optional, default `this.signer`)
 -   `order` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ##### Examples
@@ -657,7 +669,7 @@ Get a withdrawal
 ##### Parameters
 
 -   `withdrawal` **[request.Withdrawal](#requestwithdrawal)** 
--   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)** 
+-   `signer` **signatures.MessageSigner**  (optional, default `this.signer`)
 -   `findWithdrawal` **[request.FindWithdrawal](#requestfindwithdrawal)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Withdrawal](#responsewithdrawal)>** 
@@ -672,7 +684,7 @@ Create a new withdrawal
 ##### Parameters
 
 -   `withdrawal` **[request.Withdrawal](#requestwithdrawal)** 
--   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)** 
+-   `signer` **signatures.MessageSigner?**  (optional, default `this.signer`)
 
 ##### Examples
 
@@ -1528,12 +1540,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `data` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
     -   `data.code` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** error short code
     -   `data.message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** human readable error message
-
-## signatures.MessageSigner
-
-A function that accepts a string and returns a Promise resolving on its ECDSA signature
-
-Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)
 
 ## WebsocketTokenManager
 

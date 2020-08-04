@@ -1,8 +1,7 @@
 import { ethers } from 'ethers';
 
+import * as constants from './constants';
 import * as types from './types';
-
-const orderSignatureHashVersion = 1;
 
 /**
  * A function that accepts a string and returns a Promise resolving on its ECDSA signature
@@ -24,7 +23,7 @@ export const orderHash = function getPlaceOrderWalletHash(
   order: types.rest.request.Order,
 ): string {
   return solidityHashOfParams([
-    ['uint8', orderSignatureHashVersion],
+    ['uint8', constants.ORDER_SIGNATURE_HASH_VERSION],
     ['uint128', uuidToUint8Array(order.nonce)],
     ['address', order.wallet],
     ['string', order.market],

@@ -2,6 +2,7 @@ toc:
   - name: Clients
     children:
       - PublicClient
+      - AuthenticatedClientOptions
       - AuthenticatedClient
   - name: Enums
     description: |
