@@ -29,9 +29,9 @@ const publicClient = new idex.client.rest.Public({
 console.log(await publicClient.getServerTime());
 ```
 
-In-depth usage documentation by endpoint is [available here](https://github.com/idexio/idex-sdk-js/blob/master//API.md).
+In-depth usage documentation by endpoint is [available here](https://github.com/idexio/idex-sdk-js/blob/master/API.md).
 
 ## Contracts
 
-View the provided [contract](https://github.com/idexio/idex-sdk-js/blob/master/contracts/SignatureVerifier.sol) for a
+View the provided [contract](https://github.com/idexio/idex-sdk-js/blob/master/contracts/Signatures.sol) for a
 corresponding Solidity implementation of order signature verification.
