@@ -1,15 +1,6 @@
 import * as enums from './enums';
-import * as request from './request';
-import * as response from './response';
-import * as utils from './utils';
+import * as rest from './rest';
 import * as webSocket from './webSocket';
-import * as webSocketSubscriptionMessages from './webSocketSubscriptionMessages';
+import * as utils from './utils';
 
-export {
-  enums,
-  request,
-  response,
-  utils,
-  webSocket,
-  webSocketSubscriptionMessages,
-};
+export { enums, rest, webSocket, utils };
