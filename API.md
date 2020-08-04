@@ -211,6 +211,8 @@
         -   [Properties](#properties-36)
 -   [ECDSA Signatures](#ecdsa-signatures)
     -   [signatures.MessageSigner](#signaturesmessagesigner)
+-   [WebSocketClientOptions](#websocketclientoptions)
+    -   [Properties](#properties-37)
 
 ## Clients
 
@@ -729,13 +731,7 @@ WebSocket API client
 
 #### Parameters
 
--   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
--   `websocketAuthTokenFetch` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Authenticated Rest API client fetch token call (`/wsToken`)
-     SDK Websocket client will then automatically handle Websocket token generation and refresh.
-     You can omit this when using only public websocket subscription.
-     Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
-     See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
--   `shouldReconnectAutomatically`   (optional, default `false`)
+-   `options` **[WebSocketClientOptions](#websocketclientoptions)** 
 
 #### Examples
 
@@ -1624,3 +1620,19 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 A function that accepts a string and returns a Promise resolving on its ECDSA signature
 
 Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)
+
+## WebSocketClientOptions
+
+WebSocket API client options
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Must be set to true
+-   `websocketAuthTokenFetch` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Authenticated Rest API client fetch token call (`/wsToken`)
+     SDK Websocket client will then automatically handle Websocket token generation and refresh.
+     You can omit this when using only public websocket subscription.
+     Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
+     See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
+-   `shouldReconnectAutomatically` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** If true, automatically reconnects when connection is closed by the server or network errors

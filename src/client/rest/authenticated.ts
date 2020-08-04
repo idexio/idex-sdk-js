@@ -70,12 +70,14 @@ export default class AuthenticatedRESTClient {
 
     this.axios = isNode
       ? Axios.create({
-          headers: { Authorization: `Bearer ${options.apiKey}` },
+          headers: {
+            [constants.REST_API_KEY_HEADER]: options.apiKey,
+          },
           httpAgent: new http.Agent({ keepAlive: true }),
           httpsAgent: new https.Agent({ keepAlive: true }),
         })
       : Axios.create({
-          headers: { Authorization: `Bearer ${options.apiKey}` },
+          headers: { [constants.REST_API_KEY_HEADER]: options.apiKey },
         });
   }
 
@@ -480,12 +482,12 @@ export default class AuthenticatedRESTClient {
 
   protected createHmacRequestSignatureHeader(
     payload: string | Record<string, unknown>,
-  ): { 'hmac-request-signature': string } {
+  ): { [constants.REST_HMAC_SIGNATURE_HEADER]: string } {
     const hmacRequestSignature = crypto
       .createHmac('sha256', this.apiSecret)
       .update(typeof payload === 'string' ? payload : JSON.stringify(payload))
       .digest('hex');
 
-    return { 'hmac-request-signature': hmacRequestSignature };
+    return { [constants.REST_HMAC_SIGNATURE_HEADER]: hmacRequestSignature };
   }
 }
