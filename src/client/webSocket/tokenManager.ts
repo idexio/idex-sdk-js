@@ -12,7 +12,7 @@ const TOKEN_EXPIRATION_MS = 1000 * 60 * 14; // 14 minutes (15 is already expired
 
 type WebsocketTokenFetch = (wallet: string) => Promise<string>;
 
-/**
+/*
  * https://docs.idex.io/#websocket-authentication-endpoints
  *
  * ```

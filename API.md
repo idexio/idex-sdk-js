@@ -5,69 +5,78 @@
 ### Table of Contents
 
 -   [Clients](#clients)
-    -   [PublicClient](#publicclient)
+    -   [AuthenticatedRESTClient](#authenticatedrestclient)
         -   [Parameters](#parameters)
         -   [Examples](#examples)
+        -   [getUser](#getuser)
+            -   [Parameters](#parameters-1)
+        -   [getWallets](#getwallets)
+            -   [Parameters](#parameters-2)
+        -   [getBalances](#getbalances)
+            -   [Parameters](#parameters-3)
+        -   [createOrder](#createorder)
+            -   [Parameters](#parameters-4)
+            -   [Examples](#examples-1)
+        -   [createTestOrder](#createtestorder)
+            -   [Parameters](#parameters-5)
+            -   [Examples](#examples-2)
+        -   [cancelOrder](#cancelorder)
+            -   [Parameters](#parameters-6)
+            -   [Examples](#examples-3)
+        -   [cancelOrders](#cancelorders)
+            -   [Parameters](#parameters-7)
+            -   [Examples](#examples-4)
+        -   [getOrder](#getorder)
+            -   [Parameters](#parameters-8)
+        -   [getOrders](#getorders)
+            -   [Parameters](#parameters-9)
+        -   [getFill](#getfill)
+            -   [Parameters](#parameters-10)
+        -   [getFills](#getfills)
+            -   [Parameters](#parameters-11)
+        -   [getDeposit](#getdeposit)
+            -   [Parameters](#parameters-12)
+        -   [getDeposits](#getdeposits)
+            -   [Parameters](#parameters-13)
+        -   [withdraw](#withdraw)
+            -   [Parameters](#parameters-14)
+        -   [withdraw](#withdraw-1)
+            -   [Parameters](#parameters-15)
+            -   [Examples](#examples-5)
+        -   [getWithdrawals](#getwithdrawals)
+            -   [Parameters](#parameters-16)
+        -   [getWsToken](#getwstoken)
+            -   [Parameters](#parameters-17)
+    -   [AuthenticatedRESTClientOptions](#authenticatedrestclientoptions)
+        -   [Properties](#properties)
+    -   [PublicRESTClient](#publicrestclient)
+        -   [Parameters](#parameters-18)
+        -   [Examples](#examples-6)
         -   [ping](#ping)
         -   [getServerTime](#getservertime)
         -   [getExchangeInfo](#getexchangeinfo)
         -   [getAssets](#getassets)
         -   [getMarkets](#getmarkets)
-            -   [Parameters](#parameters-1)
-        -   [getTickers](#gettickers)
-            -   [Parameters](#parameters-2)
-        -   [getCandles](#getcandles)
-            -   [Parameters](#parameters-3)
-        -   [getTrades](#gettrades)
-            -   [Parameters](#parameters-4)
-        -   [getOrderBookLevel1](#getorderbooklevel1)
-            -   [Parameters](#parameters-5)
-        -   [getOrderBookLevel2](#getorderbooklevel2)
-            -   [Parameters](#parameters-6)
-    -   [AuthenticatedClientOptions](#authenticatedclientoptions)
-        -   [Properties](#properties)
-    -   [AuthenticatedClient](#authenticatedclient)
-        -   [Parameters](#parameters-7)
-        -   [Examples](#examples-1)
-        -   [getUser](#getuser)
-            -   [Parameters](#parameters-8)
-        -   [getWallets](#getwallets)
-            -   [Parameters](#parameters-9)
-        -   [getBalances](#getbalances)
-            -   [Parameters](#parameters-10)
-        -   [createOrder](#createorder)
-            -   [Parameters](#parameters-11)
-            -   [Examples](#examples-2)
-        -   [createTestOrder](#createtestorder)
-            -   [Parameters](#parameters-12)
-            -   [Examples](#examples-3)
-        -   [cancelOrder](#cancelorder)
-            -   [Parameters](#parameters-13)
-            -   [Examples](#examples-4)
-        -   [cancelOrders](#cancelorders)
-            -   [Parameters](#parameters-14)
-            -   [Examples](#examples-5)
-        -   [getOrder](#getorder)
-            -   [Parameters](#parameters-15)
-        -   [getOrders](#getorders)
-            -   [Parameters](#parameters-16)
-        -   [getFill](#getfill)
-            -   [Parameters](#parameters-17)
-        -   [getFills](#getfills)
-            -   [Parameters](#parameters-18)
-        -   [getDeposit](#getdeposit)
             -   [Parameters](#parameters-19)
-        -   [getDeposits](#getdeposits)
+        -   [getTickers](#gettickers)
             -   [Parameters](#parameters-20)
-        -   [withdraw](#withdraw)
+        -   [getCandles](#getcandles)
             -   [Parameters](#parameters-21)
-        -   [withdraw](#withdraw-1)
+        -   [getTrades](#gettrades)
             -   [Parameters](#parameters-22)
-            -   [Examples](#examples-6)
-        -   [getWithdrawals](#getwithdrawals)
+        -   [getOrderBookLevel1](#getorderbooklevel1)
             -   [Parameters](#parameters-23)
-        -   [getWsToken](#getwstoken)
+        -   [getOrderBookLevel2](#getorderbooklevel2)
             -   [Parameters](#parameters-24)
+    -   [PublicRESTClientOptions](#publicrestclientoptions)
+        -   [Properties](#properties-1)
+    -   [WebSocketClient](#websocketclient)
+        -   [Parameters](#parameters-25)
+        -   [Examples](#examples-7)
+        -   [subscribeAuthenticated](#subscribeauthenticated)
+            -   [Parameters](#parameters-26)
+        -   [subscribeUnauthenticated](#subscribeunauthenticated)
+            -   [Parameters](#parameters-27)
 -   [Enums](#enums)
     -   [CandleInterval](#candleinterval)
         -   [1m](#1m)
@@ -125,129 +134,466 @@
         -   [stopLossLimit](#stoplosslimit)
         -   [takeProfit](#takeprofit)
         -   [takeProfitLimit](#takeprofitlimit)
--   [Requests](#requests)
+-   [REST Requests](#rest-requests)
     -   [request.CancelOrders](#requestcancelorders)
-        -   [Properties](#properties-1)
-    -   [request.FindBalances](#requestfindbalances)
         -   [Properties](#properties-2)
-    -   [request.FindCandles](#requestfindcandles)
+    -   [request.FindBalances](#requestfindbalances)
         -   [Properties](#properties-3)
-    -   [request.FindDeposit](#requestfinddeposit)
+    -   [request.FindCandles](#requestfindcandles)
         -   [Properties](#properties-4)
-    -   [request.FindDeposits](#requestfinddeposits)
+    -   [request.FindDeposit](#requestfinddeposit)
         -   [Properties](#properties-5)
-    -   [request.FindFill](#requestfindfill)
+    -   [request.FindDeposits](#requestfinddeposits)
         -   [Properties](#properties-6)
-    -   [request.FindFills](#requestfindfills)
+    -   [request.FindFill](#requestfindfill)
         -   [Properties](#properties-7)
-    -   [request.FindOrder](#requestfindorder)
+    -   [request.FindFills](#requestfindfills)
         -   [Properties](#properties-8)
-    -   [request.FindOrders](#requestfindorders)
+    -   [request.FindMarkets](#requestfindmarkets)
         -   [Properties](#properties-9)
-    -   [request.FindTrades](#requestfindtrades)
+    -   [request.FindOrder](#requestfindorder)
         -   [Properties](#properties-10)
-    -   [request.FindWithdrawal](#requestfindwithdrawal)
+    -   [request.FindOrders](#requestfindorders)
         -   [Properties](#properties-11)
-    -   [request.FindWithdrawals](#requestfindwithdrawals)
+    -   [request.FindTrades](#requestfindtrades)
         -   [Properties](#properties-12)
-    -   [request.Order](#requestorder)
+    -   [request.FindWithdrawal](#requestfindwithdrawal)
         -   [Properties](#properties-13)
-    -   [request.Withdrawal](#requestwithdrawal)
+    -   [request.FindWithdrawals](#requestfindwithdrawals)
         -   [Properties](#properties-14)
--   [Responses](#responses)
-    -   [response.Asset](#responseasset)
+    -   [request.Order](#requestorder)
         -   [Properties](#properties-15)
-    -   [response.Balance](#responsebalance)
+    -   [request.Withdrawal](#requestwithdrawal)
         -   [Properties](#properties-16)
-    -   [response.Candle](#responsecandle)
+-   [REST Responses](#rest-responses)
+    -   [response.Asset](#responseasset)
         -   [Properties](#properties-17)
-    -   [response.Deposit](#responsedeposit)
+    -   [response.Balance](#responsebalance)
         -   [Properties](#properties-18)
-    -   [response.ExchangeInfo](#responseexchangeinfo)
+    -   [response.Candle](#responsecandle)
         -   [Properties](#properties-19)
-    -   [response.Fill](#responsefill)
+    -   [response.Deposit](#responsedeposit)
         -   [Properties](#properties-20)
-    -   [response.Market](#responsemarket)
+    -   [response.ExchangeInfo](#responseexchangeinfo)
         -   [Properties](#properties-21)
-    -   [response.Order](#responseorder)
+    -   [response.Fill](#responsefill)
         -   [Properties](#properties-22)
-    -   [response.OrderBookLevel1](#responseorderbooklevel1)
+    -   [response.Market](#responsemarket)
         -   [Properties](#properties-23)
-    -   [response.OrderBookLevel2](#responseorderbooklevel2)
+    -   [response.Order](#responseorder)
         -   [Properties](#properties-24)
-    -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
-    -   [response.OrderFill](#responseorderfill)
+    -   [response.OrderBookLevel1](#responseorderbooklevel1)
         -   [Properties](#properties-25)
+    -   [response.OrderBookLevel2](#responseorderbooklevel2)
+        -   [Properties](#properties-26)
+    -   [response.OrderFill](#responseorderfill)
+        -   [Properties](#properties-27)
     -   [response.Ping](#responseping)
     -   [response.Ticker](#responseticker)
-        -   [Properties](#properties-26)
-    -   [response.Time](#responsetime)
-        -   [Properties](#properties-27)
-    -   [response.Trade](#responsetrade)
         -   [Properties](#properties-28)
-    -   [response.User](#responseuser)
+    -   [response.Time](#responsetime)
         -   [Properties](#properties-29)
-    -   [response.Wallet](#responsewallet)
+    -   [response.Trade](#responsetrade)
         -   [Properties](#properties-30)
-    -   [response.WebSocketToken](#responsewebsockettoken)
+    -   [response.User](#responseuser)
         -   [Properties](#properties-31)
-    -   [response.Withdrawal](#responsewithdrawal)
+    -   [response.Wallet](#responsewallet)
         -   [Properties](#properties-32)
+    -   [response.WebSocketToken](#responsewebsockettoken)
+        -   [Properties](#properties-33)
+    -   [response.Withdrawal](#responsewithdrawal)
+        -   [Properties](#properties-34)
 -   [WebSocket Responses](#websocket-responses)
     -   [webSocketResponse.Error](#websocketresponseerror)
-        -   [Properties](#properties-33)
--   [WebsocketTokenManager](#websockettokenmanager)
-    -   [Parameters](#parameters-25)
--   [WebSocketClient](#websocketclient)
-    -   [Parameters](#parameters-26)
-    -   [Examples](#examples-7)
-    -   [subscribeAuthenticated](#subscribeauthenticated)
-        -   [Parameters](#parameters-27)
-    -   [subscribeUnauthenticated](#subscribeunauthenticated)
-        -   [Parameters](#parameters-28)
--   [request.FindMarkets](#requestfindmarkets)
-    -   [Properties](#properties-34)
--   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
-    -   [Properties](#properties-35)
--   [RawResponseMessage](#rawresponsemessage)
--   [OrderBookPrice](#orderbookprice)
--   [OrderBookSize](#orderbooksize)
--   [OrderBookNumOrders](#orderbooknumorders)
--   [autoDispatchEnabled](#autodispatchenabled)
+        -   [Properties](#properties-35)
+    -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
+        -   [Properties](#properties-36)
+-   [ECDSA Signatures](#ecdsa-signatures)
+    -   [signatures.MessageSigner](#signaturesmessagesigner)
 
 ## Clients
 
 
 
 
-### PublicClient
+### AuthenticatedRESTClient
 
-Public API client
+Authenticated API client
 
 #### Parameters
 
--   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Increases rate limits if provided
--   `baseUrl` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `options` **[AuthenticatedRESTClientOptions](#authenticatedrestclientoptions)** 
 
 #### Examples
 
 ```javascript
+import { v1 as uuidv1 } from 'uuid';
 import * as idex from '@idexio/idex-sdk-js';
 
-// Edit the values below for your environment
-const config = {
-  baseURL: 'https://api-sandbox.idex.io/v1',
+const authenticatedClient = new idex.client.rest.Authenticated({
+  sandbox: true,
+  // Edit the values before for your environment
   apiKey: '1f7c4f52-4af7-4e1b-aa94-94fac8d931aa',
-};
+  apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
+  // Optionally prove a wallet private key to automatically sign requests that need an ECDSA signature
+  walletPrivateKey: '0x3141592653589793238462643383279502884197169399375105820974944592'
+});
+```
 
-const publicClient = new idex.PublicClient(config.baseURL);
+#### getUser
 
-// Optionally provide an API key to increase rate limits
-const publicClientWithApiKey = new idex.PublicClient(
-  config.baseURL,
-  config.apiKey,
+-   **See: <https://docs.idex.io/#get-user-account>
+    **
+
+Get account details for the API key’s user
+
+##### Parameters
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.User](#responseuser)>** 
+
+#### getWallets
+
+-   **See: <https://docs.idex.io/#get-wallets>
+    **
+
+Get account details for the API key’s user
+
+##### Parameters
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Wallet](#responsewallet)>>** 
+
+#### getBalances
+
+-   **See: <https://docs.idex.io/#get-balances>
+    **
+
+Get asset quantity data (positions) held by a wallet on the exchange
+
+##### Parameters
+
+-   `findBalances` **[request.FindBalances](#requestfindbalances)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Balance](#responsebalance)>>** 
+
+#### createOrder
+
+-   **See: <https://docs.idex.io/#create-order>
+    **
+
+Create and submit an order to the matching engine.
+
+##### Parameters
+
+-   `order` **[request.Order](#requestorder)** 
+-   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+
+##### Examples
+
+```javascript
+const order = await authenticatedClient.createOrder(
+  {
+    nonce: uuidv1(),
+    wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+    market: 'IDEX-ETH',
+    type: 'limit',
+    side: 'sell',
+    price: '0.10000000',
+    quantity: '1.50000000",
+  },
+  idex.signatures.privateKeySigner(config.walletPrivateKey),
 );
+```
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
+
+#### createTestOrder
+
+-   **See: <https://docs.idex.io/#test-create-order>
+    **
+
+Tests order creation and validation without submitting an order to the matching engine
+
+##### Parameters
+
+-   `order` **[request.Order](#requestorder)** 
+-   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+
+##### Examples
+
+```javascript
+const order = await authenticatedClient.createTestOrder(
+  {
+    nonce: uuidv1(),
+    wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+    market: 'IDEX-ETH',
+    type: 'limit',
+    side: 'sell',
+    price: '0.10000000',
+    quantity: '1.50000000",
+  },
+  idex.signatures.privateKeySigner(config.walletPrivateKey),
+);
+```
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
+
+#### cancelOrder
+
+-   **See: <https://docs.idex.io/#cancel-order>
+    **
+
+Cancel a single order
+
+##### Parameters
+
+-   `cancelOrder` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+
+##### Examples
+
+```javascript
+const responseByOrderId = await authenticatedClient.cancelOrder(
+  {
+    nonce: uuidv1(),
+    wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+    orderId: 'f077a010-ce18-11ea-9557-a9d3f954788d',
+  },
+  idex.signatures.privateKeySigner(config.walletPrivateKey),
+);
+
+const clientOrderId = '0001_23234_18863_IDEX_ETH';
+const responseByClientId = await authenticatedClient.cancelOrder(
+  {
+    nonce: uuidv1(),
+    wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+    orderId: `client:${clientOrderId}`,
+  },
+  idex.signatures.privateKeySigner(config.walletPrivateKey),
+);
+```
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
+
+#### cancelOrders
+
+-   **See: <https://docs.idex.io/#cancel-order>
+    **
+
+Cancel multiple orders
+
+##### Parameters
+
+-   `cancelOrders` **[request.CancelOrders](#requestcancelorders)** 
+-   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+-   `order` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+##### Examples
+
+```javascript
+const allOrders = authenticatedClient.cancelOrders(
+  {
+    nonce: uuidv1(),
+    wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+  },
+  idex.signatures.privateKeySigner(config.walletPrivateKey),
+);
+
+const ordersForMarket = authenticatedClient.cancelOrders(
+  {
+    nonce: uuidv1(),
+    wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+    market: 'IDEX-ETH'
+  },
+  idex.signatures.privateKeySigner(config.walletPrivateKey),
+);
+```
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Order](#responseorder)>>** 
+
+#### getOrder
+
+-   **See: <https://docs.idex.io/#get-orders>
+    **
+
+Get an order
+
+##### Parameters
+
+-   `findOrder` **[request.FindOrder](#requestfindorder)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
+
+#### getOrders
+
+-   **See: <https://docs.idex.io/#cancel-order>
+    **
+
+Get multiple orders
+
+##### Parameters
+
+-   `findOrders` **[request.FindOrders](#requestfindorders)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Order](#responseorder)>>** 
+
+#### getFill
+
+-   **See: <https://docs.idex.io/#get-fills>
+    **
+
+Get a fill
+
+##### Parameters
+
+-   `findFill` **[request.FindFill](#requestfindfill)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Fill](#responsefill)>** 
+
+#### getFills
+
+-   **See: <https://docs.idex.io/#get-fills>
+    **
+
+Get multiple fills
+
+##### Parameters
+
+-   `findFills` **[request.FindFills](#requestfindfills)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Fill](#responsefill)>>** 
+
+#### getDeposit
+
+-   **See: <https://docs.idex.io/#get-deposits>
+    **
+
+Get a deposit
+
+##### Parameters
+
+-   `findDeposit` **[request.FindDeposit](#requestfinddeposit)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Deposit](#responsedeposit)>** 
+
+#### getDeposits
+
+-   **See: <https://docs.idex.io/#get-deposits>
+    **
+
+Get multiple deposits
+
+##### Parameters
+
+-   `findDeposits` **[request.FindDeposits](#requestfinddeposits)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Deposit](#responsedeposit)>>** 
+
+#### withdraw
+
+-   **See: <https://docs.idex.io/#get-withdrawals>
+    **
+
+Get a withdrawal
+
+##### Parameters
+
+-   `withdrawal` **[request.Withdrawal](#requestwithdrawal)** 
+-   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)**  (optional, default `this.signer`)
+-   `findWithdrawal` **[request.FindWithdrawal](#requestfindwithdrawal)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Withdrawal](#responsewithdrawal)>** 
+
+#### withdraw
+
+-   **See: <https://docs.idex.io/#withdraw-funds>
+    **
+
+Create a new withdrawal
+
+##### Parameters
+
+-   `withdrawal` **[request.Withdrawal](#requestwithdrawal)** 
+-   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+
+##### Examples
+
+```javascript
+const withdrawal = await authenticatedClient.withdraw(
+  {
+    nonce: uuidv1(),
+    wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+    asset: 'ETH',
+    quantity: '0.04000000',
+  },
+  idex.signatures.privateKeySigner(config.walletPrivateKey),
+);
+```
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Withdrawal](#responsewithdrawal)>** 
+
+#### getWithdrawals
+
+-   **See: <https://docs.idex.io/#get-withdrawals>
+    **
+
+Get multiple withdrawals
+
+##### Parameters
+
+-   `findWithdrawals` **[request.FindWithdrawals](#requestfindwithdrawals)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Withdrawal](#responsewithdrawal)>>** 
+
+#### getWsToken
+
+-   **See: <https://docs.idex.io/#get-authentication-token>
+    **
+
+Obtain a WebSocket API token
+
+##### Parameters
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum wallet address
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+
+### AuthenticatedRESTClientOptions
+
+Authenticated API client options
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Must be set to true
+-   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to authenticate user
+-   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to compute HMAC signature
+-   `privateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, used to create ECDSA signatures
+
+### PublicRESTClient
+
+Public REST API client
+
+#### Parameters
+
+-   `options` **[PublicRESTClientOptions](#publicrestclientoptions)** 
+
+#### Examples
+
+```javascript
+import { v1 as uuidv1 } from 'uuid';
+
+const publicClient = new idex.client.rest.Public({
+  sandbox: true,
+  // Optionally provide an API key to increase rate limits
+  apiKey: '1f7c4f52-4af7-4e1b-aa94-94fac8d931aa',
+});
+console.log(await publicClient.getTickers('IDEX-ETH'));
 ```
 
 #### ping
@@ -365,369 +711,73 @@ Get current order book price levels for a market
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.OrderBookLevel2](#responseorderbooklevel2)>** 
 
-### AuthenticatedClientOptions
+### PublicRESTClientOptions
 
-AuthenticatedClientOptions
+Public REST API client options
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
 #### Properties
 
 -   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Must be set to true
--   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to authenticate user
--   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to compute HMAC signature
--   `privateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, used to create ECDSA signatures
+-   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Increases rate limits if provided
 
-### AuthenticatedClient
+### WebSocketClient
 
-Authenticated API client
+WebSocket API client
 
 #### Parameters
 
--   `options` **[AuthenticatedClientOptions](#authenticatedclientoptions)** 
+-   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
+-   `websocketAuthTokenFetch` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Authenticated Rest API client fetch token call (`/wsToken`)
+     SDK Websocket client will then automatically handle Websocket token generation and refresh.
+     You can omit this when using only public websocket subscription.
+     Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
+     See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
+-   `shouldReconnectAutomatically`   (optional, default `false`)
 
 #### Examples
 
 ```javascript
-import { v1 as uuidv1 } from 'uuid';
-import * as idex from '@idexio/idex-sdk-js';
+import * as idex from '@idexio/idex-node';
 
-// Edit the values below for your environment
 const config = {
-  baseURL: 'https://api-sandbox.idex.io/v1',
-  apiKey: '1f7c4f52-4af7-4e1b-aa94-94fac8d931aa',
-  apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
-  walletPrivateKey: '0x3141592653589793238462643383279502884197169399375105820974944592'
-};
-
-const authenticatedClient = new idex.AuthenticatedClient(
+  baseURL: 'wss://ws.idex.io',
+  shouldReconnectAutomatically: true,
+}
+const webSocketClient = new idex.WebSocketClient(
   config.baseURL,
-  config.apiKey,
-  config.apiSecret,
+  // Optional, but required for authenticated wallet subscriptions
+  wallet => authenticatedClient.getWsToken(uuidv1(), wallet),
+  config.shouldReconnectAutomatically,
 );
+await webSocketClient.connect();
 ```
 
-#### getUser
+#### subscribeAuthenticated
 
--   **See: <https://docs.idex.io/#get-user-account>
-    **
+Strictly typed subscribe which only can be used on authenticated subscriptions.
 
-Get account details for the API key’s user
+For this methods you need to pass `websocketAuthTokenFetch` to the websocket constructor.
+Library will automatically refresh user's wallet auth tokens for you.
 
-##### Parameters
-
--   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.User](#responseuser)>** 
-
-#### getWallets
-
--   **See: <https://docs.idex.io/#get-wallets>
-    **
-
-Get account details for the API key’s user
+See [API specification](https://docs.idex.io/#get-authentication-token)
 
 ##### Parameters
 
--   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;request.AuthenticatedSubscription>** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Wallet](#responsewallet)>>** 
+Returns **void** 
 
-#### getBalances
+#### subscribeUnauthenticated
 
--   **See: <https://docs.idex.io/#get-balances>
-    **
-
-Get asset quantity data (positions) held by a wallet on the exchange
+Subscribe which only can be used on non-authenticated subscriptions
 
 ##### Parameters
 
--   `findBalances` **[request.FindBalances](#requestfindbalances)** 
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;request.UnauthenticatedSubscription>** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Balance](#responsebalance)>>** 
-
-#### createOrder
-
--   **See: <https://docs.idex.io/#create-order>
-    **
-
-Create and submit an order to the matching engine.
-
-##### Parameters
-
--   `order` **[request.Order](#requestorder)** 
--   `signer` **signatures.MessageSigner?**  (optional, default `this.signer`)
-
-##### Examples
-
-```javascript
-const order = await authenticatedClient.createOrder(
-  {
-    nonce: uuidv1(),
-    wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
-    market: 'IDEX-ETH',
-    type: 'limit',
-    side: 'sell',
-    price: '0.10000000',
-    quantity: '1.50000000",
-  },
-  idex.signatures.privateKeySigner(config.walletPrivateKey),
-);
-```
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
-
-#### createTestOrder
-
--   **See: <https://docs.idex.io/#test-create-order>
-    **
-
-Tests order creation and validation without submitting an order to the matching engine
-
-##### Parameters
-
--   `order` **[request.Order](#requestorder)** 
--   `signer` **signatures.MessageSigner?**  (optional, default `this.signer`)
-
-##### Examples
-
-```javascript
-const order = await authenticatedClient.createTestOrder(
-  {
-    nonce: uuidv1(),
-    wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
-    market: 'IDEX-ETH',
-    type: 'limit',
-    side: 'sell',
-    price: '0.10000000',
-    quantity: '1.50000000",
-  },
-  idex.signatures.privateKeySigner(config.walletPrivateKey),
-);
-```
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
-
-#### cancelOrder
-
--   **See: <https://docs.idex.io/#cancel-order>
-    **
-
-Cancel a single order
-
-##### Parameters
-
--   `cancelOrder` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `signer` **signatures.MessageSigner?**  (optional, default `this.signer`)
-
-##### Examples
-
-```javascript
-const responseByOrderId = await authenticatedClient.cancelOrder(
-  {
-    nonce: uuidv1(),
-    wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
-    orderId: 'f077a010-ce18-11ea-9557-a9d3f954788d',
-  },
-  idex.signatures.privateKeySigner(config.walletPrivateKey),
-);
-
-const clientOrderId = '0001_23234_18863_IDEX_ETH';
-const responseByClientId = await authenticatedClient.cancelOrder(
-  {
-    nonce: uuidv1(),
-    wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
-    orderId: `client:${clientOrderId}`,
-  },
-  idex.signatures.privateKeySigner(config.walletPrivateKey),
-);
-```
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
-
-#### cancelOrders
-
--   **See: <https://docs.idex.io/#cancel-order>
-    **
-
-Cancel multiple orders
-
-##### Parameters
-
--   `cancelOrders` **[request.CancelOrders](#requestcancelorders)** 
--   `signer` **signatures.MessageSigner?**  (optional, default `this.signer`)
--   `order` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-##### Examples
-
-```javascript
-const allOrders = authenticatedClient.cancelOrders(
-  {
-    nonce: uuidv1(),
-    wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
-  },
-  idex.signatures.privateKeySigner(config.walletPrivateKey),
-);
-
-const ordersForMarket = authenticatedClient.cancelOrders(
-  {
-    nonce: uuidv1(),
-    wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
-    market: 'IDEX-ETH'
-  },
-  idex.signatures.privateKeySigner(config.walletPrivateKey),
-);
-```
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Order](#responseorder)>>** 
-
-#### getOrder
-
--   **See: <https://docs.idex.io/#get-orders>
-    **
-
-Get an order
-
-##### Parameters
-
--   `findOrder` **[request.FindOrder](#requestfindorder)** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
-
-#### getOrders
-
--   **See: <https://docs.idex.io/#cancel-order>
-    **
-
-Get multiple orders
-
-##### Parameters
-
--   `findOrders` **[request.FindOrders](#requestfindorders)** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Order](#responseorder)>>** 
-
-#### getFill
-
--   **See: <https://docs.idex.io/#get-fills>
-    **
-
-Get a fill
-
-##### Parameters
-
--   `findFill` **[request.FindFill](#requestfindfill)** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Fill](#responsefill)>** 
-
-#### getFills
-
--   **See: <https://docs.idex.io/#get-fills>
-    **
-
-Get multiple fills
-
-##### Parameters
-
--   `findFills` **[request.FindFills](#requestfindfills)** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Fill](#responsefill)>>** 
-
-#### getDeposit
-
--   **See: <https://docs.idex.io/#get-deposits>
-    **
-
-Get a deposit
-
-##### Parameters
-
--   `findDeposit` **[request.FindDeposit](#requestfinddeposit)** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Deposit](#responsedeposit)>** 
-
-#### getDeposits
-
--   **See: <https://docs.idex.io/#get-deposits>
-    **
-
-Get multiple deposits
-
-##### Parameters
-
--   `findDeposits` **[request.FindDeposits](#requestfinddeposits)** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Deposit](#responsedeposit)>>** 
-
-#### withdraw
-
--   **See: <https://docs.idex.io/#get-withdrawals>
-    **
-
-Get a withdrawal
-
-##### Parameters
-
--   `withdrawal` **[request.Withdrawal](#requestwithdrawal)** 
--   `signer` **signatures.MessageSigner**  (optional, default `this.signer`)
--   `findWithdrawal` **[request.FindWithdrawal](#requestfindwithdrawal)** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Withdrawal](#responsewithdrawal)>** 
-
-#### withdraw
-
--   **See: <https://docs.idex.io/#withdraw-funds>
-    **
-
-Create a new withdrawal
-
-##### Parameters
-
--   `withdrawal` **[request.Withdrawal](#requestwithdrawal)** 
--   `signer` **signatures.MessageSigner?**  (optional, default `this.signer`)
-
-##### Examples
-
-```javascript
-const withdrawal = await authenticatedClient.withdraw(
-  {
-    nonce: uuidv1(),
-    wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
-    asset: 'ETH',
-    quantity: '0.04000000',
-  },
-  idex.signatures.privateKeySigner(config.walletPrivateKey),
-);
-```
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Withdrawal](#responsewithdrawal)>** 
-
-#### getWithdrawals
-
--   **See: <https://docs.idex.io/#get-withdrawals>
-    **
-
-Get multiple withdrawals
-
-##### Parameters
-
--   `findWithdrawals` **[request.FindWithdrawals](#requestfindwithdrawals)** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Withdrawal](#responsewithdrawal)>>** 
-
-#### getWsToken
-
--   **See: <https://docs.idex.io/#get-authentication-token>
-    **
-
-Obtain a WebSocket API token
-
-##### Parameters
-
--   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum wallet address
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+Returns **void** 
 
 ## Enums
 
@@ -1024,7 +1074,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-## Requests
+## REST Requests
 
 
 
@@ -1109,6 +1159,16 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
 -   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Fills created at the same timestamp or after fillId
+
+### request.FindMarkets
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Target market, all markets are returned if omitted
+-   `regionOnly` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** true only returns markets available in the geographic region of the request
+-   `depositId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ### request.FindOrder
 
@@ -1204,7 +1264,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `assetContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset by contract address
 -   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Withdrawal amount in asset terms, fees are taken from this value
 
-## Responses
+## REST Responses
 
 
 
@@ -1373,8 +1433,8 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
--   `bids` **\[[response.OrderBookPriceLevel](#responseorderbookpricelevel)]** 
--   `asks` **\[[response.OrderBookPriceLevel](#responseorderbookpricelevel)]** 
+-   `bids` **\[response.OrderBookPriceLevel]** 
+-   `asks` **\[response.OrderBookPriceLevel]** 
 
 ### response.OrderBookLevel2
 
@@ -1384,14 +1444,8 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
--   `bids` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.OrderBookPriceLevel](#responseorderbookpricelevel)>** 
--   `asks` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.OrderBookPriceLevel](#responseorderbookpricelevel)>** 
-
-### response.OrderBookPriceLevel
-
-OrderBookPriceLevel
-
-Type: \[[OrderBookPrice](#orderbookprice), [OrderBookSize](#orderbooksize), [OrderBookNumOrders](#orderbooknumorders)]
+-   `bids` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;response.OrderBookPriceLevel>** 
+-   `asks` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;response.OrderBookPriceLevel>** 
 
 ### response.OrderFill
 
@@ -1541,123 +1595,25 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
     -   `data.code` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** error short code
     -   `data.message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** human readable error message
 
-## WebsocketTokenManager
-
-<https://docs.idex.io/#websocket-authentication-endpoints>
-
-    const wsTokenStore = new WebsocketTokenManager(wallet => client.getWsToken(uuidv1(), wallet))
-    const token = await wsTokenStore.getToken("0x123abc...");
-    wsClient.subscribe([{ name: 'balance', wallet: '0x0'}], token);
-
-### Parameters
-
--   `websocketAuthTokenFetch` **WebsocketTokenFetch** 
-
-## WebSocketClient
-
-WebSocket API client
-
-### Parameters
-
--   `baseURL` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base URL of websocket API
--   `websocketAuthTokenFetch` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Authenticated Rest API client fetch token call (`/wsToken`)
-     SDK Websocket client will then automatically handle Websocket token generation and refresh.
-     You can omit this when using only public websocket subscription.
-     Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
-     See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
--   `shouldReconnectAutomatically`   (optional, default `false`)
-
-### Examples
-
-```javascript
-import * as idex from '@idexio/idex-node';
-
-const config = {
-  baseURL: 'wss://ws.idex.io',
-  shouldReconnectAutomatically: true,
-}
-const webSocketClient = new idex.WebSocketClient(
-  config.baseURL,
-  // Optional, but required for authenticated wallet subscriptions
-  wallet => authenticatedClient.getWsToken(uuidv1(), wallet),
-  config.shouldReconnectAutomatically,
-);
-await webSocketClient.connect();
-```
-
-### subscribeAuthenticated
-
-Strictly typed subscribe which only can be used on authenticated subscriptions.
-
-For this methods you need to pass `websocketAuthTokenFetch` to the websocket constructor.
-Library will automatically refresh user's wallet auth tokens for you.
-
-See [API specification](https://docs.idex.io/#get-authentication-token)
-
-#### Parameters
-
--   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;request.AuthenticatedSubscription>** 
-
-Returns **void** 
-
-### subscribeUnauthenticated
-
-Subscribe which only can be used on non-authenticated subscriptions
-
-#### Parameters
-
--   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;request.UnauthenticatedSubscription>** 
-
-Returns **void** 
-
-## request.FindMarkets
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
--   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Target market, all markets are returned if omitted
--   `regionOnly` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** true only returns markets available in the geographic region of the request
--   `depositId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-## webSocketResponse.Subscriptions
+### webSocketResponse.Subscriptions
 
 Subscriptions Response
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
-### Properties
+#### Properties
 
 -   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 -   `method` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** subscriptions
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Subscription>** 
 
-## RawResponseMessage
+## ECDSA Signatures
 
-Response message without transformation to human readable form
 
-Type: SubscriptionMessageShort
 
-## OrderBookPrice
 
-OrderBookPrice
+### signatures.MessageSigner
 
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+A function that accepts a string and returns a Promise resolving on its ECDSA signature
 
-## OrderBookSize
-
-OrderBookSize
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-## OrderBookNumOrders
-
-OrderBookNumOrders
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-## autoDispatchEnabled
-
-Currently has no effect
-
-Type: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)
+Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)

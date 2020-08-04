@@ -233,7 +233,7 @@ export type Response =
   | SubscriptionsResponse
   | SubscriptionMessageLong;
 
-/**
+/*
  * Response message without transformation to human readable form
  */
 export type RawResponseMessage = SubscriptionMessageShort;

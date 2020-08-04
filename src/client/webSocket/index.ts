@@ -29,6 +29,7 @@ export type ResponseListener = (response: response.Response) => unknown;
  *   config.shouldReconnectAutomatically,
  * );
  * await webSocketClient.connect();
+ *
  */
 export default class WebSocketClient {
   private baseURL: string;

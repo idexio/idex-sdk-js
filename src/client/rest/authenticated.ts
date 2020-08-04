@@ -11,9 +11,9 @@ import * as signatures from '../../signatures';
 import { isNode } from '../../utils';
 
 /**
- * AuthenticatedClientOptions
+ * Authenticated API client options
  *
- * @typedef {Object} AuthenticatedClientOptions
+ * @typedef {Object} AuthenticatedRESTClientOptions
  * @property {boolean} sandbox - Must be set to true
  * @property {string} apiKey - Used to authenticate user
  * @property {string} apiSecret - Used to compute HMAC signature
@@ -34,19 +34,16 @@ export interface AuthenticatedRESTClientOptions {
  * import { v1 as uuidv1 } from 'uuid';
  * import * as idex from '@idexio/idex-sdk-js';
  *
- * // Edit the values below for your environment
- * const config = {
- *   baseURL: 'https://api-sandbox.idex.io/v1',
+ * const authenticatedClient = new idex.client.rest.Authenticated({
+ *   sandbox: true,
+ *   // Edit the values before for your environment
  *   apiKey: '1f7c4f52-4af7-4e1b-aa94-94fac8d931aa',
  *   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
+ *   // Optionally prove a wallet private key to automatically sign requests that need an ECDSA signature
  *   walletPrivateKey: '0x3141592653589793238462643383279502884197169399375105820974944592'
- * };
+ * });
  *
- * const authenticatedClient = new idex.AuthenticatedClient(
- *   config.baseURL,
- *   config.apiKey,
- *   config.apiSecret,
- * );
+ * @param {AuthenticatedRESTClientOptions} options
  */
 export default class AuthenticatedRESTClient {
   public baseURL: string;
@@ -141,7 +138,7 @@ export default class AuthenticatedRESTClient {
    * @see https://docs.idex.io/#create-order
    *
    * @param {request.Order} order
-   * @param {signatures.MessageSigner} [signer]
+   * @param {signatures.MessageSigner} [signer] - Required if a private key was not provided in the constructor
    */
   public async createOrder(
     order: request.Order,
@@ -179,7 +176,7 @@ export default class AuthenticatedRESTClient {
    * @see https://docs.idex.io/#test-create-order
    *
    * @param {request.Order} order
-   * @param {signatures.MessageSigner} [signer]
+   * @param {signatures.MessageSigner} [signer] - Required if a private key was not provided in the constructor
    */
   public async createTestOrder(
     order: request.Order,
@@ -223,7 +220,7 @@ export default class AuthenticatedRESTClient {
    * @see https://docs.idex.io/#cancel-order
    *
    * @param {string} cancelOrder
-   * @param {signatures.MessageSigner} [signer]
+   * @param {signatures.MessageSigner} [signer] - Required if a private key was not provided in the constructor
    */
   public async cancelOrder(
     cancelOrder: request.CancelOrder,
@@ -265,7 +262,7 @@ export default class AuthenticatedRESTClient {
    * @see https://docs.idex.io/#cancel-order
    *
    * @param {string} order
-   * @param {signatures.MessageSigner} [signer]
+   * @param {signatures.MessageSigner} [signer] - Required if a private key was not provided in the constructor
    */
   public async cancelOrders(
     cancelOrders: request.CancelOrders,
@@ -393,7 +390,7 @@ export default class AuthenticatedRESTClient {
    * @see https://docs.idex.io/#withdraw-funds
    *
    * @param {request.Withdrawal} withdrawal
-   * @param {signatures.MessageSigner} [signer]
+   * @param {signatures.MessageSigner} [signer] - Required if a private key was not provided in the constructor
    */
   public async withdraw(
     withdrawal: request.Withdrawal,

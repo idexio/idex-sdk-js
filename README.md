@@ -18,15 +18,18 @@ The official library for IDEX's REST and WebSocket APIs
 npm install @idexio/idex-sdk
 ```
 
-In-depth usage documentation by endpoint is [available here](https://github.com/idexio/idex-sdk-js/blob/master//API.md).
-
 ## Getting Started
 
 ```typescript
-const publicClient = new idex.PublicClient(config.baseURL);
-console.log(await publicClient.time());
+import * as idex from '@idexio/idex-sdk-js';
+
+const publicClient = new idex.client.rest.Public({
+  sandbox: true,
+});
+console.log(await publicClient.getServerTime());
 ```
 
+In-depth usage documentation by endpoint is [available here](https://github.com/idexio/idex-sdk-js/blob/master//API.md).
 
 ## Contracts
 

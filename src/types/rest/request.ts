@@ -294,7 +294,7 @@ interface WithdrawalBase {
   nonce: string;
   wallet: string;
   quantity: string;
-  /** Currently has no effect */
+  // Currently has no effect
   autoDispatchEnabled?: boolean;
 }
 
