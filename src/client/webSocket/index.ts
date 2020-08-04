@@ -129,7 +129,7 @@ export default class WebSocketClient {
   }
 
   public isConnected(): boolean {
-    return this.webSocket && this.webSocket.readyState === WebSocket.OPEN;
+    return this.webSocket?.readyState === WebSocket.OPEN;
   }
 
   /* Event listeners */
