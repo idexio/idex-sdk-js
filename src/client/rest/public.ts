@@ -1,42 +1,53 @@
-import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 import http from 'http';
 import https from 'https';
+import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 
-import { isNode } from '../utils';
-import { request, response } from '../types';
+import * as constants from '../../constants';
+import * as request from '../../types/rest/request';
+import * as response from '../../types/rest/response';
+import { isNode } from '../../utils';
 
 /**
- * Public API client
+ * Public REST API client options
+ *
+ * @typedef {Object} PublicRESTClientOptions
+ * @property {boolean} sandbox - Must be set to true
+ * @property {string} [apiKey] - Increases rate limits if provided
+ */
+export interface PublicRESTClientOptions {
+  sandbox?: boolean;
+  baseURL?: string;
+  apiKey?: string;
+}
+
+/**
+ * Public REST API client
  *
  * @example
- * import * as idex from '@idexio/idex-sdk-js';
+ * import { v1 as uuidv1 } from 'uuid';
  *
- * // Edit the values below for your environment
- * const config = {
- *   baseURL: 'https://api-sandbox.idex.io/v1',
+ * const publicClient = new idex.client.rest.Public({
+ *   sandbox: true,
+ *   // Optionally provide an API key to increase rate limits
  *   apiKey: '1f7c4f52-4af7-4e1b-aa94-94fac8d931aa',
- * };
+ * });
+ * console.log(await publicClient.getTickers('IDEX-ETH'));
  *
- * const publicClient = new idex.PublicClient(config.baseURL);
- *
- * // Optionally provide an API key to increase rate limits
- * const publicClientWithApiKey = new idex.PublicClient(
- *   config.baseURL,
- *   config.apiKey,
- * );
- *
- * @param {string} baseUrl
- * @param {string} [apiKey] Increases rate limits if provided
+ * @param {PublicRESTClientOptions} options
  */
-export default class PublicClient {
+export default class PublicRESTClient {
   public baseURL: string;
 
   private axios: AxiosInstance;
 
-  public constructor(baseURL: string, apiKey?: string) {
-    this.baseURL = baseURL;
+  public constructor(options: PublicRESTClientOptions) {
+    this.baseURL = options.sandbox
+      ? constants.SANDBOX_REST_API_BASE_URL
+      : options.baseURL;
 
-    const headers = apiKey ? { Authorization: `Bearer ${apiKey}` } : null;
+    const headers = options.apiKey
+      ? { Authorization: `Bearer ${options.apiKey}` }
+      : null;
     this.axios = isNode
       ? Axios.create({
           headers,

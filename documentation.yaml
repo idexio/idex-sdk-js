@@ -1,8 +1,11 @@
 toc:
   - name: Clients
     children:
-      - PublicClient
-      - AuthenticatedClient
+      - AuthenticatedRESTClient
+      - AuthenticatedRESTClientOptions
+      - PublicRESTClient
+      - PublicRESTClientOptions
+      - WebSocketClient
   - name: Enums
     description: |
       Sets of named constants used as field types for several requests and responses
@@ -17,7 +20,7 @@ toc:
       - OrderStatus
       - OrderTimeInForce
       - OrderType
-  - name: Requests
+  - name: REST Requests
     children:
       - request.CancelOrders
       - request.FindBalances
@@ -26,6 +29,7 @@ toc:
       - request.FindDeposits
       - request.FindFill
       - request.FindFills
+      - request.FindMarkets
       - request.FindOrder
       - request.FindOrders
       - request.FindTrades
@@ -33,7 +37,7 @@ toc:
       - request.FindWithdrawals
       - request.Order
       - request.Withdrawal
-  - name: Responses
+  - name: REST Responses
     children:
       - response.Asset
       - response.Balance
@@ -58,3 +62,7 @@ toc:
   - name: WebSocket Responses
     children:
       - webSocketResponse.Error
+      - webSocketResponse.Subscriptions
+  - name: ECDSA Signatures
+    children:
+      - signatures.MessageSigner

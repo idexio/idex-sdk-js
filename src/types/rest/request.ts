@@ -1,6 +1,5 @@
-import * as enums from './enums';
-
-import { XOR } from './utils';
+import * as enums from '../enums';
+import { XOR } from '../utils';
 
 interface CancelOrdersBase {
   nonce: string;
@@ -295,7 +294,7 @@ interface WithdrawalBase {
   nonce: string;
   wallet: string;
   quantity: string;
-  /** Currently has no effect */
+  // Currently has no effect
   autoDispatchEnabled?: boolean;
 }
 

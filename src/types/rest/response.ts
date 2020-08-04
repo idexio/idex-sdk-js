@@ -1,6 +1,5 @@
-import * as enums from './enums';
-
-import { XOR } from './utils';
+import * as enums from '../enums';
+import { XOR } from '../utils';
 
 /**
  * Asset
@@ -248,31 +247,16 @@ export interface Order {
   fills?: OrderFill[];
 }
 
-/**
- * OrderBookPrice
- *
- * @typedef {string} OrderBookPrice
- */
 type Price = string;
 
-/**
- * OrderBookSize
- *
- * @typedef {string} OrderBookSize
- */
 type Size = string;
 
-/**
- * OrderBookNumOrders
- *
- * @typedef {string} OrderBookNumOrders
- */
 type NumOrders = number;
 
 /**
  * OrderBookPriceLevel
  *
- * @typedef {[OrderBookPrice, OrderBookSize, OrderBookNumOrders]} response.OrderBookPriceLevel
+ * @typedef {[string, string, number]} response.OrderBookPriceLevel
  */
 export type OrderBookPriceLevel = [Price, Size, NumOrders];
 

@@ -1,5 +1,4 @@
-import * as enums from './enums';
-import * as webSocketSubscriptionMessages from './webSocketSubscriptionMessages';
+import * as enums from '../enums';
 
 export type Method = 'subscribe' | 'subscriptions' | 'unsubscribe';
 
@@ -98,50 +97,3 @@ export type Request =
   | SubscribeRequest
   | SubscriptionsRequest
   | UnsubscribeRequest;
-
-/**
- * Error Response
- *
- * @typedef {Object} webSocketResponse.Error
- * @property {string} [cid]
- * @property {string} type - error
- * @property {Object} data
- * @property {string} data.code - error short code
- * @property {string} data.message - human readable error message
- */
-export interface ErrorResponse {
-  cid?: string;
-  type: 'error';
-  data: {
-    code: string;
-    message: string;
-  };
-}
-
-/**
- * Subscriptions Response
- *
- * @typedef {Object} webSocketResponse.Subscriptions
- * @property {string} [cid]
- * @property {string} method - subscriptions
- * @property {Subscription[]} subscriptions
- * @property {string} Subscription.name - subscription name
- * @property {string} Subscription.markets - markets
- * @property {string} [Subscription.interval] - candle interval
- * @property {string} [Subscription.wallet] - wallet address
- */
-export interface SubscriptionsResponse {
-  cid?: string;
-  type: 'subscriptions';
-  subscriptions: Subscription[];
-}
-
-export type Response =
-  | ErrorResponse
-  | SubscriptionsResponse
-  | webSocketSubscriptionMessages.SubscriptionMessageLong;
-
-/**
- * Response message without transformation to human readable form
- */
-export type RawResponseMessage = webSocketSubscriptionMessages.SubscriptionMessageShort;

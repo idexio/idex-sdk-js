@@ -1,8 +1,7 @@
 import { ethers } from 'ethers';
 
+import * as constants from './constants';
 import * as types from './types';
-
-const orderSignatureHashVersion = 1;
 
 /**
  * A function that accepts a string and returns a Promise resolving on its ECDSA signature
@@ -21,22 +20,29 @@ export const privateKeySigner = function getPrivateKeyMessageSigner(
 };
 
 export const orderHash = function getPlaceOrderWalletHash(
-  order: types.request.Order,
+  order: types.rest.request.Order,
 ): string {
   return solidityHashOfParams([
-    ['uint8', orderSignatureHashVersion],
+    ['uint8', constants.ORDER_SIGNATURE_HASH_VERSION],
     ['uint128', uuidToUint8Array(order.nonce)],
     ['address', order.wallet],
     ['string', order.market],
     ['uint8', types.enums.OrderType[order.type]],
     ['uint8', types.enums.OrderSide[order.side]],
-    ['string', (order as types.request.OrderByBaseQuantity).quantity || ''],
     [
       'string',
-      (order as types.request.OrderByQuoteQuantity).quoteOrderQuantity || '',
+      (order as types.rest.request.OrderByBaseQuantity).quantity || '',
     ],
-    ['string', (order as types.request.OrderWithPrice).price || ''],
-    ['string', (order as types.request.OrderWithStopPrice).stopPrice || ''],
+    [
+      'string',
+      (order as types.rest.request.OrderByQuoteQuantity).quoteOrderQuantity ||
+        '',
+    ],
+    ['string', (order as types.rest.request.OrderWithPrice).price || ''],
+    [
+      'string',
+      (order as types.rest.request.OrderWithStopPrice).stopPrice || '',
+    ],
     ['string', order.clientOrderId || ''],
     ['uint8', types.enums.OrderTimeInForce[order.timeInForce] || 0],
     [
@@ -49,15 +55,15 @@ export const orderHash = function getPlaceOrderWalletHash(
 
 export const cancelOrderHash = function getCancelOrderWalletHash(
   parameters: types.utils.XOR<
-    types.request.CancelOrder,
-    types.request.CancelOrders
+    types.rest.request.CancelOrder,
+    types.rest.request.CancelOrders
   >,
 ): string {
   // Validate either single order or multiple orders
   if (
     [
       parameters.orderId,
-      (parameters as types.request.CancelOrders).market,
+      (parameters as types.rest.request.CancelOrders).market,
     ].filter((val) => !!val).length > 1
   ) {
     throw new Error(
@@ -69,12 +75,12 @@ export const cancelOrderHash = function getCancelOrderWalletHash(
     ['uint128', uuidToUint8Array(parameters.nonce)],
     ['address', parameters.wallet],
     ['string', parameters.orderId || ''],
-    ['string', (parameters as types.request.CancelOrders).market || ''],
+    ['string', (parameters as types.rest.request.CancelOrders).market || ''],
   ]);
 };
 
 export const withdrawalHash = function getWithdrawalWalletHash(
-  withdrawal: types.request.Withdrawal,
+  withdrawal: types.rest.request.Withdrawal,
 ): string {
   if (
     (withdrawal.asset && withdrawal.assetContractAddress) ||
