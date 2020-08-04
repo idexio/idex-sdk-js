@@ -253,7 +253,7 @@ type Size = string;
 
 type NumOrders = number;
 
-/*
+/**
  * OrderBookPriceLevel
  *
  * @typedef {[string, string, number]} response.OrderBookPriceLevel

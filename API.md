@@ -186,6 +186,7 @@
         -   [Properties](#properties-25)
     -   [response.OrderBookLevel2](#responseorderbooklevel2)
         -   [Properties](#properties-26)
+    -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
     -   [response.OrderFill](#responseorderfill)
         -   [Properties](#properties-27)
     -   [response.Ping](#responseping)
@@ -1433,8 +1434,8 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
--   `bids` **\[response.OrderBookPriceLevel]** 
--   `asks` **\[response.OrderBookPriceLevel]** 
+-   `bids` **\[[response.OrderBookPriceLevel](#responseorderbookpricelevel)]** 
+-   `asks` **\[[response.OrderBookPriceLevel](#responseorderbookpricelevel)]** 
 
 ### response.OrderBookLevel2
 
@@ -1444,8 +1445,14 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
--   `bids` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;response.OrderBookPriceLevel>** 
--   `asks` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;response.OrderBookPriceLevel>** 
+-   `bids` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.OrderBookPriceLevel](#responseorderbookpricelevel)>** 
+-   `asks` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.OrderBookPriceLevel](#responseorderbookpricelevel)>** 
+
+### response.OrderBookPriceLevel
+
+OrderBookPriceLevel
+
+Type: \[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)]
 
 ### response.OrderFill
 
