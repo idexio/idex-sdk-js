@@ -245,7 +245,8 @@ const authenticatedClient = new idex.client.rest.Authenticated({
 
 #### getUser
 
--   **See: <https://docs.idex.io/#get-user-account>**
+-   **See: <https://docs.idex.io/#get-user-account>
+    **
 
 Get account details for the API key’s user
 
@@ -257,7 +258,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getWallets
 
--   **See: <https://docs.idex.io/#get-wallets>**
+-   **See: <https://docs.idex.io/#get-wallets>
+    **
 
 Get account details for the API key’s user
 
@@ -269,7 +271,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getBalances
 
--   **See: <https://docs.idex.io/#get-balances>**
+-   **See: <https://docs.idex.io/#get-balances>
+    **
 
 Get asset quantity data (positions) held by a wallet on the exchange
 
@@ -281,7 +284,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### createOrder
 
--   **See: <https://docs.idex.io/#create-order>**
+-   **See: <https://docs.idex.io/#create-order>
+    **
 
 Create and submit an order to the matching engine.
 
@@ -311,7 +315,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### createTestOrder
 
--   **See: <https://docs.idex.io/#test-create-order>**
+-   **See: <https://docs.idex.io/#test-create-order>
+    **
 
 Tests order creation and validation without submitting an order to the matching engine
 
@@ -341,7 +346,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### cancelOrder
 
--   **See: <https://docs.idex.io/#cancel-order>**
+-   **See: <https://docs.idex.io/#cancel-order>
+    **
 
 Cancel a single order
 
@@ -377,7 +383,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### cancelOrders
 
--   **See: <https://docs.idex.io/#cancel-order>**
+-   **See: <https://docs.idex.io/#cancel-order>
+    **
 
 Cancel multiple orders
 
@@ -412,7 +419,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getOrder
 
--   **See: <https://docs.idex.io/#get-orders>**
+-   **See: <https://docs.idex.io/#get-orders>
+    **
 
 Get an order
 
@@ -424,7 +432,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getOrders
 
--   **See: <https://docs.idex.io/#cancel-order>**
+-   **See: <https://docs.idex.io/#cancel-order>
+    **
 
 Get multiple orders
 
@@ -436,7 +445,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getFill
 
--   **See: <https://docs.idex.io/#get-fills>**
+-   **See: <https://docs.idex.io/#get-fills>
+    **
 
 Get a fill
 
@@ -448,7 +458,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getFills
 
--   **See: <https://docs.idex.io/#get-fills>**
+-   **See: <https://docs.idex.io/#get-fills>
+    **
 
 Get multiple fills
 
@@ -460,7 +471,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getDeposit
 
--   **See: <https://docs.idex.io/#get-deposits>**
+-   **See: <https://docs.idex.io/#get-deposits>
+    **
 
 Get a deposit
 
@@ -472,7 +484,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getDeposits
 
--   **See: <https://docs.idex.io/#get-deposits>**
+-   **See: <https://docs.idex.io/#get-deposits>
+    **
 
 Get multiple deposits
 
@@ -484,7 +497,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### withdraw
 
--   **See: <https://docs.idex.io/#get-withdrawals>**
+-   **See: <https://docs.idex.io/#get-withdrawals>
+    **
 
 Get a withdrawal
 
@@ -498,7 +512,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### withdraw
 
--   **See: <https://docs.idex.io/#withdraw-funds>**
+-   **See: <https://docs.idex.io/#withdraw-funds>
+    **
 
 Create a new withdrawal
 
@@ -525,7 +540,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getWithdrawals
 
--   **See: <https://docs.idex.io/#get-withdrawals>**
+-   **See: <https://docs.idex.io/#get-withdrawals>
+    **
 
 Get multiple withdrawals
 
@@ -537,7 +553,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getWsToken
 
--   **See: <https://docs.idex.io/#get-authentication-token>**
+-   **See: <https://docs.idex.io/#get-authentication-token>
+    **
 
 Obtain a WebSocket API token
 
@@ -584,7 +601,8 @@ console.log(await publicClient.getTickers('IDEX-ETH'));
 
 #### ping
 
--   **See: <https://docs.idex.io/#get-ping>**
+-   **See: <https://docs.idex.io/#get-ping>
+    **
 
 Test connectivity to the REST API
 
@@ -592,7 +610,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getServerTime
 
--   **See: <https://docs.idex.io/#get-time>**
+-   **See: <https://docs.idex.io/#get-time>
+    **
 
 Returns the current server time
 
@@ -600,7 +619,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getExchangeInfo
 
--   **See: <https://docs.idex.io/#get-exchange>**
+-   **See: <https://docs.idex.io/#get-exchange>
+    **
 
 Returns basic information about the exchange.
 
@@ -608,7 +628,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getAssets
 
--   **See: <https://docs.idex.io/#get-assets>**
+-   **See: <https://docs.idex.io/#get-assets>
+    **
 
 Returns information about assets supported by the exchange
 
@@ -616,7 +637,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getMarkets
 
--   **See: <https://docs.idex.io/#get-markets>**
+-   **See: <https://docs.idex.io/#get-markets>
+    **
 
 Returns information about the currently listed markets
 
@@ -628,7 +650,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getTickers
 
--   **See: <https://docs.idex.io/#get-tickers>**
+-   **See: <https://docs.idex.io/#get-tickers>
+    **
 
 Returns market statistics for the trailing 24-hour period
 
@@ -640,7 +663,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getCandles
 
--   **See: <https://docs.idex.io/#get-candles>**
+-   **See: <https://docs.idex.io/#get-candles>
+    **
 
 Returns candle (OHLCV) data for a market
 
@@ -652,7 +676,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getTrades
 
--   **See: <https://docs.idex.io/#get-trades>**
+-   **See: <https://docs.idex.io/#get-trades>
+    **
 
 Returns public trade data for a market
 
@@ -664,7 +689,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getOrderBookLevel1
 
--   **See: <https://docs.idex.io/#get-order-books>**
+-   **See: <https://docs.idex.io/#get-order-books>
+    **
 
 Get current top bid/ask price levels of order book for a market
 
@@ -676,7 +702,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### getOrderBookLevel2
 
--   **See: <https://docs.idex.io/#get-order-books>**
+-   **See: <https://docs.idex.io/#get-order-books>
+    **
 
 Get current order book price levels for a market
 

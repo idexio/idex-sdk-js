@@ -450,8 +450,7 @@ export default class AuthenticatedRESTClient {
       method: 'GET',
       url: `${this.baseURL}${endpoint}`,
       headers: this.createHmacRequestSignatureHeader(
-        // The query serializer for HMAC must be the same as that used to send the request so the
-        // signature can deterministically be computed on the other side
+        // The param serializer for HMAC must be the same as that used for the request itself
         qs.stringify(requestParams),
       ),
       params: requestParams,
@@ -481,12 +480,9 @@ export default class AuthenticatedRESTClient {
       method: 'DELETE',
       url: `${this.baseURL}${endpoint}`,
       headers: this.createHmacRequestSignatureHeader(
-        qs.stringify(requestParams),
+        JSON.stringify(requestParams),
       ),
-      params: requestParams,
-      // The query serializer for HMAC must be the same as that used to send the request so the
-      // signature can deterministically be computed on the other side
-      paramsSerializer: qs.stringify,
+      data: requestParams,
     });
   }
 
