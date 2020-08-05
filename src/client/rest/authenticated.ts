@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import http from 'http';
 import https from 'https';
-import queryString from 'query-string';
+import qs from 'qs';
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 import * as constants from '../../constants';
@@ -452,10 +452,10 @@ export default class AuthenticatedRESTClient {
       headers: this.createHmacRequestSignatureHeader(
         // The query serializer for HMAC must be the same as that used to send the request so the
         // signature can deterministically be computed on the other side
-        queryString.stringify(requestParams),
+        qs.stringify(requestParams),
       ),
       params: requestParams,
-      paramsSerializer: queryString.stringify,
+      paramsSerializer: qs.stringify,
     });
   }
 
@@ -475,18 +475,18 @@ export default class AuthenticatedRESTClient {
 
   protected async delete(
     endpoint: string,
-    requestParams: Record<string, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+    requestParams: request.CancelOrdersBody, // eslint-disable-line @typescript-eslint/no-explicit-any
   ): Promise<AxiosResponse> {
     return this.axios({
       method: 'DELETE',
       url: `${this.baseURL}${endpoint}`,
       headers: this.createHmacRequestSignatureHeader(
-        queryString.stringify(requestParams),
+        qs.stringify(requestParams),
       ),
       params: requestParams,
       // The query serializer for HMAC must be the same as that used to send the request so the
       // signature can deterministically be computed on the other side
-      paramsSerializer: queryString.stringify,
+      paramsSerializer: qs.stringify,
     });
   }
 
