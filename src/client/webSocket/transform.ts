@@ -1,5 +1,10 @@
 import * as restResponse from '../../types/rest/response';
 import * as webSocketResponse from '../../types/webSocket/response';
+import {
+  SdkAuthenticatedSubscription,
+  Subscription,
+  SdkSubscription,
+} from '../../types/webSocket/request';
 
 const transformTickersMessage = (
   ticker: webSocketResponse.TickerShort,
@@ -154,4 +159,21 @@ export const transformMessage = (
     default:
       return message;
   }
+};
+
+/**
+ * Wallet is used only to generate user's wallet auth token
+ * After we got token, we don't want to send wallet to the server
+ *
+ */
+export const removeWalletFromSdkSubscription = (
+  subscription:
+    | SdkAuthenticatedSubscription
+    | (SdkSubscription & { wallet?: string }),
+): Subscription => {
+  const subscriptionWithoutWallet = { ...subscription };
+  if (subscriptionWithoutWallet.wallet) {
+    delete subscriptionWithoutWallet.wallet;
+  }
+  return subscriptionWithoutWallet;
 };

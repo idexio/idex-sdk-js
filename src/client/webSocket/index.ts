@@ -4,7 +4,7 @@ import * as constants from '../../constants';
 import * as request from '../../types/webSocket/request';
 import * as response from '../../types/webSocket/response';
 import WebsocketTokenManager from './tokenManager';
-import { transformMessage } from './transform';
+import { transformMessage, removeWalletFromSdkSubscription } from './transform';
 import { isNode } from '../../utils';
 
 const userAgent = 'idex-sdk-js';
@@ -194,7 +194,7 @@ export default class WebSocketClient {
       this.sendMessage({
         cid,
         method: 'subscribe',
-        subscriptions,
+        subscriptions: subscriptions.map(removeWalletFromSdkSubscription),
         token: this.webSocketTokenManager.getLastCachedToken(uniqueWallets[0]),
       });
       return;
@@ -214,14 +214,10 @@ export default class WebSocketClient {
 
     // For multiple wallets, we need to split subscriptions
     authSubscriptions.forEach((authSubscription) => {
-      const subscriptionWithoutWallet = { ...authSubscription };
-      // Wallet is used only to generate user's wallet auth token
-      // After we got token, we don't want to send wallet to the server
-      delete subscriptionWithoutWallet.wallet;
       this.sendMessage({
         cid,
         method: 'subscribe',
-        subscriptions: [subscriptionWithoutWallet as request.Subscription],
+        subscriptions: [removeWalletFromSdkSubscription(authSubscription)],
         token: this.webSocketTokenManager.getLastCachedToken(
           authSubscription.wallet,
         ),
