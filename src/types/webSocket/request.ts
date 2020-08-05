@@ -57,7 +57,7 @@ export type AuthenticatedSubscription =
   | BalancesSubscription
   | OrdersSubscription;
 
-export type SdkAuthenticatedSubscription =
+export type InternalAuthenticatedSubscription =
   | (BalancesSubscription & { wallet: string })
   | (OrdersSubscription & { wallet: string });
 
@@ -68,12 +68,12 @@ export type UnauthenticatedSubscription =
   | TickersSubscription
   | TradesSubscription;
 
-/**
- * Internal Subscription which include wallets
- * required for generation of authentication tokens
+/*
+ * Internal subscription does include wallet for generation of authentication tokens.
+ * Should be used only in combination with existing SDK subscription methods.
  */
-export type SdkSubscription =
-  | SdkAuthenticatedSubscription
+export type InternalSubscription =
+  | InternalAuthenticatedSubscription
   | UnauthenticatedSubscription;
 
 export type Subscription =

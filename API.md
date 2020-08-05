@@ -762,7 +762,7 @@ See [API specification](https://docs.idex.io/#get-authentication-token)
 
 ##### Parameters
 
--   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;request.SdkAuthenticatedSubscription>** 
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;request.InternalAuthenticatedSubscription>** 
 
 Returns **void** 
 
@@ -1636,10 +1636,3 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 A function that accepts a string and returns a Promise resolving on its ECDSA signature
 
 Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)
-
-## SdkSubscription
-
-Internal Subscription which include wallets
-required for generation of authentication tokens
-
-Type: (SdkAuthenticatedSubscription | UnauthenticatedSubscription)

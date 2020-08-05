@@ -158,7 +158,7 @@ export default class WebSocketClient {
   }
 
   public async subscribe(
-    subscriptions: request.SdkSubscription[],
+    subscriptions: request.InternalSubscription[],
     cid?: string,
   ): Promise<void> {
     const authSubscriptions = subscriptions.filter(isAuthenticatedSubscription);
@@ -234,7 +234,7 @@ export default class WebSocketClient {
    * See {@link https://docs.idex.io/#get-authentication-token|API specification}
    */
   public subscribeAuthenticated(
-    subscriptions: request.SdkAuthenticatedSubscription[],
+    subscriptions: request.InternalAuthenticatedSubscription[],
   ): void {
     this.subscribe(subscriptions);
   }
@@ -328,8 +328,8 @@ export default class WebSocketClient {
 }
 
 function isAuthenticatedSubscription(
-  subscription: request.SdkSubscription,
-): subscription is request.SdkAuthenticatedSubscription {
+  subscription: request.InternalSubscription,
+): subscription is request.InternalAuthenticatedSubscription {
   return Object.keys(request.AuthenticatedSubscriptionName).includes(
     subscription.name,
   );
