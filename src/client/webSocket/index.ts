@@ -5,6 +5,7 @@ import * as request from '../../types/webSocket/request';
 import * as response from '../../types/webSocket/response';
 import WebsocketTokenManager from './tokenManager';
 import { transformMessage } from './transform';
+import { isNode } from '../../utils';
 
 const userAgent = 'idex-sdk-js';
 
@@ -261,9 +262,14 @@ export default class WebSocketClient {
   /* Private */
 
   private createWebSocket(): void {
-    this.webSocket = new WebSocket(this.baseURL, {
-      headers: { 'User-Agent': userAgent },
-    });
+    this.webSocket = new WebSocket(
+      this.baseURL,
+      isNode
+        ? {
+            headers: { 'User-Agent': userAgent },
+          }
+        : undefined,
+    );
     this.webSocket.onmessage = this.handleWebSocketMessage.bind(this);
     this.webSocket.onclose = this.handleWebSocketClose.bind(this);
     this.webSocket.onerror = this.handleWebSocketError.bind(this);
