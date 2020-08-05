@@ -120,7 +120,7 @@ export interface OrderShort {
   T: number;
   x: keyof typeof enums.OrderStateChange;
   X: keyof typeof enums.OrderStatus;
-  u: string;
+  u: number;
   o: keyof typeof enums.OrderType;
   S: keyof typeof enums.OrderSide;
   q: string;
@@ -144,6 +144,7 @@ export interface OrderLong {
   timeOfOriginalOrder: number; // T
   executionType: keyof typeof enums.OrderStateChange; // x
   status: keyof typeof enums.OrderStatus; // X
+  sequence: number;
   orderBookSequenceNumber?: string; // u
   type: keyof typeof enums.OrderType; // o
   side: keyof typeof enums.OrderSide; // S
