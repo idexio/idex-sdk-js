@@ -157,18 +157,15 @@ export default class WebSocketClient {
   }
 
   public async subscribe(
-    subscriptions: request.Subscription[],
+    subscriptions: request.SdkSubscription[],
     cid?: string,
   ): Promise<void> {
-    // TODO: Do these need to be any?
     const authSubscriptions = subscriptions.filter(isAuthenticatedSubscription);
     const uniqueWallets = Array.from(
       new Set(
         authSubscriptions
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .filter((subscription) => (subscription as any).wallet)
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .map((subscription) => (subscription as any).wallet),
+          .filter((subscription) => subscription.wallet)
+          .map((subscription) => subscription.wallet),
       ),
     );
 
@@ -184,15 +181,6 @@ export default class WebSocketClient {
       );
     }
 
-    if (authSubscriptions.length === 0) {
-      this.sendMessage({
-        cid,
-        method: 'subscribe',
-        subscriptions,
-      });
-      return;
-    }
-
     // Prepare all auth tokens for subscriptions
     await Promise.all(
       uniqueWallets.map((wallet) =>
@@ -200,6 +188,7 @@ export default class WebSocketClient {
       ),
     );
 
+    // For single wallet, send all subscriptions at once (also unauthenticated)
     if (uniqueWallets.length === 1) {
       this.sendMessage({
         cid,
@@ -210,19 +199,31 @@ export default class WebSocketClient {
       return;
     }
 
-    // For more wallets we need to split subscriptions
-    subscriptions.forEach((subscription) => {
-      // TODO: Does this need to be any?
+    // Subscribe public subscriptions all at once
+    const publicSubscriptions = subscriptions.filter(
+      (subscription) => !isAuthenticatedSubscription(subscription),
+    );
+    if (publicSubscriptions.length > 0) {
       this.sendMessage({
         cid,
         method: 'subscribe',
-        subscriptions: [subscription],
-        token: isAuthenticatedSubscription(subscription)
-          ? this.webSocketTokenManager.getLastCachedToken(
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (subscription as any).wallet,
-            )
-          : undefined,
+        subscriptions: publicSubscriptions,
+      });
+    }
+
+    // For multiple wallets, we need to split subscriptions
+    authSubscriptions.forEach((authSubscription) => {
+      const subscriptionWithoutWallet = { ...authSubscription };
+      // Wallet is used only to generate user's wallet auth token
+      // After we got token, we don't want to send wallet to the server
+      delete subscriptionWithoutWallet.wallet;
+      this.sendMessage({
+        cid,
+        method: 'subscribe',
+        subscriptions: [subscriptionWithoutWallet as request.Subscription],
+        token: this.webSocketTokenManager.getLastCachedToken(
+          authSubscription.wallet,
+        ),
       });
     });
   }
@@ -236,7 +237,7 @@ export default class WebSocketClient {
    * See {@link https://docs.idex.io/#get-authentication-token|API specification}
    */
   public subscribeAuthenticated(
-    subscriptions: request.AuthenticatedSubscription[],
+    subscriptions: request.SdkAuthenticatedSubscription[],
   ): void {
     this.subscribe(subscriptions);
   }
@@ -325,8 +326,8 @@ export default class WebSocketClient {
 }
 
 function isAuthenticatedSubscription(
-  subscription: request.Subscription,
-): boolean {
+  subscription: request.SdkSubscription,
+): subscription is request.SdkAuthenticatedSubscription {
   return Object.keys(request.AuthenticatedSubscriptionName).includes(
     subscription.name,
   );

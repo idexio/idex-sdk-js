@@ -57,12 +57,24 @@ export type AuthenticatedSubscription =
   | BalancesSubscription
   | OrdersSubscription;
 
+export type SdkAuthenticatedSubscription =
+  | (BalancesSubscription & { wallet: string })
+  | (OrdersSubscription & { wallet: string });
+
 export type UnauthenticatedSubscription =
   | CandlesSubscription
   | L1OrderBookSubscription
   | L2OrderBookSubscription
   | TickersSubscription
   | TradesSubscription;
+
+/**
+ * Internal Subscription which include wallets
+ * required for generation of authentication tokens
+ */
+export type SdkSubscription =
+  | SdkAuthenticatedSubscription
+  | UnauthenticatedSubscription;
 
 export type Subscription =
   | AuthenticatedSubscription
