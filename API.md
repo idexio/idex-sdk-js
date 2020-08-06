@@ -221,19 +221,27 @@
         -   [Properties](#properties-39)
 -   [ECDSA Signatures](#ecdsa-signatures)
     -   [signatures.MessageSigner](#signaturesmessagesigner)
+-   [isDefinedFilter](#isdefinedfilter)
+    -   [Parameters](#parameters-29)
+-   [WebsocketTokenManager](#websockettokenmanager)
+    -   [Parameters](#parameters-30)
+    -   [Examples](#examples-9)
+    -   [getToken](#gettoken)
+        -   [Parameters](#parameters-31)
 -   [WebSocketRequestBalancesSubscription](#websocketrequestbalancessubscription)
     -   [Properties](#properties-40)
     -   [wallet](#wallet-1)
+-   [forceRefresh](#forcerefresh)
 -   [WebSocketRequestOrdersSubscription](#websocketrequestorderssubscription)
     -   [Properties](#properties-41)
     -   [wallet](#wallet-2)
 -   [associateWalletHash](#associatewallethash)
-    -   [Parameters](#parameters-29)
+    -   [Parameters](#parameters-32)
 -   [CancelledOrder](#cancelledorder)
     -   [Properties](#properties-42)
 -   [ResetResponseCancelledOrder](#resetresponsecancelledorder)
 -   [splitSubscriptions](#splitsubscriptions)
-    -   [Parameters](#parameters-30)
+    -   [Parameters](#parameters-33)
 
 ## Clients
 
@@ -833,13 +841,17 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
--   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Must be set to true
--   `websocketAuthTokenFetch` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Authenticated Rest API client fetch token call (`/wsToken`)
+-   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?**  Should the WebSocket connect to the [| Sandbox environment](https://docs.idex.io/#sandbox)?
+     **Note**: This must be set to `true` during the Sandbox preview.
+-   `websocketAuthTokenFetch` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?**  Authenticated Rest API client fetch token call (`/wsToken`)
      SDK Websocket client will then automatically handle Websocket token generation and refresh.
      You can omit this when using only public websocket subscription.
      Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
      See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
--   `shouldReconnectAutomatically` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** If true, automatically reconnects when connection is closed by the server or network errors
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Optionally provide a wallet to use for any authenticated subscriptions which do not have a wallet
+     provided.  If this is not provided, it is an error to subscribe without a `wallet` parameter in the
+     request.
+-   `shouldReconnectAutomatically` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?**  If true, automatically reconnects when connection is closed by the server or network errors
 
 ## Enums
 
@@ -1711,6 +1723,46 @@ A function that accepts a string and returns a Promise resolving on its ECDSA si
 
 Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)
 
+## isDefinedFilter
+
+Filter out any undefined values from an array using `Array.filter` so that
+TypeScript understands.
+
+### Parameters
+
+-   `value` **(T | [undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined))** 
+
+Returns **any** 
+
+## WebsocketTokenManager
+
+<https://docs.idex.io/#websocket-authentication-endpoints>
+
+### Parameters
+
+-   `websocketAuthTokenFetch` **WebsocketTokenFetch** 
+
+### Examples
+
+```javascript
+const wsTokenStore = new WebsocketTokenManager(wallet => client.getWsToken(uuidv1(), wallet))
+ const token = await wsTokenStore.getToken("0x123abc...");
+ wsClient.subscribe([{ name: 'balance', wallet: '0x0'}], token);
+```
+
+### getToken
+
+Get a token for the given wallet, returning any previously generated
+tokens if they have not expired yet.  If called in parallel it will
+return the pending request if the wallet is the same.
+
+#### Parameters
+
+-   `walletAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `forceRefresh`   (optional, default `false`)
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined))>** 
+
 ## WebSocketRequestBalancesSubscription
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -1718,10 +1770,21 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 ### Properties
 
 -   `name` **`"balances"`** The name of the subscription
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
+     needed to get an updated `wsToken`.  This property is not required if a wallet was
+     provided when constructing the WebSocketClient.
 
 ### wallet
 
+Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
+ needed to get an updated `wsToken`.  This property is not required if a wallet was
+ provided when constructing the WebSocketClient.
+
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## forceRefresh
+
+Force refresh the token (unless a current request is pending)
 
 ## WebSocketRequestOrdersSubscription
 
@@ -1730,8 +1793,15 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 ### Properties
 
 -   `name` **`"orders"`** The name of the subscription
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
+     needed to get an updated `wsToken`.  This property is not required if a wallet was
+     provided when constructing the WebSocketClient.
 
 ### wallet
+
+Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
+ needed to get an updated `wsToken`.  This property is not required if a wallet was
+ provided when constructing the WebSocketClient.
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
