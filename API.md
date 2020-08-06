@@ -83,17 +83,6 @@
 ```
 
 
-#### RestPublicClientOptions
-
-Public REST API client options
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-##### Properties
-
--   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Must be set to true
--   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Increases rate limits if provided
-
 #### RestPublicClient
 
 Public REST API client
@@ -231,25 +220,23 @@ Get current order book price levels for a market
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseOrderBookLevel2>** 
 
-### REST Authenticated Client
+#### RestPublicClientOptions
 
-```typescript
-  import { RestAuthenticatedClient } from '@idexio/idex-sdk';
-```
-
-
-#### RestAuthenticatedClientOptions
-
-Authenticated API client configuration options.
+Public REST API client options
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
 ##### Properties
 
 -   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Must be set to true
--   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to authenticate user
--   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to compute HMAC signature
--   `privateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, used to create ECDSA signatures
+-   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Increases rate limits if provided
+
+### REST Authenticated Client
+
+```typescript
+  import { RestAuthenticatedClient } from '@idexio/idex-sdk';
+```
+
 
 #### RestAuthenticatedClient
 
@@ -624,35 +611,25 @@ Obtain a WebSocket API token
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 
+#### RestAuthenticatedClientOptions
+
+Authenticated API client configuration options.
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+##### Properties
+
+-   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Must be set to true
+-   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to authenticate user
+-   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to compute HMAC signature
+-   `privateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, used to create ECDSA signatures
+
 ### WebSocketClient
 
 ```typescript
   import { WebSocketClient } from '@idexio/idex-sdk';
 ```
 
-
-#### WebSocketClientOptions
-
-WebSocket API client options
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-##### Properties
-
--   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** <br />
-     Should the WebSocket connect to the {@link https://docs.idex.io/#sandbox | Sandbox environment}?
-     **Note**: This must be set to `true` during the Sandbox preview.
--   `websocketAuthTokenFetch` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** <br />
-     Authenticated Rest API client fetch token call (`/wsToken`)
-     SDK Websocket client will then automatically handle Websocket token generation and refresh.
-     You can omit this when using only public websocket subscription.
-     Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
-     See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** <br />
-     Optionally provide a wallet to use for any authenticated subscriptions which do not have a wallet
-     provided.  If this is not provided, it is an error to subscribe without a `wallet` parameter in the
-     request.
--   `shouldReconnectAutomatically` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?**  If true, automatically reconnects when connection is closed by the server or network errors
 
 #### WebSocketClient
 
@@ -704,6 +681,29 @@ Subscribe which only can be used on non-authenticated subscriptions
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.WebSocketRequestUnauthenticatedSubscription>** 
 
 Returns **void** 
+
+#### WebSocketClientOptions
+
+WebSocket API client options
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+##### Properties
+
+-   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** <br />
+     Should the WebSocket connect to the {@link https://docs.idex.io/#sandbox | Sandbox environment}?
+     **Note**: This must be set to `true` during the Sandbox preview.
+-   `websocketAuthTokenFetch` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** <br />
+     Authenticated Rest API client fetch token call (`/wsToken`)
+     SDK Websocket client will then automatically handle Websocket token generation and refresh.
+     You can omit this when using only public websocket subscription.
+     Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
+     See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** <br />
+     Optionally provide a wallet to use for any authenticated subscriptions which do not have a wallet
+     provided.  If this is not provided, it is an error to subscribe without a `wallet` parameter in the
+     request.
+-   `shouldReconnectAutomatically` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?**  If true, automatically reconnects when connection is closed by the server or network errors
 
 ## Enums
 

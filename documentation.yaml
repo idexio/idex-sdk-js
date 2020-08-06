@@ -7,24 +7,24 @@ toc:
             import { RestPublicClient } from '@idexio/idex-sdk';
           ```
         children:
-          - RestPublicClientOptions
           - RestPublicClient
+          - RestPublicClientOptions
       - name: REST Authenticated Client
         description: |
           ```typescript
             import { RestAuthenticatedClient } from '@idexio/idex-sdk';
           ```
         children: 
-          - RestAuthenticatedClientOptions
           - RestAuthenticatedClient
+          - RestAuthenticatedClientOptions
       - name: WebSocketClient
         description: |
           ```typescript
             import { WebSocketClient } from '@idexio/idex-sdk';
           ```
         children:
-          - WebSocketClientOptions
           - WebSocketClient
+          - WebSocketClientOptions
   - name: Enums
     description: |
       Sets of named constants used as field types for several requests and responses
