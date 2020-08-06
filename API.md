@@ -697,10 +697,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
      You can omit this when using only public websocket subscription.
      Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
      See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** <br />
-     Optionally provide a wallet to use for any authenticated subscriptions which do not have a wallet
-     provided.  If this is not provided, it is an error to subscribe without a `wallet` parameter in the
-     request.
 -   `shouldReconnectAutomatically` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?**  If true, automatically reconnects when connection is closed by the server or network errors
 
 ## Enums
@@ -1550,17 +1546,15 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 #### Properties
 
 -   `name` **`"orders"`** The name of the subscription
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
-     needed to get an updated `wsToken`.  This property is not required if a wallet was
-     provided when constructing the WebSocketClient.
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
+     needed to get an updated `wsToken`.
      <br />
      **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
 
 #### wallet
 
 Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
- needed to get an updated `wsToken`.  This property is not required if a wallet was
- provided when constructing the WebSocketClient.
+ needed to get an updated `wsToken`.
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
@@ -1571,17 +1565,15 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 #### Properties
 
 -   `name` **`"balances"`** The name of the subscription
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
-     needed to get an updated `wsToken`.  This property is not required if a wallet was
-     provided when constructing the WebSocketClient.
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
+     needed to get an updated `wsToken`.
      <br />
      **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
 
 #### wallet
 
 Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
- needed to get an updated `wsToken`.  This property is not required if a wallet was
- provided when constructing the WebSocketClient.
+ needed to get an updated `wsToken`.
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 

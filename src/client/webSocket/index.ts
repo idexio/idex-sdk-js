@@ -30,17 +30,12 @@ export type ResponseListener = (
  *  You can omit this when using only public websocket subscription.
  *  Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
  *  See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
- * @property {string} [wallet] - <br />
- *  Optionally provide a wallet to use for any authenticated subscriptions which do not have a wallet
- *  provided.  If this is not provided, it is an error to subscribe without a `wallet` parameter in the
- *  request.
  * @property {boolean} [shouldReconnectAutomatically] -
  *  If true, automatically reconnects when connection is closed by the server or network errors
  */
 export interface WebSocketClientOptions {
   sandbox?: boolean;
   baseURL?: string;
-  wallet?: string;
   websocketAuthTokenFetch?: (wallet: string) => Promise<string>;
   shouldReconnectAutomatically?: boolean;
 }
@@ -86,14 +81,9 @@ export class WebSocketClient {
 
   /**
    * Set to true when the reconnect logic should not be run.
+   * @private
    */
   private doNotReconnect = false;
-
-  /**
-   * Wallet address to use for authenticated subscriptions if not provided
-   * on the subscription object.
-   */
-  private walletAddress?: undefined | string;
 
   constructor(options: WebSocketClientOptions) {
     const baseURL =
@@ -189,7 +179,6 @@ export class WebSocketClient {
   public async subscribe(
     subscriptions: types.WebSocketRequestSubscription[],
     cid?: string,
-    forceRefreshToken = false,
   ): Promise<void> {
     const [authSubscriptions, publicSubscriptions] = splitSubscriptions(
       subscriptions,
@@ -219,13 +208,8 @@ export class WebSocketClient {
           }
 
           if (!walletAddress) {
-            // eslint-disable-next-line no-param-reassign
-            walletAddress = this.walletAddress;
-          }
-
-          if (!walletAddress) {
             throw new Error(
-              `WebSocket: "${subscription.name}" subscription invalid, authenticated subscriptions require a wallet parameter or a wallet parameter during the client construction.`,
+              `WebSocket: "${subscription.name}" subscription invalid, authenticated subscriptions require a wallet parameter.`,
             );
           }
 
@@ -233,10 +217,7 @@ export class WebSocketClient {
             cid,
             method: 'subscribe',
             subscriptions: [subscription],
-            token: await webSocketTokenManager.getToken(
-              walletAddress,
-              forceRefreshToken,
-            ),
+            token: await webSocketTokenManager.getToken(walletAddress),
           });
         },
       ),
