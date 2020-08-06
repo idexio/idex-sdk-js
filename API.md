@@ -213,6 +213,9 @@
         -   [Properties](#properties-37)
 -   [ECDSA Signatures](#ecdsa-signatures)
     -   [signatures.MessageSigner](#signaturesmessagesigner)
+-   [CancelledOrder](#cancelledorder)
+    -   [Properties](#properties-38)
+-   [ResetResponseCancelledOrder](#resetresponsecancelledorder)
 
 ## Clients
 
@@ -379,7 +382,7 @@ const responseByClientId = await authenticatedClient.cancelOrder(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;response.RestResponseCancelledOrder>** 
 
 #### cancelOrders
 
@@ -415,7 +418,7 @@ const ordersForMarket = authenticatedClient.cancelOrders(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Order](#responseorder)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;response.RestResponseCancelledOrder>** 
 
 #### getOrder
 
@@ -1636,3 +1639,20 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 A function that accepts a string and returns a Promise resolving on its ECDSA signature
 
 Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)
+
+## CancelledOrder
+
+A cancelled order
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The `orderId` of the order that was cancelled.
+
+## ResetResponseCancelledOrder
+
+Response to cancelled orders which is an array of [CancelledOrder](#cancelledorder) indicating
+any successfully cancelled orders.
+
+Type: [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[CancelledOrder](#cancelledorder)>

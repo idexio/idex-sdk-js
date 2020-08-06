@@ -247,6 +247,24 @@ export interface Order {
   fills?: OrderFill[];
 }
 
+/**
+ * A cancelled order
+ *
+ * @typedef {Object} CancelledOrder
+ * @property {string} orderId - The `orderId` of the order that was cancelled.
+ */
+export type CancelledOrder = {
+  orderId: string;
+};
+
+/**
+ * Response to cancelled orders which is an array of {@link CancelledOrder} indicating
+ * any successfully cancelled orders.
+ *
+ * @typedef {CancelledOrder[]} ResetResponseCancelledOrder
+ */
+export type RestResponseCancelledOrder = CancelledOrder[];
+
 type Price = string;
 
 type Size = string;
