@@ -130,7 +130,7 @@ export const transformMessage = (
     | types.WebSocketResponseError
     | types.WebSocketResponseSubscriptions
     | types.WebSocketResponseSubscriptionMessageShort,
-): types.WebSocketResponseResponse => {
+): types.WebSocketResponse => {
   if (message.type === 'error' || message.type === 'subscriptions') {
     return message;
   }

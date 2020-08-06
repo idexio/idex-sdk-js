@@ -14,9 +14,7 @@ const nodeUserAgent = 'idex-sdk-js';
 export type ConnectListener = () => unknown;
 export type DisconnectListener = () => unknown;
 export type ErrorListener = (errorEvent: WebSocket.ErrorEvent) => unknown;
-export type ResponseListener = (
-  response: types.WebSocketResponseResponse,
-) => unknown;
+export type ResponseListener = (response: types.WebSocketResponse) => unknown;
 
 /**
  * WebSocket API client options

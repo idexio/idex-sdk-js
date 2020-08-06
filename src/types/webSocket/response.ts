@@ -231,7 +231,7 @@ export interface WebSocketResponseSubscriptions {
   subscriptions: WebSocketRequestSubscription[];
 }
 
-export type WebSocketResponseResponse =
+export type WebSocketResponse =
   | WebSocketResponseError
   | WebSocketResponseSubscriptions
   | WebSocketResponseSubscriptionMessageLong;
