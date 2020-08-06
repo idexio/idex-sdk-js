@@ -206,31 +206,36 @@ export default class WebSocketClient {
     }
 
     await Promise.all(
-      authSubscriptions.map(async (subscription) => {
-        if (!webSocketTokenManager) {
-          throw new Error(
-            '`websocketAuthTokenFetch` is required for authenticated subscriptions',
-          );
-        }
+      authSubscriptions.map(
+        async ({ wallet: walletAddress, ...subscription }) => {
+          if (!webSocketTokenManager) {
+            throw new Error(
+              '`websocketAuthTokenFetch` is required for authenticated subscriptions',
+            );
+          }
 
-        const walletAddress = subscription.wallet || this.walletAddress;
+          if (!walletAddress) {
+            // eslint-disable-next-line no-param-reassign
+            walletAddress = this.walletAddress;
+          }
 
-        if (!walletAddress) {
-          throw new Error(
-            `WebSocket: "${subscription.name}" subscription invalid, authenticated subscriptions require a wallet parameter or a wallet parameter during the client construction.`,
-          );
-        }
+          if (!walletAddress) {
+            throw new Error(
+              `WebSocket: "${subscription.name}" subscription invalid, authenticated subscriptions require a wallet parameter or a wallet parameter during the client construction.`,
+            );
+          }
 
-        this.sendMessage({
-          cid,
-          method: 'subscribe',
-          subscriptions: [subscription],
-          token: await webSocketTokenManager.getToken(
-            walletAddress,
-            forceRefreshToken,
-          ),
-        });
-      }),
+          this.sendMessage({
+            cid,
+            method: 'subscribe',
+            subscriptions: [subscription],
+            token: await webSocketTokenManager.getToken(
+              walletAddress,
+              forceRefreshToken,
+            ),
+          });
+        },
+      ),
     );
   }
 
