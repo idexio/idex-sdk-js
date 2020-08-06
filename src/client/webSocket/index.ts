@@ -1,17 +1,20 @@
 import WebSocket from 'isomorphic-ws';
 
+import * as types from '../../types';
+
 import * as constants from '../../constants';
-import * as request from '../../types/webSocket/request';
-import * as response from '../../types/webSocket/response';
 import WebsocketTokenManager from './tokenManager';
 import { transformMessage } from './transform';
+import { WebSocketRequestAuthenticatedSubscription } from '../../types';
 
 const userAgent = 'idex-sdk-js';
 
 export type ConnectListener = () => unknown;
 export type DisconnectListener = () => unknown;
 export type ErrorListener = (errorEvent: WebSocket.ErrorEvent) => unknown;
-export type ResponseListener = (response: response.Response) => unknown;
+export type ResponseListener = (
+  response: types.WebSocketResponseResponse,
+) => unknown;
 
 /**
  * WebSocket API client options
@@ -72,14 +75,18 @@ export default class WebSocketClient {
   private webSocketTokenManager?: WebsocketTokenManager;
 
   constructor(options: WebSocketClientOptions) {
-    this.baseURL = options.sandbox
+    const baseURL = options.sandbox
       ? constants.SANDBOX_WEBSOCKET_API_BASE_URL
       : options.baseURL;
-    if (!this.baseURL) {
+    if (!baseURL) {
       throw new Error('Must set sandbox to true');
     }
 
-    this.shouldReconnectAutomatically = options.shouldReconnectAutomatically;
+    this.baseURL = baseURL;
+
+    this.shouldReconnectAutomatically =
+      options.shouldReconnectAutomatically ?? false;
+
     this.reconnectAttempt = 0;
 
     this.connectListeners = new Set();
@@ -157,11 +164,13 @@ export default class WebSocketClient {
   }
 
   public async subscribe(
-    subscriptions: request.Subscription[],
+    subscriptions: types.WebSocketRequestSubscription[],
     cid?: string,
   ): Promise<void> {
-    // TODO: Do these need to be any?
-    const authSubscriptions = subscriptions.filter(isAuthenticatedSubscription);
+    const [authSubscriptions, publicSubscriptions] = splitSubscriptions(
+      subscriptions,
+    );
+
     const uniqueWallets = Array.from(
       new Set(
         authSubscriptions
@@ -236,7 +245,7 @@ export default class WebSocketClient {
    * See {@link https://docs.idex.io/#get-authentication-token|API specification}
    */
   public subscribeAuthenticated(
-    subscriptions: request.AuthenticatedSubscription[],
+    subscriptions: types.WebSocketRequestAuthenticatedSubscription[],
   ): void {
     this.subscribe(subscriptions);
   }
@@ -245,12 +254,14 @@ export default class WebSocketClient {
    * Subscribe which only can be used on non-authenticated subscriptions
    */
   public subscribeUnauthenticated(
-    subscriptions: request.UnauthenticatedSubscription[],
+    subscriptions: types.WebSocketRequestUnauthenticatedSubscription[],
   ): void {
     this.subscribe(subscriptions);
   }
 
-  public unsubscribe(subscriptions: request.UnsubscribeSubscription[]): void {
+  public unsubscribe(
+    subscriptions: types.WebSocketRequestUnsubscribeSubscription[],
+  ): void {
     this.sendMessage({
       method: 'unsubscribe',
       subscriptions,
@@ -309,7 +320,7 @@ export default class WebSocketClient {
     this.reconnectAttempt = 0;
   }
 
-  private sendMessage(payload: request.Request): void {
+  private sendMessage(payload: types.WebSocketRequest): void {
     this.throwIfDisconnected();
 
     this.webSocket.send(JSON.stringify(payload));
@@ -324,10 +335,32 @@ export default class WebSocketClient {
   }
 }
 
-function isAuthenticatedSubscription(
-  subscription: request.Subscription,
-): boolean {
-  return Object.keys(request.AuthenticatedSubscriptionName).includes(
-    subscription.name,
+/**
+ * Take in subscriptions and return array split by authenticated or unauthenticated
+ */
+function splitSubscriptions(
+  subscriptions: types.WebSocketRequestSubscription[],
+) {
+  return subscriptions.reduce(
+    (arr, subscription) => {
+      if (isAuthenticatedSubscription(subscription)) {
+        arr[0].push(subscription);
+      } else {
+        arr[1].push(subscription);
+      }
+      return arr;
+    },
+    [
+      [] as types.WebSocketRequestAuthenticatedSubscription[],
+      [] as types.WebSocketRequestUnauthenticatedSubscription[],
+    ] as const,
   );
+}
+
+function isAuthenticatedSubscription(
+  subscription: types.WebSocketRequestSubscription,
+): subscription is WebSocketRequestAuthenticatedSubscription {
+  return Object.keys(
+    types.WebSocketRequestAuthenticatedSubscriptionName,
+  ).includes(subscription.name);
 }

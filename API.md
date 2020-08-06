@@ -5,7 +5,7 @@
 ### Table of Contents
 
 -   [Clients](#clients)
-    -   [AuthenticatedRESTClient](#authenticatedrestclient)
+    -   [RestAuthenticatedClient](#restauthenticatedclient)
         -   [Parameters](#parameters)
         -   [Examples](#examples)
         -   [getUser](#getuser)
@@ -47,9 +47,9 @@
             -   [Parameters](#parameters-16)
         -   [getWsToken](#getwstoken)
             -   [Parameters](#parameters-17)
-    -   [AuthenticatedRESTClientOptions](#authenticatedrestclientoptions)
+    -   [RestAuthenticatedClientOptions](#restauthenticatedclientoptions)
         -   [Properties](#properties)
-    -   [PublicRESTClient](#publicrestclient)
+    -   [RestPublicClient](#restpublicclient)
         -   [Parameters](#parameters-18)
         -   [Examples](#examples-6)
         -   [ping](#ping)
@@ -68,7 +68,7 @@
             -   [Parameters](#parameters-23)
         -   [getOrderBookLevel2](#getorderbooklevel2)
             -   [Parameters](#parameters-24)
-    -   [PublicRESTClientOptions](#publicrestclientoptions)
+    -   [RestPublicClientOptions](#restpublicclientoptions)
         -   [Properties](#properties-1)
     -   [WebSocketClient](#websocketclient)
         -   [Parameters](#parameters-25)
@@ -137,79 +137,79 @@
         -   [takeProfit](#takeprofit)
         -   [takeProfitLimit](#takeprofitlimit)
 -   [REST Requests](#rest-requests)
-    -   [request.CancelOrders](#requestcancelorders)
+    -   [RestRequestCancelOrders](#restrequestcancelorders)
         -   [Properties](#properties-3)
-    -   [request.FindBalances](#requestfindbalances)
+    -   [RestRequestFindBalances](#restrequestfindbalances)
         -   [Properties](#properties-4)
-    -   [request.FindCandles](#requestfindcandles)
+    -   [RestRequestFindCandles](#restrequestfindcandles)
         -   [Properties](#properties-5)
-    -   [request.FindDeposit](#requestfinddeposit)
+    -   [RestRequestFindDeposit](#restrequestfinddeposit)
         -   [Properties](#properties-6)
-    -   [request.FindDeposits](#requestfinddeposits)
+    -   [RestRequestFindDeposits](#restrequestfinddeposits)
         -   [Properties](#properties-7)
-    -   [request.FindFill](#requestfindfill)
+    -   [RestRequestFindFill](#restrequestfindfill)
         -   [Properties](#properties-8)
-    -   [request.FindFills](#requestfindfills)
+    -   [RestRequestFindFills](#restrequestfindfills)
         -   [Properties](#properties-9)
-    -   [request.FindMarkets](#requestfindmarkets)
+    -   [RestRequestFindMarkets](#restrequestfindmarkets)
         -   [Properties](#properties-10)
-    -   [request.FindOrder](#requestfindorder)
+    -   [RestRequestFindOrder](#restrequestfindorder)
         -   [Properties](#properties-11)
-    -   [request.FindOrders](#requestfindorders)
+    -   [RestRequestFindOrders](#restrequestfindorders)
         -   [Properties](#properties-12)
-    -   [request.FindTrades](#requestfindtrades)
+    -   [RestRequestFindTrades](#restrequestfindtrades)
         -   [Properties](#properties-13)
-    -   [request.FindWithdrawal](#requestfindwithdrawal)
+    -   [RestRequestFindWithdrawal](#restrequestfindwithdrawal)
         -   [Properties](#properties-14)
-    -   [request.FindWithdrawals](#requestfindwithdrawals)
+    -   [RestRequestFindWithdrawals](#restrequestfindwithdrawals)
         -   [Properties](#properties-15)
-    -   [request.Order](#requestorder)
+    -   [RestRequestOrder](#restrequestorder)
         -   [Properties](#properties-16)
-    -   [request.Withdrawal](#requestwithdrawal)
+    -   [RestRequestWithdrawal](#restrequestwithdrawal)
         -   [Properties](#properties-17)
 -   [REST Responses](#rest-responses)
-    -   [response.Asset](#responseasset)
+    -   [RestResponseAsset](#restresponseasset)
         -   [Properties](#properties-18)
-    -   [response.Balance](#responsebalance)
+    -   [RestResponseBalance](#restresponsebalance)
         -   [Properties](#properties-19)
-    -   [response.Candle](#responsecandle)
+    -   [RestResponseCandle](#restresponsecandle)
         -   [Properties](#properties-20)
-    -   [response.Deposit](#responsedeposit)
+    -   [RestResponseDeposit](#restresponsedeposit)
         -   [Properties](#properties-21)
-    -   [response.ExchangeInfo](#responseexchangeinfo)
+    -   [RestResponseExchangeInfo](#restresponseexchangeinfo)
         -   [Properties](#properties-22)
-    -   [response.Fill](#responsefill)
+    -   [RestResponseFill](#restresponsefill)
         -   [Properties](#properties-23)
-    -   [response.Market](#responsemarket)
+    -   [RestResponseMarket](#restresponsemarket)
         -   [Properties](#properties-24)
-    -   [response.Order](#responseorder)
+    -   [RestResponseOrder](#restresponseorder)
         -   [Properties](#properties-25)
-    -   [response.OrderBookLevel1](#responseorderbooklevel1)
+    -   [RestResponseOrderBookLevel1](#restresponseorderbooklevel1)
         -   [Properties](#properties-26)
-    -   [response.OrderBookLevel2](#responseorderbooklevel2)
+    -   [RestResponseOrderBookLevel2](#restresponseorderbooklevel2)
         -   [Properties](#properties-27)
-    -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
-    -   [response.OrderFill](#responseorderfill)
+    -   [RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)
+    -   [RestResponseOrderFill](#restresponseorderfill)
         -   [Properties](#properties-28)
-    -   [response.Ping](#responseping)
-    -   [response.Ticker](#responseticker)
+    -   [RestResponsePing](#restresponseping)
+    -   [RestResponseTicker](#restresponseticker)
         -   [Properties](#properties-29)
-    -   [response.Time](#responsetime)
+    -   [RestResponseTime](#restresponsetime)
         -   [Properties](#properties-30)
-    -   [response.Trade](#responsetrade)
+    -   [RestResponseTrade](#restresponsetrade)
         -   [Properties](#properties-31)
-    -   [response.User](#responseuser)
+    -   [RestResponseUser](#restresponseuser)
         -   [Properties](#properties-32)
-    -   [response.Wallet](#responsewallet)
+    -   [RestResponseWallet](#restresponsewallet)
         -   [Properties](#properties-33)
-    -   [response.WebSocketToken](#responsewebsockettoken)
+    -   [RestResponseWebSocketToken](#restresponsewebsockettoken)
         -   [Properties](#properties-34)
-    -   [response.Withdrawal](#responsewithdrawal)
+    -   [RestResponseWithdrawal](#restresponsewithdrawal)
         -   [Properties](#properties-35)
 -   [WebSocket Responses](#websocket-responses)
-    -   [webSocketResponse.Error](#websocketresponseerror)
+    -   [WebSocketResponseError](#websocketresponseerror)
         -   [Properties](#properties-36)
-    -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
+    -   [WebSocketResponseSubscriptions](#websocketresponsesubscriptions)
         -   [Properties](#properties-37)
 -   [ECDSA Signatures](#ecdsa-signatures)
     -   [signatures.MessageSigner](#signaturesmessagesigner)
@@ -219,21 +219,21 @@
 
 
 
-### AuthenticatedRESTClient
+### RestAuthenticatedClient
 
 Authenticated API client
 
 #### Parameters
 
--   `options` **[AuthenticatedRESTClientOptions](#authenticatedrestclientoptions)** 
+-   `options` **[RestAuthenticatedClientOptions](#restauthenticatedclientoptions)** 
 
 #### Examples
 
 ```javascript
 import { v1 as uuidv1 } from 'uuid';
-import * as idex from '@idexio/idex-sdk-js';
+import { RestAuthenticatedClient } from '@idexio/idex-sdk';
 
-const authenticatedClient = new idex.client.rest.Authenticated({
+const authenticatedClient = new RestAuthenticatedClient({
   sandbox: true,
   // Edit the values before for your environment
   apiKey: '1f7c4f52-4af7-4e1b-aa94-94fac8d931aa',
@@ -254,7 +254,7 @@ Get account details for the API key’s user
 
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.User](#responseuser)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseUser>** 
 
 #### getWallets
 
@@ -267,7 +267,7 @@ Get account details for the API key’s user
 
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Wallet](#responsewallet)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseWallet>>** 
 
 #### getBalances
 
@@ -278,9 +278,9 @@ Get asset quantity data (positions) held by a wallet on the exchange
 
 ##### Parameters
 
--   `findBalances` **[request.FindBalances](#requestfindbalances)** 
+-   `findBalances` **types.RestRequestFindBalances** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Balance](#responsebalance)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseBalance>>** 
 
 #### createOrder
 
@@ -291,7 +291,7 @@ Create and submit an order to the matching engine.
 
 ##### Parameters
 
--   `order` **[request.Order](#requestorder)** 
+-   `order` **types.RestRequestOrder** 
 -   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 
 ##### Examples
@@ -311,7 +311,7 @@ const order = await authenticatedClient.createOrder(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.Order>** 
 
 #### createTestOrder
 
@@ -322,7 +322,7 @@ Tests order creation and validation without submitting an order to the matching 
 
 ##### Parameters
 
--   `order` **[request.Order](#requestorder)** 
+-   `order` **types.RestRequestOrder** 
 -   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 
 ##### Examples
@@ -342,7 +342,7 @@ const order = await authenticatedClient.createTestOrder(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.Order>** 
 
 #### cancelOrder
 
@@ -379,7 +379,7 @@ const responseByClientId = await authenticatedClient.cancelOrder(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.Order>** 
 
 #### cancelOrders
 
@@ -390,7 +390,7 @@ Cancel multiple orders
 
 ##### Parameters
 
--   `cancelOrders` **[request.CancelOrders](#requestcancelorders)** 
+-   `cancelOrders` **types.RestRequestCancelOrders** 
 -   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 -   `order` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
@@ -415,7 +415,7 @@ const ordersForMarket = authenticatedClient.cancelOrders(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Order](#responseorder)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.Order>>** 
 
 #### getOrder
 
@@ -426,9 +426,9 @@ Get an order
 
 ##### Parameters
 
--   `findOrder` **[request.FindOrder](#requestfindorder)** 
+-   `findOrder` **types.RestRequestFindOrder** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.Order>** 
 
 #### getOrders
 
@@ -439,9 +439,9 @@ Get multiple orders
 
 ##### Parameters
 
--   `findOrders` **[request.FindOrders](#requestfindorders)** 
+-   `findOrders` **types.RestRequestFindOrders** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Order](#responseorder)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.Order>>** 
 
 #### getFill
 
@@ -452,9 +452,9 @@ Get a fill
 
 ##### Parameters
 
--   `findFill` **[request.FindFill](#requestfindfill)** 
+-   `findFill` **types.RestRequestFindFill** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Fill](#responsefill)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseFill>** 
 
 #### getFills
 
@@ -465,9 +465,9 @@ Get multiple fills
 
 ##### Parameters
 
--   `findFills` **[request.FindFills](#requestfindfills)** 
+-   `findFills` **types.RestRequestFindFills** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Fill](#responsefill)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseFill>>** 
 
 #### getDeposit
 
@@ -478,9 +478,9 @@ Get a deposit
 
 ##### Parameters
 
--   `findDeposit` **[request.FindDeposit](#requestfinddeposit)** 
+-   `findDeposit` **types.RestRequestFindDeposit** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Deposit](#responsedeposit)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseDeposit>** 
 
 #### getDeposits
 
@@ -491,9 +491,9 @@ Get multiple deposits
 
 ##### Parameters
 
--   `findDeposits` **[request.FindDeposits](#requestfinddeposits)** 
+-   `findDeposits` **types.RestRequestFindDeposits** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Deposit](#responsedeposit)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseDeposit>>** 
 
 #### withdraw
 
@@ -504,11 +504,11 @@ Get a withdrawal
 
 ##### Parameters
 
--   `withdrawal` **[request.Withdrawal](#requestwithdrawal)** 
+-   `withdrawal` **types.RestRequestWithdrawal** 
 -   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)**  (optional, default `this.signer`)
--   `findWithdrawal` **[request.FindWithdrawal](#requestfindwithdrawal)** 
+-   `findWithdrawal` **types.RestRequestFindWithdrawal** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Withdrawal](#responsewithdrawal)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseWithdrawal>** 
 
 #### withdraw
 
@@ -519,7 +519,7 @@ Create a new withdrawal
 
 ##### Parameters
 
--   `withdrawal` **[request.Withdrawal](#requestwithdrawal)** 
+-   `withdrawal` **types.RestRequestWithdrawal** 
 -   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 
 ##### Examples
@@ -536,7 +536,7 @@ const withdrawal = await authenticatedClient.withdraw(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Withdrawal](#responsewithdrawal)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseWithdrawal>** 
 
 #### getWithdrawals
 
@@ -547,9 +547,9 @@ Get multiple withdrawals
 
 ##### Parameters
 
--   `findWithdrawals` **[request.FindWithdrawals](#requestfindwithdrawals)** 
+-   `findWithdrawals` **types.RestRequestFindWithdrawals** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Withdrawal](#responsewithdrawal)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseWithdrawal>>** 
 
 #### getWsToken
 
@@ -565,7 +565,7 @@ Obtain a WebSocket API token
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 
-### AuthenticatedRESTClientOptions
+### RestAuthenticatedClientOptions
 
 Authenticated API client options
 
@@ -578,20 +578,21 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to compute HMAC signature
 -   `privateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, used to create ECDSA signatures
 
-### PublicRESTClient
+### RestPublicClient
 
 Public REST API client
 
 #### Parameters
 
--   `options` **[PublicRESTClientOptions](#publicrestclientoptions)** 
+-   `options` **[RestPublicClientOptions](#restpublicclientoptions)** 
 
 #### Examples
 
 ```javascript
 import { v1 as uuidv1 } from 'uuid';
+import { RestPublicClient } from '@idexio/idex-sdk';
 
-const publicClient = new idex.client.rest.Public({
+const publicClient = new RestPublicClientPublic({
   sandbox: true,
   // Optionally provide an API key to increase rate limits
   apiKey: '1f7c4f52-4af7-4e1b-aa94-94fac8d931aa',
@@ -624,7 +625,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 Returns basic information about the exchange.
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.ExchangeInfo](#responseexchangeinfo)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseExchangeInfo>** 
 
 #### getAssets
 
@@ -633,7 +634,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 Returns information about assets supported by the exchange
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Asset](#responseasset)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseAsset>>** 
 
 #### getMarkets
 
@@ -646,7 +647,7 @@ Returns information about the currently listed markets
 
 -   `findMarkets` **FindMarkets** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Market](#responsemarket)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseMarket>>** 
 
 #### getTickers
 
@@ -659,7 +660,7 @@ Returns market statistics for the trailing 24-hour period
 
 -   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Base-quote pair e.g. 'IDEX-ETH', if provided limits ticker data to a single market
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Ticker](#responseticker)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseTicker>>** 
 
 #### getCandles
 
@@ -672,7 +673,7 @@ Returns candle (OHLCV) data for a market
 
 -   `findCandles` **FindCandles** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Candle](#responsecandle)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseCandle>>** 
 
 #### getTrades
 
@@ -683,9 +684,9 @@ Returns public trade data for a market
 
 ##### Parameters
 
--   `findTrades` **[request.FindTrades](#requestfindtrades)** 
+-   `findTrades` **types.RestRequestFindTrades** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Trade](#responsetrade)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseTrade>>** 
 
 #### getOrderBookLevel1
 
@@ -698,7 +699,7 @@ Get current top bid/ask price levels of order book for a market
 
 -   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.OrderBookLevel1](#responseorderbooklevel1)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseOrderBookLevel1>** 
 
 #### getOrderBookLevel2
 
@@ -712,9 +713,9 @@ Get current order book price levels for a market
 -   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Number of bids and asks to return. Default is 50, 0 returns the entire book (optional, default `50`)
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.OrderBookLevel2](#responseorderbooklevel2)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseOrderBookLevel2>** 
 
-### PublicRESTClientOptions
+### RestPublicClientOptions
 
 Public REST API client options
 
@@ -762,7 +763,7 @@ See [API specification](https://docs.idex.io/#get-authentication-token)
 
 ##### Parameters
 
--   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;request.AuthenticatedSubscription>** 
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.WebSocketRequestAuthenticatedSubscription>** 
 
 Returns **void** 
 
@@ -772,7 +773,7 @@ Subscribe which only can be used on non-authenticated subscriptions
 
 ##### Parameters
 
--   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;request.UnauthenticatedSubscription>** 
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.WebSocketRequestUnauthenticatedSubscription>** 
 
 Returns **void** 
 
@@ -1092,7 +1093,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 
 
-### request.CancelOrders
+### RestRequestCancelOrders
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1103,7 +1104,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Single orderId or clientOrderId to cancel; prefix client-provided ids with client:
 -   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Base-quote pair e.g. 'IDEX-ETH'
 
-### request.FindBalances
+### RestRequestFindBalances
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1113,7 +1114,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `asset[]` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset symbols
 
-### request.FindCandles
+### RestRequestFindCandles
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1125,7 +1126,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
 
-### request.FindDeposit
+### RestRequestFindDeposit
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1135,7 +1136,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `depositId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
-### request.FindDeposits
+### RestRequestFindDeposits
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1149,7 +1150,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
 -   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Fills created at the same timestamp or after fillId
 
-### request.FindFill
+### RestRequestFindFill
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1159,7 +1160,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `fillId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
-### request.FindFills
+### RestRequestFindFills
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1173,7 +1174,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
 -   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Fills created at the same timestamp or after fillId
 
-### request.FindMarkets
+### RestRequestFindMarkets
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1183,7 +1184,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `regionOnly` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** true only returns markets available in the geographic region of the request
 -   `depositId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
-### request.FindOrder
+### RestRequestFindOrder
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1193,7 +1194,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Single orderId or clientOrderId to cancel; prefix client-provided ids with client:
 
-### request.FindOrders
+### RestRequestFindOrders
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1208,7 +1209,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
 -   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** orderId of the earliest (oldest) order, only applies if orderId is absent
 
-### request.FindTrades
+### RestRequestFindTrades
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1220,7 +1221,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
 -   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Trades created at the same timestamp or after fromId
 
-### request.FindWithdrawal
+### RestRequestFindWithdrawal
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1230,7 +1231,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `withdrawalId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
-### request.FindWithdrawals
+### RestRequestFindWithdrawals
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1245,7 +1246,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
 -   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Withdrawals created after the fromId
 
-### request.Order
+### RestRequestOrder
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1265,7 +1266,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `selfTradePrevention` **[OrderSelfTradePrevention](#orderselftradeprevention)?** Defaults to decrease and cancel
 -   `cancelAfter` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Timestamp after which a standing limit order will be automatically cancelled; gtt tif only
 
-### request.Withdrawal
+### RestRequestWithdrawal
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1282,7 +1283,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 
 
-### response.Asset
+### RestResponseAsset
 
 Asset
 
@@ -1299,7 +1300,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `tradeMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `withdrawalMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
-### response.Balance
+### RestResponseBalance
 
 Balance
 
@@ -1313,7 +1314,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `locked` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of the asset held in trades on the order book
 -   `usdValue` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of the asset held by the wallet on the exchange in USD
 
-### response.Candle
+### RestResponseCandle
 
 Candle (OHLCV) data points aggregated by time interval
 
@@ -1329,7 +1330,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `volume` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total volume of the period in base terms
 -   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Fill sequence number of the last trade in the interval
 
-### response.Deposit
+### RestResponseDeposit
 
 Asset deposits into smart contract
 
@@ -1344,7 +1345,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `txTime` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of the Ethereum deposit tx
 -   `confirmationTime` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of credit on IDEX including block confirmations
 
-### response.ExchangeInfo
+### RestResponseExchangeInfo
 
 Basic exchange info
 
@@ -1364,7 +1365,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `takerTradeMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum order size that is accepted by the matching engine for execution in ETH, applies to both ETH and tokens
 -   `withdrawMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum withdrawal amount in ETH, applies to both ETH and tokens
 
-### response.Fill
+### RestResponseFill
 
 Fill
 
@@ -1390,7 +1391,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Ethereum transaction id, if available
 -   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Eth Tx Status
 
-### response.Market
+### RestResponseMarket
 
 Market
 
@@ -1409,7 +1410,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `orderTypes` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[OrderType](#ordertype)>** 
 -   `tradeMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum quantity in base terms
 
-### response.Order
+### RestResponseOrder
 
 Order
 
@@ -1436,9 +1437,9 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `stopPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Stop loss or take profit price, only present for stopLoss, stopLossLimit, takeProfit, and takeProfitLimit orders
 -   `timeInForce` **[OrderTimeInForce](#ordertimeinforce)?** Time in force policy, see values, only present for all limit orders specifying a non-default (gtc) policy
 -   `selfTradePrevention` **[OrderSelfTradePrevention](#orderselftradeprevention)?** Self-trade prevention policy, see values, only present for orders specifying a non-default (dc) policy
--   `null-null` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.OrderFill](#responseorderfill)>** Array of order fill objects
+-   `null-null` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseOrderFill](#restresponseorderfill)>** Array of order fill objects
 
-### response.OrderBookLevel1
+### RestResponseOrderBookLevel1
 
 OrderBookLevel1
 
@@ -1446,10 +1447,10 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
--   `bids` **\[[response.OrderBookPriceLevel](#responseorderbookpricelevel)]** 
--   `asks` **\[[response.OrderBookPriceLevel](#responseorderbookpricelevel)]** 
+-   `bids` **\[[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)]** 
+-   `asks` **\[[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)]** 
 
-### response.OrderBookLevel2
+### RestResponseOrderBookLevel2
 
 OrderBookLevel2
 
@@ -1457,16 +1458,16 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
--   `bids` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.OrderBookPriceLevel](#responseorderbookpricelevel)>** 
--   `asks` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.OrderBookPriceLevel](#responseorderbookpricelevel)>** 
+-   `bids` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)>** 
+-   `asks` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)>** 
 
-### response.OrderBookPriceLevel
+### RestResponseOrderBookPriceLevel
 
 OrderBookPriceLevel
 
 Type: \[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)]
 
-### response.OrderFill
+### RestResponseOrderFill
 
 OrderFill
 
@@ -1488,13 +1489,13 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Ethereum transaction id, if available
 -   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Eth Tx Status
 
-### response.Ping
+### RestResponsePing
 
 Ping
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
-### response.Ticker
+### RestResponseTicker
 
 Ticker
 
@@ -1517,7 +1518,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `numTrades` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Number of fills for the market in the period
 -   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Last trade sequence number for the market
 
-### response.Time
+### RestResponseTime
 
 Time
 
@@ -1527,7 +1528,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 -   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Current server time
 
-### response.Trade
+### RestResponseTrade
 
 Trade
 
@@ -1543,7 +1544,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `makerSide` **[OrderSide](#orderside)** Which side of the order the liquidity maker was on
 -   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Last trade sequence number for the market
 
-### response.User
+### RestResponseUser
 
 User
 
@@ -1562,7 +1563,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `makerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** User-specific maker trade fee rate
 -   `takerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** User-specific taker trade fee rate
 
-### response.Wallet
+### RestResponseWallet
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1572,7 +1573,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `totalPortfolioValueUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of all holdings deposited on the exchange for the wallet in USD
 -   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of association of the wallet with the user account
 
-### response.WebSocketToken
+### RestResponseWebSocketToken
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1580,7 +1581,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 -   `token` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** WebSocket subscription authentication token
 
-### response.Withdrawal
+### RestResponseWithdrawal
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1600,7 +1601,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 
 
-### webSocketResponse.Error
+### WebSocketResponseError
 
 Error Response
 
@@ -1614,7 +1615,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
     -   `data.code` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** error short code
     -   `data.message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** human readable error message
 
-### webSocketResponse.Subscriptions
+### WebSocketResponseSubscriptions
 
 Subscriptions Response
 
@@ -1624,7 +1625,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 -   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 -   `method` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** subscriptions
--   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Subscription>** 
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;WebSocketRequestSubscription>** 
 
 ## ECDSA Signatures
 

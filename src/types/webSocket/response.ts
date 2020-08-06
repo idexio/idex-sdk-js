@@ -1,8 +1,8 @@
 import * as enums from '../enums';
 import * as restResponse from '../rest/response';
-import { Subscription } from './request';
+import { WebSocketRequestSubscription } from './request';
 
-export interface TickerShort {
+export interface WebSocketResponseTickerShort {
   m: string;
   t: number;
   o: string;
@@ -19,7 +19,7 @@ export interface TickerShort {
   u: number;
 }
 
-export interface TradeShort {
+export interface WebSocketResponseTradeShort {
   m: string;
   i: string;
   p: string;
@@ -30,7 +30,8 @@ export interface TradeShort {
   u: number;
 }
 
-export interface TradeLong extends restResponse.Trade {
+export interface WebSocketResponseTradeLong
+  extends restResponse.RestResponseTrade {
   market: string; // m
 }
 
@@ -49,7 +50,8 @@ export interface CandleShort {
   u: number;
 }
 
-export interface CandleLong extends restResponse.Candle {
+export interface WebSocketResponseCandleLong
+  extends restResponse.RestResponseCandle {
   market: string; // m
   time: number; // t
   interval: keyof typeof enums.CandleInterval; // i
@@ -57,7 +59,7 @@ export interface CandleLong extends restResponse.Candle {
   numTrades: number; // n
 }
 
-export interface L1OrderBookShort {
+export interface WebSocketResponseL1OrderBookShort {
   m: string;
   t: number;
   b: string;
@@ -66,7 +68,7 @@ export interface L1OrderBookShort {
   A: string;
 }
 
-export interface L1OrderBookLong {
+export interface WebSocketResponseL1OrderBookLong {
   market: string; // m
   time: number; // t
   bidPrice: string; // b
@@ -75,25 +77,25 @@ export interface L1OrderBookLong {
   askQuantity: string; // A
 }
 
-type L2OrderBookChange = restResponse.OrderBookPriceLevel;
+type WebSocketResponseL2OrderBookChange = restResponse.RestResponseOrderBookPriceLevel;
 
-export interface L2OrderBookShort {
+export interface WebSocketResponseL2OrderBookShort {
   m: string;
   t: number;
   u: number;
-  b: L2OrderBookChange[];
-  a: L2OrderBookChange[];
+  b: WebSocketResponseL2OrderBookChange[];
+  a: WebSocketResponseL2OrderBookChange[];
 }
 
-export interface L2OrderBookLong {
+export interface WebSocketResponseL2OrderBookLong {
   market: string; // m
   time: number; // t
   sequence: number; // u
-  bids: L2OrderBookChange[]; // b
-  asks: L2OrderBookChange[]; // a
+  bids: WebSocketResponseL2OrderBookChange[]; // b
+  asks: WebSocketResponseL2OrderBookChange[]; // a
 }
 
-export interface BalanceShort {
+export interface WebSocketResponseBalanceShort {
   w: string;
   a: string;
   q: string;
@@ -102,7 +104,7 @@ export interface BalanceShort {
   d: string;
 }
 
-export interface BalanceLong {
+export interface WebSocketResponseBalanceLong {
   wallet: string; // w
   asset: string; // a
   quantity: string;
@@ -111,7 +113,7 @@ export interface BalanceLong {
   usdValue: string;
 }
 
-export interface OrderShort {
+export interface WebSocketResponseOrderShort {
   m: string;
   i: string;
   c: string;
@@ -132,10 +134,10 @@ export interface OrderShort {
   P?: string;
   f: keyof typeof enums.OrderTimeInForce;
   V: keyof typeof enums.OrderSelfTradePrevention;
-  F?: OrderFillShort[];
+  F?: WebSocketResponseOrderFillShort[];
 }
 
-export interface OrderLong {
+export interface WebSocketResponseOrderLong {
   market: string; // m
   orderId: string; // i
   clientOrderId: string; // c
@@ -153,11 +155,11 @@ export interface OrderLong {
   selfTradePrevention: keyof typeof enums.OrderSelfTradePrevention; // V
   originalQuantity: string; // q
   executedQuantity: string; // z
-  cumulativeQuoteQuantity: string; // Z
-  fills?: restResponse.OrderFill[]; // F
+  cumulativeQuoteQuantity?: string; // Z
+  fills?: restResponse.RestResponseOrderFill[]; // F
 }
 
-export interface OrderFillShort {
+export interface WebSocketResponseOrderFillShort {
   i: string;
   p: string;
   q: string;
@@ -173,35 +175,35 @@ export interface OrderFillShort {
   S: keyof typeof enums.EthTransactionStatus;
 }
 
-export type SubscriptionMessageShort =
-  | { type: 'tickers'; data: TickerShort }
-  | { type: 'trades'; data: TradeShort }
+export type WebSocketResponseSubscriptionMessageShort =
+  | { type: 'tickers'; data: WebSocketResponseTickerShort }
+  | { type: 'trades'; data: WebSocketResponseTradeShort }
   | { type: 'candles'; data: CandleShort }
-  | { type: 'l1orderbook'; data: L1OrderBookShort }
-  | { type: 'l2orderbook'; data: L2OrderBookShort }
-  | { type: 'balances'; data: BalanceShort }
-  | { type: 'orders'; data: OrderShort };
+  | { type: 'l1orderbook'; data: WebSocketResponseL1OrderBookShort }
+  | { type: 'l2orderbook'; data: WebSocketResponseL2OrderBookShort }
+  | { type: 'balances'; data: WebSocketResponseBalanceShort }
+  | { type: 'orders'; data: WebSocketResponseOrderShort };
 
-export type SubscriptionMessageLong =
-  | { type: 'tickers'; data: restResponse.Ticker }
-  | { type: 'trades'; data: TradeLong }
-  | { type: 'candles'; data: CandleLong }
-  | { type: 'l1orderbook'; data: L1OrderBookLong }
-  | { type: 'l2orderbook'; data: L2OrderBookLong }
-  | { type: 'balances'; data: BalanceLong }
-  | { type: 'orders'; data: OrderLong };
+export type WebSocketResponseSubscriptionMessageLong =
+  | { type: 'tickers'; data: restResponse.RestResponseTicker }
+  | { type: 'trades'; data: WebSocketResponseTradeLong }
+  | { type: 'candles'; data: WebSocketResponseCandleLong }
+  | { type: 'l1orderbook'; data: WebSocketResponseL1OrderBookLong }
+  | { type: 'l2orderbook'; data: WebSocketResponseL2OrderBookLong }
+  | { type: 'balances'; data: WebSocketResponseBalanceLong }
+  | { type: 'orders'; data: WebSocketResponseOrderLong };
 
 /**
  * Error Response
  *
- * @typedef {Object} webSocketResponse.Error
+ * @typedef {Object} WebSocketResponseError
  * @property {string} [cid]
  * @property {string} type - error
  * @property {Object} data
  * @property {string} data.code - error short code
  * @property {string} data.message - human readable error message
  */
-export interface ErrorResponse {
+export interface WebSocketResponseError {
   cid?: string;
   type: 'error';
   data: {
@@ -213,27 +215,27 @@ export interface ErrorResponse {
 /**
  * Subscriptions Response
  *
- * @typedef {Object} webSocketResponse.Subscriptions
+ * @typedef {Object} WebSocketResponseSubscriptions
  * @property {string} [cid]
  * @property {string} method - subscriptions
- * @property {Subscription[]} subscriptions
+ * @property {WebSocketRequestSubscription[]} subscriptions
  * @property {string} Subscription.name - subscription name
  * @property {string} Subscription.markets - markets
  * @property {string} [Subscription.interval] - candle interval
  * @property {string} [Subscription.wallet] - wallet address
  */
-export interface SubscriptionsResponse {
+export interface WebSocketResponseSubscriptions {
   cid?: string;
   type: 'subscriptions';
-  subscriptions: Subscription[];
+  subscriptions: WebSocketRequestSubscription[];
 }
 
-export type Response =
-  | ErrorResponse
-  | SubscriptionsResponse
-  | SubscriptionMessageLong;
+export type WebSocketResponseResponse =
+  | WebSocketResponseError
+  | WebSocketResponseSubscriptions
+  | WebSocketResponseSubscriptionMessageLong;
 
 /*
  * Response message without transformation to human readable form
  */
-export type RawResponseMessage = SubscriptionMessageShort;
+export type WebSocketResponseRawMessage = WebSocketResponseSubscriptionMessageShort;

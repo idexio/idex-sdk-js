@@ -1,4 +1,2 @@
-import Authenticated from './authenticated';
-import Public from './public';
-
-export { Authenticated, Public };
+export * from './public';
+export * from './authenticated';

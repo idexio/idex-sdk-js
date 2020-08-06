@@ -1,11 +1,11 @@
+type TokenValue = {
+  fetching?: Promise<string>;
+  expiration: number;
+  token?: string;
+};
+
 type TokensMap = {
-  [wallet: string]:
-    | {
-        fetching?: Promise<string>;
-        expiration: number;
-        token?: string;
-      }
-    | undefined;
+  [wallet: string]: TokenValue | undefined;
 };
 
 const TOKEN_EXPIRATION_MS = 1000 * 60 * 14; // 14 minutes (15 is already expired)
@@ -30,30 +30,30 @@ export default class WebsocketTokenManager {
     this.websocketAuthTokenFetch = websocketAuthTokenFetch;
   }
 
-  public getToken = async (walletAddress: string): Promise<string> => {
+  public getToken = async (
+    walletAddress: string,
+  ): Promise<string | undefined> => {
     const tokenRef = this.walletTokens[walletAddress];
     if (tokenRef) {
       // If there are more parallel requests, make sure we fetch just once
       if (tokenRef.fetching) {
         return tokenRef.fetching;
       }
-      const isValid =
-        tokenRef.expiration < new Date().getTime() && tokenRef.token;
 
-      if (isValid) {
+      if (tokenRef.expiration < new Date().getTime() && tokenRef.token) {
         return tokenRef.token;
       }
     }
 
-    // In case we requesting wallet token first time,
+    // In case we RestRequesting wallet token first time,
     // or token already expired (~15 mins),
     // we need to generate fresh one.
 
     const tokenUpdate = (this.walletTokens[walletAddress] = {
       expiration: new Date().getTime() + TOKEN_EXPIRATION_MS,
       fetching: this.websocketAuthTokenFetch(walletAddress),
-      token: '',
-    });
+      token: undefined,
+    } as TokenValue);
 
     try {
       const token = await tokenUpdate.fetching;
@@ -65,6 +65,6 @@ export default class WebsocketTokenManager {
   };
 
   public getLastCachedToken = (walletAddress: string): string => {
-    return this.walletTokens[walletAddress].token || '';
+    return this.walletTokens[walletAddress]?.token || '';
   };
 }

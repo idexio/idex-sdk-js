@@ -4,7 +4,7 @@ import { XOR } from '../utils';
 /**
  * Asset
  *
- * @typedef {Object} response.Asset
+ * @typedef {Object} RestResponseAsset
  * @property {number} id - Internal id of the asset
  * @property {string} name
  * @property {string} symbol
@@ -14,7 +14,7 @@ import { XOR } from '../utils';
  * @property {string} tradeMinimum
  * @property {string} withdrawalMinimum
  */
-export interface Asset {
+export interface RestResponseAsset {
   name: string;
   symbol: string;
   contractAddress: string;
@@ -25,14 +25,14 @@ export interface Asset {
 /**
  * Balance
  *
- * @typedef {Object} response.Balance
+ * @typedef {Object} RestResponseBalance
  * @property {string} asset - Asset symbol
  * @property {string} quantity - Total quantity of the asset held by the wallet on the exchange
  * @property {string} availableForTrade - Quantity of the asset available for trading; quantity - locked
  * @property {string} locked - Quantity of the asset held in trades on the order book
  * @property {string} usdValue - Total value of the asset held by the wallet on the exchange in USD
  */
-export interface Balance {
+export interface RestResponseBalance {
   asset: string;
   quantity: string;
   availableForTrade: string;
@@ -43,7 +43,7 @@ export interface Balance {
 /**
  * Candle (OHLCV) data points aggregated by time interval
  *
- * @typedef {Object} response.Candle
+ * @typedef {Object} RestResponseCandle
  * @property {number} start - Time of the start of the interval
  * @property {string} open - Price of the first fill of the interval in quote terms
  * @property {string} high - Price of the highest fill of the interval in quote terms
@@ -52,7 +52,7 @@ export interface Balance {
  * @property {string} volume - Total volume of the period in base terms
  * @property {number} sequence - Fill sequence number of the last trade in the interval
  */
-export interface Candle {
+export interface RestResponseCandle {
   start: number;
   open: string;
   high: string;
@@ -65,7 +65,7 @@ export interface Candle {
 /**
  * Asset deposits into smart contract
  *
- * @typedef {Object} response.Deposit
+ * @typedef {Object} RestResponseDeposit
  * @property {string} depositId - IDEX-issued deposit identifier
  * @property {string} asset - Asset by symbol
  * @property {string} quantity - Deposit amount in asset terms
@@ -73,7 +73,7 @@ export interface Candle {
  * @property {number} txTime - Timestamp of the Ethereum deposit tx
  * @property {number} confirmationTime - Timestamp of credit on IDEX including block confirmations
  */
-export interface Deposit {
+export interface RestResponseDeposit {
   depositId: string;
   asset: string;
   quantity: string;
@@ -85,7 +85,7 @@ export interface Deposit {
 /**
  * Basic exchange info
  *
- * @typedef {Object} response.ExchangeInfo
+ * @typedef {Object} RestResponseExchangeInfo
  * @property {string} timeZone - Server time zone, always UTC
  * @property {number} serverTime - Current server time
  * @property {string} ethereumDepositContractAddress - Ethereum address of the exchange custody contract for deposits
@@ -98,7 +98,7 @@ export interface Deposit {
  * @property {string} takerTradeMinimum - Minimum order size that is accepted by the matching engine for execution in ETH, applies to both ETH and tokens
  * @property {string} withdrawMinimum - Minimum withdrawal amount in ETH, applies to both ETH and tokens
  */
-export interface ExchangeInfo {
+export interface RestResponseExchangeInfo {
   timeZone: string;
   serverTime: number;
   ethereumDepositContractAddress: string;
@@ -115,7 +115,7 @@ export interface ExchangeInfo {
 /**
  * Fill
  *
- * @typedef {Object} response.Fill
+ * @typedef {Object} RestResponseFill
  * @property {string} fillId - Internal ID of fill
  * @property {string} orderId - Internal ID of order
  * @property {string} [clientOrderId] - Client-provided ID of order
@@ -134,7 +134,7 @@ export interface ExchangeInfo {
  * @property {string} [txId] - Ethereum transaction id, if available
  * @property {string} txStatus - Eth Tx Status
  */
-export interface Fill extends OrderFill {
+export interface RestResponseFill extends RestResponseOrderFill {
   orderId: string;
   clientOrderId?: string;
   market: string;
@@ -144,7 +144,7 @@ export interface Fill extends OrderFill {
 /**
  * OrderFill
  *
- * @typedef {Object} response.OrderFill
+ * @typedef {Object} RestResponseOrderFill
  * @property {string} fillId - Internal ID of fill
  * @property {string} price - Executed price of fill in quote terms
  * @property {string} quantity - Executed quantity of fill in base terms
@@ -159,7 +159,7 @@ export interface Fill extends OrderFill {
  * @property {string} [txId] - Ethereum transaction id, if available
  * @property {string} txStatus - Eth Tx Status
  */
-export interface OrderFill {
+export interface RestResponseOrderFill {
   fillId: string;
   price: string;
   quantity: string;
@@ -178,7 +178,7 @@ export interface OrderFill {
 /**
  * Market
  *
- * @typedef {Object} response.Market
+ * @typedef {Object} RestResponseMarket
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
  * @property {MarketStatus} status
  * @property {string} baseAsset - e.g. 'IDEX'
@@ -190,7 +190,7 @@ export interface OrderFill {
  * @property {OrderType[]} orderTypes
  * @property {string} tradeMinimum - Minimum quantity in base terms
  */
-export interface Market {
+export interface RestResponseMarket {
   market: string;
   status: keyof typeof enums.MarketStatus;
   baseAsset: string;
@@ -202,7 +202,7 @@ export interface Market {
 /**
  * Order
  *
- * @typedef {Object} response.Order
+ * @typedef {Object} RestResponseOrder
  * @property {string} market - Market symbol as base-quote pair e.g. 'IDEX-ETH'
  * @property {string} orderId - Exchange-assigned order identifier
  * @property {string} [clientOrderId] - Client-specified order identifier
@@ -222,7 +222,7 @@ export interface Market {
  * @property {string} [stopPrice] - Stop loss or take profit price, only present for stopLoss, stopLossLimit, takeProfit, and takeProfitLimit orders
  * @property {OrderTimeInForce} [timeInForce] - Time in force policy, see values, only present for all limit orders specifying a non-default (gtc) policy
  * @property {OrderSelfTradePrevention} [selfTradePrevention] - Self-trade prevention policy, see values, only present for orders specifying a non-default (dc) policy
- * @property {response.OrderFill[]} - Array of order fill objects
+ * @property {RestResponseOrderFill[]} - Array of order fill objects
  */
 export interface Order {
   market: string;
@@ -244,7 +244,7 @@ export interface Order {
   stopPrice?: string;
   timeInForce: keyof typeof enums.OrderTimeInForce;
   selfTradePrevention: keyof typeof enums.OrderSelfTradePrevention;
-  fills?: OrderFill[];
+  fills?: RestResponseOrderFill[];
 }
 
 type Price = string;
@@ -256,11 +256,11 @@ type NumOrders = number;
 /**
  * OrderBookPriceLevel
  *
- * @typedef {[string, string, number]} response.OrderBookPriceLevel
+ * @typedef {[string, string, number]} RestResponseOrderBookPriceLevel
  */
-export type OrderBookPriceLevel = [Price, Size, NumOrders];
+export type RestResponseOrderBookPriceLevel = [Price, Size, NumOrders];
 
-interface OrderBook {
+interface RestResponseOrderBook {
   sequence: number;
   bids: unknown[];
   asks: unknown[];
@@ -269,38 +269,38 @@ interface OrderBook {
 /**
  * OrderBookLevel1
  *
- * @typedef {Object} response.OrderBookLevel1
- * @property {[response.OrderBookPriceLevel]} bids
- * @property {[response.OrderBookPriceLevel]} asks
+ * @typedef {Object} RestResponseOrderBookLevel1
+ * @property {[RestResponseOrderBookPriceLevel]} bids
+ * @property {[RestResponseOrderBookPriceLevel]} asks
  */
-export interface OrderBookLevel1 extends OrderBook {
-  bids: [OrderBookPriceLevel];
-  asks: [OrderBookPriceLevel];
+export interface RestResponseOrderBookLevel1 extends RestResponseOrderBook {
+  bids: [RestResponseOrderBookPriceLevel];
+  asks: [RestResponseOrderBookPriceLevel];
 }
 
 /**
  * OrderBookLevel2
  *
- * @typedef {Object} response.OrderBookLevel2
- * @property {response.OrderBookPriceLevel[]} bids
- * @property {response.OrderBookPriceLevel[]} asks
+ * @typedef {Object} RestResponseOrderBookLevel2
+ * @property {RestResponseOrderBookPriceLevel[]} bids
+ * @property {RestResponseOrderBookPriceLevel[]} asks
  */
-export interface OrderBookLevel2 extends OrderBook {
-  bids: OrderBookPriceLevel[];
-  asks: OrderBookPriceLevel[];
+export interface RestResponseOrderBookLevel2 extends RestResponseOrderBook {
+  bids: RestResponseOrderBookPriceLevel[];
+  asks: RestResponseOrderBookPriceLevel[];
 }
 
 /**
  * Ping
  *
- * @typedef {Object} response.Ping
+ * @typedef {Object} RestResponsePing
  */
-export type Ping = { [key: string]: never };
+export type RestResponsePing = { [key: string]: never };
 
 /**
  * Ticker
  *
- * @typedef {Object} response.Ticker
+ * @typedef {Object} RestResponseTicker
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
  * @property {string} percentChange - % change from open to close
  * @property {string} baseVolume - 24h volume in base terms
@@ -316,7 +316,7 @@ export type Ping = { [key: string]: never };
  * @property {number} numTrades - Number of fills for the market in the period
  * @property {?number} sequence - Last trade sequence number for the market
  */
-export interface Ticker {
+export interface RestResponseTicker {
   market: string;
   percentChange: string;
   baseVolume: string;
@@ -336,17 +336,17 @@ export interface Ticker {
 /**
  * Time
  *
- * @typedef {Object} response.Time
+ * @typedef {Object} RestResponseTime
  * @property {number} time - Current server time
  */
-export interface Time {
+export interface RestResponseTime {
   serverTime: number;
 }
 
 /**
  * Trade
  *
- * @typedef {Object} response.Trade
+ * @typedef {Object} RestResponseTrade
  * @property {string} fillId - Internal ID of fill
  * @property {string} price - Executed price of trade in quote terms
  * @property {string} quantity - Executed quantity of trade in base terms
@@ -355,7 +355,7 @@ export interface Time {
  * @property {OrderSide} makerSide - Which side of the order the liquidity maker was on
  * @property {number} sequence - Last trade sequence number for the market
  */
-export interface Trade {
+export interface RestResponseTrade {
   fillId: string;
   price: string;
   quantity: string;
@@ -368,7 +368,7 @@ export interface Trade {
 /**
  * User
  *
- * @typedef {Object} response.User
+ * @typedef {Object} RestResponseUser
  * @property {boolean} depositEnabled - Deposits are enabled for the user account
  * @property {boolean} orderEnabled - Placing orders is enabled for the user account
  * @property {boolean} cancelEnabled - Cancelling orders is enabled for the user account
@@ -380,7 +380,7 @@ export interface Trade {
  * @property {string} makerFeeRate - User-specific maker trade fee rate
  * @property {string} takerFeeRate - User-specific taker trade fee rate
  */
-export interface User {
+export interface RestResponseUser {
   depositEnabled: boolean;
   orderEnabled: boolean;
   cancelEnabled: boolean;
@@ -394,26 +394,26 @@ export interface User {
 }
 
 /**
- * @typedef {Object} response.Wallet
+ * @typedef {Object} RestResponseWallet
  * @property {string} address - Ethereum address of the wallet
  * @property {string} totalPortfolioValueUsd - Total value of all holdings deposited on the exchange for the wallet in USD
  * @property {number} time - Timestamp of association of the wallet with the user account
  */
-export interface Wallet {
+export interface RestResponseWallet {
   address: string;
   totalPortfolioValueUsd: string;
   time: number;
 }
 
 /**
- * @typedef {Object} response.WebSocketToken
+ * @typedef {Object} RestResponseWebSocketToken
  * @property {string} token - WebSocket subscription authentication token
  */
-export interface WebSocketToken {
+export interface RestResponseWebSocketToken {
   token: string;
 }
 
-interface WithdrawalBase {
+interface RestResponseWithdrawalBase {
   withdrawalId: string;
   quantity: string;
   time: number;
@@ -422,16 +422,18 @@ interface WithdrawalBase {
   txStatus: keyof typeof enums.EthTransactionStatus;
 }
 
-export interface WithdrawalBySymbol extends WithdrawalBase {
+export interface RestResponseWithdrawalBySymbol
+  extends RestResponseWithdrawalBase {
   asset: string;
 }
 
-export interface WithdrawalByAddress extends WithdrawalBase {
+export interface RestResponseWithdrawalByAddress
+  extends RestResponseWithdrawalBase {
   assetContractAddress: string;
 }
 
 /**
- * @typedef {Object} response.Withdrawal
+ * @typedef {Object} RestResponseWithdrawal
  * @property {string} withdrawalId - Exchange-assigned withdrawal identifier
  * @property {string} [asset] - Symbol of the withdrawn asset, exclusive with assetContractAddress
  * @property {string} [assetContractAddress] - Token contract address of withdrawn asset, exclusive with asset
@@ -441,4 +443,7 @@ export interface WithdrawalByAddress extends WithdrawalBase {
  * @property {string} [txId] - Ethereum id of the withdrawal transaction
  * @property {string} txStatus - Status of the withdrawal settlement transaction
  */
-export type Withdrawal = XOR<WithdrawalBySymbol, WithdrawalByAddress>;
+export type RestResponseWithdrawal = XOR<
+  RestResponseWithdrawalBySymbol,
+  RestResponseWithdrawalByAddress
+>;
