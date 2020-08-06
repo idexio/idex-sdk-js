@@ -1,12 +1,30 @@
 import { ethers } from 'ethers';
 
 import * as constants from './constants';
-import * as types from './types';
+
+import {
+  RestRequestOrder,
+  RestRequestOrderByBaseQuantity,
+  RestRequestOrderByQuoteQuantity,
+  RestRequestOrderWithPrice,
+  RestRequestOrderWithStopPrice,
+  RestRequestWithdrawal,
+  OrderType,
+  OrderSide,
+  OrderTimeInForce,
+  OrderSelfTradePrevention,
+  isWithdrawalByAssetSymbolRequest,
+  isWithdrawalByAssetAddressRequest,
+  RestRequestCancelOrderOrOrders,
+  isRestRequestCancelOrder,
+  isRestRequestCancelOrders,
+  RestRequestAssociateWallet,
+} from './types';
 
 /**
  * A function that accepts a string and returns a Promise resolving on its ECDSA signature
  *
- * @typedef {Function} signatures.MessageSigner
+ * @typedef {Function} MessageSigner
  */
 export type MessageSigner = (message: string) => Promise<string>;
 
@@ -19,52 +37,49 @@ export const privateKeySigner = function getPrivateKeyMessageSigner(
     );
 };
 
-export const orderHash = function getPlaceOrderWalletHash(
-  order: types.rest.request.Order,
-): string {
+export function createOrderSignature(order: RestRequestOrder): string {
   return solidityHashOfParams([
     ['uint8', constants.ORDER_SIGNATURE_HASH_VERSION],
     ['uint128', uuidToUint8Array(order.nonce)],
     ['address', order.wallet],
     ['string', order.market],
-    ['uint8', types.enums.OrderType[order.type]],
-    ['uint8', types.enums.OrderSide[order.side]],
+    ['uint8', OrderType[order.type]],
+    ['uint8', OrderSide[order.side]],
+    ['string', (order as RestRequestOrderByBaseQuantity).quantity || ''],
     [
       'string',
-      (order as types.rest.request.OrderByBaseQuantity).quantity || '',
+      (order as RestRequestOrderByQuoteQuantity).quoteOrderQuantity || '',
     ],
-    [
-      'string',
-      (order as types.rest.request.OrderByQuoteQuantity).quoteOrderQuantity ||
-        '',
-    ],
-    ['string', (order as types.rest.request.OrderWithPrice).price || ''],
-    [
-      'string',
-      (order as types.rest.request.OrderWithStopPrice).stopPrice || '',
-    ],
+    ['string', (order as RestRequestOrderWithPrice).price || ''],
+    ['string', (order as RestRequestOrderWithStopPrice).stopPrice || ''],
     ['string', order.clientOrderId || ''],
-    ['uint8', types.enums.OrderTimeInForce[order.timeInForce] || 0],
+    ['uint8', order.timeInForce ? OrderTimeInForce[order.timeInForce] : 0],
     [
       'uint8',
-      types.enums.OrderSelfTradePrevention[order.selfTradePrevention] || 0,
+      order.selfTradePrevention
+        ? OrderSelfTradePrevention[order.selfTradePrevention]
+        : 0,
     ],
     ['uint64', order.cancelAfter || 0],
   ]);
+}
+
+type TypeValuePairings = {
+  string: string;
+  address: string;
+  uint128: Uint8Array;
+  uint8: number;
+  uint64: number;
+  bool: boolean;
 };
 
-export const cancelOrderHash = function getCancelOrderWalletHash(
-  parameters: types.utils.XOR<
-    types.rest.request.CancelOrder,
-    types.rest.request.CancelOrders
-  >,
+export function createCancelOrderSignature(
+  parameters: RestRequestCancelOrderOrOrders,
 ): string {
   // Validate either single order or multiple orders
   if (
-    [
-      parameters.orderId,
-      (parameters as types.rest.request.CancelOrders).market,
-    ].filter((val) => !!val).length > 1
+    !isRestRequestCancelOrder(parameters) &&
+    !isRestRequestCancelOrders(parameters)
   ) {
     throw new Error(
       'Cancel orders may specify at most one of orderId or market',
@@ -74,17 +89,20 @@ export const cancelOrderHash = function getCancelOrderWalletHash(
   return solidityHashOfParams([
     ['uint128', uuidToUint8Array(parameters.nonce)],
     ['address', parameters.wallet],
-    ['string', parameters.orderId || ''],
-    ['string', (parameters as types.rest.request.CancelOrders).market || ''],
+    ['string', isRestRequestCancelOrder(parameters) ? parameters.orderId : ''],
+    [
+      'string',
+      (isRestRequestCancelOrders(parameters) ? parameters.market : '') ?? '',
+    ],
   ]);
-};
+}
 
-export const withdrawalHash = function getWithdrawalWalletHash(
-  withdrawal: types.rest.request.Withdrawal,
+export function createWithdrawalSignature(
+  withdrawal: RestRequestWithdrawal,
 ): string {
   if (
-    (withdrawal.asset && withdrawal.assetContractAddress) ||
-    (!withdrawal.asset && !withdrawal.assetContractAddress)
+    !isWithdrawalByAssetSymbolRequest(withdrawal) &&
+    !isWithdrawalByAssetAddressRequest(withdrawal)
   ) {
     throw new Error(
       'Withdrawal must specify exactly one of asset or assetContractAddress',
@@ -94,34 +112,34 @@ export const withdrawalHash = function getWithdrawalWalletHash(
   return solidityHashOfParams([
     ['uint128', uuidToUint8Array(withdrawal.nonce)],
     ['address', withdrawal.wallet],
-    withdrawal.asset
+    isWithdrawalByAssetSymbolRequest(withdrawal)
       ? ['string', withdrawal.asset]
       : ['address', withdrawal.assetContractAddress],
     ['string', withdrawal.quantity],
     ['bool', true], // Auto-dispatch
   ]);
-};
+}
 
-export function associateWalletHash(
-  request: types.rest.request.RestRequestAssociateWallet,
+/**
+ * Generates the signature for the associate wallet request
+ * @private
+ */
+export function createAssociateWalletSignature(
+  associate: RestRequestAssociateWallet,
 ): string {
-  if (!request.wallet || !request.nonce) {
+  if (!associate.wallet || !associate.nonce) {
     throw new Error('Associate Wallet must provide a wallet and nonce');
   }
 
   return solidityHashOfParams([
-    ['uint128', uuidToUint8Array(request.nonce)],
-    ['address', request.wallet],
+    ['uint128', uuidToUint8Array(associate.nonce)],
+    ['address', associate.wallet],
   ]);
 }
 
-type TypeValuePair =
-  | ['string' | 'address', string]
-  | ['uint128', string | Uint8Array]
-  | ['uint8' | 'uint64', number]
-  | ['bool', boolean];
-
-function solidityHashOfParams(params: TypeValuePair[]): string {
+function solidityHashOfParams<K extends keyof TypeValuePairings>(
+  params: Array<[K, TypeValuePairings[K]]>,
+): string {
   const fields = params.map((param) => param[0]);
   const values = params.map((param) => param[1]);
 

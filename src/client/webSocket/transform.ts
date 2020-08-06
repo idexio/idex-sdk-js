@@ -1,9 +1,8 @@
-import * as restResponse from '../../types/rest/response';
-import * as webSocketResponse from '../../types/webSocket/response';
+import * as types from '../../types';
 
 const transformTickersMessage = (
-  ticker: webSocketResponse.TickerShort,
-): restResponse.Ticker => ({
+  ticker: types.WebSocketResponseTickerShort,
+): types.RestResponseTicker => ({
   market: ticker.m,
   time: ticker.t,
   open: ticker.o,
@@ -14,15 +13,15 @@ const transformTickersMessage = (
   baseVolume: ticker.v,
   quoteVolume: ticker.q,
   percentChange: ticker.P,
-  ...(ticker.n && { numTrades: ticker.n }),
+  numTrades: ticker.n,
   ask: ticker.a,
   bid: ticker.b,
   sequence: ticker.u,
 });
 
 const transformTradesMessage = (
-  trade: webSocketResponse.TradeShort,
-): webSocketResponse.TradeLong => ({
+  trade: types.WebSocketResponseTradeShort,
+): types.WebSocketResponseTradeLong => ({
   market: trade.m,
   fillId: trade.i,
   price: trade.p,
@@ -34,8 +33,8 @@ const transformTradesMessage = (
 });
 
 const transformCandlesMessage = (
-  candle: webSocketResponse.CandleShort,
-): webSocketResponse.CandleLong => ({
+  candle: types.WebSocketResponseCandleShort,
+): types.WebSocketResponseCandleLong => ({
   market: candle.m,
   time: candle.t,
   interval: candle.i,
@@ -51,8 +50,8 @@ const transformCandlesMessage = (
 });
 
 const transformL1orderbooksMessage = (
-  l1orderbook: webSocketResponse.L1OrderBookShort,
-): webSocketResponse.L1OrderBookLong => ({
+  l1orderbook: types.WebSocketResponseL1OrderBookShort,
+): types.WebSocketResponseL1OrderBookLong => ({
   market: l1orderbook.m,
   time: l1orderbook.t,
   bidPrice: l1orderbook.b,
@@ -62,8 +61,8 @@ const transformL1orderbooksMessage = (
 });
 
 const transformL2orderbooksMessage = (
-  l2orderbook: webSocketResponse.L2OrderBookShort,
-): webSocketResponse.L2OrderBookLong => ({
+  l2orderbook: types.WebSocketResponseL2OrderBookShort,
+): types.WebSocketResponseL2OrderBookLong => ({
   market: l2orderbook.m,
   time: l2orderbook.t,
   sequence: l2orderbook.u,
@@ -72,8 +71,8 @@ const transformL2orderbooksMessage = (
 });
 
 const transformBalancesMessage = (
-  balance: webSocketResponse.BalanceShort,
-): webSocketResponse.BalanceLong => ({
+  balance: types.WebSocketResponseBalanceShort,
+): types.WebSocketResponseBalanceLong => ({
   wallet: balance.w,
   asset: balance.a,
   quantity: balance.q,
@@ -83,8 +82,8 @@ const transformBalancesMessage = (
 });
 
 const transformOrderFill = (
-  fill: webSocketResponse.OrderFillShort,
-): restResponse.OrderFill => ({
+  fill: types.WebSocketResponseOrderFillShort,
+): types.RestResponseOrderFill => ({
   fillId: fill.i,
   price: fill.p,
   quantity: fill.q,
@@ -101,8 +100,8 @@ const transformOrderFill = (
 });
 
 const transformOrdersMessage = (
-  order: webSocketResponse.OrderShort,
-): webSocketResponse.OrderLong => ({
+  order: types.WebSocketResponseOrderShort,
+): types.WebSocketResponseOrderLong => ({
   market: order.m,
   orderId: order.i,
   clientOrderId: order.c,
@@ -128,10 +127,10 @@ const transformOrdersMessage = (
 
 export const transformMessage = (
   message:
-    | webSocketResponse.ErrorResponse
-    | webSocketResponse.SubscriptionsResponse
-    | webSocketResponse.SubscriptionMessageShort,
-): webSocketResponse.Response => {
+    | types.WebSocketResponseError
+    | types.WebSocketResponseSubscriptions
+    | types.WebSocketResponseSubscriptionMessageShort,
+): types.WebSocketResponse => {
   if (message.type === 'error' || message.type === 'subscriptions') {
     return message;
   }

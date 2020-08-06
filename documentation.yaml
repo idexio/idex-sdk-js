@@ -1,12 +1,30 @@
 toc:
   - name: Clients
     children:
-      - AuthenticatedRESTClient
-      - AuthenticatedRESTClientOptions
-      - PublicRESTClient
-      - PublicRESTClientOptions
-      - WebSocketClient
-      - WebSocketClientOptions
+      - name: REST Public Client
+        description: |
+          ```typescript
+            import { RestPublicClient } from '@idexio/idex-sdk';
+          ```
+        children:
+          - RestPublicClient
+          - RestPublicClientOptions
+      - name: REST Authenticated Client
+        description: |
+          ```typescript
+            import { RestAuthenticatedClient } from '@idexio/idex-sdk';
+          ```
+        children: 
+          - RestAuthenticatedClient
+          - RestAuthenticatedClientOptions
+      - name: WebSocketClient
+        description: |
+          ```typescript
+            import { WebSocketClient } from '@idexio/idex-sdk';
+          ```
+        children:
+          - WebSocketClient
+          - WebSocketClientOptions
   - name: Enums
     description: |
       Sets of named constants used as field types for several requests and responses
@@ -23,49 +41,57 @@ toc:
       - OrderType
   - name: REST Requests
     children:
-      - request.CancelOrders
-      - request.FindBalances
-      - request.FindCandles
-      - request.FindDeposit
-      - request.FindDeposits
-      - request.FindFill
-      - request.FindFills
-      - request.FindMarkets
-      - request.FindOrder
-      - request.FindOrders
-      - request.FindTrades
-      - request.FindWithdrawal
-      - request.FindWithdrawals
-      - request.Order
-      - request.Withdrawal
+      - RestRequestCancelOrders
+      - RestRequestFindBalances
+      - RestRequestFindCandles
+      - RestRequestFindDeposit
+      - RestRequestFindDeposits
+      - RestRequestFindFill
+      - RestRequestFindFills
+      - RestRequestFindMarkets
+      - RestRequestFindOrder
+      - RestRequestFindOrders
+      - RestRequestFindTrades
+      - RestRequestFindWithdrawal
+      - RestRequestFindWithdrawals
+      - RestRequestOrder
+      - RestRequestWithdrawal
       - RestRequestAssociateWallet
   - name: REST Responses
     children:
-      - response.Asset
-      - response.Balance
-      - response.Candle
-      - response.Deposit
-      - response.ExchangeInfo
-      - response.Fill
-      - response.Market
-      - response.Order
-      - response.OrderBookLevel1
-      - response.OrderBookLevel2
-      - response.OrderBookPriceLevel
-      - response.OrderFill
-      - response.Ping
-      - response.Ticker
-      - response.Time
-      - response.Trade
-      - response.User
-      - response.Wallet
-      - response.WebSocketToken
-      - response.Withdrawal
+      - RestResponseAsset
+      - RestResponseBalance
+      - RestResponseCandle
+      - RestResponseDeposit
+      - RestResponseExchangeInfo
+      - RestResponseFill
+      - RestResponseMarket
+      - RestResponseOrder
+      - RestResponseCancelledOrder
+      - RestResponseOrderBookLevel1
+      - RestResponseOrderBookLevel2
+      - RestResponseOrderBookPriceLevel
+      - RestResponseOrderFill
+      - RestResponsePing
+      - RestResponseTicker
+      - RestResponseTime
+      - RestResponseTrade
+      - RestResponseUser
+      - RestResponseWallet
+      - RestResponseWebSocketToken
+      - RestResponseWithdrawal
       - RestResponseAssociateWallet
+  - name: WebSocket Subscriptions
+    children:
+      - AuthTokenWebSocketRequestOrdersSubscription
+      - AuthTokenWebSocketRequestBalancesSubscription
   - name: WebSocket Responses
     children:
-      - webSocketResponse.Error
-      - webSocketResponse.Subscriptions
+      - WebSocketResponseError
+      - WebSocketResponseSubscriptions
   - name: ECDSA Signatures
     children:
-      - signatures.MessageSigner
+      - MessageSigner
+      - createAssociateWalletSignature
+  - name: Misc Types & Utilities
+    children:

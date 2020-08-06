@@ -1,6 +1,10 @@
-import * as client from './client';
-import * as constants from './constants';
-import * as signatures from './signatures';
-import * as types from './types';
+export * from './types';
+export * from './client';
+export * from './constants';
+export * from './signatures';
 
-export { client, constants, signatures, types };
+// legacy exports - remove once migrated
+export * as signatures from './signatures';
+export * as types from './types/legacy';
+export * as client from './client/legacy';
+export * as constants from './constants';

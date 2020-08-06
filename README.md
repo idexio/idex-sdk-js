@@ -27,9 +27,9 @@ npm install @idexio/idex-sdk
 Get IDEX 2.0 sandbox [API keys](https://idex.io).
 
 ```typescript
-import * as idex from '@idexio/idex-sdk-js';
+import * as idex from '@idexio/idex-sdk';
 
-const publicClient = new idex.client.rest.Public({
+const publicClient = new idex.RestPublicClient({
   sandbox: true,
 });
 console.log(await publicClient.getServerTime());
