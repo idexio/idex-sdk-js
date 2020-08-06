@@ -7,4 +7,4 @@ export * from './signatures';
 export * as signatures from './signatures';
 export * as types from './types/legacy';
 export * as client from './client/legacy';
-export * as constant from './constants';
+export * as constants from './constants';
