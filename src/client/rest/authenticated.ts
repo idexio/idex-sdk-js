@@ -118,6 +118,38 @@ export default class AuthenticatedRESTClient {
     return (await this.get('/balances', findBalances)).data;
   }
 
+  // Wallet Association Endpoint
+
+  /**
+   * Associate a wallet with the authenticated account
+   *
+   * @example
+   *
+   * const wallet = await authenticatedClient.associateWallet(
+   *   {
+   *     nonce: uuidv1(),
+   *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+   *   },
+   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   * );
+   *
+   * @see https://docs.idex.io/#associate-wallet
+   *
+   * @param {request.RestRequestAssociateWallet} withdrawal
+   * @param {signatures.MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   */
+  public async associateWallet(
+    associate: request.RestRequestAssociateWallet,
+    signer: signatures.MessageSigner = this.signer,
+  ): Promise<response.RestResponseAssociateWallet> {
+    return (
+      await this.post('/wallets', {
+        parameters: associate,
+        signature: await signer(signatures.associateWalletHash(associate)),
+      })
+    ).data;
+  }
+
   // Orders & Trade Endpoints
 
   /**

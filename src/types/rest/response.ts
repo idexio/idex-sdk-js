@@ -460,3 +460,15 @@ export interface WithdrawalByAddress extends WithdrawalBase {
  * @property {string} txStatus - Status of the withdrawal settlement transaction
  */
 export type Withdrawal = XOR<WithdrawalBySymbol, WithdrawalByAddress>;
+
+/**
+ * @typedef {Object} RestResponseAssociateWallet
+ * @property {string} address - 	Ethereum address of the wallet
+ * @property {string} totalPortfolioValueUsd - Total value of all holdings deposited on the exchange for the wallet in USD
+ * @property {number} time - Timestamp of association of the wallet with the user account
+ */
+export type RestResponseAssociateWallet = {
+  address: string;
+  totalPortfolioValueUsd: string;
+  time: number;
+};

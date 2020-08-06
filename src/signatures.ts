@@ -102,6 +102,19 @@ export const withdrawalHash = function getWithdrawalWalletHash(
   ]);
 };
 
+export function associateWalletHash(
+  request: types.rest.request.RestRequestAssociateWallet,
+): string {
+  if (!request.wallet || !request.nonce) {
+    throw new Error('Associate Wallet must provide a wallet and nonce');
+  }
+
+  return solidityHashOfParams([
+    ['uint128', uuidToUint8Array(request.nonce)],
+    ['address', request.wallet],
+  ]);
+}
+
 type TypeValuePair =
   | ['string' | 'address', string]
   | ['uint128', string | Uint8Array]
