@@ -86,9 +86,10 @@ export class WebSocketClient {
 
   constructor(options: WebSocketClientOptions) {
     const baseURL =
-      options.baseURL ?? options.sandbox
+      options.baseURL ??
+      (options.sandbox
         ? constants.SANDBOX_WEBSOCKET_API_BASE_URL
-        : constants.LIVE_WEBSOCKET_API_BASE_URL;
+        : constants.LIVE_WEBSOCKET_API_BASE_URL);
 
     if (!baseURL) {
       throw new Error('Must set sandbox to true');
