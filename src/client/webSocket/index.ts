@@ -3,12 +3,13 @@ import WebSocket from 'isomorphic-ws';
 import * as types from '../../types';
 
 import * as constants from '../../constants';
-import WebsocketTokenManager from './tokenManager';
+import WebsocketTokenManager, {
+  removeWalletFromSdkSubscription,
+} from './tokenManager';
 import { transformMessage } from './transform';
-import { WebSocketRequestAuthenticatedSubscription } from '../../types';
-import { isDefinedFilter } from '../../utils';
+import { isNode } from '../../utils';
 
-const userAgent = 'idex-sdk-js';
+const nodeUserAgent = 'idex-sdk-js';
 
 export type ConnectListener = () => unknown;
 export type DisconnectListener = () => unknown;
@@ -177,16 +178,61 @@ export class WebSocketClient {
   }
 
   public async subscribe(
-    subscriptions: types.WebSocketRequestSubscription[],
+    subscriptions: types.AuthTokenWebSocketRequestSubscription[],
     cid?: string,
   ): Promise<void> {
-    const [authSubscriptions, publicSubscriptions] = splitSubscriptions(
-      subscriptions,
-    );
+    const authSubscriptions = subscriptions.filter(isAuthenticatedSubscription);
+
+    // Public subscriptions can be subscribed all at once
+    if (authSubscriptions.length === 0) {
+      this.sendMessage({ cid, method: 'subscribe', subscriptions });
+      return;
+    }
 
     const { webSocketTokenManager } = this;
 
-    if (publicSubscriptions.length) {
+    // For authenticated, we do require token manager
+    if (!webSocketTokenManager) {
+      throw new Error(
+        'WebSocket: `websocketAuthTokenFetch` is required for authenticated subscriptions',
+      );
+    }
+
+    const uniqueWallets = Array.from(
+      new Set(
+        authSubscriptions
+          .filter((subscription) => subscription.wallet)
+          .map((subscription) => subscription.wallet),
+      ),
+    );
+
+    if (!uniqueWallets.length) {
+      throw new Error(
+        'WebSocket: Missing `wallet` for authenticated subscription',
+      );
+    }
+
+    // Prepare (fetch) all authentication tokens for subscriptions
+    await Promise.all(
+      uniqueWallets.map((wallet) => webSocketTokenManager.getToken(wallet)),
+    );
+
+    // For single wallet, send all subscriptions at once (also unauthenticated)
+    if (uniqueWallets.length === 1) {
+      this.sendMessage({
+        cid,
+        method: 'subscribe',
+        subscriptions: subscriptions.map(removeWalletFromSdkSubscription),
+        token: webSocketTokenManager.getLastCachedToken(uniqueWallets[0]),
+      });
+      return;
+    }
+
+    // In specific case when user subscribed with more than 1 wallet...
+
+    // Subscribe public subscriptions all at once
+    const publicSubscriptions = subscriptions.filter(isPublicSubscription);
+    if (publicSubscriptions.length > 0) {
       this.sendMessage({
         cid,
         method: 'subscribe',
@@ -194,38 +240,17 @@ export class WebSocketClient {
       });
     }
 
-    if (authSubscriptions.length === 0) {
-      return;
-    }
-
-    await Promise.all(
-      authSubscriptions.map(
-        async ({ wallet: walletAddress, ...subscription }) => {
-          if (!webSocketTokenManager) {
-            throw new Error(
-              '`websocketAuthTokenFetch` is required for authenticated subscriptions',
-            );
-          }
-
-          if (!walletAddress) {
-            throw new Error(
-              `WebSocket: "${subscription.name}" subscription invalid, authenticated subscriptions require a wallet parameter.`,
-            );
-          }
-
-          this.sendMessage({
-            cid,
-            method: 'subscribe',
-            subscriptions: [
-              // cast need to allow wallet to be required on auth subscription
-              // but not complain here since it is stripped off the subscription.
-              subscription as WebSocketRequestAuthenticatedSubscription,
-            ],
-            token: await webSocketTokenManager.getToken(walletAddress),
-          });
-        },
-      ),
-    );
+    // Send multiple wallets subscriptions
+    authSubscriptions.forEach((authSubscription) => {
+      this.sendMessage({
+        cid,
+        method: 'subscribe',
+        subscriptions: [removeWalletFromSdkSubscription(authSubscription)],
+        token: webSocketTokenManager.getLastCachedToken(
+          authSubscription.wallet,
+        ),
+      });
+    });
   }
 
   /**
@@ -237,7 +262,7 @@ export class WebSocketClient {
    * See {@link https://docs.idex.io/#get-authentication-token|API specification}
    */
   public subscribeAuthenticated(
-    subscriptions: types.WebSocketRequestAuthenticatedSubscription[],
+    subscriptions: types.AuthTokenWebSocketRequestAuthenticatedSubscription[],
   ): void {
     this.subscribe(subscriptions);
   }
@@ -267,9 +292,14 @@ export class WebSocketClient {
     if (this.webSocket) {
       return this.webSocket;
     }
-    const webSocket = new WebSocket(this.baseURL, {
-      headers: { 'User-Agent': userAgent },
-    });
+    const webSocket = new WebSocket(
+      this.baseURL,
+      isNode
+        ? {
+            headers: { 'User-Agent': nodeUserAgent },
+          }
+        : undefined,
+    );
     webSocket.onmessage = this.handleWebSocketMessage.bind(this);
     webSocket.onclose = this.handleWebSocketClose.bind(this);
     webSocket.onerror = this.handleWebSocketError.bind(this);
@@ -291,7 +321,6 @@ export class WebSocketClient {
     this.disconnectListeners.forEach((listener) => listener());
 
     if (this.shouldReconnectAutomatically && !this.doNotReconnect) {
-      // TODO: exponential backoff
       this.reconnect();
     }
   }
@@ -341,33 +370,16 @@ export class WebSocketClient {
   }
 }
 
-/**
- * Take in subscriptions and return array split by authenticated or unauthenticated
- * @private
- */
-function splitSubscriptions(
-  subscriptions: types.WebSocketRequestSubscription[],
-) {
-  return subscriptions.reduce(
-    (arr, subscription) => {
-      if (isAuthenticatedSubscription(subscription)) {
-        arr[0].push(subscription);
-      } else {
-        arr[1].push(subscription);
-      }
-      return arr;
-    },
-    [
-      [] as types.WebSocketRequestAuthenticatedSubscription[],
-      [] as types.WebSocketRequestUnauthenticatedSubscription[],
-    ] as const,
-  );
-}
-
 function isAuthenticatedSubscription(
   subscription: types.WebSocketRequestSubscription,
-): subscription is WebSocketRequestAuthenticatedSubscription {
+): subscription is types.AuthTokenWebSocketRequestAuthenticatedSubscription {
   return Object.keys(
     types.WebSocketRequestAuthenticatedSubscriptionName,
   ).includes(subscription.name);
+}
+
+function isPublicSubscription(
+  subscription: types.WebSocketRequestSubscription,
+): boolean {
+  return !isAuthenticatedSubscription(subscription);
 }

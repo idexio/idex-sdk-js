@@ -83,8 +83,8 @@ toc:
       - RestResponseAssociateWallet
   - name: WebSocket Subscriptions
     children:
-      - WebSocketRequestOrdersSubscription
-      - WebSocketRequestBalancesSubscription
+      - AuthTokenWebSocketRequestOrdersSubscription
+      - AuthTokenWebSocketRequestBalancesSubscription
   - name: WebSocket Responses
     children:
       - WebSocketResponseError
