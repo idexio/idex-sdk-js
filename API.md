@@ -308,9 +308,8 @@ Associate a wallet with the authenticated account
 
 ###### Parameters
 
--   `associate` **types.RestRequestAssociateWallet** 
+-   `associate` **[RestRequestAssociateWallet](#restrequestassociatewallet)** 
 -   `signer` **[MessageSigner](#messagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
--   `withdrawal` **[RestRequestAssociateWallet](#restrequestassociatewallet)** 
 
 ###### Examples
 
@@ -434,9 +433,8 @@ Cancel multiple orders
 
 ###### Parameters
 
--   `cancelOrders` **types.RestRequestCancelOrders** 
+-   `cancelOrders` **[RestResponseCancelledOrder](#restresponsecancelledorder)** 
 -   `signer` **[MessageSigner](#messagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
--   `orders` **[RestResponseCancelledOrder](#restresponsecancelledorder)** 
 
 ###### Examples
 

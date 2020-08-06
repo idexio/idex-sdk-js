@@ -140,7 +140,7 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#associate-wallet
    *
-   * @param {RestRequestAssociateWallet} withdrawal
+   * @param {RestRequestAssociateWallet} associate
    * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
    * @returns {Promise<RestResponseAssociateWallet>}
    */
@@ -308,7 +308,7 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#cancel-order
    *
-   * @param {RestResponseCancelledOrder} orders
+   * @param {RestResponseCancelledOrder} cancelOrders
    * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
    * @returns {Promise<RestResponseCancelledOrder>}
    */
@@ -437,6 +437,7 @@ export class RestAuthenticatedClient {
    *
    * @param {RestRequestWithdrawal} withdrawal
    * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   * @returns {Promise<types.RestResponseWithdrawal>}
    */
   public async withdraw(
     withdrawal: types.RestRequestWithdrawal,
