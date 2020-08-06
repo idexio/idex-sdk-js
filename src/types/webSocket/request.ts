@@ -100,7 +100,7 @@ export type WebSocketRequestSubscription =
   | WebSocketRequestAuthenticatedSubscription
   | WebSocketRequestUnauthenticatedSubscription;
 
-export type WebSocketRequestSubscribeRequest = {
+export type WebSocketRequestSubscribe = {
   method: 'subscribe';
   cid?: string;
   token?: string;
@@ -115,7 +115,7 @@ export type WebSocketRequestUnsubscribeSubscription = Partial<
   WebSocketRequestSubscription
 >;
 
-export interface WebSocketRequestUnsubscribeRequest {
+export interface WebSocketRequestUnsubscribe {
   method: 'unsubscribe';
   cid?: string;
   markets?: string[];
@@ -125,12 +125,12 @@ export interface WebSocketRequestUnsubscribeRequest {
   )[];
 }
 
-export interface WebSocketRequestSubscriptionsRequest {
+export interface WebSocketRequestSubscriptions {
   method: 'subscriptions';
   cid?: string;
 }
 
 export type WebSocketRequest =
-  | WebSocketRequestSubscribeRequest
-  | WebSocketRequestSubscriptionsRequest
-  | WebSocketRequestUnsubscribeRequest;
+  | WebSocketRequestSubscribe
+  | WebSocketRequestSubscriptions
+  | WebSocketRequestUnsubscribe;
