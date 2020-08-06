@@ -11,7 +11,7 @@ import * as signatures from '../../signatures';
 import { isNode } from '../../utils';
 
 /**
- * Authenticated API client options
+ * Authenticated API client configuration options.
  *
  * @typedef {Object} RestAuthenticatedClientOptions
  * @property {boolean} sandbox - Must be set to true

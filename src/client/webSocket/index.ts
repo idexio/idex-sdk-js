@@ -21,16 +21,16 @@ export type ResponseListener = (
  * WebSocket API client options
  *
  * @typedef {Object} WebSocketClientOptions
- * @property {boolean} [sandbox] -
+ * @property {boolean} [sandbox] - <br />
  *  Should the WebSocket connect to the {@link https://docs.idex.io/#sandbox | Sandbox environment}?
  *  **Note**: This must be set to `true` during the Sandbox preview.
- * @property {function} [websocketAuthTokenFetch] -
+ * @property {function} [websocketAuthTokenFetch] - <br />
  *  Authenticated Rest API client fetch token call (`/wsToken`)
  *  SDK Websocket client will then automatically handle Websocket token generation and refresh.
  *  You can omit this when using only public websocket subscription.
  *  Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
  *  See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
- * @property {string} [wallet] -
+ * @property {string} [wallet] - <br />
  *  Optionally provide a wallet to use for any authenticated subscriptions which do not have a wallet
  *  provided.  If this is not provided, it is an error to subscribe without a `wallet` parameter in the
  *  request.
