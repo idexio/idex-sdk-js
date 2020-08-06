@@ -37,7 +37,7 @@ export interface RestPublicClientOptions {
  *
  * @param {RestPublicClientOptions} options
  */
-export default class RestPublicClient {
+export class RestPublicClient {
   public baseURL: string;
 
   private axios: AxiosInstance;

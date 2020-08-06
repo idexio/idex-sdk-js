@@ -65,7 +65,7 @@ export interface WebSocketClientOptions {
  *
  * @param {WebSocketClientOptions} options
  */
-export default class WebSocketClient {
+export class WebSocketClient {
   private baseURL: string;
 
   private shouldReconnectAutomatically: boolean;
