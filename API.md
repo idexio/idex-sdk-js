@@ -60,14 +60,16 @@
     -   [RestResponseWithdrawal](#restresponsewithdrawal)
     -   [RestResponseAssociateWallet](#restresponseassociatewallet)
 -   [WebSocket Subscriptions](#websocket-subscriptions)
-    -   [WebSocketRequestOrdersSubscription](#websocketrequestorderssubscription)
-    -   [WebSocketRequestBalancesSubscription](#websocketrequestbalancessubscription)
 -   [WebSocket Responses](#websocket-responses)
     -   [WebSocketResponseError](#websocketresponseerror)
     -   [WebSocketResponseSubscriptions](#websocketresponsesubscriptions)
 -   [ECDSA Signatures](#ecdsa-signatures)
     -   [MessageSigner](#messagesigner)
 -   [Misc Types & Utilities](#misc-types--utilities)
+-   [AuthTokenWebSocketRequestBalancesSubscription](#authtokenwebsocketrequestbalancessubscription)
+    -   [Properties](#properties)
+-   [AuthTokenWebSocketRequestOrdersSubscription](#authtokenwebsocketrequestorderssubscription)
+    -   [Properties](#properties-1)
 
 ## Clients
 
@@ -666,7 +668,7 @@ See [API specification](https://docs.idex.io/#get-authentication-token)
 
 ###### Parameters
 
--   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.WebSocketRequestAuthenticatedSubscription>** 
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.AuthTokenWebSocketRequestAuthenticatedSubscription>** 
 
 Returns **void** 
 
@@ -697,10 +699,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
      You can omit this when using only public websocket subscription.
      Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
      See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** <br />
-     Optionally provide a wallet to use for any authenticated subscriptions which do not have a wallet
-     provided.  If this is not provided, it is an error to subscribe without a `wallet` parameter in the
-     request.
 -   `shouldReconnectAutomatically` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?**  If true, automatically reconnects when connection is closed by the server or network errors
 
 ## Enums
@@ -1543,48 +1541,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 
 
-### WebSocketRequestOrdersSubscription
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-#### Properties
-
--   `name` **`"orders"`** The name of the subscription
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
-     needed to get an updated `wsToken`.  This property is not required if a wallet was
-     provided when constructing the WebSocketClient.
-     <br />
-     **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
-
-#### wallet
-
-Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
- needed to get an updated `wsToken`.  This property is not required if a wallet was
- provided when constructing the WebSocketClient.
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### WebSocketRequestBalancesSubscription
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-#### Properties
-
--   `name` **`"balances"`** The name of the subscription
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
-     needed to get an updated `wsToken`.  This property is not required if a wallet was
-     provided when constructing the WebSocketClient.
-     <br />
-     **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
-
-#### wallet
-
-Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
- needed to get an updated `wsToken`.  This property is not required if a wallet was
- provided when constructing the WebSocketClient.
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
 ## WebSocket Responses
 
 
@@ -1631,6 +1587,30 @@ Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Sta
 
 
 
+
+## AuthTokenWebSocketRequestBalancesSubscription
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `name` **`"balances"`** The name of the subscription
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Balances subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
+     function when needed to get an updated `wsToken`.
+     <br />
+     **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
+
+## AuthTokenWebSocketRequestOrdersSubscription
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `name` **`"orders"`** The name of the subscription
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Orders subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
+     function when needed to get an updated `wsToken`.
+     <br />
+     **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
 
 # Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.Order>**
 

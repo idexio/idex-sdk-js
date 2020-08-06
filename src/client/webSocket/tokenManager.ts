@@ -1,3 +1,5 @@
+import { WebSocketRequestSubscription } from '../../types';
+
 type TokenValue = {
   fetching?: Promise<string>;
   expiration: number;
@@ -36,14 +38,7 @@ export default class WebsocketTokenManager {
    * return the pending request if the wallet is the same.
    * @private
    */
-  public async getToken(
-    walletAddress: string,
-    /**
-     * Force refresh the token (unless a current request is pending)
-     * @ignore
-     * */
-    forceRefresh = false,
-  ): Promise<string | undefined> {
+  public async getToken(walletAddress: string): Promise<string | undefined> {
     const tokenRef = this.walletTokens[walletAddress];
     if (tokenRef) {
       // If there are more parallel requests, make sure we fetch just once
@@ -51,7 +46,7 @@ export default class WebsocketTokenManager {
         return tokenRef.fetching;
       }
 
-      if (tokenRef.token && tokenRef.expiration < Date.now() && !forceRefresh) {
+      if (tokenRef.token && tokenRef.expiration < Date.now()) {
         return tokenRef.token;
       }
     }
@@ -78,3 +73,17 @@ export default class WebsocketTokenManager {
     return this.walletTokens[walletAddress]?.token || '';
   };
 }
+
+/*
+ * Wallet is used only to generate user's wallet auth token
+ * After we got token, we don't want to send wallet to the server
+ */
+export const removeWalletFromSdkSubscription = (
+  subscription: WebSocketRequestSubscription & { wallet?: string },
+): WebSocketRequestSubscription => {
+  const subscriptionWithoutWallet = { ...subscription };
+  if (subscriptionWithoutWallet.wallet) {
+    delete subscriptionWithoutWallet.wallet;
+  }
+  return subscriptionWithoutWallet;
+};
