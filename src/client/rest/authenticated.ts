@@ -437,7 +437,7 @@ export class RestAuthenticatedClient {
    *
    * @param {RestRequestWithdrawal} withdrawal
    * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
-   * @returns {Promise<types.RestResponseWithdrawal>}
+   * @returns {Promise<RestResponseWithdrawal>}
    */
   public async withdraw(
     withdrawal: types.RestRequestWithdrawal,
@@ -473,7 +473,7 @@ export class RestAuthenticatedClient {
    * @see https://docs.idex.io/#get-withdrawals
    *
    * @param {RestRequestFindWithdrawals} findWithdrawals
-   * @return {Promise<RestResponseWithdrawal[]>}
+   * @returns {Promise<RestResponseWithdrawal[]>}
    */
   public async getWithdrawals(
     findWithdrawals: types.RestRequestFindWithdrawals,

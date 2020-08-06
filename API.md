@@ -563,7 +563,7 @@ const withdrawal = await authenticatedClient.withdraw(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseWithdrawal>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseWithdrawal](#restresponsewithdrawal)>** 
 
 ##### getWithdrawal
 
