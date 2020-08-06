@@ -28,7 +28,9 @@ Complete documentation for the IDEX 2.0 API is available at https://docs.idex.io
 ## Installation
 
 ```bash
-npm install @idexio/idex-sdk
+yarn add @idexio/idex-sdk
+// or
+npm install --save @idexio/idex-sdk
 ```
 
 ## Getting Started
