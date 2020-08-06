@@ -1,6 +1,15 @@
 <!-- markdownlint-disable MD033 -->
 # <img src="assets/logo.png" alt="IDEX" height="36px" valign="top"> Javascript SDK
 
+![Discord](https://img.shields.io/discord/455246457465733130?label=Discord&style=flat-square)
+![GitHub](https://img.shields.io/github/license/idexio/idex-sdk-js?style=flat-square)
+![npm](https://img.shields.io/npm/v/@idexio/idex-sdk?style=flat-square)
+![GitHub issues](https://img.shields.io/github/issues/idexio/idex-sdk-js?style=flat-square)
+
+
+![Twitter Follow](https://img.shields.io/twitter/follow/idexio?style=social)
+
+
 The official library for [IDEX 2.0's](https://idex.io) REST and WebSocket APIs
 
 *Important: This SDK supports the all-new [IDEX 2.0](https://idex.io), now available for integation via a fully-functional [testnet sandbox](https://docs.idex.io/#sandbox). [IDEX 1.0](https://idex.market) and its [API](https://docs.idex.market) will continue to operate for a short period of time as IDEX's mainnet exchange, allowing the community to upgrade integrations. It is not recommended to start any new development for the IDEX 1.0 API.*
