@@ -181,7 +181,7 @@ export class RestAuthenticatedClient {
   public async createOrder(
     order: types.RestRequestOrder,
     signer: signatures.MessageSigner = this.signer,
-  ): Promise<types.Order> {
+  ): Promise<types.RestResponseOrder> {
     if (!signer) {
       throw new Error('No signer provided');
     }
@@ -219,7 +219,7 @@ export class RestAuthenticatedClient {
   public async createTestOrder(
     order: types.RestRequestOrder,
     signer: signatures.MessageSigner = this.signer,
-  ): Promise<types.Order> {
+  ): Promise<types.RestResponseOrder> {
     if (!signer) {
       throw new Error('No signer provided');
     }
@@ -328,11 +328,11 @@ export class RestAuthenticatedClient {
    * @see https://docs.idex.io/#get-orders
    *
    * @param {types.RestRequestFindOrder} findOrder
-   * @return {Promise<types.Order>}
+   * @return {Promise<types.RestResponseOrder>}
    */
   public async getOrder(
     findOrder: types.RestRequestFindOrder,
-  ): Promise<types.Order> {
+  ): Promise<types.RestResponseOrder> {
     return (await this.get('/orders', findOrder)).data;
   }
 
@@ -342,11 +342,11 @@ export class RestAuthenticatedClient {
    * @see https://docs.idex.io/#cancel-order
    *
    * @param {types.RestRequestFindOrders} findOrders
-   * @return {Promise<types.Order[]>}
+   * @return {Promise<types.RestResponseOrder[]>}
    */
   public async getOrders(
     findOrders: types.RestRequestFindOrders,
-  ): Promise<types.Order[]> {
+  ): Promise<types.RestResponseOrder[]> {
     return (await this.get('/orders', findOrders)).data;
   }
 

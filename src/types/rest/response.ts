@@ -224,7 +224,7 @@ export interface RestResponseMarket {
  * @property {OrderSelfTradePrevention} [selfTradePrevention] - Self-trade prevention policy, see values, only present for orders specifying a non-default (dc) policy
  * @property {RestResponseOrderFill[]} - Array of order fill objects
  */
-export interface Order {
+export interface RestResponseOrder {
   market: string;
   orderId: string;
   clientOrderId?: string;
@@ -248,22 +248,14 @@ export interface Order {
 }
 
 /**
- * A cancelled order
- *
- * @typedef {Object} CancelledOrder
- * @property {string} orderId - The `orderId` of the order that was cancelled.
- */
-export type CancelledOrder = {
-  orderId: string;
-};
-
-/**
  * Response to cancelled orders which is an array of {@link CancelledOrder} indicating
  * any successfully cancelled orders.
  *
- * @typedef {CancelledOrder[]} RestResponseCancelledOrder
+ * @typedef {Object[]} RestResponseCancelledOrder
  */
-export type RestResponseCancelledOrder = CancelledOrder[];
+export type RestResponseCancelledOrder = {
+  orderId: string;
+}[];
 
 type Price = string;
 
