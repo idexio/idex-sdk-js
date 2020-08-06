@@ -24,7 +24,7 @@ import {
 /**
  * A function that accepts a string and returns a Promise resolving on its ECDSA signature
  *
- * @typedef {Function} signatures.MessageSigner
+ * @typedef {Function} MessageSigner
  */
 export type MessageSigner = (message: string) => Promise<string>;
 
@@ -122,6 +122,7 @@ export function createWithdrawalSignature(
 
 /**
  * Generates the signature for the associate wallet request
+ * @private
  */
 export function createAssociateWalletSignature(
   associate: RestRequestAssociateWallet,

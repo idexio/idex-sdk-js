@@ -15,6 +15,7 @@ type WebsocketTokenFetch = (wallet: string) => Promise<string>;
 /**
  * https://docs.idex.io/#websocket-authentication-endpoints
  *
+ * @private
  * @example
  *  const wsTokenStore = new WebsocketTokenManager(wallet => client.getWsToken(uuidv1(), wallet))
  *  const token = await wsTokenStore.getToken("0x123abc...");
@@ -33,10 +34,14 @@ export default class WebsocketTokenManager {
    * Get a token for the given wallet, returning any previously generated
    * tokens if they have not expired yet.  If called in parallel it will
    * return the pending request if the wallet is the same.
+   * @private
    */
   public async getToken(
     walletAddress: string,
-    /** Force refresh the token (unless a current request is pending) */
+    /**
+     * Force refresh the token (unless a current request is pending)
+     * @ignore
+     * */
     forceRefresh = false,
   ): Promise<string | undefined> {
     const tokenRef = this.walletTokens[walletAddress];

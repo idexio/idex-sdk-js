@@ -349,6 +349,7 @@ export default class WebSocketClient {
 
 /**
  * Take in subscriptions and return array split by authenticated or unauthenticated
+ * @private
  */
 function splitSubscriptions(
   subscriptions: types.WebSocketRequestSubscription[],

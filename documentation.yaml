@@ -49,6 +49,7 @@ toc:
       - RestResponseFill
       - RestResponseMarket
       - RestResponseOrder
+      - RestResponseCancelledOrder
       - RestResponseOrderBookLevel1
       - RestResponseOrderBookLevel2
       - RestResponseOrderBookPriceLevel
@@ -62,10 +63,17 @@ toc:
       - RestResponseWebSocketToken
       - RestResponseWithdrawal
       - RestResponseAssociateWallet
+  - name: WebSocket Subscriptions
+    children:
+      - WebSocketRequestOrdersSubscription
+      - WebSocketRequestBalancesSubscription
   - name: WebSocket Responses
     children:
       - WebSocketResponseError
       - WebSocketResponseSubscriptions
   - name: ECDSA Signatures
     children:
-      - signatures.MessageSigner
+      - MessageSigner
+      - createAssociateWalletSignature
+  - name: Misc Types & Utilities
+    children:

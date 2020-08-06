@@ -190,6 +190,7 @@
         -   [Properties](#properties-25)
     -   [RestResponseOrder](#restresponseorder)
         -   [Properties](#properties-26)
+    -   [RestResponseCancelledOrder](#restresponsecancelledorder)
     -   [RestResponseOrderBookLevel1](#restresponseorderbooklevel1)
         -   [Properties](#properties-27)
     -   [RestResponseOrderBookLevel2](#restresponseorderbooklevel2)
@@ -214,34 +215,23 @@
         -   [Properties](#properties-36)
     -   [RestResponseAssociateWallet](#restresponseassociatewallet)
         -   [Properties](#properties-37)
+-   [WebSocket Subscriptions](#websocket-subscriptions)
+    -   [WebSocketRequestOrdersSubscription](#websocketrequestorderssubscription)
+        -   [Properties](#properties-38)
+        -   [wallet](#wallet-1)
+    -   [WebSocketRequestBalancesSubscription](#websocketrequestbalancessubscription)
+        -   [Properties](#properties-39)
+        -   [wallet](#wallet-2)
 -   [WebSocket Responses](#websocket-responses)
     -   [WebSocketResponseError](#websocketresponseerror)
-        -   [Properties](#properties-38)
+        -   [Properties](#properties-40)
     -   [WebSocketResponseSubscriptions](#websocketresponsesubscriptions)
-        -   [Properties](#properties-39)
+        -   [Properties](#properties-41)
 -   [ECDSA Signatures](#ecdsa-signatures)
-    -   [signatures.MessageSigner](#signaturesmessagesigner)
--   [isDefinedFilter](#isdefinedfilter)
-    -   [Parameters](#parameters-29)
--   [WebsocketTokenManager](#websockettokenmanager)
-    -   [Parameters](#parameters-30)
-    -   [Examples](#examples-9)
-    -   [getToken](#gettoken)
-        -   [Parameters](#parameters-31)
--   [WebSocketRequestBalancesSubscription](#websocketrequestbalancessubscription)
-    -   [Properties](#properties-40)
-    -   [wallet](#wallet-1)
--   [forceRefresh](#forcerefresh)
--   [WebSocketRequestOrdersSubscription](#websocketrequestorderssubscription)
-    -   [Properties](#properties-41)
-    -   [wallet](#wallet-2)
--   [associateWalletHash](#associatewallethash)
-    -   [Parameters](#parameters-32)
+    -   [MessageSigner](#messagesigner)
+-   [Misc Types & Utilities](#misc-types--utilities)
 -   [CancelledOrder](#cancelledorder)
     -   [Properties](#properties-42)
--   [ResetResponseCancelledOrder](#resetresponsecancelledorder)
--   [splitSubscriptions](#splitsubscriptions)
-    -   [Parameters](#parameters-33)
 
 ## Clients
 
@@ -321,7 +311,7 @@ Associate a wallet with the authenticated account
 ##### Parameters
 
 -   `associate` **types.RestRequestAssociateWallet** 
--   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+-   `signer` **signatures.MessageSigner?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 -   `withdrawal` **[RestRequestAssociateWallet](#restrequestassociatewallet)** 
 
 ##### Examples
@@ -348,7 +338,7 @@ Create and submit an order to the matching engine.
 ##### Parameters
 
 -   `order` **types.RestRequestOrder** 
--   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+-   `signer` **signatures.MessageSigner?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 
 ##### Examples
 
@@ -379,7 +369,7 @@ Tests order creation and validation without submitting an order to the matching 
 ##### Parameters
 
 -   `order` **types.RestRequestOrder** 
--   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+-   `signer` **signatures.MessageSigner?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 
 ##### Examples
 
@@ -410,7 +400,7 @@ Cancel a single order
 ##### Parameters
 
 -   `cancelOrder` **RestRequestCancelOrder** 
--   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+-   `signer` **signatures.MessageSigner?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 
 ##### Examples
 
@@ -447,8 +437,8 @@ Cancel multiple orders
 ##### Parameters
 
 -   `cancelOrders` **types.RestRequestCancelOrders** 
--   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
--   `orders` **RestResponseCancelledOrder** 
+-   `signer` **signatures.MessageSigner?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+-   `orders` **[RestResponseCancelledOrder](#restresponsecancelledorder)** 
 
 ##### Examples
 
@@ -561,7 +551,7 @@ Get a withdrawal
 ##### Parameters
 
 -   `withdrawal` **types.RestRequestWithdrawal** 
--   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)**  (optional, default `this.signer`)
+-   `signer` **signatures.MessageSigner**  (optional, default `this.signer`)
 -   `findWithdrawal` **types.RestRequestFindWithdrawal** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseWithdrawal>** 
@@ -576,7 +566,7 @@ Create a new withdrawal
 ##### Parameters
 
 -   `withdrawal` **types.RestRequestWithdrawal** 
--   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+-   `signer` **signatures.MessageSigner?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 
 ##### Examples
 
@@ -1514,6 +1504,13 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `selfTradePrevention` **[OrderSelfTradePrevention](#orderselftradeprevention)?** Self-trade prevention policy, see values, only present for orders specifying a non-default (dc) policy
 -   `null-null` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseOrderFill](#restresponseorderfill)>** Array of order fill objects
 
+### RestResponseCancelledOrder
+
+Response to cancelled orders which is an array of [CancelledOrder](#cancelledorder) indicating
+any successfully cancelled orders.
+
+Type: [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[CancelledOrder](#cancelledorder)>
+
 ### RestResponseOrderBookLevel1
 
 OrderBookLevel1
@@ -1681,6 +1678,49 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `totalPortfolioValueUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of all holdings deposited on the exchange for the wallet in USD
 -   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of association of the wallet with the user account
 
+## WebSocket Subscriptions
+
+
+
+
+### WebSocketRequestOrdersSubscription
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `name` **`"orders"`** The name of the subscription
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
+     needed to get an updated `wsToken`.  This property is not required if a wallet was
+     provided when constructing the WebSocketClient.
+
+#### wallet
+
+Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
+ needed to get an updated `wsToken`.  This property is not required if a wallet was
+ provided when constructing the WebSocketClient.
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### WebSocketRequestBalancesSubscription
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `name` **`"balances"`** The name of the subscription
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
+     needed to get an updated `wsToken`.  This property is not required if a wallet was
+     provided when constructing the WebSocketClient.
+
+#### wallet
+
+Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
+ needed to get an updated `wsToken`.  This property is not required if a wallet was
+ provided when constructing the WebSocketClient.
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
 ## WebSocket Responses
 
 
@@ -1717,103 +1757,16 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 
 
-### signatures.MessageSigner
+### MessageSigner
 
 A function that accepts a string and returns a Promise resolving on its ECDSA signature
 
 Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)
 
-## isDefinedFilter
+## Misc Types & Utilities
 
-Filter out any undefined values from an array using `Array.filter` so that
-TypeScript understands.
 
-### Parameters
 
--   `value` **(T | [undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined))** 
-
-Returns **any** 
-
-## WebsocketTokenManager
-
-<https://docs.idex.io/#websocket-authentication-endpoints>
-
-### Parameters
-
--   `websocketAuthTokenFetch` **WebsocketTokenFetch** 
-
-### Examples
-
-```javascript
-const wsTokenStore = new WebsocketTokenManager(wallet => client.getWsToken(uuidv1(), wallet))
- const token = await wsTokenStore.getToken("0x123abc...");
- wsClient.subscribe([{ name: 'balance', wallet: '0x0'}], token);
-```
-
-### getToken
-
-Get a token for the given wallet, returning any previously generated
-tokens if they have not expired yet.  If called in parallel it will
-return the pending request if the wallet is the same.
-
-#### Parameters
-
--   `walletAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `forceRefresh`   (optional, default `false`)
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined))>** 
-
-## WebSocketRequestBalancesSubscription
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
--   `name` **`"balances"`** The name of the subscription
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
-     needed to get an updated `wsToken`.  This property is not required if a wallet was
-     provided when constructing the WebSocketClient.
-
-### wallet
-
-Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
- needed to get an updated `wsToken`.  This property is not required if a wallet was
- provided when constructing the WebSocketClient.
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-## forceRefresh
-
-Force refresh the token (unless a current request is pending)
-
-## WebSocketRequestOrdersSubscription
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
--   `name` **`"orders"`** The name of the subscription
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
-     needed to get an updated `wsToken`.  This property is not required if a wallet was
-     provided when constructing the WebSocketClient.
-
-### wallet
-
-Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
- needed to get an updated `wsToken`.  This property is not required if a wallet was
- provided when constructing the WebSocketClient.
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-## associateWalletHash
-
-Generates the signature for the associate wallet request
-
-### Parameters
-
--   `associate` **[RestRequestAssociateWallet](#restrequestassociatewallet)** 
-
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ## CancelledOrder
 
@@ -1824,21 +1777,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 ### Properties
 
 -   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The `orderId` of the order that was cancelled.
-
-## ResetResponseCancelledOrder
-
-Response to cancelled orders which is an array of [CancelledOrder](#cancelledorder) indicating
-any successfully cancelled orders.
-
-Type: [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[CancelledOrder](#cancelledorder)>
-
-## splitSubscriptions
-
-Take in subscriptions and return array split by authenticated or unauthenticated
-
-### Parameters
-
--   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.WebSocketRequestSubscription>** 
 
 # Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.Order>**
 

@@ -6,6 +6,9 @@ export const isNode =
 /**
  * Filter out any undefined values from an array using `Array.filter` so that
  * TypeScript understands.
+ *
+ * @private
+ * @internal
  */
 export function isDefinedFilter<T>(value: T | undefined): value is T {
   return typeof value !== 'undefined';

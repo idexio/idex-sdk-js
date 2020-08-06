@@ -261,7 +261,7 @@ export type CancelledOrder = {
  * Response to cancelled orders which is an array of {@link CancelledOrder} indicating
  * any successfully cancelled orders.
  *
- * @typedef {CancelledOrder[]} ResetResponseCancelledOrder
+ * @typedef {CancelledOrder[]} RestResponseCancelledOrder
  */
 export type RestResponseCancelledOrder = CancelledOrder[];
 
