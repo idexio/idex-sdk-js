@@ -271,7 +271,7 @@ Get account details for the API key’s user
 
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseUser>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseUser](#restresponseuser)>** 
 
 ##### getWallets
 
@@ -284,7 +284,7 @@ Get account details for the API key’s user
 
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseWallet>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseWallet](#restresponsewallet)>>** 
 
 ##### getBalances
 
@@ -297,7 +297,7 @@ Get asset quantity data (positions) held by a wallet on the exchange
 
 -   `findBalances` **[RestRequestFindBalances](#restrequestfindbalances)** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseBalance>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseBalance](#restresponsebalance)>>** 
 
 ##### associateWallet
 
@@ -324,7 +324,7 @@ const wallet = await authenticatedClient.associateWallet(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseAssociateWallet>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseAssociateWallet](#restresponseassociatewallet)>** 
 
 ##### createOrder
 
@@ -355,7 +355,7 @@ const order = await authenticatedClient.createOrder(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseOrder>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseOrder](#restresponseorder)>** 
 
 ##### createTestOrder
 
@@ -386,7 +386,7 @@ const order = await authenticatedClient.createTestOrder(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseOrder>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseOrder](#restresponseorder)>** 
 
 ##### cancelOrder
 
@@ -423,7 +423,7 @@ const responseByClientId = await authenticatedClient.cancelOrder(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseCancelledOrder>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseCancelledOrder](#restresponsecancelledorder)>** 
 
 ##### cancelOrders
 
@@ -459,7 +459,7 @@ const ordersForMarket = authenticatedClient.cancelOrders(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseCancelledOrder>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseCancelledOrder](#restresponsecancelledorder)>** 
 
 ##### getOrder
 
@@ -541,21 +541,6 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### withdraw
 
--   **See: <https://docs.idex.io/#get-withdrawals>
-    **
-
-Get a withdrawal
-
-###### Parameters
-
--   `withdrawal` **types.RestRequestWithdrawal** 
--   `signer` **signatures.MessageSigner**  (optional, default `this.signer`)
--   `findWithdrawal` **[RestRequestFindWithdrawal](#restrequestfindwithdrawal)** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseWithdrawal](#restresponsewithdrawal)>** 
-
-##### withdraw
-
 -   **See: <https://docs.idex.io/#withdraw-funds>
     **
 
@@ -581,6 +566,19 @@ const withdrawal = await authenticatedClient.withdraw(
 ```
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseWithdrawal>** 
+
+##### getWithdrawal
+
+-   **See: <https://docs.idex.io/#get-withdrawals>
+    **
+
+Get a withdrawal
+
+###### Parameters
+
+-   `findWithdrawal` **[RestRequestFindWithdrawal](#restrequestfindwithdrawal)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseWithdrawal](#restresponsewithdrawal)>** 
 
 ##### getWithdrawals
 
