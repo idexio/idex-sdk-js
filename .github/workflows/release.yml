@@ -62,7 +62,7 @@ jobs:
         run: yarn build
       # Build Documentation which will be commited by semantic-release
       - name: Build Documentation
-        run: yarn documentation
+        run: yarn generate:docs
       - name: Semantic Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

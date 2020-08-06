@@ -10,7 +10,8 @@
     "build": "npm-run-all -s clean -s build:*",
     "build:tsc": "npx tsc",
     "clean": "rm -rf dist",
-    "documentation": "npx documentation readme src/** --markdown-toc-max-depth 3 --readme-file=API.md --section=API --parse-extension ts --shallow --resolve node --format remark --config documentation.yaml",
+    "generate:docs": "npx documentation readme src/** --markdown-toc-max-depth 3 --readme-file=API.md --section=API --parse-extension ts --shallow --resolve node --format remark --config documentation.yaml",
+    "generate:docs:commit": "git add API.md && git commit --no-verify -m 'docs(api): update api documentation'",
     "lint": "eslint 'src/**/*.ts'",
     "lint:fix": "eslint 'src/**/*.ts' --ext .ts --fix",
     "lint:fix:package": "pretty-quick --pattern package.json",
@@ -71,8 +72,8 @@
   },
   "husky": {
     "hooks": {
-      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true",
-      "pre-commit": "npm-run-all -p lint:fix:*",
+      "commit-msg": "exec < /dev/tty && git cz --hook || true",
+      "pre-commit": "npm-run-all -p lint:fix:* generate:docs -s generate:docs:commit",
       "pre-push": "npm-run-all build"
     }
   },
