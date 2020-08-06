@@ -115,7 +115,7 @@ export class RestPublicClient {
    *
    * @see https://docs.idex.io/#get-markets
    *
-   * @param {FindMarkets} findMarkets
+   * @param {RestRequestFindMarkets} findMarkets
    * @return {Promise<RestResponseMarket[]>}
    */
   public async getMarkets(
@@ -145,7 +145,7 @@ export class RestPublicClient {
    *
    * @see https://docs.idex.io/#get-candles
    *
-   * @param {FindCandles} findCandles
+   * @param {RestRequestFindCandles} findCandles
    * @return {Promise<RestResponseCandle[]>}
    */
   public async getCandles(

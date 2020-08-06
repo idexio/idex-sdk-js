@@ -148,7 +148,7 @@ Returns information about the currently listed markets
 
 ###### Parameters
 
--   `findMarkets` **FindMarkets** 
+-   `findMarkets` **[RestRequestFindMarkets](#restrequestfindmarkets)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseMarket](#restresponsemarket)>>** 
 
@@ -174,7 +174,7 @@ Returns candle (OHLCV) data for a market
 
 ###### Parameters
 
--   `findCandles` **FindCandles** 
+-   `findCandles` **[RestRequestFindCandles](#restrequestfindcandles)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseCandle](#restresponsecandle)>>** 
 
