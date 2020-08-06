@@ -49,7 +49,8 @@ See the [idex-contracts](https://github.com/idexio/idex-contracts) repo for a re
 order and withdrawal signature verification that exactly mirrors the [Javascript implementation](https://github.com/idexio/idex-sdk-js/blob/main/src/signatures.ts)
 found in this repo.
 
-The Exchange ABI can be used to query contract state, [deposit funds](https://docs.idex.io/#deposit-funds), or [exit wallets](https://docs.idex.io/#exit-wallet).
+The [Exchange ABI](https://github.com/idexio/idex-sdk-js/blob/master/contracts/Exchange.abi.json) can be used to query
+contract state, [deposit funds](https://docs.idex.io/#deposit-funds), or [exit wallets](https://docs.idex.io/#exit-wallet).
 
 ## License
 
