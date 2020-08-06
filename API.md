@@ -110,7 +110,7 @@ console.log(await publicClient.getTickers('IDEX-ETH'));
 
 Test connectivity to the REST API
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{: never}>** 
+Returns **{}** 
 
 ##### getServerTime
 
