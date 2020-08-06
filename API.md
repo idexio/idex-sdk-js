@@ -14,69 +14,72 @@
             -   [Parameters](#parameters-2)
         -   [getBalances](#getbalances)
             -   [Parameters](#parameters-3)
-        -   [createOrder](#createorder)
+        -   [associateWallet](#associatewallet)
             -   [Parameters](#parameters-4)
             -   [Examples](#examples-1)
-        -   [createTestOrder](#createtestorder)
+        -   [createOrder](#createorder)
             -   [Parameters](#parameters-5)
             -   [Examples](#examples-2)
-        -   [cancelOrder](#cancelorder)
+        -   [createTestOrder](#createtestorder)
             -   [Parameters](#parameters-6)
             -   [Examples](#examples-3)
-        -   [cancelOrders](#cancelorders)
+        -   [cancelOrder](#cancelorder)
             -   [Parameters](#parameters-7)
             -   [Examples](#examples-4)
-        -   [getOrder](#getorder)
+        -   [cancelOrders](#cancelorders)
             -   [Parameters](#parameters-8)
-        -   [getOrders](#getorders)
-            -   [Parameters](#parameters-9)
-        -   [getFill](#getfill)
-            -   [Parameters](#parameters-10)
-        -   [getFills](#getfills)
-            -   [Parameters](#parameters-11)
-        -   [getDeposit](#getdeposit)
-            -   [Parameters](#parameters-12)
-        -   [getDeposits](#getdeposits)
-            -   [Parameters](#parameters-13)
-        -   [withdraw](#withdraw)
-            -   [Parameters](#parameters-14)
-        -   [withdraw](#withdraw-1)
-            -   [Parameters](#parameters-15)
             -   [Examples](#examples-5)
-        -   [getWithdrawals](#getwithdrawals)
+        -   [getOrder](#getorder)
+            -   [Parameters](#parameters-9)
+        -   [getOrders](#getorders)
+            -   [Parameters](#parameters-10)
+        -   [getFill](#getfill)
+            -   [Parameters](#parameters-11)
+        -   [getFills](#getfills)
+            -   [Parameters](#parameters-12)
+        -   [getDeposit](#getdeposit)
+            -   [Parameters](#parameters-13)
+        -   [getDeposits](#getdeposits)
+            -   [Parameters](#parameters-14)
+        -   [withdraw](#withdraw)
+            -   [Parameters](#parameters-15)
+        -   [withdraw](#withdraw-1)
             -   [Parameters](#parameters-16)
-        -   [getWsToken](#getwstoken)
+            -   [Examples](#examples-6)
+        -   [getWithdrawals](#getwithdrawals)
             -   [Parameters](#parameters-17)
+        -   [getWsToken](#getwstoken)
+            -   [Parameters](#parameters-18)
     -   [AuthenticatedRESTClientOptions](#authenticatedrestclientoptions)
         -   [Properties](#properties)
     -   [PublicRESTClient](#publicrestclient)
-        -   [Parameters](#parameters-18)
-        -   [Examples](#examples-6)
+        -   [Parameters](#parameters-19)
+        -   [Examples](#examples-7)
         -   [ping](#ping)
         -   [getServerTime](#getservertime)
         -   [getExchangeInfo](#getexchangeinfo)
         -   [getAssets](#getassets)
         -   [getMarkets](#getmarkets)
-            -   [Parameters](#parameters-19)
-        -   [getTickers](#gettickers)
             -   [Parameters](#parameters-20)
-        -   [getCandles](#getcandles)
+        -   [getTickers](#gettickers)
             -   [Parameters](#parameters-21)
-        -   [getTrades](#gettrades)
+        -   [getCandles](#getcandles)
             -   [Parameters](#parameters-22)
-        -   [getOrderBookLevel1](#getorderbooklevel1)
+        -   [getTrades](#gettrades)
             -   [Parameters](#parameters-23)
-        -   [getOrderBookLevel2](#getorderbooklevel2)
+        -   [getOrderBookLevel1](#getorderbooklevel1)
             -   [Parameters](#parameters-24)
+        -   [getOrderBookLevel2](#getorderbooklevel2)
+            -   [Parameters](#parameters-25)
     -   [PublicRESTClientOptions](#publicrestclientoptions)
         -   [Properties](#properties-1)
     -   [WebSocketClient](#websocketclient)
-        -   [Parameters](#parameters-25)
-        -   [Examples](#examples-7)
+        -   [Parameters](#parameters-26)
+        -   [Examples](#examples-8)
         -   [subscribeAuthenticated](#subscribeauthenticated)
-            -   [Parameters](#parameters-26)
-        -   [subscribeUnauthenticated](#subscribeunauthenticated)
             -   [Parameters](#parameters-27)
+        -   [subscribeUnauthenticated](#subscribeunauthenticated)
+            -   [Parameters](#parameters-28)
     -   [WebSocketClientOptions](#websocketclientoptions)
         -   [Properties](#properties-2)
 -   [Enums](#enums)
@@ -167,52 +170,60 @@
         -   [Properties](#properties-16)
     -   [request.Withdrawal](#requestwithdrawal)
         -   [Properties](#properties-17)
+    -   [RestRequestAssociateWallet](#restrequestassociatewallet)
+        -   [Properties](#properties-18)
+        -   [wallet](#wallet)
 -   [REST Responses](#rest-responses)
     -   [response.Asset](#responseasset)
-        -   [Properties](#properties-18)
-    -   [response.Balance](#responsebalance)
         -   [Properties](#properties-19)
-    -   [response.Candle](#responsecandle)
+    -   [response.Balance](#responsebalance)
         -   [Properties](#properties-20)
-    -   [response.Deposit](#responsedeposit)
+    -   [response.Candle](#responsecandle)
         -   [Properties](#properties-21)
-    -   [response.ExchangeInfo](#responseexchangeinfo)
+    -   [response.Deposit](#responsedeposit)
         -   [Properties](#properties-22)
-    -   [response.Fill](#responsefill)
+    -   [response.ExchangeInfo](#responseexchangeinfo)
         -   [Properties](#properties-23)
-    -   [response.Market](#responsemarket)
+    -   [response.Fill](#responsefill)
         -   [Properties](#properties-24)
-    -   [response.Order](#responseorder)
+    -   [response.Market](#responsemarket)
         -   [Properties](#properties-25)
-    -   [response.OrderBookLevel1](#responseorderbooklevel1)
+    -   [response.Order](#responseorder)
         -   [Properties](#properties-26)
-    -   [response.OrderBookLevel2](#responseorderbooklevel2)
+    -   [response.OrderBookLevel1](#responseorderbooklevel1)
         -   [Properties](#properties-27)
+    -   [response.OrderBookLevel2](#responseorderbooklevel2)
+        -   [Properties](#properties-28)
     -   [response.OrderBookPriceLevel](#responseorderbookpricelevel)
     -   [response.OrderFill](#responseorderfill)
-        -   [Properties](#properties-28)
+        -   [Properties](#properties-29)
     -   [response.Ping](#responseping)
     -   [response.Ticker](#responseticker)
-        -   [Properties](#properties-29)
-    -   [response.Time](#responsetime)
         -   [Properties](#properties-30)
-    -   [response.Trade](#responsetrade)
+    -   [response.Time](#responsetime)
         -   [Properties](#properties-31)
-    -   [response.User](#responseuser)
+    -   [response.Trade](#responsetrade)
         -   [Properties](#properties-32)
-    -   [response.Wallet](#responsewallet)
+    -   [response.User](#responseuser)
         -   [Properties](#properties-33)
-    -   [response.WebSocketToken](#responsewebsockettoken)
+    -   [response.Wallet](#responsewallet)
         -   [Properties](#properties-34)
-    -   [response.Withdrawal](#responsewithdrawal)
+    -   [response.WebSocketToken](#responsewebsockettoken)
         -   [Properties](#properties-35)
+    -   [response.Withdrawal](#responsewithdrawal)
+        -   [Properties](#properties-36)
+    -   [RestResponseAssociateWallet](#restresponseassociatewallet)
+        -   [Properties](#properties-37)
 -   [WebSocket Responses](#websocket-responses)
     -   [webSocketResponse.Error](#websocketresponseerror)
-        -   [Properties](#properties-36)
+        -   [Properties](#properties-38)
     -   [webSocketResponse.Subscriptions](#websocketresponsesubscriptions)
-        -   [Properties](#properties-37)
+        -   [Properties](#properties-39)
 -   [ECDSA Signatures](#ecdsa-signatures)
     -   [signatures.MessageSigner](#signaturesmessagesigner)
+-   [CancelledOrder](#cancelledorder)
+    -   [Properties](#properties-40)
+-   [ResetResponseCancelledOrder](#resetresponsecancelledorder)
 
 ## Clients
 
@@ -281,6 +292,33 @@ Get asset quantity data (positions) held by a wallet on the exchange
 -   `findBalances` **[request.FindBalances](#requestfindbalances)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Balance](#responsebalance)>>** 
+
+#### associateWallet
+
+-   **See: <https://docs.idex.io/#associate-wallet>
+    **
+
+Associate a wallet with the authenticated account
+
+##### Parameters
+
+-   `associate` **request.RestRequestAssociateWallet** 
+-   `signer` **[signatures.MessageSigner](#signaturesmessagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+-   `withdrawal` **request.RestRequestAssociateWallet** 
+
+##### Examples
+
+```javascript
+const wallet = await authenticatedClient.associateWallet(
+  {
+    nonce: uuidv1(),
+    wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+  },
+  idex.signatures.privateKeySigner(config.walletPrivateKey),
+);
+```
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;response.RestResponseAssociateWallet>** 
 
 #### createOrder
 
@@ -379,7 +417,7 @@ const responseByClientId = await authenticatedClient.cancelOrder(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[response.Order](#responseorder)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;response.RestResponseCancelledOrder>** 
 
 #### cancelOrders
 
@@ -415,7 +453,7 @@ const ordersForMarket = authenticatedClient.cancelOrders(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[response.Order](#responseorder)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;response.RestResponseCancelledOrder>** 
 
 #### getOrder
 
@@ -1277,6 +1315,21 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `assetContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Asset by contract address
 -   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Withdrawal amount in asset terms, fees are taken from this value
 
+### RestRequestAssociateWallet
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet to associate with the authenticated account.
+
+#### wallet
+
+The wallet to associate with the authenticated account.
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
 ## REST Responses
 
 
@@ -1595,6 +1648,16 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `txId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Ethereum id of the withdrawal transaction
 -   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Status of the withdrawal settlement transaction
 
+### RestResponseAssociateWallet
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `address` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**     Ethereum address of the wallet
+-   `totalPortfolioValueUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of all holdings deposited on the exchange for the wallet in USD
+-   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of association of the wallet with the user account
+
 ## WebSocket Responses
 
 
@@ -1636,3 +1699,20 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 A function that accepts a string and returns a Promise resolving on its ECDSA signature
 
 Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)
+
+## CancelledOrder
+
+A cancelled order
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The `orderId` of the order that was cancelled.
+
+## ResetResponseCancelledOrder
+
+Response to cancelled orders which is an array of [CancelledOrder](#cancelledorder) indicating
+any successfully cancelled orders.
+
+Type: [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[CancelledOrder](#cancelledorder)>

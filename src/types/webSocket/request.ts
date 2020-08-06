@@ -21,39 +21,36 @@ export type SubscriptionName =
 
 export interface BalancesSubscription {
   name: 'balances';
-  wallet: string;
 }
 
 export interface OrdersSubscription {
   name: 'orders';
-  markets: string[];
-  wallet: string;
 }
 
 export interface CandlesSubscription {
   name: 'candles';
-  markets: string[];
+  markets?: string[];
   interval: keyof typeof enums.CandleInterval;
 }
 
 export interface L1OrderBookSubscription {
   name: 'l1orderbook';
-  markets: string[];
+  markets?: string[];
 }
 
 export interface L2OrderBookSubscription {
   name: 'l2orderbook';
-  markets: string[];
+  markets?: string[];
 }
 
 export interface TickersSubscription {
   name: 'tickers';
-  markets: string[];
+  markets?: string[];
 }
 
 export interface TradesSubscription {
   name: 'trades';
-  markets: string[];
+  markets?: string[];
 }
 
 export type AuthenticatedSubscription =

@@ -38,6 +38,7 @@ toc:
       - request.FindWithdrawals
       - request.Order
       - request.Withdrawal
+      - RestRequestAssociateWallet
   - name: REST Responses
     children:
       - response.Asset
@@ -60,6 +61,7 @@ toc:
       - response.Wallet
       - response.WebSocketToken
       - response.Withdrawal
+      - RestResponseAssociateWallet
   - name: WebSocket Responses
     children:
       - webSocketResponse.Error

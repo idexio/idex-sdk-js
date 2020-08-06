@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import http from 'http';
 import https from 'https';
-import queryString from 'query-string';
+import qs from 'qs';
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 import * as constants from '../../constants';
@@ -118,6 +118,38 @@ export default class AuthenticatedRESTClient {
     return (await this.get('/balances', findBalances)).data;
   }
 
+  // Wallet Association Endpoint
+
+  /**
+   * Associate a wallet with the authenticated account
+   *
+   * @example
+   *
+   * const wallet = await authenticatedClient.associateWallet(
+   *   {
+   *     nonce: uuidv1(),
+   *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+   *   },
+   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   * );
+   *
+   * @see https://docs.idex.io/#associate-wallet
+   *
+   * @param {request.RestRequestAssociateWallet} withdrawal
+   * @param {signatures.MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   */
+  public async associateWallet(
+    associate: request.RestRequestAssociateWallet,
+    signer: signatures.MessageSigner = this.signer,
+  ): Promise<response.RestResponseAssociateWallet> {
+    return (
+      await this.post('/wallets', {
+        parameters: associate,
+        signature: await signer(signatures.associateWalletHash(associate)),
+      })
+    ).data;
+  }
+
   // Orders & Trade Endpoints
 
   /**
@@ -227,7 +259,7 @@ export default class AuthenticatedRESTClient {
   public async cancelOrder(
     cancelOrder: request.CancelOrder,
     signer: signatures.MessageSigner = this.signer,
-  ): Promise<response.Order> {
+  ): Promise<response.RestResponseCancelledOrder> {
     if (!signer) {
       throw new Error('No signer provided');
     }
@@ -269,7 +301,7 @@ export default class AuthenticatedRESTClient {
   public async cancelOrders(
     cancelOrders: request.CancelOrders,
     signer: signatures.MessageSigner = this.signer,
-  ): Promise<response.Order[]> {
+  ): Promise<response.RestResponseCancelledOrder> {
     if (!signer) {
       throw new Error('No signer provided');
     }
@@ -450,9 +482,11 @@ export default class AuthenticatedRESTClient {
       method: 'GET',
       url: `${this.baseURL}${endpoint}`,
       headers: this.createHmacRequestSignatureHeader(
-        queryString.stringify(requestParams),
+        // The param serializer for HMAC must be the same as that used for the request itself
+        qs.stringify(requestParams),
       ),
       params: requestParams,
+      paramsSerializer: qs.stringify,
     });
   }
 
@@ -463,29 +497,33 @@ export default class AuthenticatedRESTClient {
     return this.axios({
       method: 'POST',
       url: `${this.baseURL}${endpoint}`,
-      headers: this.createHmacRequestSignatureHeader(requestParams),
+      headers: this.createHmacRequestSignatureHeader(
+        JSON.stringify(requestParams),
+      ),
       data: requestParams,
     });
   }
 
   protected async delete(
     endpoint: string,
-    requestParams: Record<string, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+    requestParams: request.CancelOrdersBody, // eslint-disable-line @typescript-eslint/no-explicit-any
   ): Promise<AxiosResponse> {
     return this.axios({
       method: 'DELETE',
       url: `${this.baseURL}${endpoint}`,
-      headers: this.createHmacRequestSignatureHeader(requestParams),
+      headers: this.createHmacRequestSignatureHeader(
+        JSON.stringify(requestParams),
+      ),
       data: requestParams,
     });
   }
 
   protected createHmacRequestSignatureHeader(
-    payload: string | Record<string, unknown>,
+    payload: string,
   ): { [constants.REST_HMAC_SIGNATURE_HEADER]: string } {
     const hmacRequestSignature = crypto
       .createHmac('sha256', this.apiSecret)
-      .update(typeof payload === 'string' ? payload : JSON.stringify(payload))
+      .update(payload)
       .digest('hex');
 
     return { [constants.REST_HMAC_SIGNATURE_HEADER]: hmacRequestSignature };

@@ -247,6 +247,24 @@ export interface Order {
   fills?: OrderFill[];
 }
 
+/**
+ * A cancelled order
+ *
+ * @typedef {Object} CancelledOrder
+ * @property {string} orderId - The `orderId` of the order that was cancelled.
+ */
+export type CancelledOrder = {
+  orderId: string;
+};
+
+/**
+ * Response to cancelled orders which is an array of {@link CancelledOrder} indicating
+ * any successfully cancelled orders.
+ *
+ * @typedef {CancelledOrder[]} ResetResponseCancelledOrder
+ */
+export type RestResponseCancelledOrder = CancelledOrder[];
+
 type Price = string;
 
 type Size = string;
@@ -442,3 +460,15 @@ export interface WithdrawalByAddress extends WithdrawalBase {
  * @property {string} txStatus - Status of the withdrawal settlement transaction
  */
 export type Withdrawal = XOR<WithdrawalBySymbol, WithdrawalByAddress>;
+
+/**
+ * @typedef {Object} RestResponseAssociateWallet
+ * @property {string} address - 	Ethereum address of the wallet
+ * @property {string} totalPortfolioValueUsd - Total value of all holdings deposited on the exchange for the wallet in USD
+ * @property {number} time - Timestamp of association of the wallet with the user account
+ */
+export type RestResponseAssociateWallet = {
+  address: string;
+  totalPortfolioValueUsd: string;
+  time: number;
+};
