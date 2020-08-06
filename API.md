@@ -1555,6 +1555,8 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
      needed to get an updated `wsToken`.  This property is not required if a wallet was
      provided when constructing the WebSocketClient.
+     <br />
+     **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
 
 #### wallet
 
@@ -1574,6 +1576,8 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
      needed to get an updated `wsToken`.  This property is not required if a wallet was
      provided when constructing the WebSocketClient.
+     <br />
+     **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
 
 #### wallet
 

@@ -29,6 +29,8 @@ export type WebSocketRequestSubscriptionName =
  *  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
  *  needed to get an updated `wsToken`.  This property is not required if a wallet was
  *  provided when constructing the WebSocketClient.
+ *  <br />
+ *  **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
  *
  */
 export type WebSocketRequestBalancesSubscription = {
@@ -48,6 +50,8 @@ export type WebSocketRequestBalancesSubscription = {
  *  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
  *  needed to get an updated `wsToken`.  This property is not required if a wallet was
  *  provided when constructing the WebSocketClient.
+ *  <br />
+ *  **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
  */
 export type WebSocketRequestOrdersSubscription = {
   name: 'orders';
