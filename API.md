@@ -243,7 +243,9 @@
 
 ### REST Public Client
 
-
+```typescript
+  import { RestPublicClient } from '@idexio/idex-sdk';
+```
 
 
 #### RestPublicClientOptions
@@ -396,7 +398,9 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ### REST Authenticated Client
 
-
+```typescript
+  import { RestAuthenticatedClient } from '@idexio/idex-sdk';
+```
 
 
 #### RestAuthenticatedClientOptions
@@ -787,7 +791,9 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ### WebSocketClient
 
-
+```typescript
+  import { WebSocketClient } from '@idexio/idex-sdk';
+```
 
 
 #### WebSocketClientOptions

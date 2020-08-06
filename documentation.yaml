@@ -2,14 +2,26 @@ toc:
   - name: Clients
     children:
       - name: REST Public Client
+        description: |
+          ```typescript
+            import { RestPublicClient } from '@idexio/idex-sdk';
+          ```
         children:
           - RestPublicClientOptions
           - RestPublicClient
       - name: REST Authenticated Client
+        description: |
+          ```typescript
+            import { RestAuthenticatedClient } from '@idexio/idex-sdk';
+          ```
         children: 
           - RestAuthenticatedClientOptions
           - RestAuthenticatedClient
       - name: WebSocketClient
+        description: |
+          ```typescript
+            import { WebSocketClient } from '@idexio/idex-sdk';
+          ```
         children:
           - WebSocketClientOptions
           - WebSocketClient
