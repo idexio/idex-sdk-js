@@ -435,11 +435,13 @@ interface RestResponseWithdrawalBase {
 export interface RestResponseWithdrawalBySymbol
   extends RestResponseWithdrawalBase {
   asset: string;
+  assetContractAddress?: undefined;
 }
 
 export interface RestResponseWithdrawalByAddress
   extends RestResponseWithdrawalBase {
   assetContractAddress: string;
+  asset?: undefined;
 }
 
 /**
