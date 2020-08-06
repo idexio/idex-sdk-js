@@ -295,7 +295,7 @@ Get asset quantity data (positions) held by a wallet on the exchange
 
 ###### Parameters
 
--   `findBalances` **types.RestRequestFindBalances** 
+-   `findBalances` **[RestRequestFindBalances](#restrequestfindbalances)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseBalance>>** 
 
@@ -309,7 +309,7 @@ Associate a wallet with the authenticated account
 ###### Parameters
 
 -   `associate` **types.RestRequestAssociateWallet** 
--   `signer` **signatures.MessageSigner?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+-   `signer` **[MessageSigner](#messagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 -   `withdrawal` **[RestRequestAssociateWallet](#restrequestassociatewallet)** 
 
 ###### Examples
@@ -335,8 +335,8 @@ Create and submit an order to the matching engine.
 
 ###### Parameters
 
--   `order` **types.RestRequestOrder** 
--   `signer` **signatures.MessageSigner?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+-   `order` **[RestRequestOrder](#restrequestorder)** 
+-   `signer` **[MessageSigner](#messagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 
 ###### Examples
 
@@ -366,8 +366,8 @@ Tests order creation and validation without submitting an order to the matching 
 
 ###### Parameters
 
--   `order` **types.RestRequestOrder** 
--   `signer` **signatures.MessageSigner?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+-   `order` **[RestRequestOrder](#restrequestorder)** 
+-   `signer` **[MessageSigner](#messagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 
 ###### Examples
 
@@ -398,7 +398,7 @@ Cancel a single order
 ###### Parameters
 
 -   `cancelOrder` **RestRequestCancelOrder** 
--   `signer` **signatures.MessageSigner?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+-   `signer` **[MessageSigner](#messagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 
 ###### Examples
 
@@ -435,7 +435,7 @@ Cancel multiple orders
 ###### Parameters
 
 -   `cancelOrders` **types.RestRequestCancelOrders** 
--   `signer` **signatures.MessageSigner?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+-   `signer` **[MessageSigner](#messagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 -   `orders` **[RestResponseCancelledOrder](#restresponsecancelledorder)** 
 
 ###### Examples
@@ -470,9 +470,9 @@ Get an order
 
 ###### Parameters
 
--   `findOrder` **types.RestRequestFindOrder** 
+-   `findOrder` **[RestRequestFindOrder](#restrequestfindorder)** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseOrder>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseOrder](#restresponseorder)>** 
 
 ##### getOrders
 
@@ -483,9 +483,9 @@ Get multiple orders
 
 ###### Parameters
 
--   `findOrders` **types.RestRequestFindOrders** 
+-   `findOrders` **[RestRequestFindOrders](#restrequestfindorders)** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseOrder>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseOrder](#restresponseorder)>>** 
 
 ##### getFill
 
@@ -496,9 +496,9 @@ Get a fill
 
 ###### Parameters
 
--   `findFill` **types.RestRequestFindFill** 
+-   `findFill` **[RestRequestFindFill](#restrequestfindfill)** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseFill>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseFill](#restresponsefill)>** 
 
 ##### getFills
 
@@ -509,9 +509,9 @@ Get multiple fills
 
 ###### Parameters
 
--   `findFills` **types.RestRequestFindFills** 
+-   `findFills` **[RestRequestFindFills](#restrequestfindfills)** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseFill>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseFill](#restresponsefill)>>** 
 
 ##### getDeposit
 
@@ -522,9 +522,9 @@ Get a deposit
 
 ###### Parameters
 
--   `findDeposit` **types.RestRequestFindDeposit** 
+-   `findDeposit` **[RestRequestFindDeposit](#restrequestfinddeposit)** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseDeposit>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseDeposit](#restresponsedeposit)>** 
 
 ##### getDeposits
 
@@ -535,9 +535,9 @@ Get multiple deposits
 
 ###### Parameters
 
--   `findDeposits` **types.RestRequestFindDeposits** 
+-   `findDeposits` **[RestRequestFindDeposits](#restrequestfinddeposits)** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseDeposit>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseDeposit](#restresponsedeposit)>>** 
 
 ##### withdraw
 
@@ -550,9 +550,9 @@ Get a withdrawal
 
 -   `withdrawal` **types.RestRequestWithdrawal** 
 -   `signer` **signatures.MessageSigner**  (optional, default `this.signer`)
--   `findWithdrawal` **types.RestRequestFindWithdrawal** 
+-   `findWithdrawal` **[RestRequestFindWithdrawal](#restrequestfindwithdrawal)** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseWithdrawal>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseWithdrawal](#restresponsewithdrawal)>** 
 
 ##### withdraw
 
@@ -563,8 +563,8 @@ Create a new withdrawal
 
 ###### Parameters
 
--   `withdrawal` **types.RestRequestWithdrawal** 
--   `signer` **signatures.MessageSigner?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+-   `withdrawal` **[RestRequestWithdrawal](#restrequestwithdrawal)** 
+-   `signer` **[MessageSigner](#messagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 
 ###### Examples
 
@@ -591,9 +591,9 @@ Get multiple withdrawals
 
 ###### Parameters
 
--   `findWithdrawals` **types.RestRequestFindWithdrawals** 
+-   `findWithdrawals` **[RestRequestFindWithdrawals](#restrequestfindwithdrawals)** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseWithdrawal>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseWithdrawal](#restresponsewithdrawal)>>** 
 
 ##### getWsToken
 
