@@ -27,7 +27,6 @@ export type WebSocketRequestBalancesSubscription = {
 };
 
 /**
- * @typedef {Object} AuthTokenWebSocketRequestBalancesSubscription
  * @property {'balances'} name - The name of the subscription
  * @property {string} [wallet] -
  *  Balances subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
@@ -44,7 +43,6 @@ export type WebSocketRequestOrdersSubscription = {
 };
 
 /**
- * @typedef {Object} AuthTokenWebSocketRequestOrdersSubscription
  * @property {'orders'} name - The name of the subscription
  * @property {string} [wallet] -
  *  Orders subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`

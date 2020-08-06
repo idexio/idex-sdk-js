@@ -37,7 +37,6 @@ export type ResponseListener = (
 export interface WebSocketClientOptions {
   sandbox?: boolean;
   baseURL?: string;
-  wallet?: string;
   websocketAuthTokenFetch?: (wallet: string) => Promise<string>;
   shouldReconnectAutomatically?: boolean;
 }
