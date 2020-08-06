@@ -28,7 +28,7 @@ export interface RestPublicClientOptions {
  * import { v1 as uuidv1 } from 'uuid';
  * import { RestPublicClient } from '@idexio/idex-sdk';
  *
- * const publicClient = new RestPublicClientPublic({
+ * const publicClient = new RestPublicClient({
  *   sandbox: true,
  *   // Optionally provide an API key to increase rate limits
  *   apiKey: '1f7c4f52-4af7-4e1b-aa94-94fac8d931aa',
