@@ -82,6 +82,7 @@ export class WebSocketClient {
 
   /**
    * Set to true when the reconnect logic should not be run.
+   * @private
    */
   private doNotReconnect = false;
 

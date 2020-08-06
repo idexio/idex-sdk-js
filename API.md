@@ -59,17 +59,15 @@
     -   [RestResponseWebSocketToken](#restresponsewebsockettoken)
     -   [RestResponseWithdrawal](#restresponsewithdrawal)
     -   [RestResponseAssociateWallet](#restresponseassociatewallet)
--   [WebSocket Subscriptions](#websocket-subscriptions)
+-   [WebSocket Authenticated Subscriptions](#websocket-authenticated-subscriptions)
+    -   [AuthTokenWebSocketRequestOrdersSubscription](#authtokenwebsocketrequestorderssubscription)
+    -   [AuthTokenWebSocketRequestBalancesSubscription](#authtokenwebsocketrequestbalancessubscription)
 -   [WebSocket Responses](#websocket-responses)
     -   [WebSocketResponseError](#websocketresponseerror)
     -   [WebSocketResponseSubscriptions](#websocketresponsesubscriptions)
 -   [ECDSA Signatures](#ecdsa-signatures)
     -   [MessageSigner](#messagesigner)
 -   [Misc Types & Utilities](#misc-types--utilities)
--   [AuthTokenWebSocketRequestBalancesSubscription](#authtokenwebsocketrequestbalancessubscription)
-    -   [Properties](#properties)
--   [AuthTokenWebSocketRequestOrdersSubscription](#authtokenwebsocketrequestorderssubscription)
-    -   [Properties](#properties-1)
 
 ## Clients
 
@@ -1536,10 +1534,34 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `totalPortfolioValueUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of all holdings deposited on the exchange for the wallet in USD
 -   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of association of the wallet with the user account
 
-## WebSocket Subscriptions
+## WebSocket Authenticated Subscriptions
 
 
 
+
+### AuthTokenWebSocketRequestOrdersSubscription
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `name` **`"orders"`** The name of the subscription
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Orders subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
+     function when needed to get an updated `wsToken`.
+     <br />
+     **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
+
+### AuthTokenWebSocketRequestBalancesSubscription
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `name` **`"balances"`** The name of the subscription
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Balances subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
+     function when needed to get an updated `wsToken`.
+     <br />
+     **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
 
 ## WebSocket Responses
 
@@ -1587,30 +1609,6 @@ Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Sta
 
 
 
-
-## AuthTokenWebSocketRequestBalancesSubscription
-
-Type: any
-
-### Properties
-
--   `name` **`"balances"`** The name of the subscription
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Balances subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
-     function when needed to get an updated `wsToken`.
-     <br />
-     **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
-
-## AuthTokenWebSocketRequestOrdersSubscription
-
-Type: any
-
-### Properties
-
--   `name` **`"orders"`** The name of the subscription
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Orders subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
-     function when needed to get an updated `wsToken`.
-     <br />
-     **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
 
 # &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
 
