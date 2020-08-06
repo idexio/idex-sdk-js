@@ -31,10 +31,13 @@ export type ResponseListener = (response: types.WebSocketResponse) => unknown;
  *  See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
  * @property {boolean} [shouldReconnectAutomatically] -
  *  If true, automatically reconnects when connection is closed by the server or network errors
+ * @property {string} [pathSubscription] -
+ *  Path subscriptions are a quick and easy way to start receiving push updates. Eg. {market}@{subscription}_{option}
  */
 export interface WebSocketClientOptions {
   sandbox?: boolean;
   baseURL?: string;
+  pathSubscription?: string;
   websocketAuthTokenFetch?: (wallet: string) => Promise<string>;
   shouldReconnectAutomatically?: boolean;
 }
@@ -72,6 +75,8 @@ export class WebSocketClient {
 
   private errorListeners: Set<ErrorListener>;
 
+  private pathSubscription: string;
+
   private responseListeners: Set<ResponseListener>;
 
   private webSocket: null | WebSocket;
@@ -95,6 +100,8 @@ export class WebSocketClient {
     }
 
     this.baseURL = baseURL;
+
+    this.pathSubscription = options.pathSubscription || '';
 
     this.shouldReconnectAutomatically =
       options.shouldReconnectAutomatically ?? false;
@@ -295,7 +302,7 @@ export class WebSocketClient {
       return this.webSocket;
     }
     const webSocket = new WebSocket(
-      this.baseURL,
+      `${this.baseURL}/${this.pathSubscription}`,
       isNode
         ? {
             headers: { 'User-Agent': nodeUserAgent },
