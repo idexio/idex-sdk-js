@@ -1,5 +1,4 @@
 #!/bin/bash
-export HUSKY_SKIP_HOOKS=1
 
 echo "Committing Changed Documentation"
 
@@ -7,4 +6,4 @@ yarn generate:docs
 
 git add API.md
 
-git commit -m 'docs(api): update api documentation'
+HUSKY_SKIP_HOOKS=1 git commit -m 'docs(api): update api documentation'
