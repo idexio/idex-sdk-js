@@ -21,9 +21,18 @@
     "start": "node dist/index.js"
   },
   "files": [
+    ".eslintignore",
+    ".eslintrc.js",
+    ".nvmrc",
+    "API.md",
     "contracts",
     "dist",
-    "tsconfig.json"
+    "package.json",
+    "tsconfig.eslint.json",
+    "tsconfig.json",
+    "yarn.lock",
+    "README.md",
+    "LICENSE"
   ],
   "dependencies": {
     "axios": "^0.19.2",
