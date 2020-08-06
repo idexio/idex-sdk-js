@@ -75,7 +75,7 @@ export class WebSocketClient {
 
   private errorListeners: Set<ErrorListener>;
 
-  private pathSubscription: string;
+  private pathSubscription: string | null;
 
   private responseListeners: Set<ResponseListener>;
 
@@ -101,7 +101,7 @@ export class WebSocketClient {
 
     this.baseURL = baseURL;
 
-    this.pathSubscription = options.pathSubscription || '';
+    this.pathSubscription = options.pathSubscription || null;
 
     this.shouldReconnectAutomatically =
       options.shouldReconnectAutomatically ?? false;
@@ -302,7 +302,9 @@ export class WebSocketClient {
       return this.webSocket;
     }
     const webSocket = new WebSocket(
-      `${this.baseURL}/${this.pathSubscription}`,
+      this.pathSubscription
+        ? `${this.baseURL}/${this.pathSubscription}`
+        : this.baseURL,
       isNode
         ? {
             headers: { 'User-Agent': nodeUserAgent },
