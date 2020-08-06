@@ -1,12 +1,18 @@
 toc:
   - name: Clients
     children:
-      - RestAuthenticatedClient
-      - RestAuthenticatedClientOptions
-      - RestPublicClient
-      - RestPublicClientOptions
-      - WebSocketClient
-      - WebSocketClientOptions
+      - name: REST Public Client
+        children:
+          - RestPublicClientOptions
+          - RestPublicClient
+      - name: REST Authenticated Client
+        children: 
+          - RestAuthenticatedClientOptions
+          - RestAuthenticatedClient
+      - name: WebSocketClient
+        children:
+          - WebSocketClientOptions
+          - WebSocketClient
   - name: Enums
     description: |
       Sets of named constants used as field types for several requests and responses
