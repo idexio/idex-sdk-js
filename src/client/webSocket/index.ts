@@ -216,7 +216,11 @@ export class WebSocketClient {
           this.sendMessage({
             cid,
             method: 'subscribe',
-            subscriptions: [subscription],
+            subscriptions: [
+              // cast need to allow wallet to be required on auth subscription
+              // but not complain here since it is stripped off the subscription.
+              subscription as WebSocketRequestAuthenticatedSubscription,
+            ],
             token: await webSocketTokenManager.getToken(walletAddress),
           });
         },
