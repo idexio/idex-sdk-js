@@ -10,7 +10,7 @@
     "build": "npm-run-all -s clean -s build:*",
     "build:tsc": "npx tsc",
     "clean": "rm -rf dist",
-    "generate:docs": "npx documentation readme src/** --markdown-toc-max-depth 3 --readme-file=API.md --section=API --parse-extension ts --shallow --resolve node --config documentation.yaml",
+    "generate:docs": "npx documentation readme src/** --markdown-toc-max-depth 3 --readme-file=API.md --section=API --parse-extension ts --shallow --resolve node --config documentation.yaml -g",
     "generate:docs:commit": "./dev/scripts/generate:docs",
     "lint": "eslint 'src/**/*.ts'",
     "lint:fix": "eslint 'src/**/*.ts' --ext .ts --fix",

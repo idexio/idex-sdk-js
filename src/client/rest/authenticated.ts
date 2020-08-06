@@ -91,6 +91,7 @@ export class RestAuthenticatedClient {
    * @see https://docs.idex.io/#get-user-account
    *
    * @param {string} nonce - UUIDv1
+   * @returns {Promise<RestResponseUser>}
    */
   public async getUser(nonce: string): Promise<types.RestResponseUser> {
     return (await this.get('/user', { nonce })).data;
@@ -102,6 +103,7 @@ export class RestAuthenticatedClient {
    * @see https://docs.idex.io/#get-wallets
    *
    * @param {string} nonce - UUIDv1
+   * @returns {Promise<RestResponseWallet[]>}
    */
   public async getWallets(nonce: string): Promise<types.RestResponseWallet[]> {
     return (await this.get('/wallets', { nonce })).data;
@@ -112,7 +114,8 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#get-balances
    *
-   * @param {types.RestRequestFindBalances} findBalances
+   * @param {RestRequestFindBalances} findBalances
+   * @returns {Promise<RestResponseBalance[]>}
    */
   public async getBalances(
     findBalances: types.RestRequestFindBalances,
@@ -137,8 +140,9 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#associate-wallet
    *
-   * @param {RestRequestAssociateWallet} withdrawal
-   * @param {signatures.MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   * @param {RestRequestAssociateWallet} associate
+   * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   * @returns {Promise<RestResponseAssociateWallet>}
    */
   public async associateWallet(
     associate: types.RestRequestAssociateWallet,
@@ -175,8 +179,9 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#create-order
    *
-   * @param {types.RestRequestOrder} order
-   * @param {signatures.MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   * @param {RestRequestOrder} order
+   * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   * @returns {Promise<RestResponseOrder>}
    */
   public async createOrder(
     order: types.RestRequestOrder,
@@ -213,8 +218,9 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#test-create-order
    *
-   * @param {types.RestRequestOrder} order
-   * @param {signatures.MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   * @param {RestRequestOrder} order
+   * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   * @returns {Promise<RestResponseOrder>}
    */
   public async createTestOrder(
     order: types.RestRequestOrder,
@@ -258,7 +264,8 @@ export class RestAuthenticatedClient {
    * @see https://docs.idex.io/#cancel-order
    *
    * @param {RestRequestCancelOrder} cancelOrder
-   * @param {signatures.MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   * @returns {Promise<RestResponseCancelledOrder>}
    */
   public async cancelOrder(
     cancelOrder: types.RestRequestCancelOrder,
@@ -301,8 +308,9 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#cancel-order
    *
-   * @param {RestResponseCancelledOrder} orders
-   * @param {signatures.MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   * @param {RestResponseCancelledOrder} cancelOrders
+   * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   * @returns {Promise<RestResponseCancelledOrder>}
    */
   public async cancelOrders(
     cancelOrders: types.RestRequestCancelOrders,
@@ -327,8 +335,8 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#get-orders
    *
-   * @param {types.RestRequestFindOrder} findOrder
-   * @return {Promise<types.RestResponseOrder>}
+   * @param {RestRequestFindOrder} findOrder
+   * @returns {Promise<RestResponseOrder>}
    */
   public async getOrder(
     findOrder: types.RestRequestFindOrder,
@@ -341,8 +349,8 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#cancel-order
    *
-   * @param {types.RestRequestFindOrders} findOrders
-   * @return {Promise<types.RestResponseOrder[]>}
+   * @param {RestRequestFindOrders} findOrders
+   * @returns {Promise<RestResponseOrder[]>}
    */
   public async getOrders(
     findOrders: types.RestRequestFindOrders,
@@ -355,8 +363,8 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#get-fills
    *
-   * @param {types.RestRequestFindFill} findFill
-   * @return {Promise<types.RestResponseFill>}
+   * @param {RestRequestFindFill} findFill
+   * @returns {Promise<RestResponseFill>}
    */
   public async getFill(
     findFill: types.RestRequestFindFill,
@@ -369,8 +377,8 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#get-fills
    *
-   * @param {types.RestRequestFindFills} findFills
-   * @return {Promise<types.RestResponseFill[]>}
+   * @param {RestRequestFindFills} findFills
+   * @returns {Promise<RestResponseFill[]>}
    */
   public async getFills(
     findFills: types.RestRequestFindFills,
@@ -385,8 +393,8 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#get-deposits
    *
-   * @param {types.RestRequestFindDeposit} findDeposit
-   * @return {Promise<types.RestResponseDeposit>}
+   * @param {RestRequestFindDeposit} findDeposit
+   * @returns {Promise<RestResponseDeposit>}
    */
   public async getDeposit(
     findDeposit: types.RestRequestFindDeposit,
@@ -399,8 +407,8 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#get-deposits
    *
-   * @param {types.RestRequestFindDeposits} findDeposits
-   * @return {Promise<types.RestResponseDeposit[]>}
+   * @param {RestRequestFindDeposits} findDeposits
+   * @returns {Promise<RestResponseDeposit[]>}
    */
   public async getDeposits(
     findDeposits: types.RestRequestFindDeposits,
@@ -409,14 +417,6 @@ export class RestAuthenticatedClient {
   }
 
   // Withdrawal Endpoints
-  /**
-   * Get a withdrawal
-   *
-   * @see https://docs.idex.io/#get-withdrawals
-   *
-   * @param {types.RestRequestFindWithdrawal} findWithdrawal
-   * @return {Promise<types.RestResponseWithdrawal>}
-   */
 
   /**
    * Create a new withdrawal
@@ -435,8 +435,9 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#withdraw-funds
    *
-   * @param {types.RestRequestWithdrawal} withdrawal
-   * @param {signatures.MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   * @param {RestRequestWithdrawal} withdrawal
+   * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   * @returns {Promise<RestResponseWithdrawal>}
    */
   public async withdraw(
     withdrawal: types.RestRequestWithdrawal,
@@ -452,6 +453,14 @@ export class RestAuthenticatedClient {
     ).data;
   }
 
+  /**
+   * Get a withdrawal
+   *
+   * @see https://docs.idex.io/#get-withdrawals
+   *
+   * @param {RestRequestFindWithdrawal} findWithdrawal
+   * @returns {Promise<RestResponseWithdrawal>}
+   */
   public async getWithdrawal(
     findWithdrawal: types.RestRequestFindWithdrawal,
   ): Promise<types.RestResponseWithdrawal> {
@@ -463,8 +472,8 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#get-withdrawals
    *
-   * @param {types.RestRequestFindWithdrawals} findWithdrawals
-   * @return {Promise<types.RestResponseWithdrawal[]>}
+   * @param {RestRequestFindWithdrawals} findWithdrawals
+   * @returns {Promise<RestResponseWithdrawal[]>}
    */
   public async getWithdrawals(
     findWithdrawals: types.RestRequestFindWithdrawals,
