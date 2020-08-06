@@ -227,7 +227,7 @@ export default class AuthenticatedRESTClient {
   public async cancelOrder(
     cancelOrder: request.CancelOrder,
     signer: signatures.MessageSigner = this.signer,
-  ): Promise<response.Order> {
+  ): Promise<response.ResetResponseCancelledOrder> {
     if (!signer) {
       throw new Error('No signer provided');
     }
