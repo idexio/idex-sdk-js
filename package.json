@@ -72,8 +72,8 @@
   },
   "husky": {
     "hooks": {
-      "commit-msg": "exec < /dev/tty && git cz --hook || true",
-      "pre-commit": "npm-run-all -p lint:fix:* ",
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true",
+      "pre-commit": "npm-run-all -p lint:fix:* generate:docs:commit",
       "pre-push": "npm-run-all build"
     }
   },
