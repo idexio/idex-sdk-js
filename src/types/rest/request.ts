@@ -262,7 +262,7 @@ export type RestRequestOrderByBaseQuantity = (
   | RestRequestStopLossLimitOrder
   | RestRequestTakeProfitOrder
   | RestRequestTakeProfitLimitOrder
-) & { quantity: string };
+) & { quantity: string; quoteOrderQuantity?: undefined };
 
 export type RestRequestOrderByQuoteQuantity = (
   | RestRequestLimitOrder
@@ -271,7 +271,7 @@ export type RestRequestOrderByQuoteQuantity = (
   | RestRequestStopLossLimitOrder
   | RestRequestTakeProfitOrder
   | RestRequestTakeProfitLimitOrder
-) & { quoteOrderQuantity: string };
+) & { quoteOrderQuantity: string; quantity?: undefined };
 
 export type RestRequestOrderWithPrice =
   | RestRequestLimitOrder

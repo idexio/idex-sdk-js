@@ -35,7 +35,7 @@ export interface WebSocketResponseTradeLong
   market: string; // m
 }
 
-export interface CandleShort {
+export interface WebSocketResponseCandleShort {
   m: string;
   t: number;
   i: keyof typeof enums.CandleInterval;
@@ -179,7 +179,7 @@ export interface WebSocketResponseOrderFillShort {
 export type WebSocketResponseSubscriptionMessageShort =
   | { type: 'tickers'; data: WebSocketResponseTickerShort }
   | { type: 'trades'; data: WebSocketResponseTradeShort }
-  | { type: 'candles'; data: CandleShort }
+  | { type: 'candles'; data: WebSocketResponseCandleShort }
   | { type: 'l1orderbook'; data: WebSocketResponseL1OrderBookShort }
   | { type: 'l2orderbook'; data: WebSocketResponseL2OrderBookShort }
   | { type: 'balances'; data: WebSocketResponseBalanceShort }
