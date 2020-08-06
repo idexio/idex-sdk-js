@@ -347,3 +347,16 @@ export interface RestRequestCreateWithdrawalBody {
   parameters: RestRequestWithdrawal;
   signature: string;
 }
+
+/**
+ * @typedef {Object} RestRequestAssociateWallet
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet - The wallet to associate with the authenticated account.
+ */
+export type RestRequestAssociateWallet = {
+  nonce: string;
+  /**
+   * The wallet to associate with the authenticated account.
+   */
+  wallet: string;
+};

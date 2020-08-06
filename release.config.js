@@ -25,7 +25,7 @@ module.exports = {
       // commits the changed files to git
       '@semantic-release/git',
       {
-        assets: ['package.json', 'README.md'],
+        assets: ['package.json', 'README.md', 'API.md'],
       },
     ],
     // creates the github release

@@ -18,6 +18,7 @@ import {
   RestRequestCancelOrderOrOrders,
   isRestRequestCancelOrder,
   isRestRequestCancelOrders,
+  RestRequestAssociateWallet,
 } from './types';
 
 /**
@@ -120,6 +121,22 @@ export const withdrawalHash = function getWithdrawalWalletHash(
     ['bool', true], // Auto-dispatch
   ]);
 };
+
+/**
+ * Generates the signature for the associate wallet request
+ */
+export function associateWalletHash(
+  associate: RestRequestAssociateWallet,
+): string {
+  if (!associate.wallet || !associate.nonce) {
+    throw new Error('Associate Wallet must provide a wallet and nonce');
+  }
+
+  return solidityHashOfParams([
+    ['uint128', uuidToUint8Array(associate.nonce)],
+    ['address', associate.wallet],
+  ]);
+}
 
 function solidityHashOfParams<K extends keyof TypeValuePairings>(
   params: Array<[K, TypeValuePairings[K]]>,

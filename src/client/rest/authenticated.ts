@@ -120,6 +120,38 @@ export class RestAuthenticatedClient {
     return (await this.get('/balances', findBalances)).data;
   }
 
+  // Wallet Association Endpoint
+
+  /**
+   * Associate a wallet with the authenticated account
+   *
+   * @example
+   *
+   * const wallet = await authenticatedClient.associateWallet(
+   *   {
+   *     nonce: uuidv1(),
+   *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+   *   },
+   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   * );
+   *
+   * @see https://docs.idex.io/#associate-wallet
+   *
+   * @param {RestRequestAssociateWallet} withdrawal
+   * @param {signatures.MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   */
+  public async associateWallet(
+    associate: types.RestRequestAssociateWallet,
+    signer: signatures.MessageSigner = this.signer,
+  ): Promise<types.RestResponseAssociateWallet> {
+    return (
+      await this.post('/wallets', {
+        parameters: associate,
+        signature: await signer(signatures.associateWalletHash(associate)),
+      })
+    ).data;
+  }
+
   // Orders & Trade Endpoints
 
   /**
@@ -223,13 +255,13 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#cancel-order
    *
-   * @param {string} cancelOrder
+   * @param {RestRequestCancelOrder} cancelOrder
    * @param {signatures.MessageSigner} [signer] - Required if a private key was not provided in the constructor
    */
   public async cancelOrder(
     cancelOrder: types.RestRequestCancelOrder,
     signer: signatures.MessageSigner = this.signer,
-  ): Promise<types.Order> {
+  ): Promise<types.RestResponseCancelledOrder> {
     if (!signer) {
       throw new Error('No signer provided');
     }
@@ -265,13 +297,13 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#cancel-order
    *
-   * @param {string} order
+   * @param {RestResponseCancelledOrder} orders
    * @param {signatures.MessageSigner} [signer] - Required if a private key was not provided in the constructor
    */
   public async cancelOrders(
     cancelOrders: types.RestRequestCancelOrders,
     signer: signatures.MessageSigner = this.signer,
-  ): Promise<types.Order[]> {
+  ): Promise<types.RestResponseCancelledOrder> {
     if (!signer) {
       throw new Error('No signer provided');
     }

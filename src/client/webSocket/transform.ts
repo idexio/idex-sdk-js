@@ -110,7 +110,7 @@ const transformOrdersMessage = (
   timeOfOriginalOrder: order.T,
   executionType: order.x,
   status: order.X,
-  ...(order.u && { orderBookSequenceNumber: order.u }),
+  ...(order.u && { sequence: order.u }),
   type: order.o,
   side: order.S,
   originalQuantity: order.q,

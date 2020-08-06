@@ -38,6 +38,7 @@ toc:
       - RestRequestFindWithdrawals
       - RestRequestOrder
       - RestRequestWithdrawal
+      - RestRequestAssociateWallet
   - name: REST Responses
     children:
       - RestResponseAsset
@@ -60,6 +61,7 @@ toc:
       - RestResponseWallet
       - RestResponseWebSocketToken
       - RestResponseWithdrawal
+      - RestResponseAssociateWallet
   - name: WebSocket Responses
     children:
       - WebSocketResponseError
