@@ -68,8 +68,6 @@
 -   [ECDSA Signatures](#ecdsa-signatures)
     -   [MessageSigner](#messagesigner)
 -   [Misc Types & Utilities](#misc-types--utilities)
--   [CancelledOrder](#cancelledorder)
-    -   [Properties](#properties)
 
 ## Clients
 
@@ -357,7 +355,7 @@ const order = await authenticatedClient.createOrder(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.Order>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseOrder>** 
 
 ##### createTestOrder
 
@@ -388,7 +386,7 @@ const order = await authenticatedClient.createTestOrder(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.Order>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseOrder>** 
 
 ##### cancelOrder
 
@@ -474,7 +472,7 @@ Get an order
 
 -   `findOrder` **types.RestRequestFindOrder** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.Order>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.RestResponseOrder>** 
 
 ##### getOrders
 
@@ -487,7 +485,7 @@ Get multiple orders
 
 -   `findOrders` **types.RestRequestFindOrders** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.Order>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.RestResponseOrder>>** 
 
 ##### getFill
 
@@ -1368,10 +1366,10 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseCancelledOrder
 
-Response to cancelled orders which is an array of [CancelledOrder](#cancelledorder) indicating
+Response to cancelled orders which is an array of [CancelledOrder](CancelledOrder) indicating
 any successfully cancelled orders.
 
-Type: [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[CancelledOrder](#cancelledorder)>
+Type: [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>
 
 ### RestResponseOrderBookLevel1
 
@@ -1633,16 +1631,6 @@ Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Sta
 
 
 
-
-## CancelledOrder
-
-A cancelled order
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
--   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The `orderId` of the order that was cancelled.
 
 # Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.Order>**
 
