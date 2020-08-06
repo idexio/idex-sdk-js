@@ -263,7 +263,7 @@ export type CancelledOrder = {
  *
  * @typedef {CancelledOrder[]} ResetResponseCancelledOrder
  */
-export type ResetResponseCancelledOrder = CancelledOrder[];
+export type RestResponseCancelledOrder = CancelledOrder[];
 
 type Price = string;
 
