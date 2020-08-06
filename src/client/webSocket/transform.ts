@@ -33,7 +33,7 @@ const transformTradesMessage = (
 });
 
 const transformCandlesMessage = (
-  candle: types.CandleShort,
+  candle: types.WebSocketResponseCandleShort,
 ): types.WebSocketResponseCandleLong => ({
   market: candle.m,
   time: candle.t,
