@@ -7,7 +7,7 @@
   "author": "IDEX <support@idex.io>",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm-run-all -s clean -p build:*",
+    "build": "npm-run-all -s clean -s build:*",
     "build:documentation": "npx documentation readme src/** --readme-file=API.md --section=API --parse-extension ts --shallow --resolve node --config documentation.yaml",
     "build:tsc": "npx tsc",
     "clean": "rm -rf dist",

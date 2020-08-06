@@ -6,6 +6,7 @@ import * as constants from '../../constants';
 import WebsocketTokenManager from './tokenManager';
 import { transformMessage } from './transform';
 import { WebSocketRequestAuthenticatedSubscription } from '../../types';
+import { isDefinedFilter } from '../../utils';
 
 const userAgent = 'idex-sdk-js';
 
@@ -20,17 +21,26 @@ export type ResponseListener = (
  * WebSocket API client options
  *
  * @typedef {Object} WebSocketClientOptions
- * @property {boolean} sandbox - Must be set to true
- * @property {function} websocketAuthTokenFetch - Authenticated Rest API client fetch token call (`/wsToken`)
+ * @property {boolean} [sandbox] -
+ *  Should the WebSocket connect to the {@link https://docs.idex.io/#sandbox | Sandbox environment}?
+ *  **Note**: This must be set to `true` during the Sandbox preview.
+ * @property {function} [websocketAuthTokenFetch] -
+ *  Authenticated Rest API client fetch token call (`/wsToken`)
  *  SDK Websocket client will then automatically handle Websocket token generation and refresh.
  *  You can omit this when using only public websocket subscription.
  *  Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
  *  See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
- * @property {boolean} shouldReconnectAutomatically - If true, automatically reconnects when connection is closed by the server or network errors
+ * @property {string} [wallet] -
+ *  Optionally provide a wallet to use for any authenticated subscriptions which do not have a wallet
+ *  provided.  If this is not provided, it is an error to subscribe without a `wallet` parameter in the
+ *  request.
+ * @property {boolean} [shouldReconnectAutomatically] -
+ *  If true, automatically reconnects when connection is closed by the server or network errors
  */
 export interface WebSocketClientOptions {
   sandbox?: boolean;
   baseURL?: string;
+  wallet?: string;
   websocketAuthTokenFetch?: (wallet: string) => Promise<string>;
   shouldReconnectAutomatically?: boolean;
 }
@@ -39,7 +49,7 @@ export interface WebSocketClientOptions {
  * WebSocket API client
  *
  * @example
- * import * as idex from '@idexio/idex-node';
+ * import * as idex from '@idexio/idex-sdk';
  *
  * const config = {
  *   baseURL: 'wss://ws.idex.io',
@@ -70,14 +80,27 @@ export default class WebSocketClient {
 
   private responseListeners: Set<ResponseListener>;
 
-  private webSocket: WebSocket;
+  private webSocket: null | WebSocket;
 
   private webSocketTokenManager?: WebsocketTokenManager;
 
+  /**
+   * Set to true when the reconnect logic should not be run.
+   */
+  private doNotReconnect = false;
+
+  /**
+   * Wallet address to use for authenticated subscriptions if not provided
+   * on the subscription object.
+   */
+  private walletAddress?: undefined | string;
+
   constructor(options: WebSocketClientOptions) {
-    const baseURL = options.sandbox
-      ? constants.SANDBOX_WEBSOCKET_API_BASE_URL
-      : options.baseURL;
+    const baseURL =
+      options.baseURL ?? options.sandbox
+        ? constants.SANDBOX_WEBSOCKET_API_BASE_URL
+        : constants.LIVE_WEBSOCKET_API_BASE_URL;
+
     if (!baseURL) {
       throw new Error('Must set sandbox to true');
     }
@@ -108,9 +131,9 @@ export default class WebSocketClient {
       return;
     }
 
-    if (!this.webSocket) {
-      this.createWebSocket();
-    }
+    this.doNotReconnect = false;
+
+    const webSocket = this.createWebSocketIfNeeded();
 
     await new Promise((resolve) => {
       (function waitForOpen(ws: WebSocket): void {
@@ -118,7 +141,7 @@ export default class WebSocketClient {
           return resolve();
         }
         setTimeout(() => waitForOpen(ws), 100);
-      })(this.webSocket);
+      })(webSocket);
     });
 
     this.resetReconnectionState();
@@ -166,74 +189,49 @@ export default class WebSocketClient {
   public async subscribe(
     subscriptions: types.WebSocketRequestSubscription[],
     cid?: string,
+    forceRefreshToken = false,
   ): Promise<void> {
     const [authSubscriptions, publicSubscriptions] = splitSubscriptions(
       subscriptions,
     );
 
-    const uniqueWallets = Array.from(
-      new Set(
-        authSubscriptions
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .filter((subscription) => (subscription as any).wallet)
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .map((subscription) => (subscription as any).wallet),
-      ),
-    );
+    const { webSocketTokenManager } = this;
 
-    if (authSubscriptions.length && !this.webSocketTokenManager) {
-      throw new Error(
-        '`websocketAuthTokenFetch` is required for authenticated subscriptions',
-      );
-    }
-
-    if (authSubscriptions.length && !uniqueWallets.length) {
-      throw new Error(
-        'WebSocket: Missing wallet for authenticated subscription',
-      );
-    }
-
-    if (authSubscriptions.length === 0) {
+    if (publicSubscriptions.length) {
       this.sendMessage({
         cid,
         method: 'subscribe',
-        subscriptions,
+        subscriptions: publicSubscriptions,
       });
-      return;
     }
 
-    // Prepare all auth tokens for subscriptions
     await Promise.all(
-      uniqueWallets.map((wallet) =>
-        this.webSocketTokenManager.getToken(wallet),
-      ),
+      authSubscriptions.map(async (subscription) => {
+        if (!webSocketTokenManager) {
+          throw new Error(
+            '`websocketAuthTokenFetch` is required for authenticated subscriptions',
+          );
+        }
+
+        const walletAddress = subscription.wallet || this.walletAddress;
+
+        if (!walletAddress) {
+          throw new Error(
+            `WebSocket: "${subscription.name}" subscription invalid, authenticated subscriptions require a wallet parameter or a wallet parameter during the client construction.`,
+          );
+        }
+
+        this.sendMessage({
+          cid,
+          method: 'subscribe',
+          subscriptions: [subscription],
+          token: await webSocketTokenManager.getToken(
+            walletAddress,
+            forceRefreshToken,
+          ),
+        });
+      }),
     );
-
-    if (uniqueWallets.length === 1) {
-      this.sendMessage({
-        cid,
-        method: 'subscribe',
-        subscriptions,
-        token: this.webSocketTokenManager.getLastCachedToken(uniqueWallets[0]),
-      });
-      return;
-    }
-
-    // For more wallets we need to split subscriptions
-    subscriptions.forEach((subscription) => {
-      // TODO: Does this need to be any?
-      this.sendMessage({
-        cid,
-        method: 'subscribe',
-        subscriptions: [subscription],
-        token: isAuthenticatedSubscription(subscription)
-          ? this.webSocketTokenManager.getLastCachedToken(
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (subscription as any).wallet,
-            )
-          : undefined,
-      });
-    });
   }
 
   /**
@@ -270,27 +268,35 @@ export default class WebSocketClient {
 
   /* Private */
 
-  private createWebSocket(): void {
-    this.webSocket = new WebSocket(this.baseURL, {
+  private createWebSocketIfNeeded(): WebSocket {
+    this.doNotReconnect = false;
+    if (this.webSocket) {
+      return this.webSocket;
+    }
+    const webSocket = new WebSocket(this.baseURL, {
       headers: { 'User-Agent': userAgent },
     });
-    this.webSocket.onmessage = this.handleWebSocketMessage.bind(this);
-    this.webSocket.onclose = this.handleWebSocketClose.bind(this);
-    this.webSocket.onerror = this.handleWebSocketError.bind(this);
+    webSocket.onmessage = this.handleWebSocketMessage.bind(this);
+    webSocket.onclose = this.handleWebSocketClose.bind(this);
+    webSocket.onerror = this.handleWebSocketError.bind(this);
+    this.webSocket = webSocket;
+    return webSocket;
   }
 
   private destroyWebSocket(): void {
-    // TODO wait for buffer to flush
-    this.webSocket.onclose = null; // Do not reconnect
-    this.webSocket.close();
-    this.webSocket = null;
+    if (this.webSocket) {
+      // TODO wait for buffer to flush
+      this.doNotReconnect = true;
+      this.webSocket.close();
+      this.webSocket = null;
+    }
   }
 
   private handleWebSocketClose(): void {
     this.webSocket = null;
     this.disconnectListeners.forEach((listener) => listener());
 
-    if (this.shouldReconnectAutomatically) {
+    if (this.shouldReconnectAutomatically && !this.doNotReconnect) {
       // TODO: exponential backoff
       this.reconnect();
     }
@@ -309,6 +315,7 @@ export default class WebSocketClient {
   }
 
   private reconnect(): void {
+    this.doNotReconnect = false;
     // Reconnect with exponential backoff
     const backoffSeconds = 2 ** this.reconnectAttempt;
     this.reconnectAttempt += 1;
@@ -321,12 +328,17 @@ export default class WebSocketClient {
   }
 
   private sendMessage(payload: types.WebSocketRequest): void {
-    this.throwIfDisconnected();
+    const { webSocket } = this;
 
-    this.webSocket.send(JSON.stringify(payload));
+    this.throwIfDisconnected(webSocket);
+
+    webSocket.send(JSON.stringify(payload));
   }
 
-  private throwIfDisconnected(): void {
+  private throwIfDisconnected(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    webSocket: WebSocketClient['webSocket'],
+  ): asserts webSocket is WebSocket {
     if (!this.isConnected()) {
       throw new Error(
         'Websocket not yet connected, await connect() method first',

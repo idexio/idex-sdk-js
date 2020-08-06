@@ -22,13 +22,42 @@ export type WebSocketRequestSubscriptionName =
   | keyof typeof WebSocketRequestUnauthenticatedSubscriptionName
   | keyof typeof WebSocketRequestAuthenticatedSubscriptionName;
 
-export interface WebSocketRequestBalancesSubscription {
+/**
+ * @typedef {Object} WebSocketRequestBalancesSubscription
+ * @property {'balances'} name - The name of the subscription
+ * @property {string} [wallet] -
+ *  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
+ *  needed to get an updated `wsToken`.  This property is not required if a wallet was
+ *  provided when constructing the WebSocketClient.
+ *
+ */
+export type WebSocketRequestBalancesSubscription = {
   name: 'balances';
-}
+  /**
+   *  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
+   *  needed to get an updated `wsToken`.  This property is not required if a wallet was
+   *  provided when constructing the WebSocketClient.
+   */
+  wallet?: string;
+};
 
-export interface WebSocketRequestOrdersSubscription {
+/**
+ * @typedef {Object} WebSocketRequestOrdersSubscription
+ * @property {'orders'} name - The name of the subscription
+ * @property {string} [wallet] -
+ *  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
+ *  needed to get an updated `wsToken`.  This property is not required if a wallet was
+ *  provided when constructing the WebSocketClient.
+ */
+export type WebSocketRequestOrdersSubscription = {
   name: 'orders';
-}
+  /**
+   *  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
+   *  needed to get an updated `wsToken`.  This property is not required if a wallet was
+   *  provided when constructing the WebSocketClient.
+   */
+  wallet?: string;
+};
 
 export interface WebSocketRequestCandlesSubscription {
   name: 'candles';

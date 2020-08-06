@@ -221,10 +221,16 @@
         -   [Properties](#properties-39)
 -   [ECDSA Signatures](#ecdsa-signatures)
     -   [signatures.MessageSigner](#signaturesmessagesigner)
+-   [WebSocketRequestBalancesSubscription](#websocketrequestbalancessubscription)
+    -   [Properties](#properties-40)
+    -   [wallet](#wallet-1)
+-   [WebSocketRequestOrdersSubscription](#websocketrequestorderssubscription)
+    -   [Properties](#properties-41)
+    -   [wallet](#wallet-2)
 -   [associateWalletHash](#associatewallethash)
     -   [Parameters](#parameters-29)
 -   [CancelledOrder](#cancelledorder)
-    -   [Properties](#properties-40)
+    -   [Properties](#properties-42)
 -   [ResetResponseCancelledOrder](#resetresponsecancelledorder)
 -   [splitSubscriptions](#splitsubscriptions)
     -   [Parameters](#parameters-30)
@@ -779,7 +785,7 @@ WebSocket API client
 #### Examples
 
 ```javascript
-import * as idex from '@idexio/idex-node';
+import * as idex from '@idexio/idex-sdk';
 
 const config = {
   baseURL: 'wss://ws.idex.io',
@@ -1705,6 +1711,30 @@ A function that accepts a string and returns a Promise resolving on its ECDSA si
 
 Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)
 
+## WebSocketRequestBalancesSubscription
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `name` **`"balances"`** The name of the subscription
+
+### wallet
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## WebSocketRequestOrdersSubscription
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `name` **`"orders"`** The name of the subscription
+
+### wallet
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
 ## associateWalletHash
 
 Generates the signature for the associate wallet request
@@ -1743,8 +1773,6 @@ Take in subscriptions and return array split by authenticated or unauthenticated
 # Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;types.Order>**
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;response.RestResponseCancelledOrder>** 
-
-> > > > > > > beta
 
 #### cancelOrders
 

@@ -12,14 +12,13 @@ const TOKEN_EXPIRATION_MS = 1000 * 60 * 14; // 14 minutes (15 is already expired
 
 type WebsocketTokenFetch = (wallet: string) => Promise<string>;
 
-/*
+/**
  * https://docs.idex.io/#websocket-authentication-endpoints
  *
- * ```
- * const wsTokenStore = new WebsocketTokenManager(wallet => client.getWsToken(uuidv1(), wallet))
- * const token = await wsTokenStore.getToken("0x123abc...");
- * wsClient.subscribe([{ name: 'balance', wallet: '0x0'}], token);
- * ```
+ * @example
+ *  const wsTokenStore = new WebsocketTokenManager(wallet => client.getWsToken(uuidv1(), wallet))
+ *  const token = await wsTokenStore.getToken("0x123abc...");
+ *  wsClient.subscribe([{ name: 'balance', wallet: '0x0'}], token);
  */
 export default class WebsocketTokenManager {
   private websocketAuthTokenFetch: WebsocketTokenFetch;
@@ -30,9 +29,16 @@ export default class WebsocketTokenManager {
     this.websocketAuthTokenFetch = websocketAuthTokenFetch;
   }
 
-  public getToken = async (
+  /**
+   * Get a token for the given wallet, returning any previously generated
+   * tokens if they have not expired yet.  If called in parallel it will
+   * return the pending request if the wallet is the same.
+   */
+  public async getToken(
     walletAddress: string,
-  ): Promise<string | undefined> => {
+    /** Force refresh the token (unless a current request is pending) */
+    forceRefresh = false,
+  ): Promise<string | undefined> {
     const tokenRef = this.walletTokens[walletAddress];
     if (tokenRef) {
       // If there are more parallel requests, make sure we fetch just once
@@ -40,7 +46,7 @@ export default class WebsocketTokenManager {
         return tokenRef.fetching;
       }
 
-      if (tokenRef.expiration < new Date().getTime() && tokenRef.token) {
+      if (tokenRef.token && tokenRef.expiration < Date.now() && !forceRefresh) {
         return tokenRef.token;
       }
     }
@@ -48,9 +54,8 @@ export default class WebsocketTokenManager {
     // In case we RestRequesting wallet token first time,
     // or token already expired (~15 mins),
     // we need to generate fresh one.
-
     const tokenUpdate = (this.walletTokens[walletAddress] = {
-      expiration: new Date().getTime() + TOKEN_EXPIRATION_MS,
+      expiration: Date.now() + TOKEN_EXPIRATION_MS,
       fetching: this.websocketAuthTokenFetch(walletAddress),
       token: undefined,
     } as TokenValue);
@@ -62,7 +67,7 @@ export default class WebsocketTokenManager {
     } finally {
       tokenUpdate.fetching = undefined;
     }
-  };
+  }
 
   public getLastCachedToken = (walletAddress: string): string => {
     return this.walletTokens[walletAddress]?.token || '';
