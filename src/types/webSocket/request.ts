@@ -1,13 +1,16 @@
 import * as enums from '../enums';
 
-export type Method = 'subscribe' | 'subscriptions' | 'unsubscribe';
+export type WebSocketRequestMethod =
+  | 'subscribe'
+  | 'subscriptions'
+  | 'unsubscribe';
 
-export enum AuthenticatedSubscriptionName {
+export enum WebSocketRequestAuthenticatedSubscriptionName {
   balances = 'balances',
   orders = 'orders',
 }
 
-export enum UnauthenticatedSubscriptionName {
+export enum WebSocketRequestUnauthenticatedSubscriptionName {
   candles = 'candles',
   l1orderbook = 'l1orderbook',
   l2orderbook = 'l2orderbook',
@@ -15,82 +18,124 @@ export enum UnauthenticatedSubscriptionName {
   trades = 'trades',
 }
 
-export type SubscriptionName =
-  | keyof typeof UnauthenticatedSubscriptionName
-  | keyof typeof AuthenticatedSubscriptionName;
+export type WebSocketRequestSubscriptionName =
+  | keyof typeof WebSocketRequestUnauthenticatedSubscriptionName
+  | keyof typeof WebSocketRequestAuthenticatedSubscriptionName;
 
-export interface BalancesSubscription {
+export type WebSocketRequestBalancesSubscription = {
   name: 'balances';
-}
+};
 
-export interface OrdersSubscription {
+/**
+ * @typedef {Object} AuthTokenWebSocketRequestBalancesSubscription
+ * @property {'balances'} name - The name of the subscription
+ * @property {string} [wallet] -
+ *  Balances subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
+ *  function when needed to get an updated `wsToken`.
+ *  <br />
+ *  **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
+ */
+export type AuthTokenWebSocketRequestBalancesSubscription = WebSocketRequestBalancesSubscription & {
+  wallet: string;
+};
+
+export type WebSocketRequestOrdersSubscription = {
   name: 'orders';
-}
+};
 
-export interface CandlesSubscription {
+/**
+ * @typedef {Object} AuthTokenWebSocketRequestOrdersSubscription
+ * @property {'orders'} name - The name of the subscription
+ * @property {string} [wallet] -
+ *  Orders subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
+ *  function when needed to get an updated `wsToken`.
+ *  <br />
+ *  **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
+ */
+export type AuthTokenWebSocketRequestOrdersSubscription = WebSocketRequestOrdersSubscription & {
+  wallet: string;
+};
+
+export interface WebSocketRequestCandlesSubscription {
   name: 'candles';
   markets?: string[];
   interval: keyof typeof enums.CandleInterval;
 }
 
-export interface L1OrderBookSubscription {
+export interface WebSocketRequestL1OrderBookSubscription {
   name: 'l1orderbook';
   markets?: string[];
 }
 
-export interface L2OrderBookSubscription {
+export interface WebSocketRequestL2OrderBookSubscription {
   name: 'l2orderbook';
   markets?: string[];
 }
 
-export interface TickersSubscription {
+export interface WebSocketRequestTickersSubscription {
   name: 'tickers';
   markets?: string[];
 }
 
-export interface TradesSubscription {
+export interface WebSocketRequestTradesSubscription {
   name: 'trades';
   markets?: string[];
 }
 
-export type AuthenticatedSubscription =
-  | BalancesSubscription
-  | OrdersSubscription;
+export type WebSocketRequestAuthenticatedSubscription =
+  | WebSocketRequestBalancesSubscription
+  | WebSocketRequestOrdersSubscription;
 
-export type UnauthenticatedSubscription =
-  | CandlesSubscription
-  | L1OrderBookSubscription
-  | L2OrderBookSubscription
-  | TickersSubscription
-  | TradesSubscription;
+export type WebSocketRequestUnauthenticatedSubscription =
+  | WebSocketRequestCandlesSubscription
+  | WebSocketRequestL1OrderBookSubscription
+  | WebSocketRequestL2OrderBookSubscription
+  | WebSocketRequestTickersSubscription
+  | WebSocketRequestTradesSubscription;
 
-export type Subscription =
-  | AuthenticatedSubscription
-  | UnauthenticatedSubscription;
+export type WebSocketRequestSubscription =
+  | WebSocketRequestAuthenticatedSubscription
+  | WebSocketRequestUnauthenticatedSubscription;
 
-export type SubscribeRequest = {
+export type AuthTokenWebSocketRequestAuthenticatedSubscription =
+  | AuthTokenWebSocketRequestBalancesSubscription
+  | AuthTokenWebSocketRequestOrdersSubscription;
+
+export type AuthTokenWebSocketRequestSubscription =
+  | AuthTokenWebSocketRequestAuthenticatedSubscription
+  | WebSocketRequestUnauthenticatedSubscription;
+
+export type WebSocketRequestSubscribe = {
   method: 'subscribe';
   cid?: string;
   token?: string;
   markets?: string[];
-  subscriptions: (Subscription | SubscriptionName)[];
+  subscriptions: (
+    | WebSocketRequestSubscription
+    | WebSocketRequestSubscriptionName
+  )[];
 };
 
-export type UnsubscribeSubscription = Partial<Subscription>;
+export type WebSocketRequestUnsubscribeSubscription = Partial<
+  WebSocketRequestSubscription
+>;
 
-export interface UnsubscribeRequest {
+export interface WebSocketRequestUnsubscribe {
   method: 'unsubscribe';
   cid?: string;
   markets?: string[];
-  subscriptions?: (UnsubscribeSubscription | SubscriptionName)[];
+  subscriptions?: (
+    | WebSocketRequestUnsubscribeSubscription
+    | WebSocketRequestSubscriptionName
+  )[];
 }
 
-export interface SubscriptionsRequest {
+export interface WebSocketRequestSubscriptions {
   method: 'subscriptions';
   cid?: string;
 }
 
-export type Request =
-  | SubscribeRequest
-  | SubscriptionsRequest
-  | UnsubscribeRequest;
+export type WebSocketRequest =
+  | WebSocketRequestSubscribe
+  | WebSocketRequestSubscriptions
+  | WebSocketRequestUnsubscribe;

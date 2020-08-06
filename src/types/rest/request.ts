@@ -1,77 +1,82 @@
 import * as enums from '../enums';
 import { XOR } from '../utils';
 
-interface CancelOrdersBase {
+interface RestRequestCancelOrdersBase {
   nonce: string;
   wallet: string;
 }
 
-export interface CancelOrder extends CancelOrdersBase {
+export interface RestRequestCancelOrder extends RestRequestCancelOrdersBase {
   orderId: string;
 }
 
 /**
- * @typedef {Object} request.CancelOrders
+ * @typedef {Object} RestRequestCancelOrders
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} [orderId] - Single orderId or clientOrderId to cancel; prefix client-provided ids with client:
  * @property {string} [market] - Base-quote pair e.g. 'IDEX-ETH'
  */
-export interface CancelOrders extends CancelOrdersBase {
+export interface RestRequestCancelOrders extends RestRequestCancelOrdersBase {
   market?: string;
 }
 
-export interface CancelOrdersBody {
-  parameters: XOR<CancelOrder, CancelOrders>;
+export type RestRequestCancelOrderOrOrders = XOR<
+  RestRequestCancelOrder,
+  RestRequestCancelOrders
+>;
+
+export interface RestRequestCancelOrdersBody {
+  parameters: RestRequestCancelOrderOrOrders;
   signature: string;
 }
 
-interface FindByWallet {
+interface RestRequestFindByWallet {
   nonce: string;
   wallet: string;
 }
 
-export interface FindWithPagination {
+export interface RestRequestFindWithPagination {
   start?: number;
   end?: number;
   limit?: number;
 }
 
 /**
- * @typedef {Object} request.FindBalances
+ * @typedef {Object} RestRequestFindBalances
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} [asset[]] - Asset symbols
  */
-export interface FindBalances extends FindByWallet {
+export interface RestRequestFindBalances extends RestRequestFindByWallet {
   asset?: string[];
 }
 
 /**
- * @typedef {Object} request.FindCandles
+ * @typedef {Object} RestRequestFindCandles
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
  * @property {CandleInterval} interval - Time interval for data
  * @property {number} [start] - Starting timestamp (inclusive)
  * @property {number} [end] - Ending timestamp (inclusive)
  * @property {number} [limit=50] - Max results to return from 1-1000
  */
-export interface FindCandles extends FindWithPagination {
+export interface RestRequestFindCandles extends RestRequestFindWithPagination {
   market: string;
   interval: keyof typeof enums.CandleInterval;
 }
 
 /**
- * @typedef {Object} request.FindDeposit
+ * @typedef {Object} RestRequestFindDeposit
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} depositId
  */
-export interface FindDeposit extends FindByWallet {
+export interface RestRequestFindDeposit extends RestRequestFindByWallet {
   depositId: string;
 }
 
 /**
- * @typedef {Object} request.FindDeposits
+ * @typedef {Object} RestRequestFindDeposits
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} [asset] - Asset by symbol
@@ -80,23 +85,25 @@ export interface FindDeposit extends FindByWallet {
  * @property {number} [limit=50] - Max results to return from 1-1000
  * @property {string} [fromId] - Fills created at the same timestamp or after fillId
  */
-export interface FindDeposits extends FindByWallet, FindWithPagination {
+export interface RestRequestFindDeposits
+  extends RestRequestFindByWallet,
+    RestRequestFindWithPagination {
   asset?: string;
   fromId?: string;
 }
 
 /**
- * @typedef {Object} request.FindFill
+ * @typedef {Object} RestRequestFindFill
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} fillId
  */
-export interface FindFill extends FindByWallet {
+export interface RestRequestFindFill extends RestRequestFindByWallet {
   fillId: string;
 }
 
 /**
- * @typedef {Object} request.FindFills
+ * @typedef {Object} RestRequestFindFills
  * @property {string} nonce - UUIDv1
  * @property {string} wallet - Ethereum wallet address
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
@@ -105,34 +112,36 @@ export interface FindFill extends FindByWallet {
  * @property {number} [limit=50] - Max results to return from 1-1000
  * @property {string} [fromId] - Fills created at the same timestamp or after fillId
  */
-export interface FindFills extends FindByWallet, FindWithPagination {
+export interface RestRequestFindFills
+  extends RestRequestFindByWallet,
+    RestRequestFindWithPagination {
   market?: string;
   fromId?: string;
 }
 
 /**
- * @typedef {Object} request.FindMarkets
+ * @typedef {Object} RestRequestFindMarkets
  * @property {string} market - Target market, all markets are returned if omitted
  * @property {boolean} [regionOnly=false] - true only returns markets available in the geographic region of the request
  * @property {string} depositId
  */
-export interface FindMarkets {
+export interface RestRequestFindMarkets {
   market?: string;
   regionOnly?: boolean;
 }
 
 /**
- * @typedef {Object} request.FindOrder
+ * @typedef {Object} RestRequestFindOrder
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} orderId - Single orderId or clientOrderId to cancel; prefix client-provided ids with client:
  */
-export interface FindOrder extends FindByWallet {
+export interface RestRequestFindOrder extends RestRequestFindByWallet {
   orderId: string;
 }
 
 /**
- * @typedef {Object} request.FindOrders
+ * @typedef {Object} RestRequestFindOrders
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} [market] - Base-quote pair e.g. 'IDEX-ETH'
@@ -142,37 +151,39 @@ export interface FindOrder extends FindByWallet {
  * @property {number} [limit=50] - Max results to return from 1-1000
  * @property {string} [fromId] - orderId of the earliest (oldest) order, only applies if orderId is absent
  */
-export interface FindOrders extends FindByWallet, FindWithPagination {
+export interface RestRequestFindOrders
+  extends RestRequestFindByWallet,
+    RestRequestFindWithPagination {
   market?: string;
   closed?: boolean;
   fromId?: string;
 }
 
 /**
- * @typedef {Object} request.FindTrades
+ * @typedef {Object} RestRequestFindTrades
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
  * @property {number} [start] - Starting timestamp (inclusive)
  * @property {number} [end] - Ending timestamp (inclusive)
  * @property {number} [limit] - Max results to return from 1-1000
  * @property {string} [fromId] - Trades created at the same timestamp or after fromId
  */
-export interface FindTrades extends FindWithPagination {
+export interface RestRequestFindTrades extends RestRequestFindWithPagination {
   market?: string;
   fromId?: string;
 }
 
 /**
- * @typedef {Object} request.FindWithdrawal
+ * @typedef {Object} RestRequestFindWithdrawal
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} withdrawalId
  */
-export interface FindWithdrawal extends FindByWallet {
+export interface RestRequestFindWithdrawal extends RestRequestFindByWallet {
   withdrawalId: string;
 }
 
 /**
- * @typedef {Object} request.FindWithdrawals
+ * @typedef {Object} RestRequestFindWithdrawals
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} [asset] - Asset by symbol
@@ -182,13 +193,15 @@ export interface FindWithdrawal extends FindByWallet {
  * @property {number} [limit=50] - Max results to return from 1-1000
  * @property {string} [fromId] - Withdrawals created after the fromId
  */
-export interface FindWithdrawals extends FindByWallet, FindWithPagination {
+export interface RestRequestFindWithdrawals
+  extends RestRequestFindByWallet,
+    RestRequestFindWithPagination {
   asset?: string;
   assetContractAddress?: string;
   fromId?: string;
 }
 
-export interface AllOrderParameters {
+export interface RestRequestAllOrderParameters {
   nonce: string;
   wallet: string;
   market: string;
@@ -201,74 +214,78 @@ export interface AllOrderParameters {
 }
 
 // Limit
-export interface LimitOrder extends AllOrderParameters {
+export interface RestRequestLimitOrder extends RestRequestAllOrderParameters {
   type: 'limit' | 'limitMaker';
   price: string;
 }
 
 // Market
-export interface MarketOrder extends AllOrderParameters {
+export interface RestRequestMarketOrder extends RestRequestAllOrderParameters {
   type: 'market';
 }
 
 // Stop-loss market
-export interface StopLossOrder extends AllOrderParameters {
+export interface RestRequestStopLossOrder
+  extends RestRequestAllOrderParameters {
   type: 'stopLoss';
   stopPrice: string;
 }
 
 // Stop-loss limit
-export interface StopLossLimitOrder extends AllOrderParameters {
+export interface RestRequestStopLossLimitOrder
+  extends RestRequestAllOrderParameters {
   type: 'stopLossLimit';
   price: string;
   stopPrice: string;
 }
 
 // Take-profit
-export interface TakeProfitOrder extends AllOrderParameters {
+export interface RestRequestTakeProfitOrder
+  extends RestRequestAllOrderParameters {
   type: 'takeProfit';
   stopPrice: string;
 }
 
 // Take-profit limit
-export interface TakeProfitLimitOrder extends AllOrderParameters {
+export interface RestRequestTakeProfitLimitOrder
+  extends RestRequestAllOrderParameters {
   type: 'takeProfitLimit';
   price: string;
   stopPrice: string;
 }
 
 // Quantity can be specified in units of base or quote asset, but not both
-export type OrderByBaseQuantity = (
-  | LimitOrder
-  | MarketOrder
-  | StopLossOrder
-  | StopLossLimitOrder
-  | TakeProfitOrder
-  | TakeProfitLimitOrder
-) & { quantity: string };
+export type RestRequestOrderByBaseQuantity = (
+  | RestRequestLimitOrder
+  | RestRequestMarketOrder
+  | RestRequestStopLossOrder
+  | RestRequestStopLossLimitOrder
+  | RestRequestTakeProfitOrder
+  | RestRequestTakeProfitLimitOrder
+) & { quantity: string; quoteOrderQuantity?: undefined };
 
-export type OrderByQuoteQuantity = (
-  | LimitOrder
-  | MarketOrder
-  | StopLossOrder
-  | StopLossLimitOrder
-  | TakeProfitOrder
-  | TakeProfitLimitOrder
-) & { quoteOrderQuantity: string };
+export type RestRequestOrderByQuoteQuantity = (
+  | RestRequestLimitOrder
+  | RestRequestMarketOrder
+  | RestRequestStopLossOrder
+  | RestRequestStopLossLimitOrder
+  | RestRequestTakeProfitOrder
+  | RestRequestTakeProfitLimitOrder
+) & { quoteOrderQuantity: string; quantity?: undefined };
 
-export type OrderWithPrice =
-  | LimitOrder
-  | StopLossLimitOrder
-  | TakeProfitLimitOrder;
+export type RestRequestOrderWithPrice =
+  | RestRequestLimitOrder
+  | RestRequestStopLossLimitOrder
+  | RestRequestTakeProfitLimitOrder;
 
-export type OrderWithStopPrice =
-  | StopLossOrder
-  | StopLossLimitOrder
-  | TakeProfitLimitOrder
-  | TakeProfitLimitOrder;
+export type RestRequestOrderWithStopPrice =
+  | RestRequestStopLossOrder
+  | RestRequestStopLossLimitOrder
+  | RestRequestTakeProfitLimitOrder
+  | RestRequestTakeProfitLimitOrder;
 
 /**
- * @typedef {Object} request.Order
+ * @typedef {Object} RestRequestOrder
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
@@ -283,14 +300,17 @@ export type OrderWithStopPrice =
  * @property {OrderSelfTradePrevention} [selfTradePrevention=decreaseAndCancel] - Defaults to decrease and cancel
  * @property {number} [cancelAfter] - Timestamp after which a standing limit order will be automatically cancelled; gtt tif only
  */
-export type Order = XOR<OrderByBaseQuantity, OrderByQuoteQuantity>;
+export type RestRequestOrder = XOR<
+  RestRequestOrderByBaseQuantity,
+  RestRequestOrderByQuoteQuantity
+>;
 
-export interface CreateOrderBody {
-  parameters: Order;
+export interface RestRequestCreateOrderBody {
+  parameters: RestRequestOrder;
   signature: string;
 }
 
-interface WithdrawalBase {
+interface RestRequestWithdrawalBase {
   nonce: string;
   wallet: string;
   quantity: string;
@@ -298,26 +318,33 @@ interface WithdrawalBase {
   autoDispatchEnabled?: boolean;
 }
 
-export interface WithdrawalBySymbol extends WithdrawalBase {
+export interface RestRequestWithdrawalBySymbol
+  extends RestRequestWithdrawalBase {
   asset: string;
+  assetContractAddress?: undefined;
 }
 
-export interface WithdrawalByAddress extends WithdrawalBase {
+export interface RestRequestWithdrawalByAddress
+  extends RestRequestWithdrawalBase {
   assetContractAddress: string;
+  asset?: undefined;
 }
 
 /**
- * @typedef {Object} request.Withdrawal
+ * @typedef {Object} RestRequestWithdrawal
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} [asset] - Asset by symbol
  * @property {string} [assetContractAddress] - Asset by contract address
  * @property {string} quantity - Withdrawal amount in asset terms, fees are taken from this value
  */
-export type Withdrawal = XOR<WithdrawalBySymbol, WithdrawalByAddress>;
+export type RestRequestWithdrawal = XOR<
+  RestRequestWithdrawalBySymbol,
+  RestRequestWithdrawalByAddress
+>;
 
-export interface CreateWithdrawalBody {
-  parameters: Withdrawal;
+export interface RestRequestCreateWithdrawalBody {
+  parameters: RestRequestWithdrawal;
   signature: string;
 }
 
