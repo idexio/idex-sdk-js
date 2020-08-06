@@ -94,4 +94,3 @@ toc:
       - MessageSigner
       - createAssociateWalletSignature
   - name: Misc Types & Utilities
-    children:

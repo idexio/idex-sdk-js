@@ -336,7 +336,7 @@ export class RestAuthenticatedClient {
    * @see https://docs.idex.io/#get-orders
    *
    * @param {RestRequestFindOrder} findOrder
-   * @return {Promise<RestResponseOrder>}
+   * @returns {Promise<RestResponseOrder>}
    */
   public async getOrder(
     findOrder: types.RestRequestFindOrder,
@@ -350,7 +350,7 @@ export class RestAuthenticatedClient {
    * @see https://docs.idex.io/#cancel-order
    *
    * @param {RestRequestFindOrders} findOrders
-   * @return {Promise<RestResponseOrder[]>}
+   * @returns {Promise<RestResponseOrder[]>}
    */
   public async getOrders(
     findOrders: types.RestRequestFindOrders,

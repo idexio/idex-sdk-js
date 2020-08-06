@@ -258,6 +258,8 @@ export class WebSocketClient {
    * Library will automatically refresh user's wallet auth tokens for you.
    *
    * See {@link https://docs.idex.io/#get-authentication-token|API specification}
+   *
+   * @param {AuthTokenWebSocketRequestAuthenticatedSubscription[]} subscriptions
    */
   public subscribeAuthenticated(
     subscriptions: types.AuthTokenWebSocketRequestAuthenticatedSubscription[],
@@ -267,6 +269,8 @@ export class WebSocketClient {
 
   /**
    * Subscribe which only can be used on non-authenticated subscriptions
+   *
+   * @param {WebSocketRequestUnauthenticatedSubscription[]} subscriptions
    */
   public subscribeUnauthenticated(
     subscriptions: types.WebSocketRequestUnauthenticatedSubscription[],
