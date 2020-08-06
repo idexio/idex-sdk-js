@@ -39,8 +39,15 @@ In-depth usage documentation by endpoint is [available here](https://github.com/
 
 ## Contracts
 
-View the provided [contract](https://github.com/idexio/idex-sdk-js/blob/master/contracts/Signatures.sol) for a
-corresponding Solidity implementation of order signature verification.
+Included in the `contracts/` directory are the Solidity [source](https://github.com/idexio/idex-sdk-js/blob/master/contracts/SandboxToken.sol)
+and corresponding [ABI](https://github.com/idexio/idex-sdk-js/blob/master/contracts/SandboxToken.abi.json) for the
+[testnet sandbox](https://docs.idex.io/#sandbox) ERC-20 tokens, which feature a [faucet](https://docs.idex.io/#faucets)
+function for dispensing tokens.
+
+See the [idex-contracts](https://github.com/idexio/idex-contracts) repo for a reference
+[Solidity implementation](https://github.com/idexio/idex-contracts/blob/master/contracts/libraries/Signatures.sol) of
+order and withdrawal signature verification that exactly mirrors the [Javascript implementation](https://github.com/idexio/idex-sdk-js/blob/main/src/signatures.ts)
+found in this repo.
 
 ## License
 
