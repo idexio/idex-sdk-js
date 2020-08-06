@@ -59,6 +59,9 @@ jobs:
         run: yarn --frozen-lockfile --prefer-offline
       - name: Build Library
         run: yarn build
+      # Build Documentation which will be commited by semantic-release
+      - name: Build Documentation
+        run: yarn documentation
       - name: Semantic Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -8,9 +8,9 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "npm-run-all -s clean -s build:*",
-    "build:documentation": "npx documentation readme src/** --markdown-toc-max-depth 3 --readme-file=API.md --section=API --parse-extension ts --shallow --resolve node --format remark --config documentation.yaml",
     "build:tsc": "npx tsc",
     "clean": "rm -rf dist",
+    "documentation": "npx documentation readme src/** --markdown-toc-max-depth 3 --readme-file=API.md --section=API --parse-extension ts --shallow --resolve node --format remark --config documentation.yaml",
     "lint": "eslint 'src/**/*.ts'",
     "lint:fix": "eslint 'src/**/*.ts' --ext .ts --fix",
     "lint:fix:package": "pretty-quick --pattern package.json",
