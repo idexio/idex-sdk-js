@@ -37,9 +37,7 @@ export const privateKeySigner = function getPrivateKeyMessageSigner(
     );
 };
 
-export const orderHash = function getPlaceOrderWalletHash(
-  order: RestRequestOrder,
-): string {
+export function createOrderSignature(order: RestRequestOrder): string {
   return solidityHashOfParams([
     ['uint8', constants.ORDER_SIGNATURE_HASH_VERSION],
     ['uint128', uuidToUint8Array(order.nonce)],
@@ -64,7 +62,7 @@ export const orderHash = function getPlaceOrderWalletHash(
     ],
     ['uint64', order.cancelAfter || 0],
   ]);
-};
+}
 
 type TypeValuePairings = {
   string: string;
@@ -75,7 +73,7 @@ type TypeValuePairings = {
   bool: boolean;
 };
 
-export const cancelOrderHash = function getCancelOrderWalletHash(
+export function createCancelOrderSignature(
   parameters: RestRequestCancelOrderOrOrders,
 ): string {
   // Validate either single order or multiple orders
@@ -97,9 +95,9 @@ export const cancelOrderHash = function getCancelOrderWalletHash(
       (isRestRequestCancelOrders(parameters) ? parameters.market : '') ?? '',
     ],
   ]);
-};
+}
 
-export const withdrawalHash = function getWithdrawalWalletHash(
+export function createWithdrawalSignature(
   withdrawal: RestRequestWithdrawal,
 ): string {
   if (
@@ -120,12 +118,12 @@ export const withdrawalHash = function getWithdrawalWalletHash(
     ['string', withdrawal.quantity],
     ['bool', true], // Auto-dispatch
   ]);
-};
+}
 
 /**
  * Generates the signature for the associate wallet request
  */
-export function associateWalletHash(
+export function createAssociateWalletSignature(
   associate: RestRequestAssociateWallet,
 ): string {
   if (!associate.wallet || !associate.nonce) {

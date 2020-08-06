@@ -147,7 +147,9 @@ export class RestAuthenticatedClient {
     return (
       await this.post('/wallets', {
         parameters: associate,
-        signature: await signer(signatures.associateWalletHash(associate)),
+        signature: await signer(
+          signatures.createAssociateWalletSignature(associate),
+        ),
       })
     ).data;
   }
@@ -187,7 +189,7 @@ export class RestAuthenticatedClient {
     return (
       await this.post('/orders', {
         parameters: order,
-        signature: await signer(signatures.orderHash(order)),
+        signature: await signer(signatures.createOrderSignature(order)),
       })
     ).data;
   }
@@ -225,7 +227,7 @@ export class RestAuthenticatedClient {
     return (
       await this.post('/orders/test', {
         parameters: order,
-        signature: await signer(signatures.orderHash(order)),
+        signature: await signer(signatures.createOrderSignature(order)),
       })
     ).data;
   }
@@ -269,7 +271,9 @@ export class RestAuthenticatedClient {
     return (
       await this.delete('/orders', {
         parameters: cancelOrder,
-        signature: await signer(signatures.cancelOrderHash(cancelOrder)),
+        signature: await signer(
+          signatures.createCancelOrderSignature(cancelOrder),
+        ),
       })
     ).data;
   }
@@ -311,7 +315,9 @@ export class RestAuthenticatedClient {
     return (
       await this.delete('/orders', {
         parameters: cancelOrders,
-        signature: await signer(signatures.cancelOrderHash(cancelOrders)),
+        signature: await signer(
+          signatures.createCancelOrderSignature(cancelOrders),
+        ),
       })
     ).data;
   }
@@ -439,7 +445,9 @@ export class RestAuthenticatedClient {
     return (
       await this.post('/withdrawals', {
         parameters: withdrawal,
-        signature: await signer(signatures.withdrawalHash(withdrawal)),
+        signature: await signer(
+          signatures.createWithdrawalSignature(withdrawal),
+        ),
       })
     ).data;
   }
