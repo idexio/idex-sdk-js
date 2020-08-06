@@ -1,3 +1,5 @@
+import { WebSocketRequestSubscription } from '../../types';
+
 type TokenValue = {
   fetching?: Promise<string>;
   expiration: number;
@@ -71,3 +73,17 @@ export default class WebsocketTokenManager {
     return this.walletTokens[walletAddress]?.token || '';
   };
 }
+
+/*
+ * Wallet is used only to generate user's wallet auth token
+ * After we got token, we don't want to send wallet to the server
+ */
+export const removeWalletFromSdkSubscription = (
+  subscription: WebSocketRequestSubscription & { wallet?: string },
+): WebSocketRequestSubscription => {
+  const subscriptionWithoutWallet = { ...subscription };
+  if (subscriptionWithoutWallet.wallet) {
+    delete subscriptionWithoutWallet.wallet;
+  }
+  return subscriptionWithoutWallet;
+};

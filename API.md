@@ -60,8 +60,8 @@
     -   [RestResponseWithdrawal](#restresponsewithdrawal)
     -   [RestResponseAssociateWallet](#restresponseassociatewallet)
 -   [WebSocket Subscriptions](#websocket-subscriptions)
-    -   [WebSocketRequestOrdersSubscription](#websocketrequestorderssubscription)
-    -   [WebSocketRequestBalancesSubscription](#websocketrequestbalancessubscription)
+    -   [AuthTokenWebSocketRequestOrdersSubscription](#authtokenwebsocketrequestorderssubscription)
+    -   [AuthTokenWebSocketRequestBalancesSubscription](#authtokenwebsocketrequestbalancessubscription)
 -   [WebSocket Responses](#websocket-responses)
     -   [WebSocketResponseError](#websocketresponseerror)
     -   [WebSocketResponseSubscriptions](#websocketresponsesubscriptions)
@@ -666,7 +666,7 @@ See [API specification](https://docs.idex.io/#get-authentication-token)
 
 ###### Parameters
 
--   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.WebSocketRequestAuthenticatedSubscription>** 
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;types.AuthTokenWebSocketRequestAuthenticatedSubscription>** 
 
 Returns **void** 
 
@@ -1539,43 +1539,29 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 
 
-### WebSocketRequestOrdersSubscription
+### AuthTokenWebSocketRequestOrdersSubscription
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
 #### Properties
 
 -   `name` **`"orders"`** The name of the subscription
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
-     needed to get an updated `wsToken`.
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Orders subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
+     function when needed to get an updated `wsToken`.
      <br />
      **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
 
-#### wallet
-
-Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
- needed to get an updated `wsToken`.
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### WebSocketRequestBalancesSubscription
+### AuthTokenWebSocketRequestBalancesSubscription
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
 #### Properties
 
 -   `name` **`"balances"`** The name of the subscription
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
-     needed to get an updated `wsToken`.
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Balances subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
+     function when needed to get an updated `wsToken`.
      <br />
      **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
-
-#### wallet
-
-Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
- needed to get an updated `wsToken`.
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 ## WebSocket Responses
 

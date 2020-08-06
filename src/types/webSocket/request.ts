@@ -22,40 +22,37 @@ export type WebSocketRequestSubscriptionName =
   | keyof typeof WebSocketRequestUnauthenticatedSubscriptionName
   | keyof typeof WebSocketRequestAuthenticatedSubscriptionName;
 
-/**
- * @typedef {Object} WebSocketRequestBalancesSubscription
- * @property {'balances'} name - The name of the subscription
- * @property {string} wallet -
- *  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
- *  needed to get an updated `wsToken`.
- *  <br />
- *  **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
- *
- */
 export type WebSocketRequestBalancesSubscription = {
   name: 'balances';
-  /**
-   *  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
-   *  needed to get an updated `wsToken`.
-   */
-  wallet: string;
 };
 
 /**
- * @typedef {Object} WebSocketRequestOrdersSubscription
- * @property {'orders'} name - The name of the subscription
- * @property {string} wallet -
- *  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
- *  needed to get an updated `wsToken`.
+ * @typedef {Object} AuthTokenWebSocketRequestBalancesSubscription
+ * @property {'balances'} name - The name of the subscription
+ * @property {string} [wallet] -
+ *  Balances subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
+ *  function when needed to get an updated `wsToken`.
  *  <br />
  *  **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
  */
+export type AuthTokenWebSocketRequestBalancesSubscription = WebSocketRequestBalancesSubscription & {
+  wallet: string;
+};
+
 export type WebSocketRequestOrdersSubscription = {
   name: 'orders';
-  /**
-   *  Wallet to subscribe to.  This is fed to the `websocketAuthTokenFetch` function when
-   *  needed to get an updated `wsToken`.
-   */
+};
+
+/**
+ * @typedef {Object} AuthTokenWebSocketRequestOrdersSubscription
+ * @property {'orders'} name - The name of the subscription
+ * @property {string} [wallet] -
+ *  Orders subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
+ *  function when needed to get an updated `wsToken`.
+ *  <br />
+ *  **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
+ */
+export type AuthTokenWebSocketRequestOrdersSubscription = WebSocketRequestOrdersSubscription & {
   wallet: string;
 };
 
@@ -98,6 +95,14 @@ export type WebSocketRequestUnauthenticatedSubscription =
 
 export type WebSocketRequestSubscription =
   | WebSocketRequestAuthenticatedSubscription
+  | WebSocketRequestUnauthenticatedSubscription;
+
+export type AuthTokenWebSocketRequestAuthenticatedSubscription =
+  | AuthTokenWebSocketRequestBalancesSubscription
+  | AuthTokenWebSocketRequestOrdersSubscription;
+
+export type AuthTokenWebSocketRequestSubscription =
+  | AuthTokenWebSocketRequestAuthenticatedSubscription
   | WebSocketRequestUnauthenticatedSubscription;
 
 export type WebSocketRequestSubscribe = {
