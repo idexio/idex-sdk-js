@@ -205,6 +205,10 @@ export default class WebSocketClient {
       });
     }
 
+    if (authSubscriptions.length === 0) {
+      return;
+    }
+
     await Promise.all(
       authSubscriptions.map(
         async ({ wallet: walletAddress, ...subscription }) => {
