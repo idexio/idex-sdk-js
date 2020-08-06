@@ -83,7 +83,7 @@
 
 #### RestPublicClient
 
-[src/client/rest/public.ts:40-214](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/public.ts#L40-L214 "Source code on GitHub")
+[src/client/rest/public.ts:40-214](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/public.ts#L40-L214 "Source code on GitHub")
 
 Public REST API client
 
@@ -107,7 +107,7 @@ console.log(await publicClient.getTickers('IDEX-ETH'));
 
 ##### ping
 
-[src/client/rest/public.ts:77-79](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/public.ts#L77-L79 "Source code on GitHub")
+[src/client/rest/public.ts:77-79](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/public.ts#L77-L79 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-ping>
     **
@@ -118,7 +118,7 @@ Returns **{}**
 
 ##### getServerTime
 
-[src/client/rest/public.ts:88-90](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/public.ts#L88-L90 "Source code on GitHub")
+[src/client/rest/public.ts:88-90](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/public.ts#L88-L90 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-time>
     **
@@ -129,7 +129,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getExchangeInfo
 
-[src/client/rest/public.ts:99-101](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/public.ts#L99-L101 "Source code on GitHub")
+[src/client/rest/public.ts:99-101](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/public.ts#L99-L101 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-exchange>
     **
@@ -140,7 +140,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getAssets
 
-[src/client/rest/public.ts:110-112](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/public.ts#L110-L112 "Source code on GitHub")
+[src/client/rest/public.ts:110-112](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/public.ts#L110-L112 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-assets>
     **
@@ -151,7 +151,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getMarkets
 
-[src/client/rest/public.ts:122-126](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/public.ts#L122-L126 "Source code on GitHub")
+[src/client/rest/public.ts:122-126](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/public.ts#L122-L126 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-markets>
     **
@@ -166,7 +166,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getTickers
 
-[src/client/rest/public.ts:138-142](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/public.ts#L138-L142 "Source code on GitHub")
+[src/client/rest/public.ts:138-142](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/public.ts#L138-L142 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-tickers>
     **
@@ -181,7 +181,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getCandles
 
-[src/client/rest/public.ts:152-156](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/public.ts#L152-L156 "Source code on GitHub")
+[src/client/rest/public.ts:152-156](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/public.ts#L152-L156 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-candles>
     **
@@ -196,7 +196,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getTrades
 
-[src/client/rest/public.ts:166-170](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/public.ts#L166-L170 "Source code on GitHub")
+[src/client/rest/public.ts:166-170](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/public.ts#L166-L170 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-trades>
     **
@@ -211,7 +211,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getOrderBookLevel1
 
-[src/client/rest/public.ts:180-184](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/public.ts#L180-L184 "Source code on GitHub")
+[src/client/rest/public.ts:180-184](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/public.ts#L180-L184 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-order-books>
     **
@@ -226,7 +226,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getOrderBookLevel2
 
-[src/client/rest/public.ts:195-200](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/public.ts#L195-L200 "Source code on GitHub")
+[src/client/rest/public.ts:195-200](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/public.ts#L195-L200 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-order-books>
     **
@@ -242,7 +242,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### RestPublicClientOptions
 
-[src/client/rest/public.ts:18-22](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/public.ts#L11-L17 "Source code on GitHub")
+[src/client/rest/public.ts:18-22](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/public.ts#L11-L17 "Source code on GitHub")
 
 Public REST API client options
 
@@ -262,7 +262,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### RestAuthenticatedClient
 
-[src/client/rest/authenticated.ts:48-555](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L48-L555 "Source code on GitHub")
+[src/client/rest/authenticated.ts:48-555](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L48-L555 "Source code on GitHub")
 
 Authenticated API client
 
@@ -288,7 +288,7 @@ const authenticatedClient = new RestAuthenticatedClient({
 
 ##### getUser
 
-[src/client/rest/authenticated.ts:96-98](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L96-L98 "Source code on GitHub")
+[src/client/rest/authenticated.ts:96-98](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L96-L98 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-user-account>
     **
@@ -303,7 +303,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getWallets
 
-[src/client/rest/authenticated.ts:108-110](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L108-L110 "Source code on GitHub")
+[src/client/rest/authenticated.ts:108-110](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L108-L110 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-wallets>
     **
@@ -318,7 +318,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getBalances
 
-[src/client/rest/authenticated.ts:120-124](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L120-L124 "Source code on GitHub")
+[src/client/rest/authenticated.ts:120-124](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L120-L124 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-balances>
     **
@@ -333,7 +333,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### associateWallet
 
-[src/client/rest/authenticated.ts:148-160](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L148-L160 "Source code on GitHub")
+[src/client/rest/authenticated.ts:148-160](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L148-L160 "Source code on GitHub")
 
 -   **See: [GitHub](http://github.com)
     **
@@ -363,7 +363,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### createOrder
 
-[src/client/rest/authenticated.ts:187-201](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L187-L201 "Source code on GitHub")
+[src/client/rest/authenticated.ts:187-201](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L187-L201 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#create-order>
     **
@@ -396,7 +396,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### createTestOrder
 
-[src/client/rest/authenticated.ts:226-240](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L226-L240 "Source code on GitHub")
+[src/client/rest/authenticated.ts:226-240](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L226-L240 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#test-create-order>
     **
@@ -429,7 +429,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### cancelOrder
 
-[src/client/rest/authenticated.ts:271-287](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L271-L287 "Source code on GitHub")
+[src/client/rest/authenticated.ts:271-287](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L271-L287 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#cancel-order>
     **
@@ -468,7 +468,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### cancelOrders
 
-[src/client/rest/authenticated.ts:316-332](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L316-L332 "Source code on GitHub")
+[src/client/rest/authenticated.ts:316-332](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L316-L332 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#cancel-order>
     **
@@ -505,7 +505,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getOrder
 
-[src/client/rest/authenticated.ts:342-346](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L342-L346 "Source code on GitHub")
+[src/client/rest/authenticated.ts:342-346](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L342-L346 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-orders>
     **
@@ -520,7 +520,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getOrders
 
-[src/client/rest/authenticated.ts:356-360](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L356-L360 "Source code on GitHub")
+[src/client/rest/authenticated.ts:356-360](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L356-L360 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#cancel-order>
     **
@@ -535,7 +535,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getFill
 
-[src/client/rest/authenticated.ts:370-374](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L370-L374 "Source code on GitHub")
+[src/client/rest/authenticated.ts:370-374](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L370-L374 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-fills>
     **
@@ -550,7 +550,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getFills
 
-[src/client/rest/authenticated.ts:384-388](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L384-L388 "Source code on GitHub")
+[src/client/rest/authenticated.ts:384-388](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L384-L388 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-fills>
     **
@@ -565,7 +565,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getDeposit
 
-[src/client/rest/authenticated.ts:400-404](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L400-L404 "Source code on GitHub")
+[src/client/rest/authenticated.ts:400-404](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L400-L404 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-deposits>
     **
@@ -580,7 +580,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getDeposits
 
-[src/client/rest/authenticated.ts:414-418](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L414-L418 "Source code on GitHub")
+[src/client/rest/authenticated.ts:414-418](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L414-L418 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-deposits>
     **
@@ -595,7 +595,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### withdraw
 
-[src/client/rest/authenticated.ts:443-455](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L443-L455 "Source code on GitHub")
+[src/client/rest/authenticated.ts:443-455](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L443-L455 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#withdraw-funds>
     **
@@ -625,7 +625,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getWithdrawal
 
-[src/client/rest/authenticated.ts:465-469](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L465-L469 "Source code on GitHub")
+[src/client/rest/authenticated.ts:465-469](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L465-L469 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-withdrawals>
     **
@@ -640,7 +640,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getWithdrawals
 
-[src/client/rest/authenticated.ts:479-483](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L479-L483 "Source code on GitHub")
+[src/client/rest/authenticated.ts:479-483](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L479-L483 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-withdrawals>
     **
@@ -655,7 +655,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getWsToken
 
-[src/client/rest/authenticated.ts:495-497](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L495-L497 "Source code on GitHub")
+[src/client/rest/authenticated.ts:495-497](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L495-L497 "Source code on GitHub")
 
 -   **See: <https://docs.idex.io/#get-authentication-token>
     **
@@ -671,7 +671,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 #### RestAuthenticatedClientOptions
 
-[src/client/rest/authenticated.ts:22-28](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/rest/authenticated.ts#L13-L21 "Source code on GitHub")
+[src/client/rest/authenticated.ts:22-28](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/rest/authenticated.ts#L13-L21 "Source code on GitHub")
 
 Authenticated API client configuration options.
 
@@ -693,7 +693,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### WebSocketClient
 
-[src/client/webSocket/index.ts:62-373](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/webSocket/index.ts#L62-L373 "Source code on GitHub")
+[src/client/webSocket/index.ts:62-373](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/webSocket/index.ts#L62-L373 "Source code on GitHub")
 
 WebSocket API client
 
@@ -721,7 +721,7 @@ await webSocketClient.connect();
 
 ##### subscribeAuthenticated
 
-[src/client/webSocket/index.ts:264-268](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/webSocket/index.ts#L264-L268 "Source code on GitHub")
+[src/client/webSocket/index.ts:264-268](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/webSocket/index.ts#L264-L268 "Source code on GitHub")
 
 Strictly typed subscribe which only can be used on authenticated subscriptions.
 
@@ -738,7 +738,7 @@ Returns **void**
 
 ##### subscribeUnauthenticated
 
-[src/client/webSocket/index.ts:275-279](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/webSocket/index.ts#L275-L279 "Source code on GitHub")
+[src/client/webSocket/index.ts:275-279](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/webSocket/index.ts#L275-L279 "Source code on GitHub")
 
 Subscribe which only can be used on non-authenticated subscriptions
 
@@ -750,7 +750,7 @@ Returns **void**
 
 #### WebSocketClientOptions
 
-[src/client/webSocket/index.ts:35-40](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/client/webSocket/index.ts#L19-L34 "Source code on GitHub")
+[src/client/webSocket/index.ts:35-40](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/client/webSocket/index.ts#L19-L34 "Source code on GitHub")
 
 WebSocket API client options
 
@@ -776,61 +776,61 @@ Sets of named constants used as field types for several requests and responses
 
 ### CandleInterval
 
-[src/types/enums.ts:5-46](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L5-L46 "Source code on GitHub")
+[src/types/enums.ts:5-46](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L5-L46 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### 1m
 
-[src/types/enums.ts:10-10](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L10-L10 "Source code on GitHub")
+[src/types/enums.ts:10-10](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L10-L10 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### 5m
 
-[src/types/enums.ts:15-15](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L15-L15 "Source code on GitHub")
+[src/types/enums.ts:15-15](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L15-L15 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### 15m
 
-[src/types/enums.ts:20-20](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L20-L20 "Source code on GitHub")
+[src/types/enums.ts:20-20](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L20-L20 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### 30m
 
-[src/types/enums.ts:25-25](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L25-L25 "Source code on GitHub")
+[src/types/enums.ts:25-25](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L25-L25 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### 1h
 
-[src/types/enums.ts:30-30](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L30-L30 "Source code on GitHub")
+[src/types/enums.ts:30-30](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L30-L30 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### 6h
 
-[src/types/enums.ts:35-35](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L35-L35 "Source code on GitHub")
+[src/types/enums.ts:35-35](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L35-L35 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### 1d
 
-[src/types/enums.ts:40-40](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L40-L40 "Source code on GitHub")
+[src/types/enums.ts:40-40](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L40-L40 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 ### EthTransactionStatus
 
-[src/types/enums.ts:52-68](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L52-L68 "Source code on GitHub")
+[src/types/enums.ts:52-68](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L52-L68 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### pending
 
-[src/types/enums.ts:57-57](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L57-L57 "Source code on GitHub")
+[src/types/enums.ts:57-57](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L57-L57 "Source code on GitHub")
 
 Either not yet submitted or not yet mined
 
@@ -838,7 +838,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### mined
 
-[src/types/enums.ts:62-62](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L62-L62 "Source code on GitHub")
+[src/types/enums.ts:62-62](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L62-L62 "Source code on GitHub")
 
 Mined, no need for any block confirmation delay
 
@@ -846,7 +846,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### failed
 
-[src/types/enums.ts:67-67](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L67-L67 "Source code on GitHub")
+[src/types/enums.ts:67-67](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L67-L67 "Source code on GitHub")
 
 Transaction reverted
 
@@ -854,13 +854,13 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### Liquidity
 
-[src/types/enums.ts:74-85](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L74-L85 "Source code on GitHub")
+[src/types/enums.ts:74-85](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L74-L85 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### maker
 
-[src/types/enums.ts:79-79](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L79-L79 "Source code on GitHub")
+[src/types/enums.ts:79-79](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L79-L79 "Source code on GitHub")
 
 Maker provides liquidity
 
@@ -868,7 +868,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### taker
 
-[src/types/enums.ts:84-84](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L84-L84 "Source code on GitHub")
+[src/types/enums.ts:84-84](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L84-L84 "Source code on GitHub")
 
 Taker removes liquidity
 
@@ -876,13 +876,13 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### MarketStatus
 
-[src/types/enums.ts:91-107](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L91-L107 "Source code on GitHub")
+[src/types/enums.ts:91-107](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L91-L107 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### inactive
 
-[src/types/enums.ts:96-96](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L96-L96 "Source code on GitHub")
+[src/types/enums.ts:96-96](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L96-L96 "Source code on GitHub")
 
 No orders or cancels accepted
 
@@ -890,7 +890,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### cancelsOnly
 
-[src/types/enums.ts:101-101](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L101-L101 "Source code on GitHub")
+[src/types/enums.ts:101-101](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L101-L101 "Source code on GitHub")
 
 Cancels accepted but not trades
 
@@ -898,7 +898,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### active
 
-[src/types/enums.ts:106-106](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L106-L106 "Source code on GitHub")
+[src/types/enums.ts:106-106](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L106-L106 "Source code on GitHub")
 
 Trades and cancels accepted
 
@@ -906,13 +906,13 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### OrderSelfTradePrevention
 
-[src/types/enums.ts:113-137](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L113-L137 "Source code on GitHub")
+[src/types/enums.ts:113-137](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L113-L137 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### dc
 
-[src/types/enums.ts:120-120](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L120-L120 "Source code on GitHub")
+[src/types/enums.ts:120-120](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L120-L120 "Source code on GitHub")
 
 Decrement And Cancel (DC) - When two orders from the same user cross, the smaller order will
 be canceled and the larger order size will be decremented by the smaller order size. If the two
@@ -922,7 +922,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### co
 
-[src/types/enums.ts:125-125](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L125-L125 "Source code on GitHub")
+[src/types/enums.ts:125-125](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L125-L125 "Source code on GitHub")
 
 Cancel Oldest (CO) - Cancel the older (maker) order in full
 
@@ -930,7 +930,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### cn
 
-[src/types/enums.ts:131-131](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L131-L131 "Source code on GitHub")
+[src/types/enums.ts:131-131](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L131-L131 "Source code on GitHub")
 
 Cancel Newest (CN) - Cancel the newer, taker order and leave the older, resting order on the
 order book. This is the only valid option when time-in-force is set to fill or kill
@@ -939,7 +939,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### cb
 
-[src/types/enums.ts:136-136](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L136-L136 "Source code on GitHub")
+[src/types/enums.ts:136-136](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L136-L136 "Source code on GitHub")
 
 Cancel Both (CB) - Cancel both orders
 
@@ -947,31 +947,31 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### OrderSide
 
-[src/types/enums.ts:143-148](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L143-L148 "Source code on GitHub")
+[src/types/enums.ts:143-148](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L143-L148 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### buy
 
-[src/types/enums.ts:145-145](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L145-L145 "Source code on GitHub")
+[src/types/enums.ts:145-145](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L145-L145 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### sell
 
-[src/types/enums.ts:147-147](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L147-L147 "Source code on GitHub")
+[src/types/enums.ts:147-147](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L147-L147 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 ### OrderStateChange
 
-[src/types/enums.ts:154-183](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L154-L183 "Source code on GitHub")
+[src/types/enums.ts:154-183](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L154-L183 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### new
 
-[src/types/enums.ts:160-160](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L160-L160 "Source code on GitHub")
+[src/types/enums.ts:160-160](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L160-L160 "Source code on GitHub")
 
 An order without a stop has been accepted into the trading engine.
 Will not be sent as a discrete change event if the order matches on execution.
@@ -980,7 +980,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### activated
 
-[src/types/enums.ts:166-166](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L166-L166 "Source code on GitHub")
+[src/types/enums.ts:166-166](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L166-L166 "Source code on GitHub")
 
 A stop order has accepted into the trading engine, once triggered,
 will go through other normal events starting with new
@@ -989,7 +989,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### fill
 
-[src/types/enums.ts:172-172](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L172-L172 "Source code on GitHub")
+[src/types/enums.ts:172-172](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L172-L172 "Source code on GitHub")
 
 An order has generated a fill, both on maker and taker sides.
 Will be the first change event sent if an order matches on execution.
@@ -998,7 +998,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### cancelled
 
-[src/types/enums.ts:177-177](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L177-L177 "Source code on GitHub")
+[src/types/enums.ts:177-177](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L177-L177 "Source code on GitHub")
 
 An order is cancelled by the user.
 
@@ -1006,7 +1006,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### expired
 
-[src/types/enums.ts:182-182](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L182-L182 "Source code on GitHub")
+[src/types/enums.ts:182-182](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L182-L182 "Source code on GitHub")
 
 LIMIT FOK orders with no fill, LIMIT IOC or MARKET orders that partially fill, GTT orders past time.
 
@@ -1014,13 +1014,13 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### OrderStatus
 
-[src/types/enums.ts:189-235](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L189-L235 "Source code on GitHub")
+[src/types/enums.ts:189-235](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L189-L235 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### active
 
-[src/types/enums.ts:194-194](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L194-L194 "Source code on GitHub")
+[src/types/enums.ts:194-194](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L194-L194 "Source code on GitHub")
 
 Stop order exists on the order book
 
@@ -1028,7 +1028,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### open
 
-[src/types/enums.ts:199-199](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L199-L199 "Source code on GitHub")
+[src/types/enums.ts:199-199](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L199-L199 "Source code on GitHub")
 
 Limit order exists on the order book
 
@@ -1036,7 +1036,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### partiallyFilled
 
-[src/types/enums.ts:204-204](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L204-L204 "Source code on GitHub")
+[src/types/enums.ts:204-204](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L204-L204 "Source code on GitHub")
 
 Limit order has completed fills but has remaining open quantity
 
@@ -1044,7 +1044,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### filled
 
-[src/types/enums.ts:209-209](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L209-L209 "Source code on GitHub")
+[src/types/enums.ts:209-209](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L209-L209 "Source code on GitHub")
 
 Limit order is completely filled and is no longer on the book; market order was filled
 
@@ -1052,7 +1052,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### cancelled
 
-[src/types/enums.ts:214-214](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L214-L214 "Source code on GitHub")
+[src/types/enums.ts:214-214](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L214-L214 "Source code on GitHub")
 
 Limit order was cancelled prior to execution completion but may be partially filled
 
@@ -1060,7 +1060,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### rejected
 
-[src/types/enums.ts:219-219](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L219-L219 "Source code on GitHub")
+[src/types/enums.ts:219-219](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L219-L219 "Source code on GitHub")
 
 Order was rejected by the trading engine
 
@@ -1068,7 +1068,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### expired
 
-[src/types/enums.ts:224-224](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L224-L224 "Source code on GitHub")
+[src/types/enums.ts:224-224](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L224-L224 "Source code on GitHub")
 
 GTT limit order expired prior to execution completion but may be partially filled
 
@@ -1076,7 +1076,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### testOnlyAccepted
 
-[src/types/enums.ts:229-229](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L229-L229 "Source code on GitHub")
+[src/types/enums.ts:229-229](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L229-L229 "Source code on GitHub")
 
 Order submitted to the test endpoint and accepted by the trading engine, not executed
 
@@ -1084,7 +1084,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### testOnlyRejected
 
-[src/types/enums.ts:234-234](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L234-L234 "Source code on GitHub")
+[src/types/enums.ts:234-234](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L234-L234 "Source code on GitHub")
 
 Order submitted to the test endpoint and rejected by validation or the trading engine, not executed
 
@@ -1092,13 +1092,13 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### OrderTimeInForce
 
-[src/types/enums.ts:241-262](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L241-L262 "Source code on GitHub")
+[src/types/enums.ts:241-262](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L241-L262 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### gtc
 
-[src/types/enums.ts:246-246](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L246-L246 "Source code on GitHub")
+[src/types/enums.ts:246-246](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L246-L246 "Source code on GitHub")
 
 Good until cancelled (default)
 
@@ -1106,7 +1106,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### gtt
 
-[src/types/enums.ts:251-251](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L251-L251 "Source code on GitHub")
+[src/types/enums.ts:251-251](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L251-L251 "Source code on GitHub")
 
 Good until time
 
@@ -1114,7 +1114,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### ioc
 
-[src/types/enums.ts:256-256](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L256-L256 "Source code on GitHub")
+[src/types/enums.ts:256-256](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L256-L256 "Source code on GitHub")
 
 Immediate or cancel
 
@@ -1122,7 +1122,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### fok
 
-[src/types/enums.ts:261-261](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L261-L261 "Source code on GitHub")
+[src/types/enums.ts:261-261](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L261-L261 "Source code on GitHub")
 
 Fill or kill
 
@@ -1130,49 +1130,49 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### OrderType
 
-[src/types/enums.ts:268-283](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L268-L283 "Source code on GitHub")
+[src/types/enums.ts:268-283](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L268-L283 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### market
 
-[src/types/enums.ts:270-270](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L270-L270 "Source code on GitHub")
+[src/types/enums.ts:270-270](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L270-L270 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### limit
 
-[src/types/enums.ts:272-272](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L272-L272 "Source code on GitHub")
+[src/types/enums.ts:272-272](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L272-L272 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### limitMaker
 
-[src/types/enums.ts:274-274](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L274-L274 "Source code on GitHub")
+[src/types/enums.ts:274-274](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L274-L274 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### stopLoss
 
-[src/types/enums.ts:276-276](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L276-L276 "Source code on GitHub")
+[src/types/enums.ts:276-276](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L276-L276 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### stopLossLimit
 
-[src/types/enums.ts:278-278](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L278-L278 "Source code on GitHub")
+[src/types/enums.ts:278-278](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L278-L278 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### takeProfit
 
-[src/types/enums.ts:280-280](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L280-L280 "Source code on GitHub")
+[src/types/enums.ts:280-280](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L280-L280 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 #### takeProfitLimit
 
-[src/types/enums.ts:282-282](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/enums.ts#L282-L282 "Source code on GitHub")
+[src/types/enums.ts:282-282](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/enums.ts#L282-L282 "Source code on GitHub")
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
@@ -1183,7 +1183,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestRequestCancelOrders
 
-[src/types/rest/request.ts:20-22](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L13-L19 "Source code on GitHub")
+[src/types/rest/request.ts:20-22](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L13-L19 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1196,7 +1196,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestRequestFindBalances
 
-[src/types/rest/request.ts:51-53](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L45-L50 "Source code on GitHub")
+[src/types/rest/request.ts:51-53](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L45-L50 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1208,7 +1208,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestRequestFindCandles
 
-[src/types/rest/request.ts:63-66](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L55-L62 "Source code on GitHub")
+[src/types/rest/request.ts:63-66](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L55-L62 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1222,7 +1222,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestRequestFindDeposit
 
-[src/types/rest/request.ts:74-76](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L68-L73 "Source code on GitHub")
+[src/types/rest/request.ts:74-76](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L68-L73 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1234,7 +1234,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestRequestFindDeposits
 
-[src/types/rest/request.ts:88-93](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L78-L87 "Source code on GitHub")
+[src/types/rest/request.ts:88-93](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L78-L87 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1250,7 +1250,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestRequestFindFill
 
-[src/types/rest/request.ts:101-103](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L95-L100 "Source code on GitHub")
+[src/types/rest/request.ts:101-103](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L95-L100 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1262,7 +1262,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestRequestFindFills
 
-[src/types/rest/request.ts:115-120](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L105-L114 "Source code on GitHub")
+[src/types/rest/request.ts:115-120](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L105-L114 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1278,7 +1278,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestRequestFindMarkets
 
-[src/types/rest/request.ts:128-131](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L122-L127 "Source code on GitHub")
+[src/types/rest/request.ts:128-131](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L122-L127 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1290,7 +1290,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestRequestFindOrder
 
-[src/types/rest/request.ts:139-141](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L133-L138 "Source code on GitHub")
+[src/types/rest/request.ts:139-141](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L133-L138 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1302,7 +1302,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestRequestFindOrders
 
-[src/types/rest/request.ts:154-160](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L143-L153 "Source code on GitHub")
+[src/types/rest/request.ts:154-160](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L143-L153 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1319,7 +1319,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestRequestFindTrades
 
-[src/types/rest/request.ts:170-173](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L162-L169 "Source code on GitHub")
+[src/types/rest/request.ts:170-173](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L162-L169 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1333,7 +1333,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestRequestFindWithdrawal
 
-[src/types/rest/request.ts:181-183](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L175-L180 "Source code on GitHub")
+[src/types/rest/request.ts:181-183](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L175-L180 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1345,7 +1345,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestRequestFindWithdrawals
 
-[src/types/rest/request.ts:196-202](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L185-L195 "Source code on GitHub")
+[src/types/rest/request.ts:196-202](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L185-L195 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1362,7 +1362,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestRequestOrder
 
-[src/types/rest/request.ts:303-306](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L287-L302 "Source code on GitHub")
+[src/types/rest/request.ts:303-306](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L287-L302 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1384,7 +1384,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestRequestWithdrawal
 
-[src/types/rest/request.ts:341-344](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L333-L340 "Source code on GitHub")
+[src/types/rest/request.ts:341-344](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L333-L340 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1398,7 +1398,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestRequestAssociateWallet
 
-[src/types/rest/request.ts:356-362](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L351-L355 "Source code on GitHub")
+[src/types/rest/request.ts:356-362](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L351-L355 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1409,7 +1409,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### wallet
 
-[src/types/rest/request.ts:361-361](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/request.ts#L361-L361 "Source code on GitHub")
+[src/types/rest/request.ts:361-361](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/request.ts#L361-L361 "Source code on GitHub")
 
 The wallet to associate with the authenticated account.
 
@@ -1422,7 +1422,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseAsset
 
-[src/types/rest/response.ts:17-23](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L4-L16 "Source code on GitHub")
+[src/types/rest/response.ts:17-23](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L4-L16 "Source code on GitHub")
 
 Asset
 
@@ -1441,7 +1441,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseBalance
 
-[src/types/rest/response.ts:35-41](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L25-L34 "Source code on GitHub")
+[src/types/rest/response.ts:35-41](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L25-L34 "Source code on GitHub")
 
 Balance
 
@@ -1457,7 +1457,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseCandle
 
-[src/types/rest/response.ts:55-63](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L43-L54 "Source code on GitHub")
+[src/types/rest/response.ts:55-63](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L43-L54 "Source code on GitHub")
 
 Candle (OHLCV) data points aggregated by time interval
 
@@ -1475,7 +1475,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseDeposit
 
-[src/types/rest/response.ts:76-83](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L65-L75 "Source code on GitHub")
+[src/types/rest/response.ts:76-83](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L65-L75 "Source code on GitHub")
 
 Asset deposits into smart contract
 
@@ -1492,7 +1492,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseExchangeInfo
 
-[src/types/rest/response.ts:101-113](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L85-L100 "Source code on GitHub")
+[src/types/rest/response.ts:101-113](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L85-L100 "Source code on GitHub")
 
 Basic exchange info
 
@@ -1514,7 +1514,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseFill
 
-[src/types/rest/response.ts:137-142](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L115-L136 "Source code on GitHub")
+[src/types/rest/response.ts:137-142](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L115-L136 "Source code on GitHub")
 
 Fill
 
@@ -1542,7 +1542,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseMarket
 
-[src/types/rest/response.ts:193-200](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L178-L192 "Source code on GitHub")
+[src/types/rest/response.ts:193-200](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L178-L192 "Source code on GitHub")
 
 Market
 
@@ -1563,7 +1563,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseOrder
 
-[src/types/rest/response.ts:227-248](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L202-L226 "Source code on GitHub")
+[src/types/rest/response.ts:227-248](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L202-L226 "Source code on GitHub")
 
 Order
 
@@ -1594,7 +1594,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseCancelledOrder
 
-[src/types/rest/response.ts:256-258](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L250-L255 "Source code on GitHub")
+[src/types/rest/response.ts:256-258](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L250-L255 "Source code on GitHub")
 
 Response to cancelled orders which is an array of [CancelledOrder](CancelledOrder) indicating
 any successfully cancelled orders.
@@ -1603,7 +1603,7 @@ Type: [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global
 
 ### RestResponseOrderBookLevel1
 
-[src/types/rest/response.ts:286-289](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L279-L285 "Source code on GitHub")
+[src/types/rest/response.ts:286-289](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L279-L285 "Source code on GitHub")
 
 OrderBookLevel1
 
@@ -1616,7 +1616,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseOrderBookLevel2
 
-[src/types/rest/response.ts:298-301](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L291-L297 "Source code on GitHub")
+[src/types/rest/response.ts:298-301](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L291-L297 "Source code on GitHub")
 
 OrderBookLevel2
 
@@ -1629,7 +1629,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseOrderBookPriceLevel
 
-[src/types/rest/response.ts:271-271](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L266-L270 "Source code on GitHub")
+[src/types/rest/response.ts:271-271](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L266-L270 "Source code on GitHub")
 
 OrderBookPriceLevel
 
@@ -1637,7 +1637,7 @@ Type: \[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Glo
 
 ### RestResponseOrderFill
 
-[src/types/rest/response.ts:162-176](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L144-L161 "Source code on GitHub")
+[src/types/rest/response.ts:162-176](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L144-L161 "Source code on GitHub")
 
 OrderFill
 
@@ -1661,7 +1661,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponsePing
 
-[src/types/rest/response.ts:308-308](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L303-L307 "Source code on GitHub")
+[src/types/rest/response.ts:308-308](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L303-L307 "Source code on GitHub")
 
 Ping
 
@@ -1669,7 +1669,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseTicker
 
-[src/types/rest/response.ts:329-344](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L310-L328 "Source code on GitHub")
+[src/types/rest/response.ts:329-344](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L310-L328 "Source code on GitHub")
 
 Ticker
 
@@ -1694,7 +1694,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseTime
 
-[src/types/rest/response.ts:352-354](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L346-L351 "Source code on GitHub")
+[src/types/rest/response.ts:352-354](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L346-L351 "Source code on GitHub")
 
 Time
 
@@ -1706,7 +1706,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseTrade
 
-[src/types/rest/response.ts:368-376](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L356-L367 "Source code on GitHub")
+[src/types/rest/response.ts:368-376](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L356-L367 "Source code on GitHub")
 
 Trade
 
@@ -1724,7 +1724,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseUser
 
-[src/types/rest/response.ts:393-404](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L378-L392 "Source code on GitHub")
+[src/types/rest/response.ts:393-404](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L378-L392 "Source code on GitHub")
 
 User
 
@@ -1745,7 +1745,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseWallet
 
-[src/types/rest/response.ts:412-416](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L406-L411 "Source code on GitHub")
+[src/types/rest/response.ts:412-416](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L406-L411 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1757,7 +1757,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseWebSocketToken
 
-[src/types/rest/response.ts:422-424](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L418-L421 "Source code on GitHub")
+[src/types/rest/response.ts:422-424](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L418-L421 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1767,7 +1767,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseWithdrawal
 
-[src/types/rest/response.ts:458-461](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L447-L457 "Source code on GitHub")
+[src/types/rest/response.ts:458-461](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L447-L457 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1784,7 +1784,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### RestResponseAssociateWallet
 
-[src/types/rest/response.ts:469-473](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/rest/response.ts#L463-L468 "Source code on GitHub")
+[src/types/rest/response.ts:469-473](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/rest/response.ts#L463-L468 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1801,7 +1801,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### AuthTokenWebSocketRequestOrdersSubscription
 
-[src/types/webSocket/request.ts:55-57](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/webSocket/request.ts#L46-L54 "Source code on GitHub")
+[src/types/webSocket/request.ts:55-57](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/webSocket/request.ts#L46-L54 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1815,7 +1815,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### AuthTokenWebSocketRequestBalancesSubscription
 
-[src/types/webSocket/request.ts:38-40](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/webSocket/request.ts#L29-L37 "Source code on GitHub")
+[src/types/webSocket/request.ts:38-40](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/webSocket/request.ts#L29-L37 "Source code on GitHub")
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
@@ -1834,7 +1834,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### WebSocketResponseError
 
-[src/types/webSocket/response.ts:207-214](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/webSocket/response.ts#L197-L206 "Source code on GitHub")
+[src/types/webSocket/response.ts:207-214](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/webSocket/response.ts#L197-L206 "Source code on GitHub")
 
 Error Response
 
@@ -1850,7 +1850,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### WebSocketResponseSubscriptions
 
-[src/types/webSocket/response.ts:228-232](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/types/webSocket/response.ts#L216-L227 "Source code on GitHub")
+[src/types/webSocket/response.ts:228-232](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/types/webSocket/response.ts#L216-L227 "Source code on GitHub")
 
 Subscriptions Response
 
@@ -1869,7 +1869,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### MessageSigner
 
-[src/signatures.ts:29-29](https://github.com/idexio/idex-sdk-js/blob/34252f059bb313af5a5f6a4505d9e01ca7ecaa45/src/signatures.ts#L24-L28 "Source code on GitHub")
+[src/signatures.ts:29-29](https://github.com/idexio/idex-sdk-js/blob/c2d4ac87ed9026ed9406a42466a069b28749009f/src/signatures.ts#L24-L28 "Source code on GitHub")
 
 A function that accepts a string and returns a Promise resolving on its ECDSA signature
 
