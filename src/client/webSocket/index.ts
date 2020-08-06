@@ -21,7 +21,7 @@ export type ResponseListener = (response: types.WebSocketResponse) => unknown;
  *
  * @typedef {Object} WebSocketClientOptions
  * @property {boolean} [sandbox] - <br />
- *  Should the WebSocket connect to the {@link https://docs.idex.io/#sandbox | Sandbox environment}?
+ *  Should the WebSocket connect to the {@link https://docs.idex.io/#sandbox|Sandbox Environment}?
  *  **Note**: This must be set to `true` during the Sandbox preview.
  * @property {function} [websocketAuthTokenFetch] - <br />
  *  Authenticated Rest API client fetch token call (`/wsToken`)
