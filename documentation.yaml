@@ -81,7 +81,7 @@ toc:
       - RestResponseWebSocketToken
       - RestResponseWithdrawal
       - RestResponseAssociateWallet
-  - name: WebSocket Authenticated Subscriptions
+  - name: WebSocket Subscriptions
     children:
       - AuthTokenWebSocketRequestOrdersSubscription
       - AuthTokenWebSocketRequestBalancesSubscription
