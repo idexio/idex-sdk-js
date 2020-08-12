@@ -694,6 +694,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
      Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
      See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
 -   `shouldReconnectAutomatically` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?**  If true, automatically reconnects when connection is closed by the server or network errors
+-   `pathSubscription` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Path subscriptions are a quick and easy way to start receiving push updates. Eg. {market}@{subscription}\_{option}
 
 ## Enums
 

@@ -1,5 +1,4 @@
 import * as enums from '../enums';
-import { XOR } from '../utils';
 
 /**
  * Asset
@@ -432,18 +431,6 @@ interface RestResponseWithdrawalBase {
   txStatus: keyof typeof enums.EthTransactionStatus;
 }
 
-export interface RestResponseWithdrawalBySymbol
-  extends RestResponseWithdrawalBase {
-  asset: string;
-  assetContractAddress?: undefined;
-}
-
-export interface RestResponseWithdrawalByAddress
-  extends RestResponseWithdrawalBase {
-  assetContractAddress: string;
-  asset?: undefined;
-}
-
 /**
  * @typedef {Object} RestResponseWithdrawal
  * @property {string} withdrawalId - Exchange-assigned withdrawal identifier
@@ -455,10 +442,10 @@ export interface RestResponseWithdrawalByAddress
  * @property {string} [txId] - Ethereum id of the withdrawal transaction
  * @property {string} txStatus - Status of the withdrawal settlement transaction
  */
-export type RestResponseWithdrawal = XOR<
-  RestResponseWithdrawalBySymbol,
-  RestResponseWithdrawalByAddress
->;
+export interface RestResponseWithdrawal extends RestResponseWithdrawalBase {
+  asset: string;
+  assetContractAddress: string;
+}
 
 /**
  * @typedef {Object} RestResponseAssociateWallet
