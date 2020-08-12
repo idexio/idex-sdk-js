@@ -138,7 +138,7 @@ export class RestPublicClient {
   public async getTickers(
     market?: string,
   ): Promise<types.RestResponseTicker[]> {
-    return (await this.get('/tickers', { market })).data;
+    return (await this.get('/tickers', market ? { market } : undefined)).data;
   }
 
   /**
