@@ -1,5 +1,4 @@
 import * as enums from '../enums';
-import { XOR } from '../utils';
 
 /**
  * Asset
