@@ -138,8 +138,7 @@ export class RestAuthenticatedClient {
    *   idex.signatures.privateKeySigner(config.walletPrivateKey),
    * );
    *
-   * @see {@link http://github.com|GitHub}
-   * @see https://docs.idex.io/#associate-wallet
+   * @see {@link https://docs.idex.io/#associate-wallet|Associate Wallet}
    *
    * @param {RestRequestAssociateWallet} associate
    * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
