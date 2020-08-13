@@ -530,6 +530,26 @@ export class RestAuthenticatedClient {
     });
   }
 
+  protected async put(
+    endpoint: string,
+    data: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+  ): Promise<AxiosResponse> {
+    return this.request(endpoint, {
+      method: 'PUT',
+      data,
+    });
+  }
+
+  protected async patch(
+    endpoint: string,
+    data: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+  ): Promise<AxiosResponse> {
+    return this.request(endpoint, {
+      method: 'PATCH',
+      data,
+    });
+  }
+
   protected request(
     endpoint: string,
     config: Partial<AxiosRequestConfig> &
