@@ -4,6 +4,7 @@
     "src/**/*.ts",
     ".eslintrc.js",
     ".prettierrc.js",
-    "release.config.js"
+    "release.config.js",
+    "quick.ts"
   ]
 }

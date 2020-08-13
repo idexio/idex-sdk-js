@@ -54,7 +54,8 @@ export class RestPublicClient {
 
     const headers = options.apiKey
       ? { [constants.REST_API_KEY_HEADER]: options.apiKey }
-      : null;
+      : {};
+
     this.axios = isNode
       ? Axios.create({
           headers,

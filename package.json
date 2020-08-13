@@ -18,6 +18,7 @@
     "lint:fix:staged": "lint-staged",
     "lint:types": "tsc --noEmit",
     "rebuild": "npx tsc",
+    "run:quick": "ts-node -T -s -H ./quick.ts",
     "start": "node dist/index.js"
   },
   "files": [
