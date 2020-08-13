@@ -76,7 +76,7 @@ export class RestPublicClient {
    * @returns {{}}
    */
   public async ping(): Promise<{ [key: string]: never }> {
-    return (await this.get('/ping')).data;
+    return this.get('/ping');
   }
 
   /**
@@ -87,7 +87,8 @@ export class RestPublicClient {
    * @returns {Promise<number>} Current server time as milliseconds since UNIX epoch
    */
   public async getServerTime(): Promise<number> {
-    return (await this.get('/time')).data.serverTime;
+    const { serverTime } = await this.get('/time');
+    return serverTime;
   }
 
   /**
@@ -98,7 +99,7 @@ export class RestPublicClient {
    * @returns {Promise<RestResponseExchangeInfo>}
    */
   public async getExchangeInfo(): Promise<types.RestResponseExchangeInfo> {
-    return (await this.get('/exchange')).data;
+    return this.get('/exchange');
   }
 
   /**
@@ -109,7 +110,7 @@ export class RestPublicClient {
    * @returns {Promise<RestResponseAsset[]>}
    */
   public async getAssets(): Promise<types.RestResponseAsset[]> {
-    return (await this.get('/assets')).data;
+    return this.get('/assets');
   }
 
   /**
@@ -123,7 +124,7 @@ export class RestPublicClient {
   public async getMarkets(
     findMarkets: types.RestRequestFindMarkets,
   ): Promise<types.RestResponseMarket[]> {
-    return (await this.get('/markets', findMarkets)).data;
+    return this.get('/markets', findMarkets);
   }
 
   // Market Data Endpoints
@@ -139,7 +140,7 @@ export class RestPublicClient {
   public async getTickers(
     market?: string,
   ): Promise<types.RestResponseTicker[]> {
-    return (await this.get('/tickers', market ? { market } : undefined)).data;
+    return this.get('/tickers', market ? { market } : undefined);
   }
 
   /**
@@ -153,7 +154,7 @@ export class RestPublicClient {
   public async getCandles(
     findCandles: types.RestRequestFindCandles,
   ): Promise<types.RestResponseCandle[]> {
-    return (await this.get('/candles', findCandles)).data;
+    return this.get('/candles', findCandles);
   }
 
   /**
@@ -167,7 +168,7 @@ export class RestPublicClient {
   public async getTrades(
     findTrades: types.RestRequestFindTrades,
   ): Promise<types.RestResponseTrade[]> {
-    return (await this.get('/trades', findTrades)).data;
+    return this.get('/trades', findTrades);
   }
 
   /**
@@ -181,7 +182,7 @@ export class RestPublicClient {
   public async getOrderBookLevel1(
     market: string,
   ): Promise<types.RestResponseOrderBookLevel1> {
-    return (await this.get('/orderbook', { level: 1, market })).data;
+    return this.get('/orderbook', { level: 1, market });
   }
 
   /**
@@ -197,7 +198,7 @@ export class RestPublicClient {
     market: string,
     limit = 50,
   ): Promise<types.RestResponseOrderBookLevel2> {
-    return (await this.get('/orderbook', { level: 2, market, limit })).data;
+    return this.get('/orderbook', { level: 2, market, limit });
   }
 
   // Internal methods exposed for advanced usage
@@ -205,11 +206,13 @@ export class RestPublicClient {
   protected async get(
     endpoint: string,
     RestRequestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
-  ): Promise<AxiosResponse> {
-    return this.axios({
-      method: 'GET',
-      url: `${this.baseURL}${endpoint}`,
-      params: RestRequestParams,
-    });
+  ): Promise<AxiosResponse['data']> {
+    return (
+      await this.axios({
+        method: 'GET',
+        url: `${this.baseURL}${endpoint}`,
+        params: RestRequestParams,
+      })
+    ).data;
   }
 }
