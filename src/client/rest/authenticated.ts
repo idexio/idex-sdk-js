@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import http from 'http';
 import https from 'https';
 import qs from 'qs';
-import Axios, { AxiosInstance, AxiosResponse } from 'axios';
+import Axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
 
 import * as types from '../../types';
 
@@ -51,6 +51,8 @@ export class RestAuthenticatedClient {
   private axios: AxiosInstance;
 
   private apiSecret: string;
+
+  protected autoCreateHmacHeader = true;
 
   private signer: signatures.MessageSigner;
 
@@ -499,46 +501,65 @@ export class RestAuthenticatedClient {
 
   protected async get(
     endpoint: string,
-    RestRequestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    params: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
   ): Promise<AxiosResponse> {
-    return this.axios({
+    return this.request(endpoint, {
       method: 'GET',
-      url: `${this.baseURL}${endpoint}`,
-      headers: this.createHmacRestRequestSignatureHeader(
-        // The param serializer for HMAC must be the same as that used for the request itself
-        qs.stringify(RestRequestParams),
-      ),
-      params: RestRequestParams,
+      params,
       paramsSerializer: qs.stringify,
     });
   }
 
   protected async post(
     endpoint: string,
-    RestRequestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    data: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
   ): Promise<AxiosResponse> {
-    return this.axios({
+    return this.request(endpoint, {
       method: 'POST',
-      url: `${this.baseURL}${endpoint}`,
-      headers: this.createHmacRestRequestSignatureHeader(
-        JSON.stringify(RestRequestParams),
-      ),
-      data: RestRequestParams,
+      data,
     });
   }
 
   protected async delete(
     endpoint: string,
-    RestRequestParams: types.RestRequestCancelOrdersBody, // eslint-disable-line @typescript-eslint/no-explicit-any
+    data: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
   ): Promise<AxiosResponse> {
-    return this.axios({
+    return this.request(endpoint, {
       method: 'DELETE',
-      url: `${this.baseURL}${endpoint}`,
-      headers: this.createHmacRestRequestSignatureHeader(
-        JSON.stringify(RestRequestParams),
-      ),
-      data: RestRequestParams,
+      data,
     });
+  }
+
+  protected request(
+    endpoint: string,
+    config: Partial<AxiosRequestConfig> &
+      (
+        | { method: 'GET' }
+        | {
+            method: Exclude<AxiosRequestConfig['method'], 'GET' | 'get'>;
+            data: { [key: string]: unknown };
+          }
+      ),
+    createHmacSignatureHeader = this.autoCreateHmacHeader,
+  ): Promise<AxiosResponse> {
+    const request: AxiosRequestConfig = {
+      headers: {},
+      ...config,
+      url: `${this.baseURL}${endpoint}`,
+    };
+
+    if (createHmacSignatureHeader) {
+      Object.assign(
+        request.headers,
+        this.createHmacRestRequestSignatureHeader(
+          config.method === 'GET'
+            ? qs.stringify(config.params)
+            : JSON.stringify(config.data),
+        ),
+      );
+    }
+
+    return this.axios(request);
   }
 
   protected createHmacRestRequestSignatureHeader(
