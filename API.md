@@ -787,6 +787,12 @@ Cancels accepted but not trades
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
+#### limitMakerOnly
+
+Cancels and limitMaker orders only
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
 #### active
 
 Trades and cancels accepted
