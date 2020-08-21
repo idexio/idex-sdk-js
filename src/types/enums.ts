@@ -100,6 +100,11 @@ export enum MarketStatus {
    */
   cancelsOnly,
   /**
+   * Cancels and limitMaker orders only
+   * @type {string}
+   */
+  limitMakerOnly,
+  /**
    * Trades and cancels accepted
    * @type {string}
    */
