@@ -104,7 +104,7 @@ const transformOrdersMessage = (
 ): types.WebSocketResponseOrderLong => ({
   market: order.m,
   orderId: order.i,
-  clientOrderId: order.c,
+  ...(order.c && { clientOrderId: order.c }),
   wallet: order.w,
   time: order.t,
   timeOfOriginalOrder: order.T,
@@ -113,15 +113,15 @@ const transformOrdersMessage = (
   ...(order.u && { sequence: order.u }),
   type: order.o,
   side: order.S,
-  originalQuantity: order.q,
+  ...(order.q && { originalQuantity: order.q }),
   ...(order.Q && { originalQuoteQuantity: order.Q }),
   executedQuantity: order.z,
-  cumulativeQuoteQuantity: order.Z,
+  ...(order.Z && { cumulativeQuoteQuantity: order.Z }),
   ...(order.v && { avgExecutionPrice: order.v }),
   ...(order.p && { limitOrderPrice: order.p }),
   ...(order.P && { stopOrderPrice: order.P }),
-  timeInForce: order.f,
-  selfTradePrevention: order.V,
+  ...(order.f && { timeInForce: order.f }),
+  ...(order.V && { selfTradePrevention: order.V }),
   ...(order.F && { fills: order.F.map(transformOrderFill) }),
 });
 
