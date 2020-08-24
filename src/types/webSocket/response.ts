@@ -142,9 +142,9 @@ export interface WebSocketResponseOrderLong {
   orderId: string; // i
   clientOrderId?: string; // c
   wallet: string; // w
-  time: number; // t
-  timeOfOriginalOrder: number; // T
-  executionType: keyof typeof enums.OrderStateChange; // x
+  executionTime: number; // t
+  time: number; // T
+  update: keyof typeof enums.OrderStateChange; // x
   status: keyof typeof enums.OrderStatus; // X
   sequence?: number; // u
   type: keyof typeof enums.OrderType; // o
