@@ -116,7 +116,7 @@ export interface WebSocketResponseBalanceLong {
 export interface WebSocketResponseOrderShort {
   m: string;
   i: string;
-  c: string;
+  c?: string;
   w: string;
   t: number;
   T: number;
@@ -125,38 +125,39 @@ export interface WebSocketResponseOrderShort {
   u?: number;
   o: keyof typeof enums.OrderType;
   S: keyof typeof enums.OrderSide;
-  q: string;
+  q?: string;
   Q?: string;
   z: string;
   Z?: string;
   v?: string;
   p?: string;
   P?: string;
-  f: keyof typeof enums.OrderTimeInForce;
-  V: keyof typeof enums.OrderSelfTradePrevention;
+  f?: keyof typeof enums.OrderTimeInForce;
+  V?: keyof typeof enums.OrderSelfTradePrevention;
   F?: WebSocketResponseOrderFillShort[];
 }
 
 export interface WebSocketResponseOrderLong {
   market: string; // m
   orderId: string; // i
-  clientOrderId: string; // c
+  clientOrderId?: string; // c
   wallet: string; // w
   time: number; // t
   timeOfOriginalOrder: number; // T
   executionType: keyof typeof enums.OrderStateChange; // x
   status: keyof typeof enums.OrderStatus; // X
-  sequence?: number;
-  orderBookSequenceNumber?: string; // u
+  sequence?: number; // u
   type: keyof typeof enums.OrderType; // o
   side: keyof typeof enums.OrderSide; // S
-  timeInForce: keyof typeof enums.OrderTimeInForce; // f
-  price?: string; // p
-  stopPrice?: string; // P
-  selfTradePrevention: keyof typeof enums.OrderSelfTradePrevention; // V
-  originalQuantity: string; // q
+  originalQuantity?: string; // q
+  originalQuoteQuantity?: string; // Q
   executedQuantity: string; // z
   cumulativeQuoteQuantity?: string; // Z
+  avgExecutionPrice?: string; // v
+  price?: string; // p
+  stopPrice?: string; // P
+  timeInForce?: keyof typeof enums.OrderTimeInForce; // f
+  selfTradePrevention?: keyof typeof enums.OrderSelfTradePrevention; // V
   fills?: restResponse.RestResponseOrderFill[]; // F
 }
 
