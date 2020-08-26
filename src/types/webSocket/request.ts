@@ -101,44 +101,42 @@ export type AuthTokenWebSocketRequestSubscription =
   | AuthTokenWebSocketRequestAuthenticatedSubscription
   | WebSocketRequestUnauthenticatedSubscription;
 
+export type WebSocketRequestSubscribeStrictWithTopLevelMarkets = {
+  method: 'subscribe';
+  cid?: string;
+  token?: string;
+  markets: string[];
+  // when markets is provided, we can accept string subscriptions or full subscriptions
+  // and the subscriptions markets parameter is optional.  Candles can never be specified
+  // by name only due to requiring the `interval` property
+  subscriptions: (
+    | WebSocketRequestAuthenticatedSubscription['name']
+    | Exclude<WebSocketRequestUnauthenticatedSubscription['name'], 'candles'>
+    | AugmentedOptional<WebSocketRequestUnauthenticatedSubscription, 'markets'>
+    | WebSocketRequestAuthenticatedSubscription
+  )[];
+};
+
+export type WebSocketRequestSubscribeStrictWithoutTopLevelMarkets = {
+  method: 'subscribe';
+  cid?: string;
+  token?: string;
+  markets?: undefined;
+  // when top level markets property is not provided, authenticated subscriptions may still be defined
+  // by name but all unauthenticated subscriptions require the markets array so may not be defined only
+  // by their name.
+  subscriptions: (
+    | WebSocketRequestUnauthenticatedSubscription
+    | WebSocketRequestAuthenticatedSubscription
+    | WebSocketRequestAuthenticatedSubscription['name']
+  )[];
+};
+
 // This type is strictly typed and understands how subscriptions should look
 // depending on if a top level markets array is provided.
 export type WebSocketRequestSubscribeStrict =
-  | {
-      method: 'subscribe';
-      cid?: string;
-      token?: string;
-      markets: string[];
-      // when markets is provided, we can accept string subscriptions or full subscriptions
-      // and the subscriptions markets parameter is optional.  Candles can never be specified
-      // by name only due to requiring the `interval` property
-      subscriptions: (
-        | WebSocketRequestAuthenticatedSubscription['name']
-        | Exclude<
-            WebSocketRequestUnauthenticatedSubscription['name'],
-            'candles'
-          >
-        | AugmentedOptional<
-            WebSocketRequestUnauthenticatedSubscription,
-            'markets'
-          >
-        | WebSocketRequestAuthenticatedSubscription
-      )[];
-    }
-  | {
-      method: 'subscribe';
-      cid?: string;
-      token?: string;
-      markets?: undefined;
-      // when top level markets property is not provided, authenticated subscriptions may still be defined
-      // by name but all unauthenticated subscriptions require the markets array so may not be defined only
-      // by their name.
-      subscriptions: (
-        | WebSocketRequestUnauthenticatedSubscription
-        | WebSocketRequestAuthenticatedSubscription
-        | WebSocketRequestAuthenticatedSubscription['name']
-      )[];
-    };
+  | WebSocketRequestSubscribeStrictWithTopLevelMarkets
+  | WebSocketRequestSubscribeStrictWithoutTopLevelMarkets;
 
 // less strict subscribe shape
 export type WebSocketRequestSubscribe = {
@@ -183,7 +181,12 @@ export type WebSocketRequestSubscriptions = {
   cid?: string;
 };
 
-export type WebSocketRequest =
+export type WebSocketRequestStrict =
   | WebSocketRequestSubscribeStrict
+  | WebSocketRequestSubscriptions
+  | WebSocketRequestUnsubscribe;
+
+export type WebSocketRequest =
+  | WebSocketRequestSubscribe
   | WebSocketRequestSubscriptions
   | WebSocketRequestUnsubscribe;
