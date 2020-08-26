@@ -65,21 +65,14 @@
 -   [WebSocket Responses](#websocket-responses)
     -   [WebSocketResponseError](#websocketresponseerror)
     -   [WebSocketResponseSubscriptions](#websocketresponsesubscriptions)
+-   [Type Guards](#type-guards)
+    -   [isWebSocketAuthenticatedSubscription](#iswebsocketauthenticatedsubscription)
+    -   [isWebSocketUnauthenticatedSubscription](#iswebsocketunauthenticatedsubscription)
+    -   [isWebSocketCandlesSubscription](#iswebsocketcandlessubscription)
+    -   [isWebSocketLooseSubscription](#iswebsocketloosesubscription)
 -   [ECDSA Signatures](#ecdsa-signatures)
     -   [MessageSigner](#messagesigner)
 -   [Misc Types & Utilities](#misc-types--utilities)
--   [isWebSocketAuthenticatedSubscription](#iswebsocketauthenticatedsubscription)
-    -   [Parameters](#parameters)
-    -   [Properties](#properties)
--   [isWebSocketUnauthenticatedSubscription](#iswebsocketunauthenticatedsubscription)
-    -   [Parameters](#parameters-1)
-    -   [Properties](#properties-1)
--   [isWebSocketCandlesSubscription](#iswebsocketcandlessubscription)
-    -   [Parameters](#parameters-2)
-    -   [Properties](#properties-2)
--   [isWebSocketLooseSubscription](#iswebsocketloosesubscription)
-    -   [Parameters](#parameters-3)
-    -   [Properties](#properties-3)
 
 ## Clients
 
@@ -1611,6 +1604,79 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `method` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** subscriptions
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;WebSocketRequestSubscription>** 
 
+## Type Guards
+
+[Type Guards](https://www.typescriptlang.org/docs/handbook/advanced-types.html#user-defined-type-guards) 
+are mostly useful for TypeScript users and can be used to refine general types when needing to parse or 
+build the required values. 
+
+
+### isWebSocketAuthenticatedSubscription
+
+A type guard that checks if a given value is a subscription object which represents
+an authenticated subscription. These subscriptions require the `wallet` property
+(local to idex-sdk only) and require that the `WebSocketClient` was created
+with the `websocketAuthTokenFetch` function provided.
+
+#### Parameters
+
+-   `subscription` **any** 
+
+#### Properties
+
+-   `subscription` **any** The subscription to check
+
+Returns **any** 
+
+### isWebSocketUnauthenticatedSubscription
+
+A type guard that checks if a given value is a subscription object which represents
+an unauthenticated subscription.
+
+#### Parameters
+
+-   `subscription` **any** 
+
+#### Properties
+
+-   `subscription` **any** The subscription to check
+
+Returns **any** 
+
+### isWebSocketCandlesSubscription
+
+A type guard that checks if a given value is a subscription object which represents
+a `candles` subscription. This is useful as the candles subscription has the `interval`
+property in addition to `markets` and `name`.
+
+#### Parameters
+
+-   `subscription` **any** 
+
+#### Properties
+
+-   `subscription` **any** The subscription to check
+
+Returns **any** 
+
+### isWebSocketLooseSubscription
+
+A type guard which allows using a subscription object in a "loose" manner.  This is less "safe"
+but can often be useful when parsing values where you do not need strict typing.  When true, the
+provided value will be a "partial" shape of that conforms to any/all subscription objects.
+
+This should be used lightly.
+
+#### Parameters
+
+-   `subscription` **any** 
+
+#### Properties
+
+-   `subscription` **any** The subscription to check
+
+Returns **any** 
+
 ## ECDSA Signatures
 
 
@@ -1626,69 +1692,3 @@ Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Sta
 
 
 
-
-## isWebSocketAuthenticatedSubscription
-
-A type guard that checks if a given value is a subscription object which represents
-an authenticated subscription. These subscriptions require the `wallet` property
-(local to idex-sdk only) and require that the `WebSocketClient` was created
-with the `websocketAuthTokenFetch` function provided.
-
-### Parameters
-
--   `subscription` **any** 
-
-### Properties
-
--   `subscription` **any** The subscription to check
-
-Returns **any** 
-
-## isWebSocketUnauthenticatedSubscription
-
-A type guard that checks if a given value is a subscription object which represents
-an unauthenticated subscription.
-
-### Parameters
-
--   `subscription` **any** 
-
-### Properties
-
--   `subscription` **any** The subscription to check
-
-Returns **any** 
-
-## isWebSocketCandlesSubscription
-
-A type guard that checks if a given value is a subscription object which represents
-a `candles` subscription. This is useful as the candles subscription has the `interval`
-property in addition to `markets` and `name`.
-
-### Parameters
-
--   `subscription` **any** 
-
-### Properties
-
--   `subscription` **any** The subscription to check
-
-Returns **any** 
-
-## isWebSocketLooseSubscription
-
-A type guard which allows using a subscription object in a "loose" manner.  This is less "safe"
-but can often be useful when parsing values where you do not need strict typing.  When true, the
-provided value will be a "partial" shape of that conforms to any/all subscription objects.
-
-This should be used lightly.
-
-### Parameters
-
--   `subscription` **any** 
-
-### Properties
-
--   `subscription` **any** The subscription to check
-
-Returns **any** 
