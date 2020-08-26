@@ -1,22 +1,13 @@
 import * as enums from '../enums';
 import { AugmentedOptional, AugmentedRequired, Expand } from '../utils';
-
-export const WebSocketRequestAuthenticatedSubscriptionName = {
-  balances: 'balances',
-  orders: 'orders',
-} as const;
-
-export const WebSocketRequestUnauthenticatedSubscriptionName = {
-  candles: 'candles',
-  l1orderbook: 'l1orderbook',
-  l2orderbook: 'l2orderbook',
-  tickers: 'tickers',
-  trades: 'trades',
-} as const;
+import {
+  WEBSOCKET_AUTHENTICATED_SUBSCRIPTIONS,
+  WEBSOCKET_UNAUTHENTICATED_SUBSCRIPTIONS,
+} from './constants';
 
 export type WebSocketRequestSubscriptionName =
-  | keyof typeof WebSocketRequestUnauthenticatedSubscriptionName
-  | keyof typeof WebSocketRequestAuthenticatedSubscriptionName;
+  | typeof WEBSOCKET_AUTHENTICATED_SUBSCRIPTIONS[number]
+  | typeof WEBSOCKET_UNAUTHENTICATED_SUBSCRIPTIONS[number];
 
 export type WebSocketRequestBalancesSubscription = {
   name: 'balances';

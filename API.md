@@ -70,6 +70,7 @@
     -   [isWebSocketUnauthenticatedSubscription](#iswebsocketunauthenticatedsubscription)
     -   [isWebSocketCandlesSubscription](#iswebsocketcandlessubscription)
     -   [isWebSocketLooseSubscription](#iswebsocketloosesubscription)
+    -   [isCandleInterval](#iscandleinterval)
 -   [ECDSA Signatures](#ecdsa-signatures)
     -   [MessageSigner](#messagesigner)
 -   [Misc Types & Utilities](#misc-types--utilities)
@@ -1674,6 +1675,20 @@ This should be used lightly.
 #### Properties
 
 -   `subscription` **any** The subscription to check
+
+Returns **any** 
+
+### isCandleInterval
+
+A type guard which checks if a string is a valid candle interval.
+
+#### Parameters
+
+-   `value` **any** 
+
+#### Properties
+
+-   `value` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The subscription to check
 
 Returns **any** 
 
