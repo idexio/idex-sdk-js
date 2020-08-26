@@ -79,7 +79,7 @@ export class WebSocketClient {
 
   private responseListeners: Set<ResponseListener>;
 
-  private webSocket: null | WebSocket;
+  private webSocket: null | WebSocket = null;
 
   private webSocketTokenManager?: WebsocketTokenManager;
 

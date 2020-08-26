@@ -1551,7 +1551,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 #### Properties
 
 -   `name` **`"orders"`** The name of the subscription
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Orders subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**  Orders subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
      function when needed to get an updated `wsToken`.
      <br />
      **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
@@ -1563,7 +1563,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 #### Properties
 
 -   `name` **`"balances"`** The name of the subscription
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Balances subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**  Balances subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
      function when needed to get an updated `wsToken`.
      <br />
      **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
