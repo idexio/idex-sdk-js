@@ -268,28 +268,34 @@ export class WebSocketClient {
    * See {@link https://docs.idex.io/#get-authentication-token|API specification}
    *
    * @param {AuthTokenWebSocketRequestAuthenticatedSubscription[]} subscriptions
+   *  @param {[string]} cid - A custom identifier to identify the matching response
    */
   public subscribeAuthenticated(
     subscriptions: types.AuthTokenWebSocketRequestAuthenticatedSubscription[],
+    cid?: string,
   ): void {
-    this.subscribe(subscriptions);
+    this.subscribe(subscriptions, cid);
   }
 
   /**
    * Subscribe which only can be used on non-authenticated subscriptions
    *
    * @param {WebSocketRequestUnauthenticatedSubscription[]} subscriptions
+   * @param {[string]} cid - A custom identifier to identify the matching response
    */
   public subscribeUnauthenticated(
     subscriptions: types.WebSocketRequestUnauthenticatedSubscription[],
+    cid?: string,
   ): void {
-    this.subscribe(subscriptions);
+    this.subscribe(subscriptions, cid);
   }
 
   public unsubscribe(
     subscriptions: types.WebSocketRequestUnsubscribeSubscription[],
+    cid?: string,
   ): void {
     this.sendMessage({
+      cid,
       method: 'unsubscribe',
       subscriptions,
     });

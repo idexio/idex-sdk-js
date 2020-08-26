@@ -5,6 +5,6 @@
     ".eslintrc.js",
     ".prettierrc.js",
     "release.config.js",
-    "quick.ts"
+    "test/**/*.ts"
   ]
 }

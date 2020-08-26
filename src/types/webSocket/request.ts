@@ -58,7 +58,7 @@ export type AuthTokenWebSocketRequestOrdersSubscription = WebSocketRequestOrders
 
 export interface WebSocketRequestCandlesSubscription {
   name: 'candles';
-  markets?: string[];
+  markets: string[];
   interval: keyof typeof enums.CandleInterval;
 }
 
