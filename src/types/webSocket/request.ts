@@ -64,22 +64,22 @@ export interface WebSocketRequestCandlesSubscription {
 
 export interface WebSocketRequestL1OrderBookSubscription {
   name: 'l1orderbook';
-  markets?: string[];
+  markets: string[];
 }
 
 export interface WebSocketRequestL2OrderBookSubscription {
   name: 'l2orderbook';
-  markets?: string[];
+  markets: string[];
 }
 
 export interface WebSocketRequestTickersSubscription {
   name: 'tickers';
-  markets?: string[];
+  markets: string[];
 }
 
 export interface WebSocketRequestTradesSubscription {
   name: 'trades';
-  markets?: string[];
+  markets: string[];
 }
 
 export type WebSocketRequestAuthenticatedSubscription =
