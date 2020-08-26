@@ -8,6 +8,7 @@ import WebsocketTokenManager, {
 } from './tokenManager';
 import { transformMessage } from './transform';
 import { isNode } from '../../utils';
+import { isWebSocketAuthenticatedSubscription } from '../../types';
 
 const nodeUserAgent = 'idex-sdk-js';
 
@@ -187,7 +188,9 @@ export class WebSocketClient {
     subscriptions: types.AuthTokenWebSocketRequestSubscription[],
     cid?: string,
   ): Promise<void> {
-    const authSubscriptions = subscriptions.filter(isAuthenticatedSubscription);
+    const authSubscriptions = subscriptions.filter(
+      isWebSocketAuthenticatedSubscription,
+    );
 
     // Public subscriptions can be subscribed all at once
     if (authSubscriptions.length === 0) {
@@ -396,6 +399,8 @@ function isAuthenticatedSubscription(
   ).includes(subscription.name);
 }
 
+// We use this instead of the other type guards to account for unhandled subscription
+// types
 function isPublicSubscription(
   subscription: types.WebSocketRequestSubscription,
 ): boolean {

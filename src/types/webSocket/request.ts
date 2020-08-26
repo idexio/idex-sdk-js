@@ -163,6 +163,13 @@ export type WebSocketRequestSubscribe = {
   >;
 };
 
+// Loose typing to use while parsing or building
+export type WebSocketRequestSubscriptionLoose = {
+  name: string;
+  markets?: string[];
+  interval?: keyof typeof enums.CandleInterval;
+};
+
 // Subscription Objects in unsubscribe must have name but all other properties are
 // considered optional
 export type WebSocketRequestUnsubscribeSubscription = AugmentedRequired<
@@ -170,7 +177,7 @@ export type WebSocketRequestUnsubscribeSubscription = AugmentedRequired<
   'name'
 >;
 
-export interface WebSocketRequestUnsubscribe {
+export type WebSocketRequestUnsubscribe = {
   method: 'unsubscribe';
   cid?: string;
   markets?: string[];
@@ -178,12 +185,12 @@ export interface WebSocketRequestUnsubscribe {
     | WebSocketRequestUnsubscribeSubscription
     | WebSocketRequestSubscriptionName
   )[];
-}
+};
 
-export interface WebSocketRequestSubscriptions {
+export type WebSocketRequestSubscriptions = {
   method: 'subscriptions';
   cid?: string;
-}
+};
 
 export type WebSocketRequest =
   | WebSocketRequestSubscribeStrict
