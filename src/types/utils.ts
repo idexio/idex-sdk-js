@@ -7,19 +7,18 @@ export type XOR<T, U> = T | U extends AnyObj
   ? (Without<T, U> & U) | (Without<U, T> & T)
   : T | U;
 
+// Unwraps a given type so it is represented in an easier to understand
+// way to the user
 export type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
 
-export type Optional<T extends AnyObj, K extends keyof T = keyof T> = Expand<
-  T extends T ? Omit<T, K> & Partial<Pick<T, K>> : never
->;
+// Set the provided keys as optional in an object
+export type AugmentedOptional<
+  T extends AnyObj,
+  K extends keyof T = keyof T
+> = Expand<T extends T ? Omit<T, K> & Partial<Pick<T, K>> : never>;
 
-export type UnionToIntersection<U> = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  U extends any
-    ? (k: U) => void
-    : never
-) extends (k: infer I) => void
-  ? I extends I
-    ? I
-    : never
-  : never;
+// Set the provided keys as required in an object
+export type AugmentedRequired<
+  T extends AnyObj,
+  K extends keyof T = keyof T
+> = Expand<T extends T ? Omit<T, K> & Required<Pick<T, K>> : never>;

@@ -1,5 +1,5 @@
 import * as enums from '../enums';
-import { Optional, Expand, UnionToIntersection } from '../utils';
+import { AugmentedOptional, AugmentedRequired, Expand } from '../utils';
 
 export const WebSocketRequestAuthenticatedSubscriptionName = {
   balances: 'balances',
@@ -53,6 +53,11 @@ export type WebSocketRequestTradesSubscription = {
 };
 
 type WebSocketRequestWallet = {
+  /**
+   * wallet is required and is only handled by the idex-sdk.  It is used to auto generate the required
+   * wsToken
+   * @private
+   */
   wallet: string;
 };
 
@@ -105,6 +110,8 @@ export type AuthTokenWebSocketRequestSubscription =
   | AuthTokenWebSocketRequestAuthenticatedSubscription
   | WebSocketRequestUnauthenticatedSubscription;
 
+// This type is strictly typed and understands how subscriptions should look
+// depending on if a top level markets array is provided.
 export type WebSocketRequestSubscribeStrict =
   | {
       method: 'subscribe';
@@ -120,7 +127,10 @@ export type WebSocketRequestSubscribeStrict =
             WebSocketRequestUnauthenticatedSubscription['name'],
             'candles'
           >
-        | Optional<WebSocketRequestUnauthenticatedSubscription, 'markets'>
+        | AugmentedOptional<
+            WebSocketRequestUnauthenticatedSubscription,
+            'markets'
+          >
         | WebSocketRequestAuthenticatedSubscription
       )[];
     }
@@ -139,6 +149,7 @@ export type WebSocketRequestSubscribeStrict =
       )[];
     };
 
+// less strict subscribe shape
 export type WebSocketRequestSubscribe = {
   method: 'subscribe';
   cid?: string;
@@ -152,8 +163,10 @@ export type WebSocketRequestSubscribe = {
   >;
 };
 
-export type WebSocketRequestUnsubscribeSubscription = Pick<
-  WebSocketRequestSubscription,
+// Subscription Objects in unsubscribe must have name but all other properties are
+// considered optional
+export type WebSocketRequestUnsubscribeSubscription = AugmentedRequired<
+  Partial<WebSocketRequestUnauthenticatedSubscription>,
   'name'
 >;
 
