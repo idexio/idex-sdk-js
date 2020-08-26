@@ -8,40 +8,42 @@ import {
   RestRequestCancelOrder,
 } from './request';
 
+// TODO - add these to the docs
+
 export function isWithdrawalByAssetSymbolRequest(
-  value: RestRequestWithdrawal,
-): value is RestRequestWithdrawalBySymbol {
+  request: RestRequestWithdrawal,
+): request is RestRequestWithdrawalBySymbol {
   return (
-    typeof value.asset === 'string' &&
-    typeof value.assetContractAddress !== 'string' &&
-    typeof value.quantity === 'string'
+    typeof request.asset === 'string' &&
+    typeof request.assetContractAddress !== 'string' &&
+    typeof request.quantity === 'string'
   );
 }
 
 export function isWithdrawalByAssetAddressRequest(
-  value: RestRequestWithdrawal,
-): value is RestRequestWithdrawalByAddress {
+  request: RestRequestWithdrawal,
+): request is RestRequestWithdrawalByAddress {
   return (
-    typeof value.asset !== 'string' &&
-    typeof value.assetContractAddress === 'string' &&
-    typeof value.quantity === 'string'
+    typeof request.asset !== 'string' &&
+    typeof request.assetContractAddress === 'string' &&
+    typeof request.quantity === 'string'
   );
 }
 
 export function isRestRequestCancelOrder(
-  value: any,
-): value is RestRequestCancelOrder {
+  request: any,
+): request is RestRequestCancelOrder {
   return (
-    typeof value.orderId === 'string' &&
-    typeof value.market === 'undefined' &&
-    typeof value.wallet === 'string'
+    typeof request.orderId === 'string' &&
+    typeof request.market === 'undefined' &&
+    typeof request.wallet === 'string'
   );
 }
 
 export function isRestRequestCancelOrders(
-  value: any,
-): value is RestRequestCancelOrders {
+  request: any,
+): request is RestRequestCancelOrders {
   return (
-    typeof value.orderId === 'undefined' && typeof value.wallet === 'string'
+    typeof request.orderId === 'undefined' && typeof request.wallet === 'string'
   );
 }

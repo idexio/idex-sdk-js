@@ -8,6 +8,7 @@ import WebsocketTokenManager, {
 } from './tokenManager';
 import { transformMessage } from './transform';
 import { isNode } from '../../utils';
+import { isWebSocketAuthenticatedSubscription } from '../../types';
 
 const nodeUserAgent = 'idex-sdk-js';
 
@@ -79,7 +80,7 @@ export class WebSocketClient {
 
   private responseListeners: Set<ResponseListener>;
 
-  private webSocket: null | WebSocket;
+  private webSocket: null | WebSocket = null;
 
   private webSocketTokenManager?: WebsocketTokenManager;
 
@@ -187,7 +188,9 @@ export class WebSocketClient {
     subscriptions: types.AuthTokenWebSocketRequestSubscription[],
     cid?: string,
   ): Promise<void> {
-    const authSubscriptions = subscriptions.filter(isAuthenticatedSubscription);
+    const authSubscriptions = subscriptions.filter(
+      isWebSocketAuthenticatedSubscription,
+    );
 
     // Public subscriptions can be subscribed all at once
     if (authSubscriptions.length === 0) {
@@ -268,28 +271,34 @@ export class WebSocketClient {
    * See {@link https://docs.idex.io/#get-authentication-token|API specification}
    *
    * @param {AuthTokenWebSocketRequestAuthenticatedSubscription[]} subscriptions
+   *  @param {[string]} cid - A custom identifier to identify the matching response
    */
   public subscribeAuthenticated(
     subscriptions: types.AuthTokenWebSocketRequestAuthenticatedSubscription[],
+    cid?: string,
   ): void {
-    this.subscribe(subscriptions);
+    this.subscribe(subscriptions, cid);
   }
 
   /**
    * Subscribe which only can be used on non-authenticated subscriptions
    *
    * @param {WebSocketRequestUnauthenticatedSubscription[]} subscriptions
+   * @param {[string]} cid - A custom identifier to identify the matching response
    */
   public subscribeUnauthenticated(
     subscriptions: types.WebSocketRequestUnauthenticatedSubscription[],
+    cid?: string,
   ): void {
-    this.subscribe(subscriptions);
+    this.subscribe(subscriptions, cid);
   }
 
   public unsubscribe(
     subscriptions: types.WebSocketRequestUnsubscribeSubscription[],
+    cid?: string,
   ): void {
     this.sendMessage({
+      cid,
       method: 'unsubscribe',
       subscriptions,
     });
@@ -390,6 +399,8 @@ function isAuthenticatedSubscription(
   ).includes(subscription.name);
 }
 
+// We use this instead of the other type guards to account for unhandled subscription
+// types
 function isPublicSubscription(
   subscription: types.WebSocketRequestSubscription,
 ): boolean {

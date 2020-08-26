@@ -65,6 +65,11 @@
 -   [WebSocket Responses](#websocket-responses)
     -   [WebSocketResponseError](#websocketresponseerror)
     -   [WebSocketResponseSubscriptions](#websocketresponsesubscriptions)
+-   [Type Guards](#type-guards)
+    -   [isWebSocketAuthenticatedSubscription](#iswebsocketauthenticatedsubscription)
+    -   [isWebSocketUnauthenticatedSubscription](#iswebsocketunauthenticatedsubscription)
+    -   [isWebSocketCandlesSubscription](#iswebsocketcandlessubscription)
+    -   [isWebSocketLooseSubscription](#iswebsocketloosesubscription)
 -   [ECDSA Signatures](#ecdsa-signatures)
     -   [MessageSigner](#messagesigner)
 -   [Misc Types & Utilities](#misc-types--utilities)
@@ -663,6 +668,7 @@ See [API specification](https://docs.idex.io/#get-authentication-token)
 ###### Parameters
 
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;AuthTokenWebSocketRequestAuthenticatedSubscription>** 
+-   `cid` **\[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)]** A custom identifier to identify the matching response
 
 Returns **void** 
 
@@ -673,6 +679,7 @@ Subscribe which only can be used on non-authenticated subscriptions
 ###### Parameters
 
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;WebSocketRequestUnauthenticatedSubscription>** 
+-   `cid` **\[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)]** A custom identifier to identify the matching response
 
 Returns **void** 
 
@@ -1549,7 +1556,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 #### Properties
 
 -   `name` **`"orders"`** The name of the subscription
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Orders subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**  Orders subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
      function when needed to get an updated `wsToken`.
      <br />
      **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
@@ -1561,7 +1568,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 #### Properties
 
 -   `name` **`"balances"`** The name of the subscription
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Balances subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**  Balances subscription with `wallet` attribute, which is fed to the `websocketAuthTokenFetch`
      function when needed to get an updated `wsToken`.
      <br />
      **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
@@ -1596,6 +1603,79 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 -   `method` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** subscriptions
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;WebSocketRequestSubscription>** 
+
+## Type Guards
+
+[Type Guards](https://www.typescriptlang.org/docs/handbook/advanced-types.html#user-defined-type-guards) 
+are mostly useful for TypeScript users and can be used to refine general types when needing to parse or 
+build the required values. 
+
+
+### isWebSocketAuthenticatedSubscription
+
+A type guard that checks if a given value is a subscription object which represents
+an authenticated subscription. These subscriptions require the `wallet` property
+(local to idex-sdk only) and require that the `WebSocketClient` was created
+with the `websocketAuthTokenFetch` function provided.
+
+#### Parameters
+
+-   `subscription` **any** 
+
+#### Properties
+
+-   `subscription` **any** The subscription to check
+
+Returns **any** 
+
+### isWebSocketUnauthenticatedSubscription
+
+A type guard that checks if a given value is a subscription object which represents
+an unauthenticated subscription.
+
+#### Parameters
+
+-   `subscription` **any** 
+
+#### Properties
+
+-   `subscription` **any** The subscription to check
+
+Returns **any** 
+
+### isWebSocketCandlesSubscription
+
+A type guard that checks if a given value is a subscription object which represents
+a `candles` subscription. This is useful as the candles subscription has the `interval`
+property in addition to `markets` and `name`.
+
+#### Parameters
+
+-   `subscription` **any** 
+
+#### Properties
+
+-   `subscription` **any** The subscription to check
+
+Returns **any** 
+
+### isWebSocketLooseSubscription
+
+A type guard which allows using a subscription object in a "loose" manner.  This is less "safe"
+but can often be useful when parsing values where you do not need strict typing.  When true, the
+provided value will be a "partial" shape of that conforms to any/all subscription objects.
+
+This should be used lightly.
+
+#### Parameters
+
+-   `subscription` **any** 
+
+#### Properties
+
+-   `subscription` **any** The subscription to check
+
+Returns **any** 
 
 ## ECDSA Signatures
 

@@ -53,7 +53,7 @@ export class RestAuthenticatedClient {
 
   protected autoCreateHmacHeader = true;
 
-  private signer: signatures.MessageSigner;
+  private signer: undefined | signatures.MessageSigner = undefined;
 
   public constructor(options: RestAuthenticatedClientOptions) {
     const baseURL = options.sandbox
@@ -147,8 +147,13 @@ export class RestAuthenticatedClient {
    */
   public async associateWallet(
     associate: types.RestRequestAssociateWallet,
-    signer: signatures.MessageSigner = this.signer,
+    signer: undefined | signatures.MessageSigner = this.signer,
   ): Promise<types.RestResponseAssociateWallet> {
+    if (!signer) {
+      throw new Error(
+        'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
+      );
+    }
     return this.post('/wallets', {
       parameters: associate,
       signature: await signer(
@@ -184,10 +189,12 @@ export class RestAuthenticatedClient {
    */
   public async createOrder(
     order: types.RestRequestOrder,
-    signer: signatures.MessageSigner = this.signer,
+    signer: undefined | signatures.MessageSigner = this.signer,
   ): Promise<types.RestResponseOrder> {
     if (!signer) {
-      throw new Error('No signer provided');
+      throw new Error(
+        'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
+      );
     }
 
     return this.post('/orders', {
@@ -221,10 +228,12 @@ export class RestAuthenticatedClient {
    */
   public async createTestOrder(
     order: types.RestRequestOrder,
-    signer: signatures.MessageSigner = this.signer,
+    signer: undefined | signatures.MessageSigner = this.signer,
   ): Promise<types.RestResponseOrder> {
     if (!signer) {
-      throw new Error('No signer provided');
+      throw new Error(
+        'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
+      );
     }
 
     return this.post('/orders/test', {
@@ -264,10 +273,12 @@ export class RestAuthenticatedClient {
    */
   public async cancelOrder(
     cancelOrder: types.RestRequestCancelOrder,
-    signer: signatures.MessageSigner = this.signer,
+    signer: undefined | signatures.MessageSigner = this.signer,
   ): Promise<types.RestResponseCancelledOrder> {
     if (!signer) {
-      throw new Error('No signer provided');
+      throw new Error(
+        'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
+      );
     }
 
     return this.delete('/orders', {
@@ -307,10 +318,12 @@ export class RestAuthenticatedClient {
    */
   public async cancelOrders(
     cancelOrders: types.RestRequestCancelOrders,
-    signer: signatures.MessageSigner = this.signer,
+    signer: undefined | signatures.MessageSigner = this.signer,
   ): Promise<types.RestResponseCancelledOrder> {
     if (!signer) {
-      throw new Error('No signer provided');
+      throw new Error(
+        'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
+      );
     }
 
     return this.delete('/orders', {
@@ -432,8 +445,13 @@ export class RestAuthenticatedClient {
    */
   public async withdraw(
     withdrawal: types.RestRequestWithdrawal,
-    signer: signatures.MessageSigner = this.signer,
+    signer: undefined | signatures.MessageSigner = this.signer,
   ): Promise<types.RestResponseWithdrawal> {
+    if (!signer) {
+      throw new Error(
+        'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
+      );
+    }
     return this.post('/withdrawals', {
       parameters: withdrawal,
       signature: await signer(signatures.createWithdrawalSignature(withdrawal)),

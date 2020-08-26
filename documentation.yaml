@@ -89,8 +89,20 @@ toc:
     children:
       - WebSocketResponseError
       - WebSocketResponseSubscriptions
+  - name: Type Guards
+    description: |
+        [Type Guards](https://www.typescriptlang.org/docs/handbook/advanced-types.html#user-defined-type-guards) 
+        are mostly useful for TypeScript users and can be used to refine general types when needing to parse or 
+        build the required values. 
+    children:
+      - isWebSocketAuthenticatedSubscription
+      - isWebSocketUnauthenticatedSubscription
+      - isWebSocketCandlesSubscription
+      - isWebSocketLooseSubscription
   - name: ECDSA Signatures
     children:
       - MessageSigner
       - createAssociateWalletSignature
+  
+
   - name: Misc Types & Utilities
