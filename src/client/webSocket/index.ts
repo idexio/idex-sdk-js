@@ -391,18 +391,10 @@ export class WebSocketClient {
   }
 }
 
-function isAuthenticatedSubscription(
-  subscription: types.WebSocketRequestSubscription,
-): subscription is types.AuthTokenWebSocketRequestAuthenticatedSubscription {
-  return Object.keys(
-    types.WebSocketRequestAuthenticatedSubscriptionName,
-  ).includes(subscription.name);
-}
-
 // We use this instead of the other type guards to account for unhandled subscription
 // types
 function isPublicSubscription(
   subscription: types.WebSocketRequestSubscription,
 ): boolean {
-  return !isAuthenticatedSubscription(subscription);
+  return !isWebSocketAuthenticatedSubscription(subscription);
 }

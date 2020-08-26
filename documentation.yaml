@@ -99,6 +99,7 @@ toc:
       - isWebSocketUnauthenticatedSubscription
       - isWebSocketCandlesSubscription
       - isWebSocketLooseSubscription
+      - isCandleInterval
   - name: ECDSA Signatures
     children:
       - MessageSigner
