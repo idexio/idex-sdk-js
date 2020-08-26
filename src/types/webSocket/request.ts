@@ -162,7 +162,10 @@ export type WebSocketRequestSubscriptionLoose = {
 // Subscription Objects in unsubscribe must have name but all other properties are
 // considered optional
 export type WebSocketRequestUnsubscribeSubscription = AugmentedRequired<
-  Partial<WebSocketRequestUnauthenticatedSubscription>,
+  Partial<
+    | WebSocketRequestUnauthenticatedSubscription
+    | WebSocketRequestAuthenticatedSubscription
+  >,
   'name'
 >;
 
