@@ -12,9 +12,7 @@ import WebsocketTokenManager, {
 
 export type WebSocketListenerConnect = () => unknown;
 export type WebSocketListenerDisconnect = () => unknown;
-export type WebSocketListenerError = (
-  errorEvent: WebSocket.ErrorEvent,
-) => unknown;
+export type WebSocketListenerError = (error: Error) => unknown;
 export type WebSocketListenerResponse = (
   response: types.WebSocketResponse,
 ) => unknown;
@@ -212,13 +210,7 @@ export class WebSocketClient {
     cid?: string,
   ): this {
     this.subscribeRequest(subscriptions, markets, cid).catch((error) => {
-      this.handleWebSocketError({
-        error,
-        message: error.message,
-        type: 'request',
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        target: this.webSocket!,
-      });
+      this.handleWebSocketError(error);
     });
     return this;
   }
@@ -452,15 +444,16 @@ export class WebSocketClient {
     }
   }
 
-  private handleWebSocketError(event: WebSocket.ErrorEvent): void {
-    this.errorListeners.forEach((listener) => listener(event));
+  private handleWebSocketError(error: Error): void {
+    this.errorListeners.forEach((listener) => listener(error));
   }
 
-  private handleWebSocketMessage(event: WebSocket.MessageEvent): void {
-    if (typeof event.data !== 'string') {
+  private handleWebSocketMessage(data: WebSocket.Data): void {
+    if (!data) {
       throw new Error('Malformed response data'); // Shouldn't happen
     }
-    const message = transformMessage(JSON.parse(event.data));
+
+    const message = transformMessage(JSON.parse(String(data)));
     this.responseListeners.forEach((listener) => listener(message));
   }
 
