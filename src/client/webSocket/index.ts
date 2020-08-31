@@ -34,6 +34,8 @@ export type ResponseListener = (response: types.WebSocketResponse) => unknown;
  *  If true, automatically reconnects when connection is closed by the server or network errors
  * @property {string} [pathSubscription] -
  *  Path subscriptions are a quick and easy way to start receiving push updates. Eg. {market}@{subscription}_{option}
+ * @property {number} [connectTimeout] -
+ *  A timeout (in milliseconds) before failing while trying to connect to the WebSocket. Defaults to 5000.
  */
 export interface WebSocketClientOptions {
   sandbox?: boolean;
@@ -41,6 +43,7 @@ export interface WebSocketClientOptions {
   pathSubscription?: string;
   websocketAuthTokenFetch?: (wallet: string) => Promise<string>;
   shouldReconnectAutomatically?: boolean;
+  connectTimeout?: number;
 }
 
 /**
@@ -49,16 +52,12 @@ export interface WebSocketClientOptions {
  * @example
  * import * as idex from '@idexio/idex-sdk';
  *
- * const config = {
- *   baseURL: 'wss://ws.idex.io',
- *   shouldReconnectAutomatically: true,
- * }
- * const webSocketClient = new idex.WebSocketClient(
- *   config.baseURL,
- *   // Optional, but required for authenticated wallet subscriptions
- *   wallet => authenticatedClient.getWsToken(uuidv1(), wallet),
- *   config.shouldReconnectAutomatically,
- * );
+ * const webSocketClient = new idex.WebSocketClient({
+ *  sandbox: true,
+ *  shouldReconnectAutomatically: true,
+ *  websocketAuthTokenFetch: authenticatedClient.getWsToken(uuidv1(), wallet),
+ * });
+ *
  * await webSocketClient.connect();
  *
  * @param {WebSocketClientOptions} options
@@ -83,6 +82,8 @@ export class WebSocketClient {
   private webSocket: null | WebSocket = null;
 
   private webSocketTokenManager?: WebsocketTokenManager;
+
+  private connectTimeout = 5000;
 
   /**
    * Set to true when the reconnect logic should not be run.
@@ -114,6 +115,10 @@ export class WebSocketClient {
     this.disconnectListeners = new Set();
     this.errorListeners = new Set();
     this.responseListeners = new Set();
+
+    if (typeof options.connectTimeout === 'number') {
+      this.connectTimeout = options.connectTimeout;
+    }
 
     if (options.websocketAuthTokenFetch) {
       this.webSocketTokenManager = new WebsocketTokenManager(
@@ -331,6 +336,7 @@ export class WebSocketClient {
     if (this.webSocket) {
       return this.webSocket;
     }
+
     this.webSocket = new WebSocket(
       this.pathSubscription
         ? `${this.baseURL}/${this.pathSubscription}`
@@ -356,7 +362,9 @@ export class WebSocketClient {
   /**
    * Waits until the WebSocket is connected before returning
    */
-  private async resolveWhenConnected(timeout = 5000): Promise<void> {
+  private async resolveWhenConnected(
+    timeout = this.connectTimeout,
+  ): Promise<void> {
     const { webSocket: ws } = this;
     if (!ws) {
       throw new Error(

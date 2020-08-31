@@ -644,16 +644,12 @@ WebSocket API client
 ```javascript
 import * as idex from '@idexio/idex-sdk';
 
-const config = {
-  baseURL: 'wss://ws.idex.io',
-  shouldReconnectAutomatically: true,
-}
-const webSocketClient = new idex.WebSocketClient(
-  config.baseURL,
-  // Optional, but required for authenticated wallet subscriptions
-  wallet => authenticatedClient.getWsToken(uuidv1(), wallet),
-  config.shouldReconnectAutomatically,
-);
+const webSocketClient = new idex.WebSocketClient({
+ sandbox: true,
+ shouldReconnectAutomatically: true,
+ websocketAuthTokenFetch: authenticatedClient.getWsToken(uuidv1(), wallet),
+});
+
 await webSocketClient.connect();
 ```
 
@@ -703,6 +699,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
      See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
 -   `shouldReconnectAutomatically` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?**  If true, automatically reconnects when connection is closed by the server or network errors
 -   `pathSubscription` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**  Path subscriptions are a quick and easy way to start receiving push updates. Eg. {market}@{subscription}\_{option}
+-   `connectTimeout` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?**  A timeout (in milliseconds) before failing while trying to connect to the WebSocket. Defaults to 5000.
 
 ## Enums
 
