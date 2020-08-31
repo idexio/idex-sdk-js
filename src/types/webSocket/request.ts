@@ -11,10 +11,12 @@ export type WebSocketRequestSubscriptionName =
 
 export type WebSocketRequestBalancesSubscription = {
   name: 'balances';
+  wallet?: string;
 };
 
 export type WebSocketRequestOrdersSubscription = {
   name: 'orders';
+  wallet?: string;
 };
 
 export type WebSocketRequestCandlesSubscription = {
@@ -102,12 +104,8 @@ export type WebSocketRequestSubscription =
   | WebSocketRequestUnauthenticatedSubscription;
 
 export type WebSocketRequestSubscriptionsByName = {
-  balances:
-    | WebSocketRequestBalancesSubscription
-    | AuthTokenWebSocketRequestBalancesSubscription;
-  orders:
-    | WebSocketRequestOrdersSubscription
-    | AuthTokenWebSocketRequestOrdersSubscription;
+  balances: WebSocketRequestBalancesSubscription;
+  orders: WebSocketRequestOrdersSubscription;
   candles: WebSocketRequestCandlesSubscription;
   l1orderbook: WebSocketRequestL1OrderBookSubscription;
   l2orderbook: WebSocketRequestL2OrderBookSubscription;
