@@ -261,7 +261,7 @@ export class WebSocketClient {
   }
 
   public unsubscribe(
-    subscriptions: Array<
+    subscriptions?: Array<
       | types.WebSocketRequestUnsubscribeSubscription
       | types.WebSocketRequestUnsubscribeShortNames
     >,
