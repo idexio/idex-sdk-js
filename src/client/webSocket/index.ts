@@ -124,7 +124,7 @@ export class WebSocketClient {
 
   /* Connection management */
 
-  public async connect(): Promise<this> {
+  public async connect(awaitConnected = true): Promise<this> {
     if (this.isConnected()) {
       return this;
     }
@@ -132,7 +132,7 @@ export class WebSocketClient {
     this.doNotReconnect = false;
 
     // connect and await connection to succeed
-    await this.createWebSocketIfNeeded(true);
+    await this.createWebSocketIfNeeded(awaitConnected);
 
     this.resetReconnectionState();
     this.connectListeners.forEach((listener) => listener());
