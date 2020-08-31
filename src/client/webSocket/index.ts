@@ -1,21 +1,25 @@
 import WebSocket, { CONNECTING, OPEN } from 'isomorphic-ws';
 
 import * as types from '../../types';
-
 import * as constants from '../../constants';
-import WebsocketTokenManager, {
-  removeWalletFromSdkSubscription,
-} from './tokenManager';
-import { transformMessage } from './transform';
 import { isNode } from '../../utils';
 import { isWebSocketAuthenticatedSubscription } from '../../types';
 
-const nodeUserAgent = 'idex-sdk-js';
+import { transformMessage } from './transform';
+import WebsocketTokenManager, {
+  removeWalletFromSdkSubscription,
+} from './tokenManager';
 
-export type ConnectListener = () => unknown;
-export type DisconnectListener = () => unknown;
-export type ErrorListener = (errorEvent: WebSocket.ErrorEvent) => unknown;
-export type ResponseListener = (response: types.WebSocketResponse) => unknown;
+export type WebSocketListenerConnect = () => unknown;
+export type WebSocketListenerDisconnect = () => unknown;
+export type WebSocketListenerError = (
+  errorEvent: WebSocket.ErrorEvent,
+) => unknown;
+export type WebSocketListenerResponse = (
+  response: types.WebSocketResponse,
+) => unknown;
+
+const NODE_USER_AGENT = 'idex-sdk-js';
 
 /**
  * WebSocket API client options
@@ -69,15 +73,15 @@ export class WebSocketClient {
 
   private reconnectAttempt: number;
 
-  private connectListeners: Set<ConnectListener>;
+  private connectListeners: Set<WebSocketListenerConnect>;
 
-  private disconnectListeners: Set<DisconnectListener>;
+  private disconnectListeners: Set<WebSocketListenerDisconnect>;
 
-  private errorListeners: Set<ErrorListener>;
+  private errorListeners: Set<WebSocketListenerError>;
 
   private pathSubscription: string | null;
 
-  private responseListeners: Set<ResponseListener>;
+  private responseListeners: Set<WebSocketListenerResponse>;
 
   private webSocket: null | WebSocket = null;
 
@@ -163,22 +167,22 @@ export class WebSocketClient {
 
   /* Event listeners */
 
-  public onConnect(listener: ConnectListener): this {
+  public onConnect(listener: WebSocketListenerConnect): this {
     this.connectListeners.add(listener);
     return this;
   }
 
-  public onDisconnect(listener: ConnectListener): this {
+  public onDisconnect(listener: WebSocketListenerConnect): this {
     this.disconnectListeners.add(listener);
     return this;
   }
 
-  public onError(listener: ErrorListener): this {
+  public onError(listener: WebSocketListenerError): this {
     this.errorListeners.add(listener);
     return this;
   }
 
-  public onResponse(listener: ResponseListener): this {
+  public onResponse(listener: WebSocketListenerResponse): this {
     this.responseListeners.add(listener);
     return this;
   }
@@ -190,7 +194,10 @@ export class WebSocketClient {
   }
 
   public subscribe(
-    subscriptions: types.AuthTokenWebSocketRequestSubscription[],
+    subscriptions: Array<
+      | types.AuthTokenWebSocketRequestSubscription
+      | types.WebSocketRequestSubscribeShortNames
+    >,
     cid?: string,
   ): this {
     this.subscribeRequest(subscriptions, cid).catch((error) => {
@@ -252,7 +259,10 @@ export class WebSocketClient {
   /* Private */
 
   private async subscribeRequest(
-    subscriptions: types.AuthTokenWebSocketRequestSubscription[],
+    subscriptions: Array<
+      | types.AuthTokenWebSocketRequestSubscription
+      | types.WebSocketRequestSubscribeShortNames
+    >,
     cid?: string,
   ): Promise<this> {
     const authSubscriptions = subscriptions.filter(
@@ -274,11 +284,12 @@ export class WebSocketClient {
     }
 
     const uniqueWallets = Array.from(
-      new Set(
-        authSubscriptions
-          .filter((subscription) => subscription.wallet)
-          .map((subscription) => subscription.wallet),
-      ),
+      authSubscriptions.reduce((wallets, subscription) => {
+        if (subscription.wallet) {
+          wallets.add(subscription.wallet);
+        }
+        return wallets;
+      }, new Set<string>()),
     );
 
     if (!uniqueWallets.length) {
@@ -306,6 +317,7 @@ export class WebSocketClient {
 
     // Subscribe public subscriptions all at once
     const publicSubscriptions = subscriptions.filter(isPublicSubscription);
+
     if (publicSubscriptions.length > 0) {
       this.sendMessage({
         cid,
@@ -343,7 +355,7 @@ export class WebSocketClient {
         : this.baseURL,
       isNode
         ? {
-            headers: { 'User-Agent': nodeUserAgent },
+            headers: { 'User-Agent': NODE_USER_AGENT },
           }
         : undefined,
     );
@@ -461,7 +473,9 @@ export class WebSocketClient {
 // We use this instead of the other type guards to account for unhandled subscription
 // types
 function isPublicSubscription(
-  subscription: types.WebSocketRequestSubscription,
+  subscription:
+    | types.WebSocketRequestSubscribeShortNames
+    | types.WebSocketRequestSubscription,
 ): boolean {
   return !isWebSocketAuthenticatedSubscription(subscription);
 }

@@ -113,6 +113,13 @@ export type WebSocketRequestSubscriptionsByName = {
   trades: WebSocketRequestTradesSubscription;
 };
 
+export type WebSocketRequestSubscribeShortNames = Exclude<
+  keyof WebSocketRequestSubscriptionsByName,
+  'candles'
+>;
+
+export type WebSocketRequestUnsubscribeShortNames = keyof WebSocketRequestSubscriptionsByName;
+
 export type WebSocketRequestSubscribeStrictWithTopLevelMarkets = {
   method: 'subscribe';
   cid?: string;
@@ -159,8 +166,7 @@ export type WebSocketRequestSubscribe = {
   subscriptions: Array<
     | WebSocketRequestUnauthenticatedSubscription
     | WebSocketRequestAuthenticatedSubscription
-    | WebSocketRequestAuthenticatedSubscription['name']
-    | Exclude<WebSocketRequestUnauthenticatedSubscription['name'], 'candles'>
+    | WebSocketRequestSubscribeShortNames
   >;
 };
 
@@ -187,7 +193,7 @@ export type WebSocketRequestUnsubscribe = {
   markets?: string[];
   subscriptions?: (
     | WebSocketRequestUnsubscribeSubscription
-    | WebSocketRequestSubscriptionName
+    | WebSocketRequestUnsubscribeShortNames
   )[];
 };
 
