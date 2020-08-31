@@ -11,6 +11,7 @@ import {
   WEBSOCKET_AUTHENTICATED_SUBSCRIPTIONS,
   WEBSOCKET_UNAUTHENTICATED_SUBSCRIPTIONS,
 } from './constants';
+import { WebSocketResponseSubscriptions } from './response';
 
 /**
  * A type guard that checks if a given value is a subscription object which represents
@@ -81,4 +82,10 @@ export function isWebSocketLooseSubscription(
     typeof subscription === 'object' &&
     typeof subscription.name === 'string'
   );
+}
+
+export function isWebSocketResponseSubscriptions(
+  value: any,
+): value is WebSocketResponseSubscriptions {
+  return value && typeof value === 'object' && value.type === 'subscriptions';
 }

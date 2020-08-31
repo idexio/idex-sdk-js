@@ -226,11 +226,11 @@ export interface WebSocketResponseError {
  * @property {string} [Subscription.interval] - candle interval
  * @property {string} [Subscription.wallet] - wallet address
  */
-export interface WebSocketResponseSubscriptions {
+export type WebSocketResponseSubscriptions = {
   cid?: string;
   type: 'subscriptions';
   subscriptions: WebSocketRequestSubscription[];
-}
+};
 
 export type WebSocketResponse =
   | WebSocketResponseError
