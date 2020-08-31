@@ -193,14 +193,25 @@ export class WebSocketClient {
     return this.sendMessage({ method: 'subscriptions' });
   }
 
+  /**
+   * Subscribe to a given set of subscriptions, optionally providing a list of top level
+   * markets or a cid property.
+   *
+   * @see {@link https://docs.idex.io/#websocket-subscriptions|WebSocket Subscriptions}
+   *
+   * @param {AuthTokenWebSocketRequestAuthenticatedSubscription[]} subscriptions
+   * @param {string[]} [markets] - Optionally provide top level markets
+   * @param {string} [cid] - A custom identifier to identify the matching response
+   */
   public subscribe(
     subscriptions: Array<
       | types.AuthTokenWebSocketRequestSubscription
       | types.WebSocketRequestSubscribeShortNames
     >,
+    markets?: string[],
     cid?: string,
   ): this {
-    this.subscribeRequest(subscriptions, cid).catch((error) => {
+    this.subscribeRequest(subscriptions, markets, cid).catch((error) => {
       this.handleWebSocketError({
         error,
         message: error.message,
@@ -221,13 +232,15 @@ export class WebSocketClient {
    * See {@link https://docs.idex.io/#get-authentication-token|API specification}
    *
    * @param {AuthTokenWebSocketRequestAuthenticatedSubscription[]} subscriptions
-   *  @param {[string]} cid - A custom identifier to identify the matching response
+   * @param {string[]} [markets] - Optionally provide top level markets
+   * @param {string} [cid] - A custom identifier to identify the matching response
    */
   public subscribeAuthenticated(
     subscriptions: types.AuthTokenWebSocketRequestAuthenticatedSubscription[],
+    markets?: string[],
     cid?: string,
   ): this {
-    this.subscribe(subscriptions, cid);
+    this.subscribe(subscriptions, markets, cid);
     return this;
   }
 
@@ -235,23 +248,27 @@ export class WebSocketClient {
    * Subscribe which only can be used on non-authenticated subscriptions
    *
    * @param {WebSocketRequestUnauthenticatedSubscription[]} subscriptions
-   * @param {[string]} cid - A custom identifier to identify the matching response
+   * @param {string[]} [markets] - Optionally provide top level markets
+   * @param {string} [cid] - A custom identifier to identify the matching response
    */
   public subscribeUnauthenticated(
     subscriptions: types.WebSocketRequestUnauthenticatedSubscription[],
+    markets?: string[],
     cid?: string,
   ): this {
-    this.subscribe(subscriptions, cid);
+    this.subscribe(subscriptions, markets, cid);
     return this;
   }
 
   public unsubscribe(
     subscriptions: types.WebSocketRequestUnsubscribeSubscription[],
+    markets?: string[],
     cid?: string,
   ): this {
     return this.sendMessage({
       cid,
       method: 'unsubscribe',
+      markets,
       subscriptions,
     });
   }
@@ -263,6 +280,7 @@ export class WebSocketClient {
       | types.AuthTokenWebSocketRequestSubscription
       | types.WebSocketRequestSubscribeShortNames
     >,
+    markets?: string[],
     cid?: string,
   ): Promise<this> {
     const authSubscriptions = subscriptions.filter(
@@ -271,7 +289,12 @@ export class WebSocketClient {
 
     // Public subscriptions can be subscribed all at once
     if (authSubscriptions.length === 0) {
-      return this.sendMessage({ cid, method: 'subscribe', subscriptions });
+      return this.sendMessage({
+        cid,
+        method: 'subscribe',
+        markets,
+        subscriptions,
+      });
     }
 
     const { webSocketTokenManager } = this;
@@ -308,6 +331,7 @@ export class WebSocketClient {
       return this.sendMessage({
         cid,
         method: 'subscribe',
+        markets,
         subscriptions: subscriptions.map(removeWalletFromSdkSubscription),
         token: webSocketTokenManager.getLastCachedToken(uniqueWallets[0]),
       });
@@ -322,6 +346,7 @@ export class WebSocketClient {
       this.sendMessage({
         cid,
         method: 'subscribe',
+        markets,
         subscriptions: publicSubscriptions,
       });
     }
@@ -331,6 +356,7 @@ export class WebSocketClient {
       this.sendMessage({
         cid,
         method: 'subscribe',
+        markets,
         subscriptions: [removeWalletFromSdkSubscription(authSubscription)],
         token: webSocketTokenManager.getLastCachedToken(
           authSubscription.wallet,

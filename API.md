@@ -653,6 +653,22 @@ const webSocketClient = new idex.WebSocketClient({
 await webSocketClient.connect();
 ```
 
+##### subscribe
+
+-   **See: [WebSocket Subscriptions](https://docs.idex.io/#websocket-subscriptions)
+    **
+
+Subscribe to a given set of subscriptions, optionally providing a list of top level
+markets or a cid property.
+
+###### Parameters
+
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;AuthTokenWebSocketRequestAuthenticatedSubscription>** 
+-   `markets` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** Optionally provide top level markets
+-   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** A custom identifier to identify the matching response
+
+Returns **this** 
+
 ##### subscribeAuthenticated
 
 Strictly typed subscribe which only can be used on authenticated subscriptions.
@@ -665,7 +681,8 @@ See [API specification](https://docs.idex.io/#get-authentication-token)
 ###### Parameters
 
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;AuthTokenWebSocketRequestAuthenticatedSubscription>** 
--   `cid` **\[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)]** A custom identifier to identify the matching response
+-   `markets` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** Optionally provide top level markets
+-   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** A custom identifier to identify the matching response
 
 Returns **this** 
 
@@ -676,7 +693,8 @@ Subscribe which only can be used on non-authenticated subscriptions
 ###### Parameters
 
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;WebSocketRequestUnauthenticatedSubscription>** 
--   `cid` **\[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)]** A custom identifier to identify the matching response
+-   `markets` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** Optionally provide top level markets
+-   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** A custom identifier to identify the matching response
 
 Returns **this** 
 
