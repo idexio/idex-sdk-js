@@ -43,6 +43,16 @@ export type WebSocketRequestTradesSubscription = {
   markets: string[];
 };
 
+export type WebSocketRequestSubscriptionsByName = {
+  balances: WebSocketRequestBalancesSubscription;
+  orders: WebSocketRequestOrdersSubscription;
+  candles: WebSocketRequestCandlesSubscription;
+  l1orderbook: WebSocketRequestL1OrderBookSubscription;
+  l2orderbook: WebSocketRequestL2OrderBookSubscription;
+  tickers: WebSocketRequestTickersSubscription;
+  trades: WebSocketRequestTradesSubscription;
+};
+
 type WebSocketRequestWallet = {
   /**
    * wallet is required and is only handled by the idex-sdk.  It is used to auto generate the required
@@ -89,15 +99,15 @@ export type WebSocketRequestUnauthenticatedSubscription =
   | WebSocketRequestTickersSubscription
   | WebSocketRequestTradesSubscription;
 
-export type WebSocketRequestSubscription =
-  | WebSocketRequestAuthenticatedSubscription
-  | WebSocketRequestUnauthenticatedSubscription;
-
 export type AuthTokenWebSocketRequestAuthenticatedSubscription =
   | AuthTokenWebSocketRequestBalancesSubscription
   | AuthTokenWebSocketRequestOrdersSubscription;
 
 export type AuthTokenWebSocketRequestSubscription =
+  | AuthTokenWebSocketRequestAuthenticatedSubscription
+  | WebSocketRequestUnauthenticatedSubscription;
+
+export type WebSocketRequestSubscription =
   | AuthTokenWebSocketRequestAuthenticatedSubscription
   | WebSocketRequestUnauthenticatedSubscription;
 
