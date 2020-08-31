@@ -671,7 +671,7 @@ See [API specification](https://docs.idex.io/#get-authentication-token)
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;AuthTokenWebSocketRequestAuthenticatedSubscription>** 
 -   `cid` **\[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)]** A custom identifier to identify the matching response
 
-Returns **void** 
+Returns **this** 
 
 ##### subscribeUnauthenticated
 
@@ -682,7 +682,7 @@ Subscribe which only can be used on non-authenticated subscriptions
 -   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;WebSocketRequestUnauthenticatedSubscription>** 
 -   `cid` **\[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)]** A custom identifier to identify the matching response
 
-Returns **void** 
+Returns **this** 
 
 #### WebSocketClientOptions
 
