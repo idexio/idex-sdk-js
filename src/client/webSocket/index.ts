@@ -261,7 +261,10 @@ export class WebSocketClient {
   }
 
   public unsubscribe(
-    subscriptions: types.WebSocketRequestUnsubscribeSubscription[],
+    subscriptions: Array<
+      | types.WebSocketRequestUnsubscribeSubscription
+      | types.WebSocketRequestUnsubscribeShortNames
+    >,
     markets?: string[],
     cid?: string,
   ): this {
