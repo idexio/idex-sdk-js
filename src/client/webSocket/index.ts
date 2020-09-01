@@ -11,7 +11,12 @@ import WebsocketTokenManager, {
 } from './tokenManager';
 
 export type WebSocketListenerConnect = () => unknown;
-export type WebSocketListenerDisconnect = () => unknown;
+
+export type WebSocketListenerDisconnect = (
+  code: number,
+  reason: string,
+) => unknown;
+
 export type WebSocketListenerError = (error: Error) => unknown;
 export type WebSocketListenerResponse = (
   response: types.WebSocketResponse,
@@ -67,23 +72,23 @@ export interface WebSocketClientOptions {
 export class WebSocketClient {
   private baseURL: string;
 
-  private shouldReconnectAutomatically: boolean;
+  private shouldReconnectAutomatically = false;
 
-  private reconnectAttempt: number;
+  private reconnectAttempt = 0;
 
-  private connectListeners: Set<WebSocketListenerConnect>;
+  private connectListeners = new Set<WebSocketListenerConnect>();
 
-  private disconnectListeners: Set<WebSocketListenerDisconnect>;
+  private disconnectListeners = new Set<WebSocketListenerDisconnect>();
 
-  private errorListeners: Set<WebSocketListenerError>;
+  private errorListeners = new Set<WebSocketListenerError>();
 
-  private pathSubscription: string | null;
-
-  private responseListeners: Set<WebSocketListenerResponse>;
+  private responseListeners = new Set<WebSocketListenerResponse>();
 
   private webSocket: null | WebSocket = null;
 
   private webSocketTokenManager?: WebsocketTokenManager;
+
+  private pathSubscription: string | null = null;
 
   private connectTimeout = 5000;
 
@@ -106,17 +111,13 @@ export class WebSocketClient {
 
     this.baseURL = baseURL;
 
-    this.pathSubscription = options.pathSubscription || null;
+    if (options.shouldReconnectAutomatically) {
+      this.shouldReconnectAutomatically = true;
+    }
 
-    this.shouldReconnectAutomatically =
-      options.shouldReconnectAutomatically ?? false;
-
-    this.reconnectAttempt = 0;
-
-    this.connectListeners = new Set();
-    this.disconnectListeners = new Set();
-    this.errorListeners = new Set();
-    this.responseListeners = new Set();
+    if (options.pathSubscription) {
+      this.pathSubscription = options.pathSubscription;
+    }
 
     if (typeof options.connectTimeout === 'number') {
       this.connectTimeout = options.connectTimeout;
@@ -141,7 +142,6 @@ export class WebSocketClient {
     // connect and await connection to succeed
     await this.createWebSocketIfNeeded(awaitConnected);
 
-    this.resetReconnectionState();
     this.connectListeners.forEach((listener) => listener());
 
     return this;
@@ -152,15 +152,15 @@ export class WebSocketClient {
       return this; // Already disconnected
     }
 
-    // TODO wait for buffer to flush
-    this.destroyWebSocket();
-    this.disconnectListeners.forEach((listener) => listener());
+    this.doNotReconnect = true;
+    this.webSocket.close();
+    this.webSocket = null;
 
     return this;
   }
 
   public isConnected(): boolean {
-    return this.webSocket?.readyState === WebSocket.OPEN;
+    return this.webSocket?.readyState === OPEN;
   }
 
   /* Event listeners */
@@ -170,7 +170,7 @@ export class WebSocketClient {
     return this;
   }
 
-  public onDisconnect(listener: WebSocketListenerConnect): this {
+  public onDisconnect(listener: WebSocketListenerDisconnect): this {
     this.disconnectListeners.add(listener);
     return this;
   }
@@ -365,31 +365,43 @@ export class WebSocketClient {
   private async createWebSocketIfNeeded(
     awaitConnect = false,
   ): Promise<WebSocket> {
-    this.doNotReconnect = false;
-    if (this.webSocket) {
+    try {
+      this.doNotReconnect = false;
+
+      if (this.webSocket) {
+        return this.webSocket;
+      }
+
+      this.webSocket = new WebSocket(
+        this.pathSubscription
+          ? `${this.baseURL}/${this.pathSubscription}`
+          : this.baseURL,
+        isNode
+          ? {
+              headers: { 'User-Agent': NODE_USER_AGENT },
+            }
+          : undefined,
+      );
+
+      this.webSocket.on('message', this.handleWebSocketMessage.bind(this));
+      this.webSocket.on('close', this.handleWebSocketClose.bind(this));
+      this.webSocket.on('error', this.handleWebSocketError.bind(this));
+      this.webSocket.on('open', this.handleWebSocketConnect.bind(this));
+
+      if (awaitConnect) {
+        await this.resolveWhenConnected();
+      }
+
       return this.webSocket;
+    } catch (err) {
+      if (this.shouldReconnectAutomatically) {
+        this.reconnect();
+        throw new Error(
+          `Failed to connect: "${err.message}" - a reconnect attempt will be scheduled automatically`,
+        );
+      }
+      throw err;
     }
-
-    this.webSocket = new WebSocket(
-      this.pathSubscription
-        ? `${this.baseURL}/${this.pathSubscription}`
-        : this.baseURL,
-      isNode
-        ? {
-            headers: { 'User-Agent': NODE_USER_AGENT },
-          }
-        : undefined,
-    );
-
-    this.webSocket.on('message', this.handleWebSocketMessage.bind(this));
-    this.webSocket.on('close', this.handleWebSocketClose.bind(this));
-    this.webSocket.on('error', this.handleWebSocketError.bind(this));
-
-    if (awaitConnect) {
-      await this.resolveWhenConnected();
-    }
-
-    return this.webSocket;
   }
 
   /**
@@ -399,6 +411,7 @@ export class WebSocketClient {
     timeout = this.connectTimeout,
   ): Promise<void> {
     const { webSocket: ws } = this;
+
     if (!ws) {
       throw new Error(
         'Can not wait for WebSocket to connect, no WebSocket was found',
@@ -408,6 +421,7 @@ export class WebSocketClient {
     if (ws.readyState === OPEN) {
       return;
     }
+
     if (ws.readyState !== CONNECTING) {
       throw new Error(
         'Can not wait for WebSocket to connect that is not open or connecting',
@@ -416,28 +430,37 @@ export class WebSocketClient {
 
     await new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
-        this.disconnect();
+        if (this.webSocket === ws) {
+          this.disconnect();
+        }
         reject(new Error('timed out while waiting for WebSocket to connect'));
       }, timeout);
-      ws.on('open', () => {
+
+      const listener = () => {
         clearTimeout(timeoutId);
+        ws.off('open', listener);
         resolve();
-      });
+      };
+
+      ws.on('open', listener);
     });
   }
 
   private destroyWebSocket(): void {
     if (this.webSocket) {
-      // TODO wait for buffer to flush
       this.doNotReconnect = true;
-      this.webSocket.close();
+      this.webSocket.terminate();
       this.webSocket = null;
     }
   }
 
-  private handleWebSocketClose(): void {
+  private handleWebSocketConnect(): void {
+    this.resetReconnectionState();
+  }
+
+  private handleWebSocketClose(code: number, reason: string): void {
     this.webSocket = null;
-    this.disconnectListeners.forEach((listener) => listener());
+    this.disconnectListeners.forEach((listener) => listener(code, reason));
 
     if (this.shouldReconnectAutomatically && !this.doNotReconnect) {
       this.reconnect();
@@ -458,6 +481,7 @@ export class WebSocketClient {
   }
 
   private reconnect(): void {
+    this.destroyWebSocket();
     this.doNotReconnect = false;
     // Reconnect with exponential backoff
     const backoffSeconds = 2 ** this.reconnectAttempt;
