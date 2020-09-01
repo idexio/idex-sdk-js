@@ -383,10 +383,22 @@ export class WebSocketClient {
           : undefined,
       );
 
-      this.webSocket.on('message', this.handleWebSocketMessage.bind(this));
-      this.webSocket.on('close', this.handleWebSocketClose.bind(this));
-      this.webSocket.on('error', this.handleWebSocketError.bind(this));
-      this.webSocket.on('open', this.handleWebSocketConnect.bind(this));
+      this.webSocket.addEventListener(
+        'message',
+        this.handleWebSocketMessage.bind(this),
+      );
+      this.webSocket.addEventListener(
+        'close',
+        this.handleWebSocketClose.bind(this),
+      );
+      this.webSocket.addEventListener(
+        'error',
+        this.handleWebSocketError.bind(this),
+      );
+      this.webSocket.addEventListener(
+        'open',
+        this.handleWebSocketConnect.bind(this),
+      );
 
       if (awaitConnect) {
         await this.resolveWhenConnected();
@@ -438,11 +450,11 @@ export class WebSocketClient {
 
       const listener = () => {
         clearTimeout(timeoutId);
-        ws.off('open', listener);
+        ws.removeEventListener('open', listener);
         resolve();
       };
 
-      ws.on('open', listener);
+      ws.addEventListener('open', listener);
     });
   }
 
@@ -458,25 +470,27 @@ export class WebSocketClient {
     this.resetReconnectionState();
   }
 
-  private handleWebSocketClose(code: number, reason: string): void {
+  private handleWebSocketClose(event: WebSocket.CloseEvent): void {
     this.webSocket = null;
-    this.disconnectListeners.forEach((listener) => listener(code, reason));
+    this.disconnectListeners.forEach((listener) =>
+      listener(event.code, event.reason),
+    );
 
     if (this.shouldReconnectAutomatically && !this.doNotReconnect) {
       this.reconnect();
     }
   }
 
-  private handleWebSocketError(error: Error): void {
-    this.errorListeners.forEach((listener) => listener(error));
+  private handleWebSocketError(event: WebSocket.ErrorEvent): void {
+    this.errorListeners.forEach((listener) => listener(event.error));
   }
 
-  private handleWebSocketMessage(data: WebSocket.Data): void {
-    if (!data) {
+  private handleWebSocketMessage(event: WebSocket.MessageEvent): void {
+    if (!event || !event.data) {
       throw new Error('Malformed response data'); // Shouldn't happen
     }
 
-    const message = transformMessage(JSON.parse(String(data)));
+    const message = transformMessage(JSON.parse(String(event.data)));
     this.responseListeners.forEach((listener) => listener(message));
   }
 
