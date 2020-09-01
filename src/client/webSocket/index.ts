@@ -24,6 +24,10 @@ export type WebSocketListenerResponse = (
 
 const NODE_USER_AGENT = 'idex-sdk-js';
 
+// custom ping timeout in ms - how often do we ping the server
+// to check for liveness?
+const PING_TIMEOUT = 30000;
+
 /**
  * WebSocket API client options
  *
@@ -90,6 +94,10 @@ export class WebSocketClient {
 
   private pathSubscription: string | null = null;
 
+  // typescript cant type this nicely between both node and browser
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private pingTimeoutId: any;
+
   private connectTimeout = 5000;
 
   /**
@@ -148,6 +156,8 @@ export class WebSocketClient {
   }
 
   public disconnect(): this {
+    this.stopPinging();
+
     if (!this.webSocket) {
       return this; // Already disconnected
     }
@@ -459,6 +469,7 @@ export class WebSocketClient {
   }
 
   private destroyWebSocket(): void {
+    this.stopPinging();
     if (this.webSocket) {
       this.doNotReconnect = true;
       this.webSocket.terminate();
@@ -468,9 +479,52 @@ export class WebSocketClient {
 
   private handleWebSocketConnect(): void {
     this.resetReconnectionState();
+    this.startPinging();
+  }
+
+  // we need to ping from the client side to detect client-side socket closures which would otherwise
+  // not generate any close notifications.  This also aids against idle timeouts being hit.
+  // we can only send a ping from node-based environments, on browsers we need to instead use
+  // a standard message to accomplish this.
+  //
+  // the server will always only reply to custom ping messages with native pong responses so the
+  // client will not recieve any events in the browser when they occur.
+  private startPinging() {
+    this.stopPinging();
+
+    if (!this.isConnected()) {
+      return;
+    }
+
+    try {
+      const { webSocket: ws } = this;
+
+      if (!ws) {
+        return;
+      }
+
+      if (typeof ws.ping === 'function') {
+        ws.ping(JSON.stringify({ method: 'ping' }));
+      } else {
+        ws.send(JSON.stringify({ method: 'ping' }));
+      }
+    } finally {
+      if (this.isConnected()) {
+        this.pingTimeoutId = setTimeout(
+          this.startPinging.bind(this),
+          PING_TIMEOUT,
+        );
+      }
+    }
+  }
+
+  private stopPinging() {
+    clearTimeout(this.pingTimeoutId);
+    this.pingTimeoutId = undefined;
   }
 
   private handleWebSocketClose(event: WebSocket.CloseEvent): void {
+    this.stopPinging();
     this.webSocket = null;
     this.disconnectListeners.forEach((listener) =>
       listener(event.code, event.reason),
