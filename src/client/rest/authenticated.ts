@@ -1,14 +1,13 @@
-import crypto from 'crypto';
 import http from 'http';
 import https from 'https';
 import qs from 'qs';
-import Axios, { AxiosInstance, AxiosResponse } from 'axios';
+import Axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
 
 import * as types from '../../types';
 
 import * as constants from '../../constants';
 import * as signatures from '../../signatures';
-import { isNode } from '../../utils';
+import { isNode, createHmacRestRequestSignatureHeader } from '../../utils';
 
 /**
  * Authenticated API client configuration options.
@@ -52,7 +51,9 @@ export class RestAuthenticatedClient {
 
   private apiSecret: string;
 
-  private signer: signatures.MessageSigner;
+  protected autoCreateHmacHeader = true;
+
+  private signer: undefined | signatures.MessageSigner = undefined;
 
   public constructor(options: RestAuthenticatedClientOptions) {
     const baseURL = options.sandbox
@@ -94,7 +95,7 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseUser>}
    */
   public async getUser(nonce: string): Promise<types.RestResponseUser> {
-    return (await this.get('/user', { nonce })).data;
+    return this.get('/user', { nonce });
   }
 
   /**
@@ -106,7 +107,7 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseWallet[]>}
    */
   public async getWallets(nonce: string): Promise<types.RestResponseWallet[]> {
-    return (await this.get('/wallets', { nonce })).data;
+    return this.get('/wallets', { nonce });
   }
 
   /**
@@ -120,7 +121,7 @@ export class RestAuthenticatedClient {
   public async getBalances(
     findBalances: types.RestRequestFindBalances,
   ): Promise<types.RestResponseBalance[]> {
-    return (await this.get('/balances', findBalances)).data;
+    return this.get('/balances', findBalances);
   }
 
   // Wallet Association Endpoint
@@ -146,16 +147,19 @@ export class RestAuthenticatedClient {
    */
   public async associateWallet(
     associate: types.RestRequestAssociateWallet,
-    signer: signatures.MessageSigner = this.signer,
+    signer: undefined | signatures.MessageSigner = this.signer,
   ): Promise<types.RestResponseAssociateWallet> {
-    return (
-      await this.post('/wallets', {
-        parameters: associate,
-        signature: await signer(
-          signatures.createAssociateWalletSignature(associate),
-        ),
-      })
-    ).data;
+    if (!signer) {
+      throw new Error(
+        'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
+      );
+    }
+    return this.post('/wallets', {
+      parameters: associate,
+      signature: await signer(
+        signatures.createAssociateWalletSignature(associate),
+      ),
+    });
   }
 
   // Orders & Trade Endpoints
@@ -185,18 +189,18 @@ export class RestAuthenticatedClient {
    */
   public async createOrder(
     order: types.RestRequestOrder,
-    signer: signatures.MessageSigner = this.signer,
+    signer: undefined | signatures.MessageSigner = this.signer,
   ): Promise<types.RestResponseOrder> {
     if (!signer) {
-      throw new Error('No signer provided');
+      throw new Error(
+        'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
+      );
     }
 
-    return (
-      await this.post('/orders', {
-        parameters: order,
-        signature: await signer(signatures.createOrderSignature(order)),
-      })
-    ).data;
+    return this.post('/orders', {
+      parameters: order,
+      signature: await signer(signatures.createOrderSignature(order)),
+    });
   }
 
   /**
@@ -224,18 +228,18 @@ export class RestAuthenticatedClient {
    */
   public async createTestOrder(
     order: types.RestRequestOrder,
-    signer: signatures.MessageSigner = this.signer,
+    signer: undefined | signatures.MessageSigner = this.signer,
   ): Promise<types.RestResponseOrder> {
     if (!signer) {
-      throw new Error('No signer provided');
+      throw new Error(
+        'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
+      );
     }
 
-    return (
-      await this.post('/orders/test', {
-        parameters: order,
-        signature: await signer(signatures.createOrderSignature(order)),
-      })
-    ).data;
+    return this.post('/orders/test', {
+      parameters: order,
+      signature: await signer(signatures.createOrderSignature(order)),
+    });
   }
 
   /**
@@ -269,20 +273,20 @@ export class RestAuthenticatedClient {
    */
   public async cancelOrder(
     cancelOrder: types.RestRequestCancelOrder,
-    signer: signatures.MessageSigner = this.signer,
+    signer: undefined | signatures.MessageSigner = this.signer,
   ): Promise<types.RestResponseCancelledOrder> {
     if (!signer) {
-      throw new Error('No signer provided');
+      throw new Error(
+        'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
+      );
     }
 
-    return (
-      await this.delete('/orders', {
-        parameters: cancelOrder,
-        signature: await signer(
-          signatures.createCancelOrderSignature(cancelOrder),
-        ),
-      })
-    ).data;
+    return this.delete('/orders', {
+      parameters: cancelOrder,
+      signature: await signer(
+        signatures.createCancelOrderSignature(cancelOrder),
+      ),
+    });
   }
 
   /**
@@ -314,20 +318,20 @@ export class RestAuthenticatedClient {
    */
   public async cancelOrders(
     cancelOrders: types.RestRequestCancelOrders,
-    signer: signatures.MessageSigner = this.signer,
+    signer: undefined | signatures.MessageSigner = this.signer,
   ): Promise<types.RestResponseCancelledOrder> {
     if (!signer) {
-      throw new Error('No signer provided');
+      throw new Error(
+        'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
+      );
     }
 
-    return (
-      await this.delete('/orders', {
-        parameters: cancelOrders,
-        signature: await signer(
-          signatures.createCancelOrderSignature(cancelOrders),
-        ),
-      })
-    ).data;
+    return this.delete('/orders', {
+      parameters: cancelOrders,
+      signature: await signer(
+        signatures.createCancelOrderSignature(cancelOrders),
+      ),
+    });
   }
 
   /**
@@ -341,7 +345,7 @@ export class RestAuthenticatedClient {
   public async getOrder(
     findOrder: types.RestRequestFindOrder,
   ): Promise<types.RestResponseOrder> {
-    return (await this.get('/orders', findOrder)).data;
+    return this.get('/orders', findOrder);
   }
 
   /**
@@ -355,7 +359,7 @@ export class RestAuthenticatedClient {
   public async getOrders(
     findOrders: types.RestRequestFindOrders,
   ): Promise<types.RestResponseOrder[]> {
-    return (await this.get('/orders', findOrders)).data;
+    return this.get('/orders', findOrders);
   }
 
   /**
@@ -369,7 +373,7 @@ export class RestAuthenticatedClient {
   public async getFill(
     findFill: types.RestRequestFindFill,
   ): Promise<types.RestResponseFill> {
-    return (await this.get('/fills', findFill)).data;
+    return this.get('/fills', findFill);
   }
 
   /**
@@ -383,7 +387,7 @@ export class RestAuthenticatedClient {
   public async getFills(
     findFills: types.RestRequestFindFills,
   ): Promise<types.RestResponseFill[]> {
-    return (await this.get('/fills', findFills)).data;
+    return this.get('/fills', findFills);
   }
 
   // Deposit Endpoints
@@ -399,7 +403,7 @@ export class RestAuthenticatedClient {
   public async getDeposit(
     findDeposit: types.RestRequestFindDeposit,
   ): Promise<types.RestResponseDeposit> {
-    return (await this.get('/deposits', findDeposit)).data;
+    return this.get('/deposits', findDeposit);
   }
 
   /**
@@ -413,7 +417,7 @@ export class RestAuthenticatedClient {
   public async getDeposits(
     findDeposits: types.RestRequestFindDeposits,
   ): Promise<types.RestResponseDeposit[]> {
-    return (await this.get('/deposits', findDeposits)).data;
+    return this.get('/deposits', findDeposits);
   }
 
   // Withdrawal Endpoints
@@ -441,16 +445,17 @@ export class RestAuthenticatedClient {
    */
   public async withdraw(
     withdrawal: types.RestRequestWithdrawal,
-    signer: signatures.MessageSigner = this.signer,
+    signer: undefined | signatures.MessageSigner = this.signer,
   ): Promise<types.RestResponseWithdrawal> {
-    return (
-      await this.post('/withdrawals', {
-        parameters: withdrawal,
-        signature: await signer(
-          signatures.createWithdrawalSignature(withdrawal),
-        ),
-      })
-    ).data;
+    if (!signer) {
+      throw new Error(
+        'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
+      );
+    }
+    return this.post('/withdrawals', {
+      parameters: withdrawal,
+      signature: await signer(signatures.createWithdrawalSignature(withdrawal)),
+    });
   }
 
   /**
@@ -464,7 +469,7 @@ export class RestAuthenticatedClient {
   public async getWithdrawal(
     findWithdrawal: types.RestRequestFindWithdrawal,
   ): Promise<types.RestResponseWithdrawal> {
-    return (await this.get('/withdrawals', findWithdrawal)).data;
+    return this.get('/withdrawals', findWithdrawal);
   }
 
   /**
@@ -478,7 +483,7 @@ export class RestAuthenticatedClient {
   public async getWithdrawals(
     findWithdrawals: types.RestRequestFindWithdrawals,
   ): Promise<types.RestResponseWithdrawal[]> {
-    return (await this.get('/withdrawals', findWithdrawals)).data;
+    return this.get('/withdrawals', findWithdrawals);
   }
 
   // WebSocket Authentication Endpoints
@@ -492,63 +497,102 @@ export class RestAuthenticatedClient {
    * @param {string} wallet - Ethereum wallet address
    */
   public async getWsToken(nonce: string, wallet: string): Promise<string> {
-    return (await this.get('/wsToken', { nonce, wallet })).data.token;
+    return (await this.get('/wsToken', { nonce, wallet })).token;
   }
 
   // Internal methods exposed for advanced usage
 
   protected async get(
     endpoint: string,
-    RestRequestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
-  ): Promise<AxiosResponse> {
-    return this.axios({
-      method: 'GET',
-      url: `${this.baseURL}${endpoint}`,
-      headers: this.createHmacRestRequestSignatureHeader(
-        // The param serializer for HMAC must be the same as that used for the request itself
-        qs.stringify(RestRequestParams),
-      ),
-      params: RestRequestParams,
-      paramsSerializer: qs.stringify,
-    });
+    params: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+  ): Promise<AxiosResponse['data']> {
+    return (
+      await this.request(endpoint, {
+        method: 'GET',
+        params,
+        paramsSerializer: qs.stringify,
+      })
+    ).data;
   }
 
   protected async post(
     endpoint: string,
-    RestRequestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
-  ): Promise<AxiosResponse> {
-    return this.axios({
-      method: 'POST',
-      url: `${this.baseURL}${endpoint}`,
-      headers: this.createHmacRestRequestSignatureHeader(
-        JSON.stringify(RestRequestParams),
-      ),
-      data: RestRequestParams,
-    });
+    data: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+  ): Promise<AxiosResponse['data']> {
+    return (
+      await this.request(endpoint, {
+        method: 'POST',
+        data,
+      })
+    ).data;
   }
 
   protected async delete(
     endpoint: string,
-    RestRequestParams: types.RestRequestCancelOrdersBody, // eslint-disable-line @typescript-eslint/no-explicit-any
-  ): Promise<AxiosResponse> {
-    return this.axios({
-      method: 'DELETE',
-      url: `${this.baseURL}${endpoint}`,
-      headers: this.createHmacRestRequestSignatureHeader(
-        JSON.stringify(RestRequestParams),
-      ),
-      data: RestRequestParams,
-    });
+    data: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+  ): Promise<AxiosResponse['data']> {
+    return (
+      await this.request(endpoint, {
+        method: 'DELETE',
+        data,
+      })
+    ).data;
   }
 
-  protected createHmacRestRequestSignatureHeader(
-    payload: string,
-  ): { [constants.REST_HMAC_SIGNATURE_HEADER]: string } {
-    const hmacRestRequestSignature = crypto
-      .createHmac('sha256', this.apiSecret)
-      .update(payload)
-      .digest('hex');
+  protected async put(
+    endpoint: string,
+    data: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+  ): Promise<AxiosResponse['data']> {
+    return (
+      await this.request(endpoint, {
+        method: 'PUT',
+        data,
+      })
+    ).data;
+  }
 
-    return { [constants.REST_HMAC_SIGNATURE_HEADER]: hmacRestRequestSignature };
+  protected async patch(
+    endpoint: string,
+    data: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+  ): Promise<AxiosResponse['data']> {
+    return (
+      await this.request(endpoint, {
+        method: 'PATCH',
+        data,
+      })
+    ).data;
+  }
+
+  protected request(
+    endpoint: string,
+    config: Partial<AxiosRequestConfig> &
+      (
+        | { method: 'GET' }
+        | {
+            method: Exclude<AxiosRequestConfig['method'], 'GET' | 'get'>;
+            data: { [key: string]: unknown };
+          }
+      ),
+    createHmacSignatureHeader = this.autoCreateHmacHeader,
+  ): Promise<AxiosResponse> {
+    const request: AxiosRequestConfig = {
+      headers: {},
+      ...config,
+      url: `${this.baseURL}${endpoint}`,
+    };
+
+    if (createHmacSignatureHeader) {
+      Object.assign(
+        request.headers,
+        createHmacRestRequestSignatureHeader(
+          config.method === 'GET'
+            ? qs.stringify(config.params)
+            : JSON.stringify(config.data),
+          this.apiSecret,
+        ),
+      );
+    }
+
+    return this.axios(request);
   }
 }

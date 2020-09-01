@@ -1,20 +1,32 @@
-import WebSocket from 'isomorphic-ws';
+import WebSocket, { CONNECTING, OPEN } from 'isomorphic-ws';
 
 import * as types from '../../types';
-
 import * as constants from '../../constants';
+import { isNode } from '../../utils';
+import { isWebSocketAuthenticatedSubscription } from '../../types';
+
+import { transformMessage } from './transform';
 import WebsocketTokenManager, {
   removeWalletFromSdkSubscription,
 } from './tokenManager';
-import { transformMessage } from './transform';
-import { isNode } from '../../utils';
 
-const nodeUserAgent = 'idex-sdk-js';
+export type WebSocketListenerConnect = () => unknown;
 
-export type ConnectListener = () => unknown;
-export type DisconnectListener = () => unknown;
-export type ErrorListener = (errorEvent: WebSocket.ErrorEvent) => unknown;
-export type ResponseListener = (response: types.WebSocketResponse) => unknown;
+export type WebSocketListenerDisconnect = (
+  code: number,
+  reason: string,
+) => unknown;
+
+export type WebSocketListenerError = (error: Error) => unknown;
+export type WebSocketListenerResponse = (
+  response: types.WebSocketResponse,
+) => unknown;
+
+const NODE_USER_AGENT = 'idex-sdk-js';
+
+// custom ping timeout in ms - how often do we ping the server
+// to check for liveness?
+const PING_TIMEOUT = 30000;
 
 /**
  * WebSocket API client options
@@ -33,6 +45,8 @@ export type ResponseListener = (response: types.WebSocketResponse) => unknown;
  *  If true, automatically reconnects when connection is closed by the server or network errors
  * @property {string} [pathSubscription] -
  *  Path subscriptions are a quick and easy way to start receiving push updates. Eg. {market}@{subscription}_{option}
+ * @property {number} [connectTimeout] -
+ *  A timeout (in milliseconds) before failing while trying to connect to the WebSocket. Defaults to 5000.
  */
 export interface WebSocketClientOptions {
   sandbox?: boolean;
@@ -40,6 +54,7 @@ export interface WebSocketClientOptions {
   pathSubscription?: string;
   websocketAuthTokenFetch?: (wallet: string) => Promise<string>;
   shouldReconnectAutomatically?: boolean;
+  connectTimeout?: number;
 }
 
 /**
@@ -48,16 +63,12 @@ export interface WebSocketClientOptions {
  * @example
  * import * as idex from '@idexio/idex-sdk';
  *
- * const config = {
- *   baseURL: 'wss://ws.idex.io',
- *   shouldReconnectAutomatically: true,
- * }
- * const webSocketClient = new idex.WebSocketClient(
- *   config.baseURL,
- *   // Optional, but required for authenticated wallet subscriptions
- *   wallet => authenticatedClient.getWsToken(uuidv1(), wallet),
- *   config.shouldReconnectAutomatically,
- * );
+ * const webSocketClient = new idex.WebSocketClient({
+ *  sandbox: true,
+ *  shouldReconnectAutomatically: true,
+ *  websocketAuthTokenFetch: authenticatedClient.getWsToken(uuidv1(), wallet),
+ * });
+ *
  * await webSocketClient.connect();
  *
  * @param {WebSocketClientOptions} options
@@ -65,23 +76,29 @@ export interface WebSocketClientOptions {
 export class WebSocketClient {
   private baseURL: string;
 
-  private shouldReconnectAutomatically: boolean;
+  private shouldReconnectAutomatically = false;
 
-  private reconnectAttempt: number;
+  private reconnectAttempt = 0;
 
-  private connectListeners: Set<ConnectListener>;
+  private connectListeners = new Set<WebSocketListenerConnect>();
 
-  private disconnectListeners: Set<DisconnectListener>;
+  private disconnectListeners = new Set<WebSocketListenerDisconnect>();
 
-  private errorListeners: Set<ErrorListener>;
+  private errorListeners = new Set<WebSocketListenerError>();
 
-  private pathSubscription: string | null;
+  private responseListeners = new Set<WebSocketListenerResponse>();
 
-  private responseListeners: Set<ResponseListener>;
-
-  private webSocket: null | WebSocket;
+  private webSocket: null | WebSocket = null;
 
   private webSocketTokenManager?: WebsocketTokenManager;
+
+  private pathSubscription: string | null = null;
+
+  // typescript cant type this nicely between both node and browser
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private pingTimeoutId: any;
+
+  private connectTimeout = 5000;
 
   /**
    * Set to true when the reconnect logic should not be run.
@@ -102,17 +119,17 @@ export class WebSocketClient {
 
     this.baseURL = baseURL;
 
-    this.pathSubscription = options.pathSubscription || null;
+    if (options.shouldReconnectAutomatically) {
+      this.shouldReconnectAutomatically = true;
+    }
 
-    this.shouldReconnectAutomatically =
-      options.shouldReconnectAutomatically ?? false;
+    if (options.pathSubscription) {
+      this.pathSubscription = options.pathSubscription;
+    }
 
-    this.reconnectAttempt = 0;
-
-    this.connectListeners = new Set();
-    this.disconnectListeners = new Set();
-    this.errorListeners = new Set();
-    this.responseListeners = new Set();
+    if (typeof options.connectTimeout === 'number') {
+      this.connectTimeout = options.connectTimeout;
+    }
 
     if (options.websocketAuthTokenFetch) {
       this.webSocketTokenManager = new WebsocketTokenManager(
@@ -123,76 +140,166 @@ export class WebSocketClient {
 
   /* Connection management */
 
-  public async connect(): Promise<void> {
+  public async connect(awaitConnected = true): Promise<this> {
     if (this.isConnected()) {
-      return;
+      return this;
     }
 
     this.doNotReconnect = false;
 
-    const webSocket = this.createWebSocketIfNeeded();
+    // connect and await connection to succeed
+    await this.createWebSocketIfNeeded(awaitConnected);
 
-    await new Promise((resolve) => {
-      (function waitForOpen(ws: WebSocket): void {
-        if (ws.readyState === WebSocket.OPEN) {
-          return resolve();
-        }
-        setTimeout(() => waitForOpen(ws), 100);
-      })(webSocket);
-    });
-
-    this.resetReconnectionState();
     this.connectListeners.forEach((listener) => listener());
+
+    return this;
   }
 
-  public disconnect(): void {
+  public disconnect(): this {
+    this.stopPinging();
+
     if (!this.webSocket) {
-      return; // Already disconnected
+      return this; // Already disconnected
     }
 
-    // TODO wait for buffer to flush
-    this.destroyWebSocket();
-    this.disconnectListeners.forEach((listener) => listener());
+    this.doNotReconnect = true;
+    this.webSocket.close();
+    this.webSocket = null;
+
+    return this;
   }
 
   public isConnected(): boolean {
-    return this.webSocket?.readyState === WebSocket.OPEN;
+    return this.webSocket?.readyState === OPEN;
   }
 
   /* Event listeners */
 
-  public onConnect(listener: ConnectListener): void {
+  public onConnect(listener: WebSocketListenerConnect): this {
     this.connectListeners.add(listener);
+    return this;
   }
 
-  public onDisconnect(listener: ConnectListener): void {
+  public onDisconnect(listener: WebSocketListenerDisconnect): this {
     this.disconnectListeners.add(listener);
+    return this;
   }
 
-  public onError(listener: ErrorListener): void {
+  public onError(listener: WebSocketListenerError): this {
     this.errorListeners.add(listener);
+    return this;
   }
 
-  public onResponse(listener: ResponseListener): void {
+  public onResponse(listener: WebSocketListenerResponse): this {
     this.responseListeners.add(listener);
+    return this;
   }
 
   /* Subscription management */
 
-  public listSubscriptions(): void {
-    this.sendMessage({ method: 'subscriptions' });
+  public listSubscriptions(): this {
+    return this.sendMessage({ method: 'subscriptions' });
   }
 
-  public async subscribe(
-    subscriptions: types.AuthTokenWebSocketRequestSubscription[],
+  /**
+   * Subscribe to a given set of subscriptions, optionally providing a list of top level
+   * markets or a cid property.
+   *
+   * @see {@link https://docs.idex.io/#websocket-subscriptions|WebSocket Subscriptions}
+   *
+   * @param {AuthTokenWebSocketRequestAuthenticatedSubscription[]} subscriptions
+   * @param {string[]} [markets] - Optionally provide top level markets
+   * @param {string} [cid] - A custom identifier to identify the matching response
+   */
+  public subscribe(
+    subscriptions: Array<
+      | types.AuthTokenWebSocketRequestSubscription
+      | types.WebSocketRequestUnauthenticatedSubscription['name']
+    >,
+    markets?: string[],
     cid?: string,
-  ): Promise<void> {
-    const authSubscriptions = subscriptions.filter(isAuthenticatedSubscription);
+  ): this {
+    this.subscribeRequest(subscriptions, markets, cid).catch((error) => {
+      this.handleWebSocketError(error);
+    });
+    return this;
+  }
+
+  /**
+   * Strictly typed subscribe which only can be used on authenticated subscriptions.
+   *
+   * For this methods you need to pass `websocketAuthTokenFetch` to the websocket constructor.
+   * Library will automatically refresh user's wallet auth tokens for you.
+   *
+   * See {@link https://docs.idex.io/#get-authentication-token|API specification}
+   *
+   * @param {AuthTokenWebSocketRequestAuthenticatedSubscription[]} subscriptions
+   * @param {string[]} [markets] - Optionally provide top level markets
+   * @param {string} [cid] - A custom identifier to identify the matching response
+   */
+  public subscribeAuthenticated(
+    subscriptions: types.AuthTokenWebSocketRequestAuthenticatedSubscription[],
+    markets?: string[],
+    cid?: string,
+  ): this {
+    this.subscribe(subscriptions, markets, cid);
+    return this;
+  }
+
+  /**
+   * Subscribe which only can be used on non-authenticated subscriptions
+   *
+   * @param {WebSocketRequestUnauthenticatedSubscription[]} subscriptions
+   * @param {string[]} [markets] - Optionally provide top level markets
+   * @param {string} [cid] - A custom identifier to identify the matching response
+   */
+  public subscribeUnauthenticated(
+    subscriptions: types.WebSocketRequestUnauthenticatedSubscription[],
+    markets?: string[],
+    cid?: string,
+  ): this {
+    this.subscribe(subscriptions, markets, cid);
+    return this;
+  }
+
+  public unsubscribe(
+    subscriptions?: Array<
+      | types.WebSocketRequestUnsubscribeSubscription
+      | types.WebSocketRequestUnsubscribeShortNames
+    >,
+    markets?: string[],
+    cid?: string,
+  ): this {
+    return this.sendMessage({
+      cid,
+      method: 'unsubscribe',
+      markets,
+      subscriptions,
+    });
+  }
+
+  /* Private */
+
+  private async subscribeRequest(
+    subscriptions: Array<
+      | types.AuthTokenWebSocketRequestSubscription
+      | types.WebSocketRequestUnauthenticatedSubscription['name']
+    >,
+    markets?: string[],
+    cid?: string,
+  ): Promise<this> {
+    const authSubscriptions = subscriptions.filter(
+      isWebSocketAuthenticatedSubscription,
+    );
 
     // Public subscriptions can be subscribed all at once
     if (authSubscriptions.length === 0) {
-      this.sendMessage({ cid, method: 'subscribe', subscriptions });
-      return;
+      return this.sendMessage({
+        cid,
+        method: 'subscribe',
+        markets,
+        subscriptions,
+      });
     }
 
     const { webSocketTokenManager } = this;
@@ -205,11 +312,12 @@ export class WebSocketClient {
     }
 
     const uniqueWallets = Array.from(
-      new Set(
-        authSubscriptions
-          .filter((subscription) => subscription.wallet)
-          .map((subscription) => subscription.wallet),
-      ),
+      authSubscriptions.reduce((wallets, subscription) => {
+        if (subscription.wallet) {
+          wallets.add(subscription.wallet);
+        }
+        return wallets;
+      }, new Set<string>()),
     );
 
     if (!uniqueWallets.length) {
@@ -225,23 +333,25 @@ export class WebSocketClient {
 
     // For single wallet, send all subscriptions at once (also unauthenticated)
     if (uniqueWallets.length === 1) {
-      this.sendMessage({
+      return this.sendMessage({
         cid,
         method: 'subscribe',
+        markets,
         subscriptions: subscriptions.map(removeWalletFromSdkSubscription),
         token: webSocketTokenManager.getLastCachedToken(uniqueWallets[0]),
       });
-      return;
     }
 
     // In specific case when user subscribed with more than 1 wallet...
 
     // Subscribe public subscriptions all at once
     const publicSubscriptions = subscriptions.filter(isPublicSubscription);
+
     if (publicSubscriptions.length > 0) {
       this.sendMessage({
         cid,
         method: 'subscribe',
+        markets,
         subscriptions: publicSubscriptions,
       });
     }
@@ -251,86 +361,174 @@ export class WebSocketClient {
       this.sendMessage({
         cid,
         method: 'subscribe',
+        markets,
         subscriptions: [removeWalletFromSdkSubscription(authSubscription)],
         token: webSocketTokenManager.getLastCachedToken(
           authSubscription.wallet,
         ),
       });
     });
+
+    return this;
+  }
+
+  private async createWebSocketIfNeeded(
+    awaitConnect = false,
+  ): Promise<WebSocket> {
+    try {
+      this.doNotReconnect = false;
+
+      if (this.webSocket) {
+        return this.webSocket;
+      }
+
+      this.webSocket = new WebSocket(
+        this.pathSubscription
+          ? `${this.baseURL}/${this.pathSubscription}`
+          : this.baseURL,
+        isNode
+          ? {
+              headers: { 'User-Agent': NODE_USER_AGENT },
+            }
+          : undefined,
+      );
+
+      this.webSocket.addEventListener(
+        'message',
+        this.handleWebSocketMessage.bind(this),
+      );
+      this.webSocket.addEventListener(
+        'close',
+        this.handleWebSocketClose.bind(this),
+      );
+      this.webSocket.addEventListener(
+        'error',
+        this.handleWebSocketError.bind(this),
+      );
+      this.webSocket.addEventListener(
+        'open',
+        this.handleWebSocketConnect.bind(this),
+      );
+
+      if (awaitConnect) {
+        await this.resolveWhenConnected();
+      }
+
+      return this.webSocket;
+    } catch (err) {
+      if (this.shouldReconnectAutomatically) {
+        this.reconnect();
+        throw new Error(
+          `Failed to connect: "${err.message}" - a reconnect attempt will be scheduled automatically`,
+        );
+      }
+      throw err;
+    }
   }
 
   /**
-   * Strictly typed subscribe which only can be used on authenticated subscriptions.
-   *
-   * For this methods you need to pass `websocketAuthTokenFetch` to the websocket constructor.
-   * Library will automatically refresh user's wallet auth tokens for you.
-   *
-   * See {@link https://docs.idex.io/#get-authentication-token|API specification}
-   *
-   * @param {AuthTokenWebSocketRequestAuthenticatedSubscription[]} subscriptions
+   * Waits until the WebSocket is connected before returning
    */
-  public subscribeAuthenticated(
-    subscriptions: types.AuthTokenWebSocketRequestAuthenticatedSubscription[],
-  ): void {
-    this.subscribe(subscriptions);
-  }
+  private async resolveWhenConnected(
+    timeout = this.connectTimeout,
+  ): Promise<void> {
+    const { webSocket: ws } = this;
 
-  /**
-   * Subscribe which only can be used on non-authenticated subscriptions
-   *
-   * @param {WebSocketRequestUnauthenticatedSubscription[]} subscriptions
-   */
-  public subscribeUnauthenticated(
-    subscriptions: types.WebSocketRequestUnauthenticatedSubscription[],
-  ): void {
-    this.subscribe(subscriptions);
-  }
+    if (!ws) {
+      throw new Error(
+        'Can not wait for WebSocket to connect, no WebSocket was found',
+      );
+    }
 
-  public unsubscribe(
-    subscriptions: types.WebSocketRequestUnsubscribeSubscription[],
-  ): void {
-    this.sendMessage({
-      method: 'unsubscribe',
-      subscriptions,
+    if (ws.readyState === OPEN) {
+      return;
+    }
+
+    if (ws.readyState !== CONNECTING) {
+      throw new Error(
+        'Can not wait for WebSocket to connect that is not open or connecting',
+      );
+    }
+
+    await new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        if (this.webSocket === ws) {
+          this.disconnect();
+        }
+        reject(new Error('timed out while waiting for WebSocket to connect'));
+      }, timeout);
+
+      const listener = () => {
+        clearTimeout(timeoutId);
+        ws.removeEventListener('open', listener);
+        resolve();
+      };
+
+      ws.addEventListener('open', listener);
     });
   }
 
-  /* Private */
-
-  private createWebSocketIfNeeded(): WebSocket {
-    this.doNotReconnect = false;
-    if (this.webSocket) {
-      return this.webSocket;
-    }
-    const webSocket = new WebSocket(
-      this.pathSubscription
-        ? `${this.baseURL}/${this.pathSubscription}`
-        : this.baseURL,
-      isNode
-        ? {
-            headers: { 'User-Agent': nodeUserAgent },
-          }
-        : undefined,
-    );
-    webSocket.onmessage = this.handleWebSocketMessage.bind(this);
-    webSocket.onclose = this.handleWebSocketClose.bind(this);
-    webSocket.onerror = this.handleWebSocketError.bind(this);
-    this.webSocket = webSocket;
-    return webSocket;
-  }
-
   private destroyWebSocket(): void {
+    this.stopPinging();
     if (this.webSocket) {
-      // TODO wait for buffer to flush
       this.doNotReconnect = true;
-      this.webSocket.close();
+      this.webSocket.terminate();
       this.webSocket = null;
     }
   }
 
-  private handleWebSocketClose(): void {
+  private handleWebSocketConnect(): void {
+    this.resetReconnectionState();
+    this.startPinging();
+  }
+
+  // we need to ping from the client side to detect client-side socket closures which would otherwise
+  // not generate any close notifications.  This also aids against idle timeouts being hit.
+  // we can only send a ping from node-based environments, on browsers we need to instead use
+  // a standard message to accomplish this.
+  //
+  // the server will always only reply to custom ping messages with native pong responses so the
+  // client will not recieve any events in the browser when they occur.
+  private startPinging() {
+    this.stopPinging();
+
+    if (!this.isConnected()) {
+      return;
+    }
+
+    try {
+      const { webSocket: ws } = this;
+
+      if (!ws) {
+        return;
+      }
+
+      if (typeof ws.ping === 'function') {
+        ws.ping(JSON.stringify({ method: 'ping' }));
+      } else {
+        ws.send(JSON.stringify({ method: 'ping' }));
+      }
+    } finally {
+      if (this.isConnected()) {
+        this.pingTimeoutId = setTimeout(
+          this.startPinging.bind(this),
+          PING_TIMEOUT,
+        );
+      }
+    }
+  }
+
+  private stopPinging() {
+    clearTimeout(this.pingTimeoutId);
+    this.pingTimeoutId = undefined;
+  }
+
+  private handleWebSocketClose(event: WebSocket.CloseEvent): void {
+    this.stopPinging();
     this.webSocket = null;
-    this.disconnectListeners.forEach((listener) => listener());
+    this.disconnectListeners.forEach((listener) =>
+      listener(event.code, event.reason),
+    );
 
     if (this.shouldReconnectAutomatically && !this.doNotReconnect) {
       this.reconnect();
@@ -338,18 +536,20 @@ export class WebSocketClient {
   }
 
   private handleWebSocketError(event: WebSocket.ErrorEvent): void {
-    this.errorListeners.forEach((listener) => listener(event));
+    this.errorListeners.forEach((listener) => listener(event.error));
   }
 
   private handleWebSocketMessage(event: WebSocket.MessageEvent): void {
-    if (typeof event.data !== 'string') {
+    if (!event || !event.data) {
       throw new Error('Malformed response data'); // Shouldn't happen
     }
-    const message = transformMessage(JSON.parse(event.data));
+
+    const message = transformMessage(JSON.parse(String(event.data)));
     this.responseListeners.forEach((listener) => listener(message));
   }
 
   private reconnect(): void {
+    this.destroyWebSocket();
     this.doNotReconnect = false;
     // Reconnect with exponential backoff
     const backoffSeconds = 2 ** this.reconnectAttempt;
@@ -362,12 +562,14 @@ export class WebSocketClient {
     this.reconnectAttempt = 0;
   }
 
-  private sendMessage(payload: types.WebSocketRequest): void {
+  private sendMessage(payload: types.WebSocketRequest): this {
     const { webSocket } = this;
 
     this.throwIfDisconnected(webSocket);
 
     webSocket.send(JSON.stringify(payload));
+
+    return this;
   }
 
   private throwIfDisconnected(
@@ -382,16 +584,12 @@ export class WebSocketClient {
   }
 }
 
-function isAuthenticatedSubscription(
-  subscription: types.WebSocketRequestSubscription,
-): subscription is types.AuthTokenWebSocketRequestAuthenticatedSubscription {
-  return Object.keys(
-    types.WebSocketRequestAuthenticatedSubscriptionName,
-  ).includes(subscription.name);
-}
-
+// We use this instead of the other type guards to account for unhandled subscription
+// types
 function isPublicSubscription(
-  subscription: types.WebSocketRequestSubscription,
+  subscription:
+    | types.WebSocketRequestUnauthenticatedSubscription['name']
+    | types.WebSocketRequestSubscription,
 ): boolean {
-  return !isAuthenticatedSubscription(subscription);
+  return !isWebSocketAuthenticatedSubscription(subscription);
 }
