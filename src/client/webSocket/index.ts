@@ -204,7 +204,7 @@ export class WebSocketClient {
   public subscribe(
     subscriptions: Array<
       | types.AuthTokenWebSocketRequestSubscription
-      | types.WebSocketRequestSubscribeShortNames
+      | types.WebSocketRequestUnauthenticatedSubscription['name']
     >,
     markets?: string[],
     cid?: string,
@@ -273,7 +273,7 @@ export class WebSocketClient {
   private async subscribeRequest(
     subscriptions: Array<
       | types.AuthTokenWebSocketRequestSubscription
-      | types.WebSocketRequestSubscribeShortNames
+      | types.WebSocketRequestUnauthenticatedSubscription['name']
     >,
     markets?: string[],
     cid?: string,
@@ -496,7 +496,7 @@ export class WebSocketClient {
 // types
 function isPublicSubscription(
   subscription:
-    | types.WebSocketRequestSubscribeShortNames
+    | types.WebSocketRequestUnauthenticatedSubscription['name']
     | types.WebSocketRequestSubscription,
 ): boolean {
   return !isWebSocketAuthenticatedSubscription(subscription);

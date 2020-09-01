@@ -166,7 +166,7 @@ export type WebSocketRequestSubscribe = {
   subscriptions: Array<
     | WebSocketRequestUnauthenticatedSubscription
     | WebSocketRequestAuthenticatedSubscription
-    | WebSocketRequestSubscribeShortNames
+    | WebSocketRequestUnauthenticatedSubscription['name']
   >;
 };
 

@@ -1,6 +1,6 @@
 import {
   WebSocketRequestSubscription,
-  WebSocketRequestSubscribeShortNames,
+  WebSocketRequestUnauthenticatedSubscription,
 } from '../../types';
 
 type TokenValue = {
@@ -83,9 +83,11 @@ export default class WebsocketTokenManager {
  */
 export const removeWalletFromSdkSubscription = (
   subscription:
-    | WebSocketRequestSubscribeShortNames
+    | WebSocketRequestUnauthenticatedSubscription['name']
     | (WebSocketRequestSubscription & { wallet?: string }),
-): WebSocketRequestSubscribeShortNames | WebSocketRequestSubscription => {
+):
+  | WebSocketRequestUnauthenticatedSubscription['name']
+  | WebSocketRequestSubscription => {
   if (typeof subscription === 'string') {
     return subscription;
   }
