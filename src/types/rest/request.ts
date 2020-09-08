@@ -298,7 +298,7 @@ export type RestRequestOrderWithStopPrice =
  * @property {ustring} [clientOrderId] - Client-supplied order id
  * @property {string} [stopPrice] - Stop loss or take profit price, only if stop or take order
  * @property {OrderSelfTradePrevention} [selfTradePrevention=decreaseAndCancel] - Defaults to decrease and cancel
- * @property {number} [cancelAfter] - Timestamp after which a standing limit order will be automatically cancelled; gtt tif only
+ * @property {number} [cancelAfter] - Timestamp after which a standing limit order will be automatically canceled; gtt tif only
  */
 export type RestRequestOrder = XOR<
   RestRequestOrderByBaseQuantity,

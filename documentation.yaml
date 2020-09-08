@@ -67,7 +67,7 @@ toc:
       - RestResponseFill
       - RestResponseMarket
       - RestResponseOrder
-      - RestResponseCancelledOrder
+      - RestResponseCanceledOrder
       - RestResponseOrderBookLevel1
       - RestResponseOrderBookLevel2
       - RestResponseOrderBookPriceLevel
