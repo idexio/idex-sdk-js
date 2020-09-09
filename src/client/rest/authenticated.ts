@@ -351,7 +351,7 @@ export class RestAuthenticatedClient {
   /**
    * Get multiple orders
    *
-   * @see https://docs.idex.io/#cancel-order
+   * @see https://docs.idex.io/#get-orders
    *
    * @param {RestRequestFindOrders} findOrders
    * @returns {Promise<RestResponseOrder[]>}

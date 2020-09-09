@@ -480,7 +480,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getOrders
 
--   **See: <https://docs.idex.io/#cancel-order>
+-   **See: <https://docs.idex.io/#get-orders>
     **
 
 Get multiple orders
