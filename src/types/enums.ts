@@ -176,10 +176,10 @@ export enum OrderStateChange {
    */
   fill,
   /**
-   * An order is cancelled by the user.
+   * An order is canceled by the user.
    * @type {string}
    */
-  cancelled,
+  canceled,
   /**
    * LIMIT FOK orders with no fill, LIMIT IOC or MARKET orders that partially fill, GTT orders past time.
    * @type {string}
@@ -213,10 +213,10 @@ export enum OrderStatus {
    */
   filled,
   /**
-   * Limit order was cancelled prior to execution completion but may be partially filled
+   * Limit order was canceled prior to execution completion but may be partially filled
    * @type {string}
    */
-  cancelled,
+  canceled,
   /**
    * Order was rejected by the trading engine
    * @type {string}
@@ -245,7 +245,7 @@ export enum OrderStatus {
  */
 export enum OrderTimeInForce {
   /**
-   * Good until cancelled (default)
+   * Good until canceled (default)
    * @type {string}
    */
   gtc,
