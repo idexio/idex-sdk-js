@@ -6,9 +6,7 @@ import { isNode } from '../../utils';
 import { isWebSocketAuthenticatedSubscription } from '../../types';
 
 import { transformMessage } from './transform';
-import WebsocketTokenManager, {
-  removeWalletFromSdkSubscription,
-} from './tokenManager';
+import { removeWalletFromSdkSubscription } from './utils';
 
 export type WebSocketListenerConnect = () => unknown;
 
@@ -90,7 +88,7 @@ export class WebSocketClient {
 
   private webSocket: null | WebSocket = null;
 
-  private webSocketTokenManager?: WebsocketTokenManager;
+  private websocketAuthTokenFetch?: WebSocketClientOptions['websocketAuthTokenFetch'];
 
   private pathSubscription: string | null = null;
 
@@ -131,11 +129,7 @@ export class WebSocketClient {
       this.connectTimeout = options.connectTimeout;
     }
 
-    if (options.websocketAuthTokenFetch) {
-      this.webSocketTokenManager = new WebsocketTokenManager(
-        options.websocketAuthTokenFetch,
-      );
-    }
+    this.websocketAuthTokenFetch = options.websocketAuthTokenFetch;
   }
 
   /* Connection management */
@@ -302,10 +296,10 @@ export class WebSocketClient {
       });
     }
 
-    const { webSocketTokenManager } = this;
+    const { websocketAuthTokenFetch } = this;
 
     // For authenticated, we do require token manager
-    if (!webSocketTokenManager) {
+    if (!websocketAuthTokenFetch) {
       throw new Error(
         'WebSocket: `websocketAuthTokenFetch` is required for authenticated subscriptions',
       );
@@ -326,11 +320,6 @@ export class WebSocketClient {
       );
     }
 
-    // Prepare (fetch) all authentication tokens for subscriptions
-    await Promise.all(
-      uniqueWallets.map((wallet) => webSocketTokenManager.getToken(wallet)),
-    );
-
     // For single wallet, send all subscriptions at once (also unauthenticated)
     if (uniqueWallets.length === 1) {
       return this.sendMessage({
@@ -338,7 +327,7 @@ export class WebSocketClient {
         method: 'subscribe',
         markets,
         subscriptions: subscriptions.map(removeWalletFromSdkSubscription),
-        token: webSocketTokenManager.getLastCachedToken(uniqueWallets[0]),
+        token: await websocketAuthTokenFetch(uniqueWallets[0]),
       });
     }
 
@@ -356,16 +345,21 @@ export class WebSocketClient {
       });
     }
 
-    // Send multiple wallets subscriptions
-    authSubscriptions.forEach((authSubscription) => {
+    // Now prepare all auth tokens, so we can subscribe all authenticated at "once"
+    const preparedTokensByWalletIndex = await Promise.all(
+      uniqueWallets.map((wallet) => websocketAuthTokenFetch(wallet)),
+    );
+
+    // Send multiple wallets subscriptions grouped by wallet
+    uniqueWallets.forEach((wallet, walletIndex) => {
       this.sendMessage({
         cid,
         method: 'subscribe',
         markets,
-        subscriptions: [removeWalletFromSdkSubscription(authSubscription)],
-        token: webSocketTokenManager.getLastCachedToken(
-          authSubscription.wallet,
-        ),
+        subscriptions: authSubscriptions
+          .filter((item) => item.wallet === wallet)
+          .map(removeWalletFromSdkSubscription),
+        token: preparedTokensByWalletIndex[walletIndex],
       });
     });
 
