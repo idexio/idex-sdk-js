@@ -14,7 +14,7 @@ toc:
           ```typescript
             import { RestAuthenticatedClient } from '@idexio/idex-sdk';
           ```
-        children: 
+        children:
           - RestAuthenticatedClient
           - RestAuthenticatedClientOptions
       - name: WebSocketClient
@@ -85,15 +85,37 @@ toc:
     children:
       - AuthTokenWebSocketRequestOrdersSubscription
       - AuthTokenWebSocketRequestBalancesSubscription
+      - WebSocketRequestTickersSubscription
+      - WebSocketRequestCandlesSubscription
+      - WebSocketRequestTradesSubscription
+      - WebSocketRequestL1OrderBookSubscription
+      - WebSocketRequestL2OrderBookSubscription
+      - WebSocketRequestBalancesSubscription
+      - WebSocketRequestOrdersSubscription
   - name: WebSocket Responses
     children:
       - WebSocketResponseError
       - WebSocketResponseSubscriptions
+      - WebSocketResponseTickerShort
+      - WebSocketResponseTickerLong
+      - WebSocketResponseCandleShort
+      - WebSocketResponseCandleLong
+      - WebSocketResponseTradeShort
+      - WebSocketResponseTradeLong
+      - WebSocketResponseL1OrderBookShort
+      - WebSocketResponseL1OrderBookLong
+      - WebSocketResponseL2OrderBookShort
+      - WebSocketResponseL2OrderBookLong
+      - WebSocketResponseBalanceShort
+      - WebSocketResponseBalanceLong
+      - WebSocketResponseOrderShort
+      - WebSocketResponseOrderLong
+      - WebSocketResponseOrderFillShort
   - name: Type Guards
     description: |
-        [Type Guards](https://www.typescriptlang.org/docs/handbook/advanced-types.html#user-defined-type-guards) 
-        are mostly useful for TypeScript users and can be used to refine general types when needing to parse or 
-        build the required values. 
+        [Type Guards](https://www.typescriptlang.org/docs/handbook/advanced-types.html#user-defined-type-guards)
+        are mostly useful for TypeScript users and can be used to refine general types when needing to parse or
+        build the required values.
     children:
       - isWebSocketAuthenticatedSubscription
       - isWebSocketUnauthenticatedSubscription
@@ -104,6 +126,6 @@ toc:
     children:
       - MessageSigner
       - createAssociateWalletSignature
-  
+
 
   - name: Misc Types & Utilities

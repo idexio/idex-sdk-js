@@ -9,40 +9,90 @@ export type WebSocketRequestSubscriptionName =
   | typeof WEBSOCKET_AUTHENTICATED_SUBSCRIPTIONS[number]
   | typeof WEBSOCKET_UNAUTHENTICATED_SUBSCRIPTIONS[number];
 
-export type WebSocketRequestBalancesSubscription = {
-  name: 'balances';
-  wallet?: string;
+/**
+ * TickersSubscription
+ *
+ * @typedef {Object} WebSocketRequestTickersSubscription
+ * @property {string} name - 'tickers'
+ * @property {string[]} markets - array of market symbols
+ */
+export type WebSocketRequestTickersSubscription = {
+  name: 'tickers';
+  markets: string[];
 };
 
-export type WebSocketRequestOrdersSubscription = {
-  name: 'orders';
-  wallet?: string;
-};
-
+/**
+ * CandlesSubscription
+ *
+ * @typedef {Object} WebSocketRequestCandlesSubscription
+ * @property {string} name - 'candles'
+ * @property {string[]} markets - array of market symbols
+ * @property {string} interval - candle interval
+ */
 export type WebSocketRequestCandlesSubscription = {
   name: 'candles';
   markets: string[];
   interval: keyof typeof enums.CandleInterval;
 };
 
+/**
+ * TradesSubscription
+ *
+ * @typedef {Object} WebSocketRequestTradesSubscription
+ * @property {string} name - 'trades'
+ * @property {string[]}markets - array of market symbols
+ */
+export type WebSocketRequestTradesSubscription = {
+  name: 'trades';
+  markets: string[];
+};
+
+/**
+ * L1OrderBookSubscription
+ *
+ * @typedef {Object} WebSocketRequestL1OrderBookSubscription
+ * @property {string} name - 'l1orderbook'
+ * @property {string[]} markets - array of market symbols
+ */
 export type WebSocketRequestL1OrderBookSubscription = {
   name: 'l1orderbook';
   markets: string[];
 };
 
+/**
+ * L2OrderBookSubscription
+ *
+ * @typedef {Object} WebSocketRequestL2OrderBookSubscription
+ * @property {string} name - 'l2orderbook'
+ * @property {string[]} markets - array of market symbols
+ */
 export type WebSocketRequestL2OrderBookSubscription = {
   name: 'l2orderbook';
   markets: string[];
 };
 
-export type WebSocketRequestTickersSubscription = {
-  name: 'tickers';
-  markets: string[];
+/**
+ * BalancesSubscription
+ *
+ * @typedef {Object} WebSocketRequestBalancesSubscription
+ * @property {string} name - 'balances'
+ * @property {string} [wallet] - wallet address
+ */
+export type WebSocketRequestBalancesSubscription = {
+  name: 'balances';
+  wallet?: string;
 };
 
-export type WebSocketRequestTradesSubscription = {
-  name: 'trades';
-  markets: string[];
+/**
+ * OrdersSubscription
+ *
+ * @typedef {Object} WebSocketRequestOrdersSubscription
+ * @property {string} name - 'orders'
+ * @property {string} [wallet] - wallet address
+ */
+export type WebSocketRequestOrdersSubscription = {
+  name: 'orders';
+  wallet?: string;
 };
 
 type WebSocketRequestWallet = {
@@ -80,10 +130,16 @@ export type AuthTokenWebSocketRequestOrdersSubscription = Expand<
   WebSocketRequestOrdersSubscription & WebSocketRequestWallet
 >;
 
+/**
+ * @typedef {(WebSocketRequestBalancesSubscription|WebSocketRequestOrdersSubscription)} WebSocketRequestAuthenticatedSubscription
+ */
 export type WebSocketRequestAuthenticatedSubscription =
   | WebSocketRequestBalancesSubscription
   | WebSocketRequestOrdersSubscription;
 
+/**
+ * @typedef {(WebSocketRequestCandlesSubscription|WebSocketRequestL1OrderBookSubscription|WebSocketRequestL2OrderBookSubscription|WebSocketRequestTickersSubscription|WebSocketRequestTradesSubscription)} WebSocketRequestUnauthenticatedSubscription
+ */
 export type WebSocketRequestUnauthenticatedSubscription =
   | WebSocketRequestCandlesSubscription
   | WebSocketRequestL1OrderBookSubscription
@@ -91,18 +147,37 @@ export type WebSocketRequestUnauthenticatedSubscription =
   | WebSocketRequestTickersSubscription
   | WebSocketRequestTradesSubscription;
 
+/**
+ * @typedef {(AuthTokenWebSocketRequestBalancesSubscription|AuthTokenWebSocketRequestOrdersSubscription)} AuthTokenWebSocketRequestAuthenticatedSubscription
+ */
 export type AuthTokenWebSocketRequestAuthenticatedSubscription =
   | AuthTokenWebSocketRequestBalancesSubscription
   | AuthTokenWebSocketRequestOrdersSubscription;
 
+/**
+ * @typedef {(AuthTokenWebSocketRequestAuthenticatedSubscription|}WebSocketRequestUnauthenticatedSubscription) AuthTokenWebSocketRequestAuthenticatedSubscription
+ */
 export type AuthTokenWebSocketRequestSubscription =
   | AuthTokenWebSocketRequestAuthenticatedSubscription
   | WebSocketRequestUnauthenticatedSubscription;
 
+/**
+ * @typedef {(AuthTokenWebSocketRequestAuthenticatedSubscription|WebSocketRequestUnauthenticatedSubscription)} WebSocketRequestSubscription
+ */
 export type WebSocketRequestSubscription =
   | AuthTokenWebSocketRequestAuthenticatedSubscription
   | WebSocketRequestUnauthenticatedSubscription;
 
+/**
+ * @typedef {Object} WebSocketRequestSubscriptionsByName
+ * @property {WebSocketRequestSubscriptionsByName} balances
+ * @property {WebSocketRequestOrdersSubscription} orders
+ * @property {WebSocketRequestCandlesSubscription} candles
+ * @property {WebSocketRequestL1OrderBookSubscription} l1orderbook
+ * @property {WebSocketRequestL2OrderBookSubscription} l2orderbook
+ * @property {WebSocketRequestTickersSubscription} tickers
+ * @property {WebSocketRequestTradesSubscription} trades
+ */
 export type WebSocketRequestSubscriptionsByName = {
   balances: WebSocketRequestBalancesSubscription;
   orders: WebSocketRequestOrdersSubscription;
@@ -187,6 +262,15 @@ export type WebSocketRequestUnsubscribeSubscription = AugmentedRequired<
   'name'
 >;
 
+/**
+ * UnsubscribeRequest
+ *
+ * @typedef {Object} WebSocketRequestUnsubscribe
+ * @property {string} method - 'unsubscribe'
+ * @property {string} [cid] - client-supplied request id
+ * @property {string[]} [markets] - array of market symbols
+ * @property {(WebSocketRequestUnsubscribeSubscription | WebSocketRequestUnsubscribeShortNames)[]} [subscriptions] - array of subscription objects
+ */
 export type WebSocketRequestUnsubscribe = {
   method: 'unsubscribe';
   cid?: string;
@@ -197,16 +281,29 @@ export type WebSocketRequestUnsubscribe = {
   )[];
 };
 
+/**
+ * SubscriptionsRequest
+ *
+ * @typedef {Object} WebSocketRequestSubscriptions
+ * @property {string} method - 'subscriptions'
+ * @property {string} [cid] - customer-supplied request id
+ */
 export type WebSocketRequestSubscriptions = {
   method: 'subscriptions';
   cid?: string;
 };
 
+/**
+ * @typedef {(WebSocketRequestSubscribeStrict|WebSocketRequestSubscriptions|WebSocketRequestUnsubscribe)} WebSocketRequest
+ */
 export type WebSocketRequestStrict =
   | WebSocketRequestSubscribeStrict
   | WebSocketRequestSubscriptions
   | WebSocketRequestUnsubscribe;
 
+/**
+ * @typedef {(WebSocketRequestSubscribe|WebSocketRequestSubscriptions|WebSocketRequestUnsubscribe)} WebSocketRequest
+ */
 export type WebSocketRequest =
   | WebSocketRequestSubscribe
   | WebSocketRequestSubscriptions
