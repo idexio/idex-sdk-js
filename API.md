@@ -1439,8 +1439,8 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
--   `bids` **\[[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)]** 
--   `asks` **\[[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)]** 
+-   `bids` **(\[[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)] | \[])** 
+-   `asks` **(\[[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)] | \[])** 
 
 ### RestResponseOrderBookLevel2
 
