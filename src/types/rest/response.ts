@@ -279,12 +279,12 @@ interface RestResponseOrderBook {
  * OrderBookLevel1
  *
  * @typedef {Object} RestResponseOrderBookLevel1
- * @property {[RestResponseOrderBookPriceLevel]} bids
- * @property {[RestResponseOrderBookPriceLevel]} asks
+ * @property {[RestResponseOrderBookPriceLevel]|[]} bids
+ * @property {[RestResponseOrderBookPriceLevel]|[]} asks
  */
 export interface RestResponseOrderBookLevel1 extends RestResponseOrderBook {
-  bids: [RestResponseOrderBookPriceLevel];
-  asks: [RestResponseOrderBookPriceLevel];
+  bids: [RestResponseOrderBookPriceLevel] | [];
+  asks: [RestResponseOrderBookPriceLevel] | [];
 }
 
 /**

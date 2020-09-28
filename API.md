@@ -45,6 +45,7 @@
     -   [RestResponseFill](#restresponsefill)
     -   [RestResponseMarket](#restresponsemarket)
     -   [RestResponseOrder](#restresponseorder)
+    -   [RestResponseCanceledOrder](#restresponsecanceledorder)
     -   [RestResponseOrderBookLevel1](#restresponseorderbooklevel1)
     -   [RestResponseOrderBookLevel2](#restresponseorderbooklevel2)
     -   [RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)
@@ -61,9 +62,31 @@
 -   [WebSocket Subscriptions](#websocket-subscriptions)
     -   [AuthTokenWebSocketRequestOrdersSubscription](#authtokenwebsocketrequestorderssubscription)
     -   [AuthTokenWebSocketRequestBalancesSubscription](#authtokenwebsocketrequestbalancessubscription)
+    -   [WebSocketRequestTickersSubscription](#websocketrequesttickerssubscription)
+    -   [WebSocketRequestCandlesSubscription](#websocketrequestcandlessubscription)
+    -   [WebSocketRequestTradesSubscription](#websocketrequesttradessubscription)
+    -   [WebSocketRequestL1OrderBookSubscription](#websocketrequestl1orderbooksubscription)
+    -   [WebSocketRequestL2OrderBookSubscription](#websocketrequestl2orderbooksubscription)
+    -   [WebSocketRequestBalancesSubscription](#websocketrequestbalancessubscription)
+    -   [WebSocketRequestOrdersSubscription](#websocketrequestorderssubscription)
 -   [WebSocket Responses](#websocket-responses)
     -   [WebSocketResponseError](#websocketresponseerror)
     -   [WebSocketResponseSubscriptions](#websocketresponsesubscriptions)
+    -   [WebSocketResponseTickerShort](#websocketresponsetickershort)
+    -   [WebSocketResponseTickerLong](#websocketresponsetickerlong)
+    -   [WebSocketResponseCandleShort](#websocketresponsecandleshort)
+    -   [WebSocketResponseCandleLong](#websocketresponsecandlelong)
+    -   [WebSocketResponseTradeShort](#websocketresponsetradeshort)
+    -   [WebSocketResponseTradeLong](#websocketresponsetradelong)
+    -   [WebSocketResponseL1OrderBookShort](#websocketresponsel1orderbookshort)
+    -   [WebSocketResponseL1OrderBookLong](#websocketresponsel1orderbooklong)
+    -   [WebSocketResponseL2OrderBookShort](#websocketresponsel2orderbookshort)
+    -   [WebSocketResponseL2OrderBookLong](#websocketresponsel2orderbooklong)
+    -   [WebSocketResponseBalanceShort](#websocketresponsebalanceshort)
+    -   [WebSocketResponseBalanceLong](#websocketresponsebalancelong)
+    -   [WebSocketResponseOrderShort](#websocketresponseordershort)
+    -   [WebSocketResponseOrderLong](#websocketresponseorderlong)
+    -   [WebSocketResponseOrderFillShort](#websocketresponseorderfillshort)
 -   [Type Guards](#type-guards)
     -   [isWebSocketAuthenticatedSubscription](#iswebsocketauthenticatedsubscription)
     -   [isWebSocketUnauthenticatedSubscription](#iswebsocketunauthenticatedsubscription)
@@ -73,7 +96,22 @@
 -   [ECDSA Signatures](#ecdsa-signatures)
     -   [MessageSigner](#messagesigner)
 -   [Misc Types & Utilities](#misc-types--utilities)
--   [RestResponseCanceledOrder](#restresponsecanceledorder)
+-   [WebSocketRequestAuthenticatedSubscription](#websocketrequestauthenticatedsubscription)
+-   [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription)
+-   [AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription)
+-   [AuthTokenWebSocketRequestSubscription](#authtokenwebsocketrequestsubscription)
+-   [WebSocketRequestSubscription](#websocketrequestsubscription)
+-   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
+    -   [Properties](#properties)
+-   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
+-   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
+    -   [Properties](#properties-1)
+-   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
+    -   [Properties](#properties-2)
+-   [WebSocketRequest](#websocketrequest)
+-   [WebSocketRequest](#websocketrequest-1)
+-   [WebSocketResponseSubscriptionMessageShort](#websocketresponsesubscriptionmessageshort)
+-   [WebSocketResponseSubscriptionMessageLong](#websocketresponsesubscriptionmessagelong)
 
 ## Clients
 
@@ -663,7 +701,7 @@ markets or a cid property.
 
 ###### Parameters
 
--   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;AuthTokenWebSocketRequestAuthenticatedSubscription>** 
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription)>** 
 -   `markets` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** Optionally provide top level markets
 -   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** A custom identifier to identify the matching response
 
@@ -680,7 +718,7 @@ See [API specification](https://docs.idex.io/#get-authentication-token)
 
 ###### Parameters
 
--   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;AuthTokenWebSocketRequestAuthenticatedSubscription>** 
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription)>** 
 -   `markets` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** Optionally provide top level markets
 -   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** A custom identifier to identify the matching response
 
@@ -692,7 +730,7 @@ Subscribe which only can be used on non-authenticated subscriptions
 
 ###### Parameters
 
--   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;WebSocketRequestUnauthenticatedSubscription>** 
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription)>** 
 -   `markets` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** Optionally provide top level markets
 -   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** A custom identifier to identify the matching response
 
@@ -1386,6 +1424,13 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `selfTradePrevention` **[OrderSelfTradePrevention](#orderselftradeprevention)?** Self-trade prevention policy, see values, only present for orders specifying a non-default (dc) policy
 -   `null-null` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseOrderFill](#restresponseorderfill)>** Array of order fill objects
 
+### RestResponseCanceledOrder
+
+Response to canceled orders which is an array of [CanceledOrder](CanceledOrder) indicating
+any successfully canceled orders.
+
+Type: [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>
+
 ### RestResponseOrderBookLevel1
 
 OrderBookLevel1
@@ -1394,8 +1439,8 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
--   `bids` **\[[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)]** 
--   `asks` **\[[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)]** 
+-   `bids` **(\[[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)] | \[])** 
+-   `asks` **(\[[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)] | \[])** 
 
 ### RestResponseOrderBookLevel2
 
@@ -1582,6 +1627,84 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
      <br />
      **Note:** This property is not sent over the WebSocket and is exclusive to the idex-sdk.
 
+### WebSocketRequestTickersSubscription
+
+TickersSubscription
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 'tickers'
+-   `markets` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** array of market symbols
+
+### WebSocketRequestCandlesSubscription
+
+CandlesSubscription
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 'candles'
+-   `markets` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** array of market symbols
+-   `interval` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** candle interval
+
+### WebSocketRequestTradesSubscription
+
+TradesSubscription
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 'trades'
+-   `markets` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** array of market symbols
+
+### WebSocketRequestL1OrderBookSubscription
+
+L1OrderBookSubscription
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 'l1orderbook'
+-   `markets` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** array of market symbols
+
+### WebSocketRequestL2OrderBookSubscription
+
+L2OrderBookSubscription
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 'l2orderbook'
+-   `markets` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** array of market symbols
+
+### WebSocketRequestBalancesSubscription
+
+BalancesSubscription
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 'balances'
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** wallet address
+
+### WebSocketRequestOrdersSubscription
+
+OrdersSubscription
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 'orders'
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** wallet address
+
 ## WebSocket Responses
 
 
@@ -1611,13 +1734,305 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 -   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 -   `method` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** subscriptions
--   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;WebSocketRequestSubscription>** 
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[WebSocketRequestSubscription](#websocketrequestsubscription)>** 
+
+### WebSocketResponseTickerShort
+
+TickerShort
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `m` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (market) Market symbol
+-   `t` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (time) Timestamp when the statistics were computed, the opening time of the period is 24 hours prior
+-   `o` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (open) Price of the first trade in the period in quote terms
+-   `h` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (high) Highest traded price in the period in quote terms
+-   `l` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (low) Lowest traded price in the period in quote terms
+-   `c` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (close) Price of the last trade in the period in quote terms
+-   `Q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (closeQuantity) Quantity of the last trade in th period in base terms
+-   `v` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (baseVolume) Trailing 24-hour trading volume in base terms
+-   `q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (quoteVolume) Trailing 24-hour trading volume in quote terms
+-   `P` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (percentChange) Percentage change from open price to close price
+-   `n` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (numTrades) Number of trades in the period
+-   `a` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (ask) Best ask price on the order book in quote terms
+-   `b` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (bid) Best bid price on the order book in quote terms
+-   `u` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (sequence) Fill sequence number of the last trade in the period
+
+### WebSocketResponseTickerLong
+
+TickerLong
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Market symbol
+-   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp when the statistics were computed, the opening time of the period is 24 hours prior
+-   `open` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Price of the first trade in the period in quote terms
+-   `high` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Highest traded price in the period in quote terms
+-   `low` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Lowest traded price in the period in quote terms
+-   `close` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Price of the last trade in the period in quote terms
+-   `closeQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of the last trade in th period in base terms
+-   `baseVolume` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Trailing 24-hour trading volume in base terms
+-   `quoteVolume` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Trailing 24-hour trading volume in quote terms
+-   `percentChange` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Percentage change from open price to close price
+-   `numTrades` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Number of trades in the period
+-   `ask` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Best ask price on the order book in quote terms
+-   `bid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Best bid price on the order book in quote terms
+-   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Fill sequence number of the last trade in the period
+
+### WebSocketResponseCandleShort
+
+CandleShort
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `m` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (market) Market symbol
+-   `t` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (time) Timestamp when the statistics were computed, time is always between the start and end timestamps of the interval
+-   `i` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (interval) Interval duration, see Interval Values
+-   `s` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (start) Timestamp of the start of the interval
+-   `e` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (end) Timestamp of the end of the interval
+-   `o` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (open) Price of the first trade in the interval in quote terms
+-   `h` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (high) Highest traded price in the interval in quote terms
+-   `l` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (low) Lowest traded price in the interval in quote terms
+-   `c` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (close) Price of the last trade in the interval in quote terms
+-   `v` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (volume) Trading volume in the interval in base terms
+-   `n` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (numTrades) Number of trades in the candle
+-   `u` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (sequence) Fill sequence number of the last trade in the interval
+
+### WebSocketResponseCandleLong
+
+CandleLong
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Market symbol
+-   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp when the statistics were computed, time is always between the start and end timestamps of the interval
+-   `interval` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Interval duration, see Interval Values
+-   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of the start of the interval
+-   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of the end of the interval
+-   `open` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Price of the first trade in the interval in quote terms
+-   `high` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Highest traded price in the interval in quote terms
+-   `low` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Lowest traded price in the interval in quote terms
+-   `close` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Price of the last trade in the interval in quote terms
+-   `volume` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Trading volume in the interval in base terms
+-   `numTrades` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Number of trades in the candle
+-   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Fill sequence number of the last trade in the interval
+
+### WebSocketResponseTradeShort
+
+TradeShort
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `m` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (market) Market symbol
+-   `i` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (fillId) Trade identifier
+-   `p` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (price) Price of the trade in quote terms
+-   `q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (quantity) Quantity of the trade in base terms
+-   `Q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (quoteQuantity) Quantity of the trade in quote terms
+-   `t` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (time) Timestamp of the trade
+-   `s` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (makerSide) Maker side of the trade, buy or sell
+-   `u` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (sequence) Fill sequence number of the trade
+
+### WebSocketResponseTradeLong
+
+TradeLong
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Market symbol
+-   `fillId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Trade identifier
+-   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Price of the trade in quote terms
+-   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of the trade in base terms
+-   `quoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of the trade in quote terms
+-   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of the trade
+-   `makerSide` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Maker side of the trade, buy or sell
+-   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Fill sequence number of the trade
+
+### WebSocketResponseL1OrderBookShort
+
+L1OrderBookShort
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `m` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (market) Market symbol
+-   `t` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (time) Timestamp of the order book update
+-   `b` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (bidPrice) Best bid price
+-   `B` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (bidQuantity) Quantity available at the best bid price
+-   `a` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (askPrice) Best ask price
+-   `A` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (askQuantity) Quantity available at the best ask price
+
+### WebSocketResponseL1OrderBookLong
+
+L1OrderBookLong
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Market symbol
+-   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of the order book update
+-   `bidPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Best bid price
+-   `bidQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity available at the best bid price
+-   `askPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Best ask price
+-   `askQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity available at the best ask price
+
+### WebSocketResponseL2OrderBookShort
+
+L2OrderBookShort
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `m` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (market) Market symbol
+-   `t` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (time) Timestamp of the order book update
+-   `u` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (sequence) Order book update sequence number of the update
+-   `b` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)>** (bids) Array of bid price level updates
+-   `a` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)>** (asks) Array of ask price level updates
+
+### WebSocketResponseL2OrderBookLong
+
+L2OrderBookLong
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Market symbol
+-   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of the order book update
+-   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Order book update sequence number of the update
+-   `bids` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)>** Array of bid price level updates
+-   `asks` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)>** Array of ask price level updates
+
+### WebSocketResponseBalanceShort
+
+BalanceShort
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `w` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (wallet) Target wallet address
+-   `a` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (asset) Asset symbol
+-   `q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (quantity) Total quantity of the asset held by the wallet on the exchange
+-   `f` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (availableForTrade) Quantity of the asset available for trading; quantity - locked
+-   `l` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (locked) Quantity of the asset held in trades on the order book
+-   `d` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (usdValue) Total value of the asset held by the wallet on the exchange in USD
+
+### WebSocketResponseBalanceLong
+
+BalanceLong
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Target wallet address
+-   `asset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset symbol
+-   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total quantity of the asset held by the wallet on the exchange
+-   `availableForTrade` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of the asset available for trading; quantity - locked
+-   `locked` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of the asset held in trades on the order book
+-   `usdValue` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of the asset held by the wallet on the exchange in USD
+
+### WebSocketResponseOrderShort
+
+OrderShort
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `m` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (market) Market symbol
+-   `i` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (orderId) Exchange-assigned order identifier
+-   `c` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (clientOrderId) Client-specified order identifier
+-   `w` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (wallet) Ethereum address of placing wallet
+-   `t` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (executionTime) Timestamp of the most recent update
+-   `T` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (time) Timestamp of initial order processing by the matching engine
+-   `x` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (update) Type of order update, see values
+-   `X` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (status) Order status, see values
+-   `u` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** (sequence) order book update sequence number, only included if update type triggers an order book update
+-   `o` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (type) Order type, see values
+-   `S` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (side) Order side, buy or sell
+-   `q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (originalQuantity) Original quantity specified by the order in base terms, omitted for market orders specified in quote terms
+-   `Q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (originalQuoteQuantity) Original quantity specified by the order in quote terms, only present for market orders specified in quote terms
+-   `z` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (executedQuantity) Quantity that has been executed in base terms
+-   `Z` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (cumulativeQuoteQuantity) Cumulative quantity that has been spent (buy orders) or received (sell orders) in quote terms, omitted if unavailable for historical orders
+-   `v` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (avgExecutionPrice) Weighted average price of fills associated with the order; only present with fills
+-   `p` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (price) Original price specified by the order in quote terms, omitted for all market orders
+-   `P` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (stopPrice) Stop loss or take profit price, only present for stopLoss, stopLossLimit, takeProfit, and takeProfitLimit orders
+-   `f` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (timeInForce) Time in force policy, see values, only present for all limit orders specifying a non-default (gtc) policy
+-   `V` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (selfTradePrevention) Self-trade prevention policy, see values, only present for orders specifying a non-default (dc) policy
+-   `F` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[WebSocketResponseOrderFillShort](#websocketresponseorderfillshort)>?** (fills) Array of order fill objects
+
+### WebSocketResponseOrderLong
+
+OrderLong
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Market symbol
+-   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Exchange-assigned order identifier
+-   `clientOrderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Client-specified order identifier
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum address of placing wallet
+-   `executionTime` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Timestamp of the most recent update
+-   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of initial order processing by the matching engine
+-   `update` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of order update, see values
+-   `status` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Order status, see values
+-   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** order book update sequence number, only included if update type triggers an order book update
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Order type, see values
+-   `side` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Order side, buy or sell
+-   `originalQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Original quantity specified by the order in base terms, omitted for market orders specified in quote terms
+-   `originalQuoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Original quantity specified by the order in quote terms, only present for market orders specified in quote terms
+-   `executedQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity that has been executed in base terms
+-   `cumulativeQuoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Cumulative quantity that has been spent (buy orders) or received (sell orders) in quote terms, omitted if unavailable for historical orders
+-   `avgExecutionPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Weighted average price of fills associated with the order; only present with fills
+-   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Original price specified by the order in quote terms, omitted for all market orders
+-   `stopPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Stop loss or take profit price, only present for stopLoss, stopLossLimit, takeProfit, and takeProfitLimit orders
+-   `timeInForce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Time in force policy, see values, only present for all limit orders specifying a non-default (gtc) policy
+-   `selfTradePrevention` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Self-trade prevention policy, see values, only present for orders specifying a non-default (dc) policy
+-   `fills` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;WebSocketResponseOrderFillLong>?** Array of order fill objects
+
+### WebSocketResponseOrderFillShort
+
+OrderFillShort
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `i` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (fillId) Fill identifier
+-   `p` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (price) Price of the fill in quote terms
+-   `q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (quantity) Quantity of the fill in base terms
+-   `Q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (quoteQuantity) Quantity of the fill in quote terms
+-   `t` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (time) Timestamp of the fill
+-   `s` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (makerSide) Maker side of the fill, buy or sell
+-   `u` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (sequence) Fill sequence number
+-   `f` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (fee) Fee amount collected on the fill
+-   `a` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (feeAsset) Symbol of asset in which fees collected
+-   `g` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (gas) Amount collected to cover trade settlement gas costs, only present for taker
+-   `l` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (liquidity) Whether the fill is the maker or taker in the trade from the perspective of the requesting user account, maker or taker
+-   `T` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (txId) Ethereum id of the trade settlement transaction
+-   `S` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (txStatus) Status of the trade settlement transaction, see values
 
 ## Type Guards
 
-[Type Guards](https://www.typescriptlang.org/docs/handbook/advanced-types.html#user-defined-type-guards) 
-are mostly useful for TypeScript users and can be used to refine general types when needing to parse or 
-build the required values. 
+[Type Guards](https://www.typescriptlang.org/docs/handbook/advanced-types.html#user-defined-type-guards)
+are mostly useful for TypeScript users and can be used to refine general types when needing to parse or
+build the required values.
 
 
 ### isWebSocketAuthenticatedSubscription
@@ -1716,9 +2131,86 @@ Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Sta
 
 
 
-## RestResponseCanceledOrder
+## WebSocketRequestAuthenticatedSubscription
 
-Response to canceled orders which is an array of [CanceledOrder](CanceledOrder) indicating
-any successfully canceled orders.
+Type: ([WebSocketRequestBalancesSubscription](#websocketrequestbalancessubscription) \| [WebSocketRequestOrdersSubscription](#websocketrequestorderssubscription))
 
-Type: [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>
+## WebSocketRequestUnauthenticatedSubscription
+
+Type: ([WebSocketRequestCandlesSubscription](#websocketrequestcandlessubscription) \| [WebSocketRequestL1OrderBookSubscription](#websocketrequestl1orderbooksubscription) \| [WebSocketRequestL2OrderBookSubscription](#websocketrequestl2orderbooksubscription) \| [WebSocketRequestTickersSubscription](#websocketrequesttickerssubscription) \| [WebSocketRequestTradesSubscription](#websocketrequesttradessubscription))
+
+## AuthTokenWebSocketRequestAuthenticatedSubscription
+
+Type: ([AuthTokenWebSocketRequestBalancesSubscription](#authtokenwebsocketrequestbalancessubscription) \| [AuthTokenWebSocketRequestOrdersSubscription](#authtokenwebsocketrequestorderssubscription))
+
+## AuthTokenWebSocketRequestSubscription
+
+Type: ([AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription) \| [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription))
+
+## WebSocketRequestSubscription
+
+Type: ([AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription) \| [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription))
+
+## WebSocketRequestSubscriptionsByName
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `balances` **[WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)** 
+-   `orders` **[WebSocketRequestOrdersSubscription](#websocketrequestorderssubscription)** 
+-   `candles` **[WebSocketRequestCandlesSubscription](#websocketrequestcandlessubscription)** 
+-   `l1orderbook` **[WebSocketRequestL1OrderBookSubscription](#websocketrequestl1orderbooksubscription)** 
+-   `l2orderbook` **[WebSocketRequestL2OrderBookSubscription](#websocketrequestl2orderbooksubscription)** 
+-   `tickers` **[WebSocketRequestTickersSubscription](#websocketrequesttickerssubscription)** 
+-   `trades` **[WebSocketRequestTradesSubscription](#websocketrequesttradessubscription)** 
+
+## WebSocketResponseL2OrderBookChange
+
+L2OrderBookChange
+
+Type: \[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)]
+
+## WebSocketRequestUnsubscribe
+
+UnsubscribeRequest
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `method` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 'unsubscribe'
+-   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** client-supplied request id
+-   `markets` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** array of market symbols
+-   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;(WebSocketRequestUnsubscribeSubscription | WebSocketRequestUnsubscribeShortNames)>?** array of subscription objects
+
+## WebSocketRequestSubscriptions
+
+SubscriptionsRequest
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `method` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 'subscriptions'
+-   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** customer-supplied request id
+
+## WebSocketRequest
+
+Type: (WebSocketRequestSubscribeStrict | [WebSocketRequestSubscriptions](#websocketrequestsubscriptions) \| [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe))
+
+## WebSocketRequest
+
+Type: (WebSocketRequestSubscribe | [WebSocketRequestSubscriptions](#websocketrequestsubscriptions) \| [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe))
+
+## WebSocketResponseSubscriptionMessageShort
+
+Short-hand response payloads
+
+Type: ({type: `"tickers"`, data: [WebSocketResponseTickerShort](#websocketresponsetickershort)} | {type: `"trades"`, data: [WebSocketResponseTradeShort](#websocketresponsetradeshort)} | {type: `"candles"`, data: [WebSocketResponseCandleShort](#websocketresponsecandleshort)} | {type: `"l1orderbook"`, data: [WebSocketResponseL1OrderBookShort](#websocketresponsel1orderbookshort)} | {type: `"l2orderbook"`, data: [WebSocketResponseL2OrderBookShort](#websocketresponsel2orderbookshort)} | {type: `"balances"`, data: [WebSocketResponseBalanceShort](#websocketresponsebalanceshort)} | {type: `"orders"`, data: [WebSocketResponseOrderShort](#websocketresponseordershort)})
+
+## WebSocketResponseSubscriptionMessageLong
+
+Transformer (long-form) response payloads
+
+Type: ({type: `"tickers"`, data: [WebSocketResponseTickerLong](#websocketresponsetickerlong)} | {type: `"trades"`, data: [WebSocketResponseTradeLong](#websocketresponsetradelong)} | {type: `"candles"`, data: [WebSocketResponseCandleLong](#websocketresponsecandlelong)} | {type: `"l1orderbook"`, data: [WebSocketResponseL1OrderBookLong](#websocketresponsel1orderbooklong)} | {type: `"l2orderbook"`, data: [WebSocketResponseL2OrderBookLong](#websocketresponsel2orderbooklong)} | {type: `"balances"`, data: [WebSocketResponseBalanceLong](#websocketresponsebalancelong)} | {type: `"orders"`, data: [WebSocketResponseOrderLong](#websocketresponseorderlong)})
