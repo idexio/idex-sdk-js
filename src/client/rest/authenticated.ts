@@ -59,6 +59,7 @@ export class RestAuthenticatedClient {
     const baseURL = options.sandbox
       ? constants.SANDBOX_REST_API_BASE_URL
       : options.baseURL;
+
     if (!baseURL) {
       throw new Error('Must set sandbox to true');
     }

@@ -1,3 +1,5 @@
+// appear to be affected by https://github.com/typescript-eslint/typescript-eslint/issues/2360
+/* eslint-disable no-shadow */
 /**
  * @readonly
  * @enum {string}
