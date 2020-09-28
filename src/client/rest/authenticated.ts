@@ -59,6 +59,7 @@ export class RestAuthenticatedClient {
     const baseURL = options.sandbox
       ? constants.SANDBOX_REST_API_BASE_URL
       : options.baseURL;
+
     if (!baseURL) {
       throw new Error('Must set sandbox to true');
     }
@@ -269,12 +270,12 @@ export class RestAuthenticatedClient {
    *
    * @param {RestRequestCancelOrder} cancelOrder
    * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
-   * @returns {Promise<RestResponseCancelledOrder>}
+   * @returns {Promise<RestResponseCanceledOrder>}
    */
   public async cancelOrder(
     cancelOrder: types.RestRequestCancelOrder,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<types.RestResponseCancelledOrder> {
+  ): Promise<types.RestResponseCanceledOrder> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -312,14 +313,14 @@ export class RestAuthenticatedClient {
    *
    * @see https://docs.idex.io/#cancel-order
    *
-   * @param {RestResponseCancelledOrder} cancelOrders
+   * @param {RestResponseCanceledOrder} cancelOrders
    * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
-   * @returns {Promise<RestResponseCancelledOrder>}
+   * @returns {Promise<RestResponseCanceledOrder>}
    */
   public async cancelOrders(
     cancelOrders: types.RestRequestCancelOrders,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<types.RestResponseCancelledOrder> {
+  ): Promise<types.RestResponseCanceledOrder> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
