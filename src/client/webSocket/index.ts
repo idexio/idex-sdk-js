@@ -8,6 +8,8 @@ import { isWebSocketAuthenticatedSubscription } from '../../types';
 import { transformMessage } from './transform';
 import { removeWalletFromSdkSubscription } from './utils';
 
+export { transformMessage as transformWebsocketShortResponseMessage };
+
 export type WebSocketListenerConnect = () => unknown;
 
 export type WebSocketListenerDisconnect = (
