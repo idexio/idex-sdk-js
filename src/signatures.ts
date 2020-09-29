@@ -38,6 +38,12 @@ export const privateKeySigner = function getPrivateKeyMessageSigner(
 };
 
 export function createOrderSignature(order: RestRequestOrder): string {
+  const quantity =
+    (order as RestRequestOrderByBaseQuantity).quantity ||
+    (order as RestRequestOrderByQuoteQuantity).quoteOrderQuantity;
+  const isQuantityInQuote = !!(order as RestRequestOrderByQuoteQuantity)
+    .quoteOrderQuantity;
+
   return solidityHashOfParams([
     ['uint8', constants.ORDER_SIGNATURE_HASH_VERSION],
     ['uint128', uuidToUint8Array(order.nonce)],
@@ -45,11 +51,8 @@ export function createOrderSignature(order: RestRequestOrder): string {
     ['string', order.market],
     ['uint8', OrderType[order.type]],
     ['uint8', OrderSide[order.side]],
-    ['string', (order as RestRequestOrderByBaseQuantity).quantity || ''],
-    [
-      'string',
-      (order as RestRequestOrderByQuoteQuantity).quoteOrderQuantity || '',
-    ],
+    ['string', quantity],
+    ['bool', isQuantityInQuote],
     ['string', (order as RestRequestOrderWithPrice).price || ''],
     ['string', (order as RestRequestOrderWithStopPrice).stopPrice || ''],
     ['string', order.clientOrderId || ''],
