@@ -45,7 +45,7 @@
     -   [RestResponseFill](#restresponsefill)
     -   [RestResponseMarket](#restresponsemarket)
     -   [RestResponseOrder](#restresponseorder)
-    -   [RestResponseCancelledOrder](#restresponsecancelledorder)
+    -   [RestResponseCanceledOrder](#restresponsecanceledorder)
     -   [RestResponseOrderBookLevel1](#restresponseorderbooklevel1)
     -   [RestResponseOrderBookLevel2](#restresponseorderbooklevel2)
     -   [RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)
@@ -466,7 +466,7 @@ const responseByClientId = await authenticatedClient.cancelOrder(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseCancelledOrder](#restresponsecancelledorder)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseCanceledOrder](#restresponsecanceledorder)>** 
 
 ##### cancelOrders
 
@@ -477,7 +477,7 @@ Cancel multiple orders
 
 ###### Parameters
 
--   `cancelOrders` **[RestResponseCancelledOrder](#restresponsecancelledorder)** 
+-   `cancelOrders` **[RestResponseCanceledOrder](#restresponsecanceledorder)** 
 -   `signer` **[MessageSigner](#messagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 
 ###### Examples
@@ -501,7 +501,7 @@ const ordersForMarket = authenticatedClient.cancelOrders(
 );
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseCancelledOrder](#restresponsecancelledorder)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseCanceledOrder](#restresponsecanceledorder)>** 
 
 ##### getOrder
 
@@ -518,7 +518,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ##### getOrders
 
--   **See: <https://docs.idex.io/#cancel-order>
+-   **See: <https://docs.idex.io/#get-orders>
     **
 
 Get multiple orders
@@ -928,9 +928,9 @@ Will be the first change event sent if an order matches on execution.
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-#### cancelled
+#### canceled
 
-An order is cancelled by the user.
+An order is canceled by the user.
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
@@ -968,9 +968,9 @@ Limit order is completely filled and is no longer on the book; market order was 
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-#### cancelled
+#### canceled
 
-Limit order was cancelled prior to execution completion but may be partially filled
+Limit order was canceled prior to execution completion but may be partially filled
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
@@ -1004,7 +1004,7 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### gtc
 
-Good until cancelled (default)
+Good until canceled (default)
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
@@ -1234,7 +1234,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `clientOrderId` **ustring?** Client-supplied order id
 -   `stopPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Stop loss or take profit price, only if stop or take order
 -   `selfTradePrevention` **[OrderSelfTradePrevention](#orderselftradeprevention)?** Defaults to decrease and cancel
--   `cancelAfter` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Timestamp after which a standing limit order will be automatically cancelled; gtt tif only
+-   `cancelAfter` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Timestamp after which a standing limit order will be automatically canceled; gtt tif only
 
 ### RestRequestWithdrawal
 
@@ -1424,10 +1424,10 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `selfTradePrevention` **[OrderSelfTradePrevention](#orderselftradeprevention)?** Self-trade prevention policy, see values, only present for orders specifying a non-default (dc) policy
 -   `null-null` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseOrderFill](#restresponseorderfill)>** Array of order fill objects
 
-### RestResponseCancelledOrder
+### RestResponseCanceledOrder
 
-Response to cancelled orders which is an array of [CancelledOrder](CancelledOrder) indicating
-any successfully cancelled orders.
+Response to canceled orders which is an array of [CanceledOrder](CanceledOrder) indicating
+any successfully canceled orders.
 
 Type: [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>
 
@@ -1439,8 +1439,8 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
--   `bids` **\[[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)]** 
--   `asks` **\[[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)]** 
+-   `bids` **(\[[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)] | \[])** 
+-   `asks` **(\[[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)] | \[])** 
 
 ### RestResponseOrderBookLevel2
 

@@ -247,12 +247,12 @@ export interface RestResponseOrder {
 }
 
 /**
- * Response to cancelled orders which is an array of {@link CancelledOrder} indicating
- * any successfully cancelled orders.
+ * Response to canceled orders which is an array of {@link CanceledOrder} indicating
+ * any successfully canceled orders.
  *
- * @typedef {Object[]} RestResponseCancelledOrder
+ * @typedef {Object[]} RestResponseCanceledOrder
  */
-export type RestResponseCancelledOrder = {
+export type RestResponseCanceledOrder = {
   orderId: string;
 }[];
 
@@ -279,12 +279,12 @@ interface RestResponseOrderBook {
  * OrderBookLevel1
  *
  * @typedef {Object} RestResponseOrderBookLevel1
- * @property {[RestResponseOrderBookPriceLevel]} bids
- * @property {[RestResponseOrderBookPriceLevel]} asks
+ * @property {[RestResponseOrderBookPriceLevel]|[]} bids
+ * @property {[RestResponseOrderBookPriceLevel]|[]} asks
  */
 export interface RestResponseOrderBookLevel1 extends RestResponseOrderBook {
-  bids: [RestResponseOrderBookPriceLevel];
-  asks: [RestResponseOrderBookPriceLevel];
+  bids: [RestResponseOrderBookPriceLevel] | [];
+  asks: [RestResponseOrderBookPriceLevel] | [];
 }
 
 /**
