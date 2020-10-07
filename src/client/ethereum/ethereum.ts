@@ -17,7 +17,7 @@ type RequestType = 'estimate' | 'request';
 
 type EthereumWalletConfig = {
   address: string;
-  privateKey?: string;
+  privateKey: string;
   provider?: ethers.providers.JsonRpcProvider;
 };
 
@@ -48,9 +48,9 @@ type DepositTokenResponse<A extends RequestType> = A extends 'estimate'
     };
 
 const getSignerByAction = {
-  estimate: (wallet: EthereumWalletConfig) =>
+  estimate: (wallet: Required<EthereumWalletConfig>) =>
     wallet.provider.getSigner(wallet.address),
-  request(wallet: EthereumWalletConfig) {
+  request(wallet: Required<EthereumWalletConfig>) {
     if (!wallet.privateKey) {
       throw new Error(
         '[ERROR] | Contract calls require a private key unless calling estimate.',
