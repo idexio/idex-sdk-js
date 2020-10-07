@@ -332,49 +332,6 @@ export class Exchange extends Contract {
 
   functions: {
     /**
-     * Clears the currently whitelisted admin wallet, effectively disabling any functions requiring the admin role
-     */
-    removeAdmin(overrides?: Overrides): Promise<ContractTransaction>;
-
-    /**
-     * Sets a new whitelisted admin wallet
-     * @param newAdmin The new whitelisted admin wallet. Must be different from the current one
-     */
-    setAdmin(
-      newAdmin: string,
-      overrides?: Overrides,
-    ): Promise<ContractTransaction>;
-
-    /**
-     * The `Custodian` accepts `Exchange` and `Governance` addresses in its constructor, after which they can only be changed by the `Governance` contract itself. Therefore the `Custodian` must be deployed last and its address set here on an existing `Exchange` contract. This value is immutable once set and cannot be changed again
-     * Sets the address of the `Custodian` contract
-     * @param newCustodian The address of the `Custodian` contract deployed against this `Exchange` contract's address
-     */
-    setCustodian(
-      newCustodian: string,
-      overrides?: Overrides,
-    ): Promise<ContractTransaction>;
-
-    /**
-     * Sets a new Chain Propagation Period - the block delay after which order nonce invalidations are respected by `executeTrade` and wallet exits are respected by `executeTrade` and `withdraw`
-     * @param newChainPropagationPeriod The new Chain Propagation Period expressed as a number of blocks. Must be less than `_maxChainPropagationPeriod`
-     */
-    setChainPropagationPeriod(
-      newChainPropagationPeriod: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<ContractTransaction>;
-
-    /**
-     * Trade and Withdraw fees will accrue in the `_balancesInPips` mappings for this wallet
-     * Sets the address of the Fee wallet
-     * @param newFeeWallet The new Fee wallet. Must be different from the current one
-     */
-    setFeeWallet(
-      newFeeWallet: string,
-      overrides?: Overrides,
-    ): Promise<ContractTransaction>;
-
-    /**
      * Load a wallet's balance by asset address, in asset units
      * @param assetAddress The asset address to load the wallet's balance for
      * @param wallet The wallet address to load the balance for. Can be different from `msg.sender`
@@ -427,18 +384,6 @@ export class Exchange extends Contract {
     }>;
 
     /**
-     * Invalidating an order nonce will not clear partial fill quantities for earlier orders because the gas cost would potentially be unbound
-     * Load the quantity filled so far for a partially filled orders
-     * @param orderHash The order hash as originally signed by placing wallet that uniquely identifies an order
-     */
-    loadPartiallyFilledOrderQuantityInPips(
-      orderHash: BytesLike,
-      overrides?: CallOverrides,
-    ): Promise<{
-      0: BigNumber;
-    }>;
-
-    /**
      * Deposit ETH
      */
     depositEther(overrides?: PayableOverrides): Promise<ContractTransaction>;
@@ -466,30 +411,6 @@ export class Exchange extends Contract {
     ): Promise<ContractTransaction>;
 
     /**
-     * Invalidate all order nonces with a timestampInMs lower than the one provided
-     * @param nonce A Version 1 UUID. After calling and once the Chain Propagation Period has elapsed, `executeTrade` will reject order nonces from this wallet with a timestampInMs component lower than the one provided
-     */
-    invalidateOrderNonce(
-      nonce: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<ContractTransaction>;
-
-    withdraw(
-      withdrawal: {
-        withdrawalType: BigNumberish;
-        nonce: BigNumberish;
-        walletAddress: string;
-        assetSymbol: string;
-        assetAddress: string;
-        quantityInPips: BigNumberish;
-        gasFeeInPips: BigNumberish;
-        autoDispatchEnabled: boolean;
-        walletSignature: BytesLike;
-      },
-      overrides?: Overrides,
-    ): Promise<ContractTransaction>;
-
-    /**
      * Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
      */
     exitWallet(overrides?: Overrides): Promise<ContractTransaction>;
@@ -502,169 +423,7 @@ export class Exchange extends Contract {
       assetAddress: string,
       overrides?: Overrides,
     ): Promise<ContractTransaction>;
-
-    executeTrade(
-      buy: {
-        signatureHashVersion: BigNumberish;
-        nonce: BigNumberish;
-        walletAddress: string;
-        orderType: BigNumberish;
-        side: BigNumberish;
-        quantityInPips: BigNumberish;
-        quoteOrderQuantityInPips: BigNumberish;
-        limitPriceInPips: BigNumberish;
-        stopPriceInPips: BigNumberish;
-        clientOrderId: string;
-        timeInForce: BigNumberish;
-        selfTradePrevention: BigNumberish;
-        cancelAfter: BigNumberish;
-        walletSignature: BytesLike;
-      },
-      sell: {
-        signatureHashVersion: BigNumberish;
-        nonce: BigNumberish;
-        walletAddress: string;
-        orderType: BigNumberish;
-        side: BigNumberish;
-        quantityInPips: BigNumberish;
-        quoteOrderQuantityInPips: BigNumberish;
-        limitPriceInPips: BigNumberish;
-        stopPriceInPips: BigNumberish;
-        clientOrderId: string;
-        timeInForce: BigNumberish;
-        selfTradePrevention: BigNumberish;
-        cancelAfter: BigNumberish;
-        walletSignature: BytesLike;
-      },
-      trade: {
-        baseAssetSymbol: string;
-        quoteAssetSymbol: string;
-        baseAssetAddress: string;
-        quoteAssetAddress: string;
-        grossBaseQuantityInPips: BigNumberish;
-        grossQuoteQuantityInPips: BigNumberish;
-        netBaseQuantityInPips: BigNumberish;
-        netQuoteQuantityInPips: BigNumberish;
-        makerFeeAssetAddress: string;
-        takerFeeAssetAddress: string;
-        makerFeeQuantityInPips: BigNumberish;
-        takerFeeQuantityInPips: BigNumberish;
-        priceInPips: BigNumberish;
-        makerSide: BigNumberish;
-      },
-      overrides?: Overrides,
-    ): Promise<ContractTransaction>;
-
-    /**
-     * Initiate registration process for a token asset. Only `IERC20` compliant tokens can be added - ETH is hardcoded in the registry
-     * @param decimals The decimal precision of the token
-     * @param symbol The symbol identifying the token asset
-     * @param tokenAddress The address of the `IERC20` compliant token contract to add
-     */
-    registerToken(
-      tokenAddress: string,
-      symbol: string,
-      decimals: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<ContractTransaction>;
-
-    /**
-     * Finalize registration process for a token asset. All parameters must exactly match a previous call to `registerToken`
-     * @param decimals The decimal precision of the token
-     * @param symbol The symbol identifying the token asset
-     * @param tokenAddress The address of the `IERC20` compliant token contract to add
-     */
-    confirmTokenRegistration(
-      tokenAddress: string,
-      symbol: string,
-      decimals: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<ContractTransaction>;
-
-    /**
-     * Since multiple token addresses can potentially share the same symbol (in case of a token swap/contract upgrade) the provided `timestampInMs` is compared against each asset's `confirmedTimestampInMs` to uniquely determine the newest asset for the symbol at that point in time
-     * Loads an asset descriptor struct by its symbol and timestamp
-     * @param assetSymbol The asset's symbol
-     * @param timestampInMs Point in time used to disambiguate multiple tokens with same symbol
-     */
-    loadAssetBySymbol(
-      assetSymbol: string,
-      timestampInMs: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<{
-      0: {
-        exists: boolean;
-        assetAddress: string;
-        symbol: string;
-        decimals: number;
-        isConfirmed: boolean;
-        confirmedTimestampInMs: BigNumber;
-        0: boolean;
-        1: string;
-        2: string;
-        3: number;
-        4: boolean;
-        5: BigNumber;
-      };
-    }>;
-
-    /**
-     * Sets the wallet whitelisted to dispatch transactions calling the `executeTrade` and `withdraw` functions
-     * @param newDispatcherWallet The new whitelisted dispatcher wallet. Must be different from the current one
-     */
-    setDispatcher(
-      newDispatcherWallet: string,
-      overrides?: Overrides,
-    ): Promise<ContractTransaction>;
-
-    /**
-     * Clears the currently set whitelisted dispatcher wallet, effectively disabling calling the `executeTrade` and `withdraw` functions until a new wallet is set with `setDispatcher`
-     */
-    removeDispatcher(overrides?: Overrides): Promise<ContractTransaction>;
   };
-
-  /**
-   * Clears the currently whitelisted admin wallet, effectively disabling any functions requiring the admin role
-   */
-  removeAdmin(overrides?: Overrides): Promise<ContractTransaction>;
-
-  /**
-   * Sets a new whitelisted admin wallet
-   * @param newAdmin The new whitelisted admin wallet. Must be different from the current one
-   */
-  setAdmin(
-    newAdmin: string,
-    overrides?: Overrides,
-  ): Promise<ContractTransaction>;
-
-  /**
-   * The `Custodian` accepts `Exchange` and `Governance` addresses in its constructor, after which they can only be changed by the `Governance` contract itself. Therefore the `Custodian` must be deployed last and its address set here on an existing `Exchange` contract. This value is immutable once set and cannot be changed again
-   * Sets the address of the `Custodian` contract
-   * @param newCustodian The address of the `Custodian` contract deployed against this `Exchange` contract's address
-   */
-  setCustodian(
-    newCustodian: string,
-    overrides?: Overrides,
-  ): Promise<ContractTransaction>;
-
-  /**
-   * Sets a new Chain Propagation Period - the block delay after which order nonce invalidations are respected by `executeTrade` and wallet exits are respected by `executeTrade` and `withdraw`
-   * @param newChainPropagationPeriod The new Chain Propagation Period expressed as a number of blocks. Must be less than `_maxChainPropagationPeriod`
-   */
-  setChainPropagationPeriod(
-    newChainPropagationPeriod: BigNumberish,
-    overrides?: Overrides,
-  ): Promise<ContractTransaction>;
-
-  /**
-   * Trade and Withdraw fees will accrue in the `_balancesInPips` mappings for this wallet
-   * Sets the address of the Fee wallet
-   * @param newFeeWallet The new Fee wallet. Must be different from the current one
-   */
-  setFeeWallet(
-    newFeeWallet: string,
-    overrides?: Overrides,
-  ): Promise<ContractTransaction>;
 
   /**
    * Load a wallet's balance by asset address, in asset units
@@ -711,16 +470,6 @@ export class Exchange extends Contract {
   ): Promise<BigNumber>;
 
   /**
-   * Invalidating an order nonce will not clear partial fill quantities for earlier orders because the gas cost would potentially be unbound
-   * Load the quantity filled so far for a partially filled orders
-   * @param orderHash The order hash as originally signed by placing wallet that uniquely identifies an order
-   */
-  loadPartiallyFilledOrderQuantityInPips(
-    orderHash: BytesLike,
-    overrides?: CallOverrides,
-  ): Promise<BigNumber>;
-
-  /**
    * Deposit ETH
    */
   depositEther(overrides?: PayableOverrides): Promise<ContractTransaction>;
@@ -748,30 +497,6 @@ export class Exchange extends Contract {
   ): Promise<ContractTransaction>;
 
   /**
-   * Invalidate all order nonces with a timestampInMs lower than the one provided
-   * @param nonce A Version 1 UUID. After calling and once the Chain Propagation Period has elapsed, `executeTrade` will reject order nonces from this wallet with a timestampInMs component lower than the one provided
-   */
-  invalidateOrderNonce(
-    nonce: BigNumberish,
-    overrides?: Overrides,
-  ): Promise<ContractTransaction>;
-
-  withdraw(
-    withdrawal: {
-      withdrawalType: BigNumberish;
-      nonce: BigNumberish;
-      walletAddress: string;
-      assetSymbol: string;
-      assetAddress: string;
-      quantityInPips: BigNumberish;
-      gasFeeInPips: BigNumberish;
-      autoDispatchEnabled: boolean;
-      walletSignature: BytesLike;
-    },
-    overrides?: Overrides,
-  ): Promise<ContractTransaction>;
-
-  /**
    * Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
    */
   exitWallet(overrides?: Overrides): Promise<ContractTransaction>;
@@ -785,158 +510,12 @@ export class Exchange extends Contract {
     overrides?: Overrides,
   ): Promise<ContractTransaction>;
 
-  executeTrade(
-    buy: {
-      signatureHashVersion: BigNumberish;
-      nonce: BigNumberish;
-      walletAddress: string;
-      orderType: BigNumberish;
-      side: BigNumberish;
-      quantityInPips: BigNumberish;
-      quoteOrderQuantityInPips: BigNumberish;
-      limitPriceInPips: BigNumberish;
-      stopPriceInPips: BigNumberish;
-      clientOrderId: string;
-      timeInForce: BigNumberish;
-      selfTradePrevention: BigNumberish;
-      cancelAfter: BigNumberish;
-      walletSignature: BytesLike;
-    },
-    sell: {
-      signatureHashVersion: BigNumberish;
-      nonce: BigNumberish;
-      walletAddress: string;
-      orderType: BigNumberish;
-      side: BigNumberish;
-      quantityInPips: BigNumberish;
-      quoteOrderQuantityInPips: BigNumberish;
-      limitPriceInPips: BigNumberish;
-      stopPriceInPips: BigNumberish;
-      clientOrderId: string;
-      timeInForce: BigNumberish;
-      selfTradePrevention: BigNumberish;
-      cancelAfter: BigNumberish;
-      walletSignature: BytesLike;
-    },
-    trade: {
-      baseAssetSymbol: string;
-      quoteAssetSymbol: string;
-      baseAssetAddress: string;
-      quoteAssetAddress: string;
-      grossBaseQuantityInPips: BigNumberish;
-      grossQuoteQuantityInPips: BigNumberish;
-      netBaseQuantityInPips: BigNumberish;
-      netQuoteQuantityInPips: BigNumberish;
-      makerFeeAssetAddress: string;
-      takerFeeAssetAddress: string;
-      makerFeeQuantityInPips: BigNumberish;
-      takerFeeQuantityInPips: BigNumberish;
-      priceInPips: BigNumberish;
-      makerSide: BigNumberish;
-    },
-    overrides?: Overrides,
-  ): Promise<ContractTransaction>;
-
-  /**
-   * Initiate registration process for a token asset. Only `IERC20` compliant tokens can be added - ETH is hardcoded in the registry
-   * @param decimals The decimal precision of the token
-   * @param symbol The symbol identifying the token asset
-   * @param tokenAddress The address of the `IERC20` compliant token contract to add
-   */
-  registerToken(
-    tokenAddress: string,
-    symbol: string,
-    decimals: BigNumberish,
-    overrides?: Overrides,
-  ): Promise<ContractTransaction>;
-
-  /**
-   * Finalize registration process for a token asset. All parameters must exactly match a previous call to `registerToken`
-   * @param decimals The decimal precision of the token
-   * @param symbol The symbol identifying the token asset
-   * @param tokenAddress The address of the `IERC20` compliant token contract to add
-   */
-  confirmTokenRegistration(
-    tokenAddress: string,
-    symbol: string,
-    decimals: BigNumberish,
-    overrides?: Overrides,
-  ): Promise<ContractTransaction>;
-
-  /**
-   * Since multiple token addresses can potentially share the same symbol (in case of a token swap/contract upgrade) the provided `timestampInMs` is compared against each asset's `confirmedTimestampInMs` to uniquely determine the newest asset for the symbol at that point in time
-   * Loads an asset descriptor struct by its symbol and timestamp
-   * @param assetSymbol The asset's symbol
-   * @param timestampInMs Point in time used to disambiguate multiple tokens with same symbol
-   */
-  loadAssetBySymbol(
-    assetSymbol: string,
-    timestampInMs: BigNumberish,
-    overrides?: CallOverrides,
-  ): Promise<{
-    exists: boolean;
-    assetAddress: string;
-    symbol: string;
-    decimals: number;
-    isConfirmed: boolean;
-    confirmedTimestampInMs: BigNumber;
-    0: boolean;
-    1: string;
-    2: string;
-    3: number;
-    4: boolean;
-    5: BigNumber;
-  }>;
-
-  /**
-   * Sets the wallet whitelisted to dispatch transactions calling the `executeTrade` and `withdraw` functions
-   * @param newDispatcherWallet The new whitelisted dispatcher wallet. Must be different from the current one
-   */
-  setDispatcher(
-    newDispatcherWallet: string,
-    overrides?: Overrides,
-  ): Promise<ContractTransaction>;
-
   /**
    * Clears the currently set whitelisted dispatcher wallet, effectively disabling calling the `executeTrade` and `withdraw` functions until a new wallet is set with `setDispatcher`
    */
   removeDispatcher(overrides?: Overrides): Promise<ContractTransaction>;
 
   callStatic: {
-    /**
-     * Clears the currently whitelisted admin wallet, effectively disabling any functions requiring the admin role
-     */
-    removeAdmin(overrides?: Overrides): Promise<void>;
-
-    /**
-     * Sets a new whitelisted admin wallet
-     * @param newAdmin The new whitelisted admin wallet. Must be different from the current one
-     */
-    setAdmin(newAdmin: string, overrides?: Overrides): Promise<void>;
-
-    /**
-     * The `Custodian` accepts `Exchange` and `Governance` addresses in its constructor, after which they can only be changed by the `Governance` contract itself. Therefore the `Custodian` must be deployed last and its address set here on an existing `Exchange` contract. This value is immutable once set and cannot be changed again
-     * Sets the address of the `Custodian` contract
-     * @param newCustodian The address of the `Custodian` contract deployed against this `Exchange` contract's address
-     */
-    setCustodian(newCustodian: string, overrides?: Overrides): Promise<void>;
-
-    /**
-     * Sets a new Chain Propagation Period - the block delay after which order nonce invalidations are respected by `executeTrade` and wallet exits are respected by `executeTrade` and `withdraw`
-     * @param newChainPropagationPeriod The new Chain Propagation Period expressed as a number of blocks. Must be less than `_maxChainPropagationPeriod`
-     */
-    setChainPropagationPeriod(
-      newChainPropagationPeriod: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<void>;
-
-    /**
-     * Trade and Withdraw fees will accrue in the `_balancesInPips` mappings for this wallet
-     * Sets the address of the Fee wallet
-     * @param newFeeWallet The new Fee wallet. Must be different from the current one
-     */
-    setFeeWallet(newFeeWallet: string, overrides?: Overrides): Promise<void>;
-
     /**
      * Load a wallet's balance by asset address, in asset units
      * @param assetAddress The asset address to load the wallet's balance for
@@ -978,16 +557,6 @@ export class Exchange extends Contract {
     loadBalanceInPipsBySymbol(
       wallet: string,
       assetSymbol: string,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
-    /**
-     * Invalidating an order nonce will not clear partial fill quantities for earlier orders because the gas cost would potentially be unbound
-     * Load the quantity filled so far for a partially filled orders
-     * @param orderHash The order hash as originally signed by placing wallet that uniquely identifies an order
-     */
-    loadPartiallyFilledOrderQuantityInPips(
-      orderHash: BytesLike,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
@@ -1019,30 +588,6 @@ export class Exchange extends Contract {
     ): Promise<void>;
 
     /**
-     * Invalidate all order nonces with a timestampInMs lower than the one provided
-     * @param nonce A Version 1 UUID. After calling and once the Chain Propagation Period has elapsed, `executeTrade` will reject order nonces from this wallet with a timestampInMs component lower than the one provided
-     */
-    invalidateOrderNonce(
-      nonce: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<void>;
-
-    withdraw(
-      withdrawal: {
-        withdrawalType: BigNumberish;
-        nonce: BigNumberish;
-        walletAddress: string;
-        assetSymbol: string;
-        assetAddress: string;
-        quantityInPips: BigNumberish;
-        gasFeeInPips: BigNumberish;
-        autoDispatchEnabled: boolean;
-        walletSignature: BytesLike;
-      },
-      overrides?: Overrides,
-    ): Promise<void>;
-
-    /**
      * Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
      */
     exitWallet(overrides?: Overrides): Promise<void>;
@@ -1052,153 +597,9 @@ export class Exchange extends Contract {
      * @param assetAddress The address of the asset to withdraw
      */
     withdrawExit(assetAddress: string, overrides?: Overrides): Promise<void>;
-
-    executeTrade(
-      buy: {
-        signatureHashVersion: BigNumberish;
-        nonce: BigNumberish;
-        walletAddress: string;
-        orderType: BigNumberish;
-        side: BigNumberish;
-        quantityInPips: BigNumberish;
-        quoteOrderQuantityInPips: BigNumberish;
-        limitPriceInPips: BigNumberish;
-        stopPriceInPips: BigNumberish;
-        clientOrderId: string;
-        timeInForce: BigNumberish;
-        selfTradePrevention: BigNumberish;
-        cancelAfter: BigNumberish;
-        walletSignature: BytesLike;
-      },
-      sell: {
-        signatureHashVersion: BigNumberish;
-        nonce: BigNumberish;
-        walletAddress: string;
-        orderType: BigNumberish;
-        side: BigNumberish;
-        quantityInPips: BigNumberish;
-        quoteOrderQuantityInPips: BigNumberish;
-        limitPriceInPips: BigNumberish;
-        stopPriceInPips: BigNumberish;
-        clientOrderId: string;
-        timeInForce: BigNumberish;
-        selfTradePrevention: BigNumberish;
-        cancelAfter: BigNumberish;
-        walletSignature: BytesLike;
-      },
-      trade: {
-        baseAssetSymbol: string;
-        quoteAssetSymbol: string;
-        baseAssetAddress: string;
-        quoteAssetAddress: string;
-        grossBaseQuantityInPips: BigNumberish;
-        grossQuoteQuantityInPips: BigNumberish;
-        netBaseQuantityInPips: BigNumberish;
-        netQuoteQuantityInPips: BigNumberish;
-        makerFeeAssetAddress: string;
-        takerFeeAssetAddress: string;
-        makerFeeQuantityInPips: BigNumberish;
-        takerFeeQuantityInPips: BigNumberish;
-        priceInPips: BigNumberish;
-        makerSide: BigNumberish;
-      },
-      overrides?: Overrides,
-    ): Promise<void>;
-
-    /**
-     * Initiate registration process for a token asset. Only `IERC20` compliant tokens can be added - ETH is hardcoded in the registry
-     * @param decimals The decimal precision of the token
-     * @param symbol The symbol identifying the token asset
-     * @param tokenAddress The address of the `IERC20` compliant token contract to add
-     */
-    registerToken(
-      tokenAddress: string,
-      symbol: string,
-      decimals: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<void>;
-
-    /**
-     * Finalize registration process for a token asset. All parameters must exactly match a previous call to `registerToken`
-     * @param decimals The decimal precision of the token
-     * @param symbol The symbol identifying the token asset
-     * @param tokenAddress The address of the `IERC20` compliant token contract to add
-     */
-    confirmTokenRegistration(
-      tokenAddress: string,
-      symbol: string,
-      decimals: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<void>;
-
-    /**
-     * Since multiple token addresses can potentially share the same symbol (in case of a token swap/contract upgrade) the provided `timestampInMs` is compared against each asset's `confirmedTimestampInMs` to uniquely determine the newest asset for the symbol at that point in time
-     * Loads an asset descriptor struct by its symbol and timestamp
-     * @param assetSymbol The asset's symbol
-     * @param timestampInMs Point in time used to disambiguate multiple tokens with same symbol
-     */
-    loadAssetBySymbol(
-      assetSymbol: string,
-      timestampInMs: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<{
-      exists: boolean;
-      assetAddress: string;
-      symbol: string;
-      decimals: number;
-      isConfirmed: boolean;
-      confirmedTimestampInMs: BigNumber;
-      0: boolean;
-      1: string;
-      2: string;
-      3: number;
-      4: boolean;
-      5: BigNumber;
-    }>;
-
-    /**
-     * Sets the wallet whitelisted to dispatch transactions calling the `executeTrade` and `withdraw` functions
-     * @param newDispatcherWallet The new whitelisted dispatcher wallet. Must be different from the current one
-     */
-    setDispatcher(
-      newDispatcherWallet: string,
-      overrides?: Overrides,
-    ): Promise<void>;
-
-    /**
-     * Clears the currently set whitelisted dispatcher wallet, effectively disabling calling the `executeTrade` and `withdraw` functions until a new wallet is set with `setDispatcher`
-     */
-    removeDispatcher(overrides?: Overrides): Promise<void>;
   };
 
   filters: {
-    ChainPropagationPeriodChanged(
-      previousValue: null,
-      newValue: null,
-    ): EventFilter;
-
-    Deposited(
-      index: null,
-      wallet: string | null,
-      assetAddress: string | null,
-      assetSymbolIndex: string | null,
-      assetSymbol: null,
-      quantityInPips: null,
-      newExchangeBalanceInPips: null,
-      newExchangeBalanceInAssetUnits: null,
-    ): EventFilter;
-
-    DispatcherChanged(previousValue: null, newValue: null): EventFilter;
-
-    FeeWalletChanged(previousValue: null, newValue: null): EventFilter;
-
-    OrderNonceInvalidated(
-      wallet: string | null,
-      nonce: null,
-      timestampInMs: null,
-      effectiveBlockNumber: null,
-    ): EventFilter;
-
     TokenRegistered(
       assetAddress: string | null,
       assetSymbol: null,
@@ -1209,20 +610,6 @@ export class Exchange extends Contract {
       assetAddress: string | null,
       assetSymbol: null,
       decimals: null,
-    ): EventFilter;
-
-    TradeExecuted(
-      buyWallet: null,
-      sellWallet: null,
-      baseAssetSymbolIndex: string | null,
-      quoteAssetSymbolIndex: string | null,
-      baseAssetSymbol: null,
-      quoteAssetSymbol: null,
-      baseQuantityInPips: null,
-      quoteQuantityInPips: null,
-      tradePriceInPips: null,
-      buyOrderHash: null,
-      sellOrderHash: null,
     ): EventFilter;
 
     WalletExitWithdrawn(
@@ -1250,46 +637,6 @@ export class Exchange extends Contract {
   };
 
   estimateGas: {
-    /**
-     * Clears the currently whitelisted admin wallet, effectively disabling any functions requiring the admin role
-     */
-    removeAdmin(overrides?: Overrides): Promise<BigNumber>;
-
-    /**
-     * Sets a new whitelisted admin wallet
-     * @param newAdmin The new whitelisted admin wallet. Must be different from the current one
-     */
-    setAdmin(newAdmin: string, overrides?: Overrides): Promise<BigNumber>;
-
-    /**
-     * The `Custodian` accepts `Exchange` and `Governance` addresses in its constructor, after which they can only be changed by the `Governance` contract itself. Therefore the `Custodian` must be deployed last and its address set here on an existing `Exchange` contract. This value is immutable once set and cannot be changed again
-     * Sets the address of the `Custodian` contract
-     * @param newCustodian The address of the `Custodian` contract deployed against this `Exchange` contract's address
-     */
-    setCustodian(
-      newCustodian: string,
-      overrides?: Overrides,
-    ): Promise<BigNumber>;
-
-    /**
-     * Sets a new Chain Propagation Period - the block delay after which order nonce invalidations are respected by `executeTrade` and wallet exits are respected by `executeTrade` and `withdraw`
-     * @param newChainPropagationPeriod The new Chain Propagation Period expressed as a number of blocks. Must be less than `_maxChainPropagationPeriod`
-     */
-    setChainPropagationPeriod(
-      newChainPropagationPeriod: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<BigNumber>;
-
-    /**
-     * Trade and Withdraw fees will accrue in the `_balancesInPips` mappings for this wallet
-     * Sets the address of the Fee wallet
-     * @param newFeeWallet The new Fee wallet. Must be different from the current one
-     */
-    setFeeWallet(
-      newFeeWallet: string,
-      overrides?: Overrides,
-    ): Promise<BigNumber>;
-
     /**
      * Load a wallet's balance by asset address, in asset units
      * @param assetAddress The asset address to load the wallet's balance for
@@ -1331,16 +678,6 @@ export class Exchange extends Contract {
     loadBalanceInPipsBySymbol(
       wallet: string,
       assetSymbol: string,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
-    /**
-     * Invalidating an order nonce will not clear partial fill quantities for earlier orders because the gas cost would potentially be unbound
-     * Load the quantity filled so far for a partially filled orders
-     * @param orderHash The order hash as originally signed by placing wallet that uniquely identifies an order
-     */
-    loadPartiallyFilledOrderQuantityInPips(
-      orderHash: BytesLike,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
@@ -1372,30 +709,6 @@ export class Exchange extends Contract {
     ): Promise<BigNumber>;
 
     /**
-     * Invalidate all order nonces with a timestampInMs lower than the one provided
-     * @param nonce A Version 1 UUID. After calling and once the Chain Propagation Period has elapsed, `executeTrade` will reject order nonces from this wallet with a timestampInMs component lower than the one provided
-     */
-    invalidateOrderNonce(
-      nonce: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<BigNumber>;
-
-    withdraw(
-      withdrawal: {
-        withdrawalType: BigNumberish;
-        nonce: BigNumberish;
-        walletAddress: string;
-        assetSymbol: string;
-        assetAddress: string;
-        quantityInPips: BigNumberish;
-        gasFeeInPips: BigNumberish;
-        autoDispatchEnabled: boolean;
-        walletSignature: BytesLike;
-      },
-      overrides?: Overrides,
-    ): Promise<BigNumber>;
-
-    /**
      * Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
      */
     exitWallet(overrides?: Overrides): Promise<BigNumber>;
@@ -1408,156 +721,9 @@ export class Exchange extends Contract {
       assetAddress: string,
       overrides?: Overrides,
     ): Promise<BigNumber>;
-
-    executeTrade(
-      buy: {
-        signatureHashVersion: BigNumberish;
-        nonce: BigNumberish;
-        walletAddress: string;
-        orderType: BigNumberish;
-        side: BigNumberish;
-        quantityInPips: BigNumberish;
-        quoteOrderQuantityInPips: BigNumberish;
-        limitPriceInPips: BigNumberish;
-        stopPriceInPips: BigNumberish;
-        clientOrderId: string;
-        timeInForce: BigNumberish;
-        selfTradePrevention: BigNumberish;
-        cancelAfter: BigNumberish;
-        walletSignature: BytesLike;
-      },
-      sell: {
-        signatureHashVersion: BigNumberish;
-        nonce: BigNumberish;
-        walletAddress: string;
-        orderType: BigNumberish;
-        side: BigNumberish;
-        quantityInPips: BigNumberish;
-        quoteOrderQuantityInPips: BigNumberish;
-        limitPriceInPips: BigNumberish;
-        stopPriceInPips: BigNumberish;
-        clientOrderId: string;
-        timeInForce: BigNumberish;
-        selfTradePrevention: BigNumberish;
-        cancelAfter: BigNumberish;
-        walletSignature: BytesLike;
-      },
-      trade: {
-        baseAssetSymbol: string;
-        quoteAssetSymbol: string;
-        baseAssetAddress: string;
-        quoteAssetAddress: string;
-        grossBaseQuantityInPips: BigNumberish;
-        grossQuoteQuantityInPips: BigNumberish;
-        netBaseQuantityInPips: BigNumberish;
-        netQuoteQuantityInPips: BigNumberish;
-        makerFeeAssetAddress: string;
-        takerFeeAssetAddress: string;
-        makerFeeQuantityInPips: BigNumberish;
-        takerFeeQuantityInPips: BigNumberish;
-        priceInPips: BigNumberish;
-        makerSide: BigNumberish;
-      },
-      overrides?: Overrides,
-    ): Promise<BigNumber>;
-
-    /**
-     * Initiate registration process for a token asset. Only `IERC20` compliant tokens can be added - ETH is hardcoded in the registry
-     * @param decimals The decimal precision of the token
-     * @param symbol The symbol identifying the token asset
-     * @param tokenAddress The address of the `IERC20` compliant token contract to add
-     */
-    registerToken(
-      tokenAddress: string,
-      symbol: string,
-      decimals: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<BigNumber>;
-
-    /**
-     * Finalize registration process for a token asset. All parameters must exactly match a previous call to `registerToken`
-     * @param decimals The decimal precision of the token
-     * @param symbol The symbol identifying the token asset
-     * @param tokenAddress The address of the `IERC20` compliant token contract to add
-     */
-    confirmTokenRegistration(
-      tokenAddress: string,
-      symbol: string,
-      decimals: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<BigNumber>;
-
-    /**
-     * Since multiple token addresses can potentially share the same symbol (in case of a token swap/contract upgrade) the provided `timestampInMs` is compared against each asset's `confirmedTimestampInMs` to uniquely determine the newest asset for the symbol at that point in time
-     * Loads an asset descriptor struct by its symbol and timestamp
-     * @param assetSymbol The asset's symbol
-     * @param timestampInMs Point in time used to disambiguate multiple tokens with same symbol
-     */
-    loadAssetBySymbol(
-      assetSymbol: string,
-      timestampInMs: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
-    /**
-     * Sets the wallet whitelisted to dispatch transactions calling the `executeTrade` and `withdraw` functions
-     * @param newDispatcherWallet The new whitelisted dispatcher wallet. Must be different from the current one
-     */
-    setDispatcher(
-      newDispatcherWallet: string,
-      overrides?: Overrides,
-    ): Promise<BigNumber>;
-
-    /**
-     * Clears the currently set whitelisted dispatcher wallet, effectively disabling calling the `executeTrade` and `withdraw` functions until a new wallet is set with `setDispatcher`
-     */
-    removeDispatcher(overrides?: Overrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    /**
-     * Clears the currently whitelisted admin wallet, effectively disabling any functions requiring the admin role
-     */
-    removeAdmin(overrides?: Overrides): Promise<PopulatedTransaction>;
-
-    /**
-     * Sets a new whitelisted admin wallet
-     * @param newAdmin The new whitelisted admin wallet. Must be different from the current one
-     */
-    setAdmin(
-      newAdmin: string,
-      overrides?: Overrides,
-    ): Promise<PopulatedTransaction>;
-
-    /**
-     * The `Custodian` accepts `Exchange` and `Governance` addresses in its constructor, after which they can only be changed by the `Governance` contract itself. Therefore the `Custodian` must be deployed last and its address set here on an existing `Exchange` contract. This value is immutable once set and cannot be changed again
-     * Sets the address of the `Custodian` contract
-     * @param newCustodian The address of the `Custodian` contract deployed against this `Exchange` contract's address
-     */
-    setCustodian(
-      newCustodian: string,
-      overrides?: Overrides,
-    ): Promise<PopulatedTransaction>;
-
-    /**
-     * Sets a new Chain Propagation Period - the block delay after which order nonce invalidations are respected by `executeTrade` and wallet exits are respected by `executeTrade` and `withdraw`
-     * @param newChainPropagationPeriod The new Chain Propagation Period expressed as a number of blocks. Must be less than `_maxChainPropagationPeriod`
-     */
-    setChainPropagationPeriod(
-      newChainPropagationPeriod: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<PopulatedTransaction>;
-
-    /**
-     * Trade and Withdraw fees will accrue in the `_balancesInPips` mappings for this wallet
-     * Sets the address of the Fee wallet
-     * @param newFeeWallet The new Fee wallet. Must be different from the current one
-     */
-    setFeeWallet(
-      newFeeWallet: string,
-      overrides?: Overrides,
-    ): Promise<PopulatedTransaction>;
-
     /**
      * Load a wallet's balance by asset address, in asset units
      * @param assetAddress The asset address to load the wallet's balance for
@@ -1599,16 +765,6 @@ export class Exchange extends Contract {
     loadBalanceInPipsBySymbol(
       wallet: string,
       assetSymbol: string,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
-    /**
-     * Invalidating an order nonce will not clear partial fill quantities for earlier orders because the gas cost would potentially be unbound
-     * Load the quantity filled so far for a partially filled orders
-     * @param orderHash The order hash as originally signed by placing wallet that uniquely identifies an order
-     */
-    loadPartiallyFilledOrderQuantityInPips(
-      orderHash: BytesLike,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
@@ -1648,21 +804,6 @@ export class Exchange extends Contract {
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
 
-    withdraw(
-      withdrawal: {
-        withdrawalType: BigNumberish;
-        nonce: BigNumberish;
-        walletAddress: string;
-        assetSymbol: string;
-        assetAddress: string;
-        quantityInPips: BigNumberish;
-        gasFeeInPips: BigNumberish;
-        autoDispatchEnabled: boolean;
-        walletSignature: BytesLike;
-      },
-      overrides?: Overrides,
-    ): Promise<PopulatedTransaction>;
-
     /**
      * Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
      */
@@ -1676,109 +817,5 @@ export class Exchange extends Contract {
       assetAddress: string,
       overrides?: Overrides,
     ): Promise<PopulatedTransaction>;
-
-    executeTrade(
-      buy: {
-        signatureHashVersion: BigNumberish;
-        nonce: BigNumberish;
-        walletAddress: string;
-        orderType: BigNumberish;
-        side: BigNumberish;
-        quantityInPips: BigNumberish;
-        quoteOrderQuantityInPips: BigNumberish;
-        limitPriceInPips: BigNumberish;
-        stopPriceInPips: BigNumberish;
-        clientOrderId: string;
-        timeInForce: BigNumberish;
-        selfTradePrevention: BigNumberish;
-        cancelAfter: BigNumberish;
-        walletSignature: BytesLike;
-      },
-      sell: {
-        signatureHashVersion: BigNumberish;
-        nonce: BigNumberish;
-        walletAddress: string;
-        orderType: BigNumberish;
-        side: BigNumberish;
-        quantityInPips: BigNumberish;
-        quoteOrderQuantityInPips: BigNumberish;
-        limitPriceInPips: BigNumberish;
-        stopPriceInPips: BigNumberish;
-        clientOrderId: string;
-        timeInForce: BigNumberish;
-        selfTradePrevention: BigNumberish;
-        cancelAfter: BigNumberish;
-        walletSignature: BytesLike;
-      },
-      trade: {
-        baseAssetSymbol: string;
-        quoteAssetSymbol: string;
-        baseAssetAddress: string;
-        quoteAssetAddress: string;
-        grossBaseQuantityInPips: BigNumberish;
-        grossQuoteQuantityInPips: BigNumberish;
-        netBaseQuantityInPips: BigNumberish;
-        netQuoteQuantityInPips: BigNumberish;
-        makerFeeAssetAddress: string;
-        takerFeeAssetAddress: string;
-        makerFeeQuantityInPips: BigNumberish;
-        takerFeeQuantityInPips: BigNumberish;
-        priceInPips: BigNumberish;
-        makerSide: BigNumberish;
-      },
-      overrides?: Overrides,
-    ): Promise<PopulatedTransaction>;
-
-    /**
-     * Initiate registration process for a token asset. Only `IERC20` compliant tokens can be added - ETH is hardcoded in the registry
-     * @param decimals The decimal precision of the token
-     * @param symbol The symbol identifying the token asset
-     * @param tokenAddress The address of the `IERC20` compliant token contract to add
-     */
-    registerToken(
-      tokenAddress: string,
-      symbol: string,
-      decimals: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<PopulatedTransaction>;
-
-    /**
-     * Finalize registration process for a token asset. All parameters must exactly match a previous call to `registerToken`
-     * @param decimals The decimal precision of the token
-     * @param symbol The symbol identifying the token asset
-     * @param tokenAddress The address of the `IERC20` compliant token contract to add
-     */
-    confirmTokenRegistration(
-      tokenAddress: string,
-      symbol: string,
-      decimals: BigNumberish,
-      overrides?: Overrides,
-    ): Promise<PopulatedTransaction>;
-
-    /**
-     * Since multiple token addresses can potentially share the same symbol (in case of a token swap/contract upgrade) the provided `timestampInMs` is compared against each asset's `confirmedTimestampInMs` to uniquely determine the newest asset for the symbol at that point in time
-     * Loads an asset descriptor struct by its symbol and timestamp
-     * @param assetSymbol The asset's symbol
-     * @param timestampInMs Point in time used to disambiguate multiple tokens with same symbol
-     */
-    loadAssetBySymbol(
-      assetSymbol: string,
-      timestampInMs: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
-    /**
-     * Sets the wallet whitelisted to dispatch transactions calling the `executeTrade` and `withdraw` functions
-     * @param newDispatcherWallet The new whitelisted dispatcher wallet. Must be different from the current one
-     */
-    setDispatcher(
-      newDispatcherWallet: string,
-      overrides?: Overrides,
-    ): Promise<PopulatedTransaction>;
-
-    /**
-     * Clears the currently set whitelisted dispatcher wallet, effectively disabling calling the `executeTrade` and `withdraw` functions until a new wallet is set with `setDispatcher`
-     */
-    removeDispatcher(overrides?: Overrides): Promise<PopulatedTransaction>;
   };
 }

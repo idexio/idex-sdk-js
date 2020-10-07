@@ -160,6 +160,8 @@
     -   [Parameters](#parameters-27)
 -   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
     -   [Properties](#properties)
+-   [EthereumClientOptions](#ethereumclientoptions)
+    -   [Properties](#properties-1)
 -   [approve](#approve)
     -   [Parameters](#parameters-28)
 -   [approve](#approve-1)
@@ -176,263 +178,149 @@
     -   [Parameters](#parameters-34)
 -   [transferFrom](#transferfrom-3)
     -   [Parameters](#parameters-35)
--   [increaseAllowance](#increaseallowance)
+-   [depositEther](#depositether)
     -   [Parameters](#parameters-36)
--   [increaseAllowance](#increaseallowance-1)
+-   [increaseAllowance](#increaseallowance)
     -   [Parameters](#parameters-37)
--   [increaseAllowance](#increaseallowance-2)
+-   [increaseAllowance](#increaseallowance-1)
     -   [Parameters](#parameters-38)
--   [increaseAllowance](#increaseallowance-3)
+-   [increaseAllowance](#increaseallowance-2)
     -   [Parameters](#parameters-39)
+-   [increaseAllowance](#increaseallowance-3)
+    -   [Parameters](#parameters-40)
 -   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
 -   [decreaseAllowance](#decreaseallowance)
-    -   [Parameters](#parameters-40)
--   [decreaseAllowance](#decreaseallowance-1)
     -   [Parameters](#parameters-41)
--   [decreaseAllowance](#decreaseallowance-2)
+-   [decreaseAllowance](#decreaseallowance-1)
     -   [Parameters](#parameters-42)
--   [decreaseAllowance](#decreaseallowance-3)
+-   [decreaseAllowance](#decreaseallowance-2)
     -   [Parameters](#parameters-43)
--   [name](#name-4)
+-   [decreaseAllowance](#decreaseallowance-3)
     -   [Parameters](#parameters-44)
--   [symbol](#symbol-4)
+-   [name](#name-4)
     -   [Parameters](#parameters-45)
--   [decimals](#decimals-4)
+-   [symbol](#symbol-4)
     -   [Parameters](#parameters-46)
--   [totalSupply](#totalsupply-4)
+-   [decimals](#decimals-4)
     -   [Parameters](#parameters-47)
--   [balanceOf](#balanceof-4)
+-   [totalSupply](#totalsupply-4)
     -   [Parameters](#parameters-48)
--   [transfer](#transfer-4)
+-   [balanceOf](#balanceof-4)
     -   [Parameters](#parameters-49)
--   [allowance](#allowance-4)
+-   [transfer](#transfer-4)
     -   [Parameters](#parameters-50)
--   [approve](#approve-4)
+-   [allowance](#allowance-4)
     -   [Parameters](#parameters-51)
--   [transferFrom](#transferfrom-4)
+-   [approve](#approve-4)
     -   [Parameters](#parameters-52)
--   [increaseAllowance](#increaseallowance-4)
+-   [transferFrom](#transferfrom-4)
     -   [Parameters](#parameters-53)
--   [decreaseAllowance](#decreaseallowance-4)
+-   [increaseAllowance](#increaseallowance-4)
     -   [Parameters](#parameters-54)
+-   [decreaseAllowance](#decreaseallowance-4)
+    -   [Parameters](#parameters-55)
 -   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
-    -   [Properties](#properties-1)
--   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
     -   [Properties](#properties-2)
+-   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
+    -   [Properties](#properties-3)
 -   [WebSocketRequest](#websocketrequest)
 -   [WebSocketRequest](#websocketrequest-1)
--   [removeAdmin](#removeadmin)
-    -   [Parameters](#parameters-55)
--   [removeAdmin](#removeadmin-1)
-    -   [Parameters](#parameters-56)
--   [removeAdmin](#removeadmin-2)
-    -   [Parameters](#parameters-57)
--   [removeAdmin](#removeadmin-3)
-    -   [Parameters](#parameters-58)
--   [setAdmin](#setadmin)
-    -   [Parameters](#parameters-59)
--   [setAdmin](#setadmin-1)
-    -   [Parameters](#parameters-60)
--   [setAdmin](#setadmin-2)
-    -   [Parameters](#parameters-61)
--   [setAdmin](#setadmin-3)
-    -   [Parameters](#parameters-62)
--   [setCustodian](#setcustodian)
-    -   [Parameters](#parameters-63)
--   [setCustodian](#setcustodian-1)
-    -   [Parameters](#parameters-64)
--   [setCustodian](#setcustodian-2)
-    -   [Parameters](#parameters-65)
--   [setCustodian](#setcustodian-3)
-    -   [Parameters](#parameters-66)
--   [setChainPropagationPeriod](#setchainpropagationperiod)
-    -   [Parameters](#parameters-67)
--   [setChainPropagationPeriod](#setchainpropagationperiod-1)
-    -   [Parameters](#parameters-68)
--   [setChainPropagationPeriod](#setchainpropagationperiod-2)
-    -   [Parameters](#parameters-69)
--   [setChainPropagationPeriod](#setchainpropagationperiod-3)
-    -   [Parameters](#parameters-70)
--   [setFeeWallet](#setfeewallet)
-    -   [Parameters](#parameters-71)
--   [setFeeWallet](#setfeewallet-1)
-    -   [Parameters](#parameters-72)
--   [setFeeWallet](#setfeewallet-2)
-    -   [Parameters](#parameters-73)
--   [setFeeWallet](#setfeewallet-3)
-    -   [Parameters](#parameters-74)
 -   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress)
-    -   [Parameters](#parameters-75)
+    -   [Parameters](#parameters-56)
 -   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-1)
-    -   [Parameters](#parameters-76)
+    -   [Parameters](#parameters-57)
 -   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-2)
-    -   [Parameters](#parameters-77)
+    -   [Parameters](#parameters-58)
 -   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-3)
-    -   [Parameters](#parameters-78)
+    -   [Parameters](#parameters-59)
 -   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol)
-    -   [Parameters](#parameters-79)
+    -   [Parameters](#parameters-60)
 -   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-1)
-    -   [Parameters](#parameters-80)
+    -   [Parameters](#parameters-61)
 -   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-2)
-    -   [Parameters](#parameters-81)
+    -   [Parameters](#parameters-62)
 -   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-3)
-    -   [Parameters](#parameters-82)
+    -   [Parameters](#parameters-63)
 -   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress)
-    -   [Parameters](#parameters-83)
+    -   [Parameters](#parameters-64)
 -   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-1)
-    -   [Parameters](#parameters-84)
+    -   [Parameters](#parameters-65)
 -   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-2)
-    -   [Parameters](#parameters-85)
+    -   [Parameters](#parameters-66)
 -   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-3)
-    -   [Parameters](#parameters-86)
+    -   [Parameters](#parameters-67)
 -   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol)
-    -   [Parameters](#parameters-87)
+    -   [Parameters](#parameters-68)
 -   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-1)
-    -   [Parameters](#parameters-88)
+    -   [Parameters](#parameters-69)
 -   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-2)
-    -   [Parameters](#parameters-89)
+    -   [Parameters](#parameters-70)
 -   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-3)
-    -   [Parameters](#parameters-90)
--   [loadPartiallyFilledOrderQuantityInPips](#loadpartiallyfilledorderquantityinpips)
-    -   [Parameters](#parameters-91)
--   [loadPartiallyFilledOrderQuantityInPips](#loadpartiallyfilledorderquantityinpips-1)
-    -   [Parameters](#parameters-92)
--   [loadPartiallyFilledOrderQuantityInPips](#loadpartiallyfilledorderquantityinpips-2)
-    -   [Parameters](#parameters-93)
--   [loadPartiallyFilledOrderQuantityInPips](#loadpartiallyfilledorderquantityinpips-3)
-    -   [Parameters](#parameters-94)
--   [WebSocketResponseSubscriptionMessageShort](#websocketresponsesubscriptionmessageshort)
--   [depositEther](#depositether)
-    -   [Parameters](#parameters-95)
+    -   [Parameters](#parameters-71)
 -   [depositEther](#depositether-1)
-    -   [Parameters](#parameters-96)
+    -   [Parameters](#parameters-72)
 -   [depositEther](#depositether-2)
-    -   [Parameters](#parameters-97)
+    -   [Parameters](#parameters-73)
 -   [depositEther](#depositether-3)
-    -   [Parameters](#parameters-98)
--   [WebSocketResponseSubscriptionMessageLong](#websocketresponsesubscriptionmessagelong)
--   [depositTokenByAddress](#deposittokenbyaddress)
-    -   [Parameters](#parameters-99)
--   [depositTokenByAddress](#deposittokenbyaddress-1)
-    -   [Parameters](#parameters-100)
--   [depositTokenByAddress](#deposittokenbyaddress-2)
-    -   [Parameters](#parameters-101)
--   [depositTokenByAddress](#deposittokenbyaddress-3)
-    -   [Parameters](#parameters-102)
--   [depositTokenBySymbol](#deposittokenbysymbol)
-    -   [Parameters](#parameters-103)
--   [depositTokenBySymbol](#deposittokenbysymbol-1)
-    -   [Parameters](#parameters-104)
--   [depositTokenBySymbol](#deposittokenbysymbol-2)
-    -   [Parameters](#parameters-105)
--   [depositTokenBySymbol](#deposittokenbysymbol-3)
-    -   [Parameters](#parameters-106)
--   [invalidateOrderNonce](#invalidateordernonce)
-    -   [Parameters](#parameters-107)
--   [invalidateOrderNonce](#invalidateordernonce-1)
-    -   [Parameters](#parameters-108)
--   [invalidateOrderNonce](#invalidateordernonce-2)
-    -   [Parameters](#parameters-109)
--   [invalidateOrderNonce](#invalidateordernonce-3)
-    -   [Parameters](#parameters-110)
--   [exitWallet](#exitwallet)
-    -   [Parameters](#parameters-111)
--   [exitWallet](#exitwallet-1)
-    -   [Parameters](#parameters-112)
--   [exitWallet](#exitwallet-2)
-    -   [Parameters](#parameters-113)
--   [exitWallet](#exitwallet-3)
-    -   [Parameters](#parameters-114)
--   [withdrawExit](#withdrawexit)
-    -   [Parameters](#parameters-115)
--   [withdrawExit](#withdrawexit-1)
-    -   [Parameters](#parameters-116)
--   [withdrawExit](#withdrawexit-2)
-    -   [Parameters](#parameters-117)
--   [withdrawExit](#withdrawexit-3)
-    -   [Parameters](#parameters-118)
--   [registerToken](#registertoken)
-    -   [Parameters](#parameters-119)
--   [registerToken](#registertoken-1)
-    -   [Parameters](#parameters-120)
--   [registerToken](#registertoken-2)
-    -   [Parameters](#parameters-121)
--   [registerToken](#registertoken-3)
-    -   [Parameters](#parameters-122)
--   [confirmTokenRegistration](#confirmtokenregistration)
-    -   [Parameters](#parameters-123)
--   [confirmTokenRegistration](#confirmtokenregistration-1)
-    -   [Parameters](#parameters-124)
--   [confirmTokenRegistration](#confirmtokenregistration-2)
-    -   [Parameters](#parameters-125)
--   [confirmTokenRegistration](#confirmtokenregistration-3)
-    -   [Parameters](#parameters-126)
--   [loadAssetBySymbol](#loadassetbysymbol)
-    -   [Parameters](#parameters-127)
--   [loadAssetBySymbol](#loadassetbysymbol-1)
-    -   [Parameters](#parameters-128)
--   [loadAssetBySymbol](#loadassetbysymbol-2)
-    -   [Parameters](#parameters-129)
--   [loadAssetBySymbol](#loadassetbysymbol-3)
-    -   [Parameters](#parameters-130)
--   [setDispatcher](#setdispatcher)
-    -   [Parameters](#parameters-131)
--   [setDispatcher](#setdispatcher-1)
-    -   [Parameters](#parameters-132)
--   [setDispatcher](#setdispatcher-2)
-    -   [Parameters](#parameters-133)
--   [setDispatcher](#setdispatcher-3)
-    -   [Parameters](#parameters-134)
--   [removeDispatcher](#removedispatcher)
-    -   [Parameters](#parameters-135)
--   [removeDispatcher](#removedispatcher-1)
-    -   [Parameters](#parameters-136)
--   [removeDispatcher](#removedispatcher-2)
-    -   [Parameters](#parameters-137)
--   [removeDispatcher](#removedispatcher-3)
-    -   [Parameters](#parameters-138)
--   [removeAdmin](#removeadmin-4)
-    -   [Parameters](#parameters-139)
--   [setAdmin](#setadmin-4)
-    -   [Parameters](#parameters-140)
--   [setCustodian](#setcustodian-4)
-    -   [Parameters](#parameters-141)
--   [setChainPropagationPeriod](#setchainpropagationperiod-4)
-    -   [Parameters](#parameters-142)
--   [setFeeWallet](#setfeewallet-4)
-    -   [Parameters](#parameters-143)
--   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-4)
-    -   [Parameters](#parameters-144)
--   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-4)
-    -   [Parameters](#parameters-145)
--   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-4)
-    -   [Parameters](#parameters-146)
--   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-4)
-    -   [Parameters](#parameters-147)
--   [loadPartiallyFilledOrderQuantityInPips](#loadpartiallyfilledorderquantityinpips-4)
-    -   [Parameters](#parameters-148)
+    -   [Parameters](#parameters-74)
 -   [depositEther](#depositether-4)
-    -   [Parameters](#parameters-149)
+    -   [Parameters](#parameters-75)
+-   [depositTokenByAddress](#deposittokenbyaddress)
+    -   [Parameters](#parameters-76)
+-   [depositTokenByAddress](#deposittokenbyaddress-1)
+    -   [Parameters](#parameters-77)
+-   [depositTokenByAddress](#deposittokenbyaddress-2)
+    -   [Parameters](#parameters-78)
+-   [depositTokenByAddress](#deposittokenbyaddress-3)
+    -   [Parameters](#parameters-79)
+-   [depositTokenBySymbol](#deposittokenbysymbol)
+    -   [Parameters](#parameters-80)
+-   [depositTokenBySymbol](#deposittokenbysymbol-1)
+    -   [Parameters](#parameters-81)
+-   [depositTokenBySymbol](#deposittokenbysymbol-2)
+    -   [Parameters](#parameters-82)
+-   [depositTokenBySymbol](#deposittokenbysymbol-3)
+    -   [Parameters](#parameters-83)
+-   [exitWallet](#exitwallet)
+    -   [Parameters](#parameters-84)
+-   [exitWallet](#exitwallet-1)
+    -   [Parameters](#parameters-85)
+-   [exitWallet](#exitwallet-2)
+    -   [Parameters](#parameters-86)
+-   [exitWallet](#exitwallet-3)
+    -   [Parameters](#parameters-87)
+-   [withdrawExit](#withdrawexit)
+    -   [Parameters](#parameters-88)
+-   [withdrawExit](#withdrawexit-1)
+    -   [Parameters](#parameters-89)
+-   [withdrawExit](#withdrawexit-2)
+    -   [Parameters](#parameters-90)
+-   [withdrawExit](#withdrawexit-3)
+    -   [Parameters](#parameters-91)
+-   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-4)
+    -   [Parameters](#parameters-92)
+-   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-4)
+    -   [Parameters](#parameters-93)
+-   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-4)
+    -   [Parameters](#parameters-94)
+-   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-4)
+    -   [Parameters](#parameters-95)
+-   [depositEther](#depositether-5)
+    -   [Parameters](#parameters-96)
 -   [depositTokenByAddress](#deposittokenbyaddress-4)
-    -   [Parameters](#parameters-150)
+    -   [Parameters](#parameters-97)
 -   [depositTokenBySymbol](#deposittokenbysymbol-4)
-    -   [Parameters](#parameters-151)
--   [invalidateOrderNonce](#invalidateordernonce-4)
-    -   [Parameters](#parameters-152)
+    -   [Parameters](#parameters-98)
 -   [exitWallet](#exitwallet-4)
-    -   [Parameters](#parameters-153)
+    -   [Parameters](#parameters-99)
 -   [withdrawExit](#withdrawexit-4)
-    -   [Parameters](#parameters-154)
--   [registerToken](#registertoken-4)
-    -   [Parameters](#parameters-155)
--   [confirmTokenRegistration](#confirmtokenregistration-4)
-    -   [Parameters](#parameters-156)
--   [loadAssetBySymbol](#loadassetbysymbol-4)
-    -   [Parameters](#parameters-157)
--   [setDispatcher](#setdispatcher-4)
-    -   [Parameters](#parameters-158)
--   [removeDispatcher](#removedispatcher-4)
-    -   [Parameters](#parameters-159)
+    -   [Parameters](#parameters-100)
+-   [removeDispatcher](#removedispatcher)
+    -   [Parameters](#parameters-101)
+-   [WebSocketResponseSubscriptionMessageShort](#websocketresponsesubscriptionmessageshort)
+-   [WebSocketResponseSubscriptionMessageLong](#websocketresponsesubscriptionmessagelong)
+-   [invalidateOrderNonce](#invalidateordernonce)
+    -   [Parameters](#parameters-102)
 
 ## Clients
 
@@ -981,7 +869,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Must be set to true
 -   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to authenticate user
 -   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to compute HMAC signature
--   `privateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, used to create ECDSA signatures
+-   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, used to create ECDSA signatures
 
 ### WebSocketClient
 
@@ -2792,6 +2680,18 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `tickers` **[WebSocketRequestTickersSubscription](#websocketrequesttickerssubscription)** 
 -   `trades` **[WebSocketRequestTradesSubscription](#websocketrequesttradessubscription)** 
 
+## EthereumClientOptions
+
+Ethereum Client configuration options
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** When true, interacts with the sandbox contract
+-   `rpc` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** \-The Ethereum RPC url to use
+-   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, used to create ECDSA signatures
+
 ## approve
 
 See {IERC20-approve}.     _ Requirements:     _ - `spender` cannot be the zero address.
@@ -2891,6 +2791,22 @@ See {IERC20-transferFrom}.     _ Emits an {Approval} event indicating the update
 -   `overrides` **Overrides?** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## depositEther
+
+Deposits ETH into the exchange contract for the configured wallet
+
+### Parameters
+
+-   `action` **A** 
+-   `wallet` **EthereumWalletConfig** 
+-   `transaction` **TransactionOptions** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;DepositEthResponse&lt;A>>** 
+
+## 
+
+Deposits an ERC-20 token into the exchange by the given address
 
 ## increaseAllowance
 
@@ -3150,230 +3066,6 @@ Type: (WebSocketRequestSubscribeStrict | [WebSocketRequestSubscriptions](#websoc
 
 Type: (WebSocketRequestSubscribe | [WebSocketRequestSubscriptions](#websocketrequestsubscriptions) \| [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe))
 
-## removeAdmin
-
-Clears the currently whitelisted admin wallet, effectively disabling any functions requiring the admin role
-
-### Parameters
-
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## removeAdmin
-
-Clears the currently whitelisted admin wallet, effectively disabling any functions requiring the admin role
-
-### Parameters
-
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
-
-## removeAdmin
-
-Clears the currently whitelisted admin wallet, effectively disabling any functions requiring the admin role
-
-### Parameters
-
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## removeAdmin
-
-Clears the currently whitelisted admin wallet, effectively disabling any functions requiring the admin role
-
-### Parameters
-
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
-
-## setAdmin
-
-Sets a new whitelisted admin wallet
-
-### Parameters
-
--   `newAdmin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The new whitelisted admin wallet. Must be different from the current one
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## setAdmin
-
-Sets a new whitelisted admin wallet
-
-### Parameters
-
--   `newAdmin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The new whitelisted admin wallet. Must be different from the current one
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
-
-## setAdmin
-
-Sets a new whitelisted admin wallet
-
-### Parameters
-
--   `newAdmin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The new whitelisted admin wallet. Must be different from the current one
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## setAdmin
-
-Sets a new whitelisted admin wallet
-
-### Parameters
-
--   `newAdmin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The new whitelisted admin wallet. Must be different from the current one
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
-
-## setCustodian
-
-The `Custodian` accepts `Exchange` and `Governance` addresses in its constructor, after which they can only be changed by the `Governance` contract itself. Therefore the `Custodian` must be deployed last and its address set here on an existing `Exchange` contract. This value is immutable once set and cannot be changed again
-Sets the address of the `Custodian` contract
-
-### Parameters
-
--   `newCustodian` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the `Custodian` contract deployed against this `Exchange` contract's address
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## setCustodian
-
-The `Custodian` accepts `Exchange` and `Governance` addresses in its constructor, after which they can only be changed by the `Governance` contract itself. Therefore the `Custodian` must be deployed last and its address set here on an existing `Exchange` contract. This value is immutable once set and cannot be changed again
-Sets the address of the `Custodian` contract
-
-### Parameters
-
--   `newCustodian` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the `Custodian` contract deployed against this `Exchange` contract's address
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
-
-## setCustodian
-
-The `Custodian` accepts `Exchange` and `Governance` addresses in its constructor, after which they can only be changed by the `Governance` contract itself. Therefore the `Custodian` must be deployed last and its address set here on an existing `Exchange` contract. This value is immutable once set and cannot be changed again
-Sets the address of the `Custodian` contract
-
-### Parameters
-
--   `newCustodian` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the `Custodian` contract deployed against this `Exchange` contract's address
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## setCustodian
-
-The `Custodian` accepts `Exchange` and `Governance` addresses in its constructor, after which they can only be changed by the `Governance` contract itself. Therefore the `Custodian` must be deployed last and its address set here on an existing `Exchange` contract. This value is immutable once set and cannot be changed again
-Sets the address of the `Custodian` contract
-
-### Parameters
-
--   `newCustodian` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the `Custodian` contract deployed against this `Exchange` contract's address
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
-
-## setChainPropagationPeriod
-
-Sets a new Chain Propagation Period - the block delay after which order nonce invalidations are respected by `executeTrade` and wallet exits are respected by `executeTrade` and `withdraw`
-
-### Parameters
-
--   `newChainPropagationPeriod` **BigNumberish** The new Chain Propagation Period expressed as a number of blocks. Must be less than `_maxChainPropagationPeriod`
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## setChainPropagationPeriod
-
-Sets a new Chain Propagation Period - the block delay after which order nonce invalidations are respected by `executeTrade` and wallet exits are respected by `executeTrade` and `withdraw`
-
-### Parameters
-
--   `newChainPropagationPeriod` **BigNumberish** The new Chain Propagation Period expressed as a number of blocks. Must be less than `_maxChainPropagationPeriod`
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
-
-## setChainPropagationPeriod
-
-Sets a new Chain Propagation Period - the block delay after which order nonce invalidations are respected by `executeTrade` and wallet exits are respected by `executeTrade` and `withdraw`
-
-### Parameters
-
--   `newChainPropagationPeriod` **BigNumberish** The new Chain Propagation Period expressed as a number of blocks. Must be less than `_maxChainPropagationPeriod`
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## setChainPropagationPeriod
-
-Sets a new Chain Propagation Period - the block delay after which order nonce invalidations are respected by `executeTrade` and wallet exits are respected by `executeTrade` and `withdraw`
-
-### Parameters
-
--   `newChainPropagationPeriod` **BigNumberish** The new Chain Propagation Period expressed as a number of blocks. Must be less than `_maxChainPropagationPeriod`
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
-
-## setFeeWallet
-
-Trade and Withdraw fees will accrue in the `_balancesInPips` mappings for this wallet
-Sets the address of the Fee wallet
-
-### Parameters
-
--   `newFeeWallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The new Fee wallet. Must be different from the current one
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## setFeeWallet
-
-Trade and Withdraw fees will accrue in the `_balancesInPips` mappings for this wallet
-Sets the address of the Fee wallet
-
-### Parameters
-
--   `newFeeWallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The new Fee wallet. Must be different from the current one
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
-
-## setFeeWallet
-
-Trade and Withdraw fees will accrue in the `_balancesInPips` mappings for this wallet
-Sets the address of the Fee wallet
-
-### Parameters
-
--   `newFeeWallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The new Fee wallet. Must be different from the current one
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## setFeeWallet
-
-Trade and Withdraw fees will accrue in the `_balancesInPips` mappings for this wallet
-Sets the address of the Fee wallet
-
-### Parameters
-
--   `newFeeWallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The new Fee wallet. Must be different from the current one
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
-
 ## loadBalanceInAssetUnitsByAddress
 
 Load a wallet's balance by asset address, in asset units
@@ -3566,53 +3258,338 @@ Load a wallet's balance by asset symbol, in pips
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
 
-## loadPartiallyFilledOrderQuantityInPips
+## depositEther
 
-Invalidating an order nonce will not clear partial fill quantities for earlier orders because the gas cost would potentially be unbound
-Load the quantity filled so far for a partially filled orders
-
-### Parameters
-
--   `orderHash` **BytesLike** The order hash as originally signed by placing wallet that uniquely identifies an order
--   `overrides` **CallOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{0: BigNumber}>** 
-
-## loadPartiallyFilledOrderQuantityInPips
-
-Invalidating an order nonce will not clear partial fill quantities for earlier orders because the gas cost would potentially be unbound
-Load the quantity filled so far for a partially filled orders
+Deposit ETH
 
 ### Parameters
 
--   `orderHash` **BytesLike** The order hash as originally signed by placing wallet that uniquely identifies an order
--   `overrides` **CallOverrides?** 
+-   `overrides` **PayableOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## depositEther
+
+Deposit ETH
+
+### Parameters
+
+-   `overrides` **PayableOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
+
+## depositEther
+
+Deposit ETH
+
+### Parameters
+
+-   `overrides` **PayableOverrides?** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
 
-## loadPartiallyFilledOrderQuantityInPips
+## depositEther
 
-Invalidating an order nonce will not clear partial fill quantities for earlier orders because the gas cost would potentially be unbound
-Load the quantity filled so far for a partially filled orders
-
-### Parameters
-
--   `orderHash` **BytesLike** The order hash as originally signed by placing wallet that uniquely identifies an order
--   `overrides` **CallOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## loadPartiallyFilledOrderQuantityInPips
-
-Invalidating an order nonce will not clear partial fill quantities for earlier orders because the gas cost would potentially be unbound
-Load the quantity filled so far for a partially filled orders
+Deposit ETH
 
 ### Parameters
 
--   `orderHash` **BytesLike** The order hash as originally signed by placing wallet that uniquely identifies an order
--   `overrides` **CallOverrides?** 
+-   `overrides` **PayableOverrides?** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## depositTokenByAddress
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token contract address
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## depositTokenByAddress
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token contract address
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
+
+## depositTokenByAddress
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token contract address
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## depositTokenByAddress
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token contract address
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## depositTokenBySymbol
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The case-sensitive symbol string for the token
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## depositTokenBySymbol
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The case-sensitive symbol string for the token
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
+
+## depositTokenBySymbol
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The case-sensitive symbol string for the token
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## depositTokenBySymbol
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The case-sensitive symbol string for the token
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## exitWallet
+
+Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
+
+### Parameters
+
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## exitWallet
+
+Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
+
+### Parameters
+
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
+
+## exitWallet
+
+Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
+
+### Parameters
+
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## exitWallet
+
+Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
+
+### Parameters
+
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## withdrawExit
+
+Withdraw the entire balance of an asset for an exited wallet. The Chain Propagation Period must have already passed since calling `exitWallet` on `assetAddress`
+
+### Parameters
+
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the asset to withdraw
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## withdrawExit
+
+Withdraw the entire balance of an asset for an exited wallet. The Chain Propagation Period must have already passed since calling `exitWallet` on `assetAddress`
+
+### Parameters
+
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the asset to withdraw
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
+
+## withdrawExit
+
+Withdraw the entire balance of an asset for an exited wallet. The Chain Propagation Period must have already passed since calling `exitWallet` on `assetAddress`
+
+### Parameters
+
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the asset to withdraw
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## withdrawExit
+
+Withdraw the entire balance of an asset for an exited wallet. The Chain Propagation Period must have already passed since calling `exitWallet` on `assetAddress`
+
+### Parameters
+
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the asset to withdraw
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## loadBalanceInAssetUnitsByAddress
+
+Load a wallet's balance by asset address, in asset units
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset address to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## loadBalanceInAssetUnitsBySymbol
+
+Load a wallet's balance by asset address, in asset units
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset symbol to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## loadBalanceInPipsByAddress
+
+Load a wallet's balance by asset address, in pips
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset address to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## loadBalanceInPipsBySymbol
+
+Load a wallet's balance by asset symbol, in pips
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset symbol to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## depositEther
+
+Deposit ETH
+
+### Parameters
+
+-   `overrides` **PayableOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## depositTokenByAddress
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token contract address
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## depositTokenBySymbol
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The case-sensitive symbol string for the token
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## exitWallet
+
+Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
+
+### Parameters
+
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## withdrawExit
+
+Withdraw the entire balance of an asset for an exited wallet. The Chain Propagation Period must have already passed since calling `exitWallet` on `assetAddress`
+
+### Parameters
+
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the asset to withdraw
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## removeDispatcher
+
+Clears the currently set whitelisted dispatcher wallet, effectively disabling calling the `executeTrade` and `withdraw` functions until a new wallet is set with `setDispatcher`
+
+### Parameters
+
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
 
 ## WebSocketResponseSubscriptionMessageShort
 
@@ -3620,181 +3597,12 @@ Short-hand response payloads
 
 Type: ({type: `"tickers"`, data: [WebSocketResponseTickerShort](#websocketresponsetickershort)} | {type: `"trades"`, data: [WebSocketResponseTradeShort](#websocketresponsetradeshort)} | {type: `"candles"`, data: [WebSocketResponseCandleShort](#websocketresponsecandleshort)} | {type: `"l1orderbook"`, data: [WebSocketResponseL1OrderBookShort](#websocketresponsel1orderbookshort)} | {type: `"l2orderbook"`, data: [WebSocketResponseL2OrderBookShort](#websocketresponsel2orderbookshort)} | {type: `"balances"`, data: [WebSocketResponseBalanceShort](#websocketresponsebalanceshort)} | {type: `"orders"`, data: [WebSocketResponseOrderShort](#websocketresponseordershort)})
 
-## depositEther
-
-Deposit ETH
-
-### Parameters
-
--   `overrides` **PayableOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## depositEther
-
-Deposit ETH
-
-### Parameters
-
--   `overrides` **PayableOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
-
-## depositEther
-
-Deposit ETH
-
-### Parameters
-
--   `overrides` **PayableOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## depositEther
-
-Deposit ETH
-
-### Parameters
-
--   `overrides` **PayableOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
-
 ## WebSocketResponseSubscriptionMessageLong
 
 Transformer (long-form) response payloads
 
 Type: ({type: `"tickers"`, data: [WebSocketResponseTickerLong](#websocketresponsetickerlong)} | {type: `"trades"`, data: [WebSocketResponseTradeLong](#websocketresponsetradelong)} | {type: `"candles"`, data: [WebSocketResponseCandleLong](#websocketresponsecandlelong)} | {type: `"l1orderbook"`, data: [WebSocketResponseL1OrderBookLong](#websocketresponsel1orderbooklong)} | {type: `"l2orderbook"`, data: [WebSocketResponseL2OrderBookLong](#websocketresponsel2orderbooklong)} | {type: `"balances"`, data: [WebSocketResponseBalanceLong](#websocketresponsebalancelong)} | {type: `"orders"`, data: [WebSocketResponseOrderLong](#websocketresponseorderlong)})
 
-## depositTokenByAddress
-
-Deposit `IERC20` compliant tokens
-
-### Parameters
-
--   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token contract address
--   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## depositTokenByAddress
-
-Deposit `IERC20` compliant tokens
-
-### Parameters
-
--   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token contract address
--   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
-
-## depositTokenByAddress
-
-Deposit `IERC20` compliant tokens
-
-### Parameters
-
--   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token contract address
--   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## depositTokenByAddress
-
-Deposit `IERC20` compliant tokens
-
-### Parameters
-
--   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token contract address
--   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
-
-## depositTokenBySymbol
-
-Deposit `IERC20` compliant tokens
-
-### Parameters
-
--   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The case-sensitive symbol string for the token
--   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## depositTokenBySymbol
-
-Deposit `IERC20` compliant tokens
-
-### Parameters
-
--   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The case-sensitive symbol string for the token
--   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
-
-## depositTokenBySymbol
-
-Deposit `IERC20` compliant tokens
-
-### Parameters
-
--   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The case-sensitive symbol string for the token
--   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## depositTokenBySymbol
-
-Deposit `IERC20` compliant tokens
-
-### Parameters
-
--   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The case-sensitive symbol string for the token
--   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
-
-## invalidateOrderNonce
-
-Invalidate all order nonces with a timestampInMs lower than the one provided
-
-### Parameters
-
--   `nonce` **BigNumberish** A Version 1 UUID. After calling and once the Chain Propagation Period has elapsed, `executeTrade` will reject order nonces from this wallet with a timestampInMs component lower than the one provided
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## invalidateOrderNonce
-
-Invalidate all order nonces with a timestampInMs lower than the one provided
-
-### Parameters
-
--   `nonce` **BigNumberish** A Version 1 UUID. After calling and once the Chain Propagation Period has elapsed, `executeTrade` will reject order nonces from this wallet with a timestampInMs component lower than the one provided
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
-
-## invalidateOrderNonce
-
-Invalidate all order nonces with a timestampInMs lower than the one provided
-
-### Parameters
-
--   `nonce` **BigNumberish** A Version 1 UUID. After calling and once the Chain Propagation Period has elapsed, `executeTrade` will reject order nonces from this wallet with a timestampInMs component lower than the one provided
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
 ## invalidateOrderNonce
 
 Invalidate all order nonces with a timestampInMs lower than the one provided
@@ -3805,569 +3613,3 @@ Invalidate all order nonces with a timestampInMs lower than the one provided
 -   `overrides` **Overrides?** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
-
-## exitWallet
-
-Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
-
-### Parameters
-
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## exitWallet
-
-Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
-
-### Parameters
-
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
-
-## exitWallet
-
-Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
-
-### Parameters
-
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## exitWallet
-
-Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
-
-### Parameters
-
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
-
-## withdrawExit
-
-Withdraw the entire balance of an asset for an exited wallet. The Chain Propagation Period must have already passed since calling `exitWallet` on `assetAddress`
-
-### Parameters
-
--   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the asset to withdraw
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## withdrawExit
-
-Withdraw the entire balance of an asset for an exited wallet. The Chain Propagation Period must have already passed since calling `exitWallet` on `assetAddress`
-
-### Parameters
-
--   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the asset to withdraw
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
-
-## withdrawExit
-
-Withdraw the entire balance of an asset for an exited wallet. The Chain Propagation Period must have already passed since calling `exitWallet` on `assetAddress`
-
-### Parameters
-
--   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the asset to withdraw
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## withdrawExit
-
-Withdraw the entire balance of an asset for an exited wallet. The Chain Propagation Period must have already passed since calling `exitWallet` on `assetAddress`
-
-### Parameters
-
--   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the asset to withdraw
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
-
-## registerToken
-
-Initiate registration process for a token asset. Only `IERC20` compliant tokens can be added - ETH is hardcoded in the registry
-
-### Parameters
-
--   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the `IERC20` compliant token contract to add
--   `symbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The symbol identifying the token asset
--   `decimals` **BigNumberish** The decimal precision of the token
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## registerToken
-
-Initiate registration process for a token asset. Only `IERC20` compliant tokens can be added - ETH is hardcoded in the registry
-
-### Parameters
-
--   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the `IERC20` compliant token contract to add
--   `symbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The symbol identifying the token asset
--   `decimals` **BigNumberish** The decimal precision of the token
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
-
-## registerToken
-
-Initiate registration process for a token asset. Only `IERC20` compliant tokens can be added - ETH is hardcoded in the registry
-
-### Parameters
-
--   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the `IERC20` compliant token contract to add
--   `symbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The symbol identifying the token asset
--   `decimals` **BigNumberish** The decimal precision of the token
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## registerToken
-
-Initiate registration process for a token asset. Only `IERC20` compliant tokens can be added - ETH is hardcoded in the registry
-
-### Parameters
-
--   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the `IERC20` compliant token contract to add
--   `symbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The symbol identifying the token asset
--   `decimals` **BigNumberish** The decimal precision of the token
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
-
-## confirmTokenRegistration
-
-Finalize registration process for a token asset. All parameters must exactly match a previous call to `registerToken`
-
-### Parameters
-
--   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the `IERC20` compliant token contract to add
--   `symbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The symbol identifying the token asset
--   `decimals` **BigNumberish** The decimal precision of the token
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## confirmTokenRegistration
-
-Finalize registration process for a token asset. All parameters must exactly match a previous call to `registerToken`
-
-### Parameters
-
--   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the `IERC20` compliant token contract to add
--   `symbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The symbol identifying the token asset
--   `decimals` **BigNumberish** The decimal precision of the token
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
-
-## confirmTokenRegistration
-
-Finalize registration process for a token asset. All parameters must exactly match a previous call to `registerToken`
-
-### Parameters
-
--   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the `IERC20` compliant token contract to add
--   `symbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The symbol identifying the token asset
--   `decimals` **BigNumberish** The decimal precision of the token
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## confirmTokenRegistration
-
-Finalize registration process for a token asset. All parameters must exactly match a previous call to `registerToken`
-
-### Parameters
-
--   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the `IERC20` compliant token contract to add
--   `symbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The symbol identifying the token asset
--   `decimals` **BigNumberish** The decimal precision of the token
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
-
-## loadAssetBySymbol
-
-Since multiple token addresses can potentially share the same symbol (in case of a token swap/contract upgrade) the provided `timestampInMs` is compared against each asset's `confirmedTimestampInMs` to uniquely determine the newest asset for the symbol at that point in time
-Loads an asset descriptor struct by its symbol and timestamp
-
-### Parameters
-
--   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset's symbol
--   `timestampInMs` **BigNumberish** Point in time used to disambiguate multiple tokens with same symbol
--   `overrides` **CallOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{0: {exists: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean), assetAddress: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), symbol: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), decimals: [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number), isConfirmed: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean), confirmedTimestampInMs: BigNumber, 0: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean), 1: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), 2: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), 3: [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number), 4: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean), 5: BigNumber}}>** 
-
-## loadAssetBySymbol
-
-Since multiple token addresses can potentially share the same symbol (in case of a token swap/contract upgrade) the provided `timestampInMs` is compared against each asset's `confirmedTimestampInMs` to uniquely determine the newest asset for the symbol at that point in time
-Loads an asset descriptor struct by its symbol and timestamp
-
-### Parameters
-
--   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset's symbol
--   `timestampInMs` **BigNumberish** Point in time used to disambiguate multiple tokens with same symbol
--   `overrides` **CallOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{exists: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean), assetAddress: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), symbol: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), decimals: [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number), isConfirmed: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean), confirmedTimestampInMs: BigNumber, 0: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean), 1: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), 2: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), 3: [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number), 4: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean), 5: BigNumber}>** 
-
-## loadAssetBySymbol
-
-Since multiple token addresses can potentially share the same symbol (in case of a token swap/contract upgrade) the provided `timestampInMs` is compared against each asset's `confirmedTimestampInMs` to uniquely determine the newest asset for the symbol at that point in time
-Loads an asset descriptor struct by its symbol and timestamp
-
-### Parameters
-
--   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset's symbol
--   `timestampInMs` **BigNumberish** Point in time used to disambiguate multiple tokens with same symbol
--   `overrides` **CallOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## loadAssetBySymbol
-
-Since multiple token addresses can potentially share the same symbol (in case of a token swap/contract upgrade) the provided `timestampInMs` is compared against each asset's `confirmedTimestampInMs` to uniquely determine the newest asset for the symbol at that point in time
-Loads an asset descriptor struct by its symbol and timestamp
-
-### Parameters
-
--   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset's symbol
--   `timestampInMs` **BigNumberish** Point in time used to disambiguate multiple tokens with same symbol
--   `overrides` **CallOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
-
-## setDispatcher
-
-Sets the wallet whitelisted to dispatch transactions calling the `executeTrade` and `withdraw` functions
-
-### Parameters
-
--   `newDispatcherWallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The new whitelisted dispatcher wallet. Must be different from the current one
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## setDispatcher
-
-Sets the wallet whitelisted to dispatch transactions calling the `executeTrade` and `withdraw` functions
-
-### Parameters
-
--   `newDispatcherWallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The new whitelisted dispatcher wallet. Must be different from the current one
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
-
-## setDispatcher
-
-Sets the wallet whitelisted to dispatch transactions calling the `executeTrade` and `withdraw` functions
-
-### Parameters
-
--   `newDispatcherWallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The new whitelisted dispatcher wallet. Must be different from the current one
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## setDispatcher
-
-Sets the wallet whitelisted to dispatch transactions calling the `executeTrade` and `withdraw` functions
-
-### Parameters
-
--   `newDispatcherWallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The new whitelisted dispatcher wallet. Must be different from the current one
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
-
-## removeDispatcher
-
-Clears the currently set whitelisted dispatcher wallet, effectively disabling calling the `executeTrade` and `withdraw` functions until a new wallet is set with `setDispatcher`
-
-### Parameters
-
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## removeDispatcher
-
-Clears the currently set whitelisted dispatcher wallet, effectively disabling calling the `executeTrade` and `withdraw` functions until a new wallet is set with `setDispatcher`
-
-### Parameters
-
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
-
-## removeDispatcher
-
-Clears the currently set whitelisted dispatcher wallet, effectively disabling calling the `executeTrade` and `withdraw` functions until a new wallet is set with `setDispatcher`
-
-### Parameters
-
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## removeDispatcher
-
-Clears the currently set whitelisted dispatcher wallet, effectively disabling calling the `executeTrade` and `withdraw` functions until a new wallet is set with `setDispatcher`
-
-### Parameters
-
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
-
-## removeAdmin
-
-Clears the currently whitelisted admin wallet, effectively disabling any functions requiring the admin role
-
-### Parameters
-
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## setAdmin
-
-Sets a new whitelisted admin wallet
-
-### Parameters
-
--   `newAdmin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The new whitelisted admin wallet. Must be different from the current one
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## setCustodian
-
-The `Custodian` accepts `Exchange` and `Governance` addresses in its constructor, after which they can only be changed by the `Governance` contract itself. Therefore the `Custodian` must be deployed last and its address set here on an existing `Exchange` contract. This value is immutable once set and cannot be changed again
-Sets the address of the `Custodian` contract
-
-### Parameters
-
--   `newCustodian` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the `Custodian` contract deployed against this `Exchange` contract's address
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## setChainPropagationPeriod
-
-Sets a new Chain Propagation Period - the block delay after which order nonce invalidations are respected by `executeTrade` and wallet exits are respected by `executeTrade` and `withdraw`
-
-### Parameters
-
--   `newChainPropagationPeriod` **BigNumberish** The new Chain Propagation Period expressed as a number of blocks. Must be less than `_maxChainPropagationPeriod`
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## setFeeWallet
-
-Trade and Withdraw fees will accrue in the `_balancesInPips` mappings for this wallet
-Sets the address of the Fee wallet
-
-### Parameters
-
--   `newFeeWallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The new Fee wallet. Must be different from the current one
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## loadBalanceInAssetUnitsByAddress
-
-Load a wallet's balance by asset address, in asset units
-
-### Parameters
-
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
--   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset address to load the wallet's balance for
--   `overrides` **CallOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## loadBalanceInAssetUnitsBySymbol
-
-Load a wallet's balance by asset address, in asset units
-
-### Parameters
-
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
--   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset symbol to load the wallet's balance for
--   `overrides` **CallOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## loadBalanceInPipsByAddress
-
-Load a wallet's balance by asset address, in pips
-
-### Parameters
-
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
--   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset address to load the wallet's balance for
--   `overrides` **CallOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## loadBalanceInPipsBySymbol
-
-Load a wallet's balance by asset symbol, in pips
-
-### Parameters
-
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
--   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset symbol to load the wallet's balance for
--   `overrides` **CallOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## loadPartiallyFilledOrderQuantityInPips
-
-Invalidating an order nonce will not clear partial fill quantities for earlier orders because the gas cost would potentially be unbound
-Load the quantity filled so far for a partially filled orders
-
-### Parameters
-
--   `orderHash` **BytesLike** The order hash as originally signed by placing wallet that uniquely identifies an order
--   `overrides` **CallOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
-
-## depositEther
-
-Deposit ETH
-
-### Parameters
-
--   `overrides` **PayableOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## depositTokenByAddress
-
-Deposit `IERC20` compliant tokens
-
-### Parameters
-
--   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token contract address
--   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## depositTokenBySymbol
-
-Deposit `IERC20` compliant tokens
-
-### Parameters
-
--   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The case-sensitive symbol string for the token
--   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## invalidateOrderNonce
-
-Invalidate all order nonces with a timestampInMs lower than the one provided
-
-### Parameters
-
--   `nonce` **BigNumberish** A Version 1 UUID. After calling and once the Chain Propagation Period has elapsed, `executeTrade` will reject order nonces from this wallet with a timestampInMs component lower than the one provided
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## exitWallet
-
-Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
-
-### Parameters
-
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## withdrawExit
-
-Withdraw the entire balance of an asset for an exited wallet. The Chain Propagation Period must have already passed since calling `exitWallet` on `assetAddress`
-
-### Parameters
-
--   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the asset to withdraw
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## registerToken
-
-Initiate registration process for a token asset. Only `IERC20` compliant tokens can be added - ETH is hardcoded in the registry
-
-### Parameters
-
--   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the `IERC20` compliant token contract to add
--   `symbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The symbol identifying the token asset
--   `decimals` **BigNumberish** The decimal precision of the token
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## confirmTokenRegistration
-
-Finalize registration process for a token asset. All parameters must exactly match a previous call to `registerToken`
-
-### Parameters
-
--   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the `IERC20` compliant token contract to add
--   `symbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The symbol identifying the token asset
--   `decimals` **BigNumberish** The decimal precision of the token
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## loadAssetBySymbol
-
-Since multiple token addresses can potentially share the same symbol (in case of a token swap/contract upgrade) the provided `timestampInMs` is compared against each asset's `confirmedTimestampInMs` to uniquely determine the newest asset for the symbol at that point in time
-Loads an asset descriptor struct by its symbol and timestamp
-
-### Parameters
-
--   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset's symbol
--   `timestampInMs` **BigNumberish** Point in time used to disambiguate multiple tokens with same symbol
--   `overrides` **CallOverrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{exists: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean), assetAddress: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), symbol: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), decimals: [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number), isConfirmed: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean), confirmedTimestampInMs: BigNumber, 0: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean), 1: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), 2: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), 3: [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number), 4: [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean), 5: BigNumber}>** 
-
-## setDispatcher
-
-Sets the wallet whitelisted to dispatch transactions calling the `executeTrade` and `withdraw` functions
-
-### Parameters
-
--   `newDispatcherWallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The new whitelisted dispatcher wallet. Must be different from the current one
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
-
-## removeDispatcher
-
-Clears the currently set whitelisted dispatcher wallet, effectively disabling calling the `executeTrade` and `withdraw` functions until a new wallet is set with `setDispatcher`
-
-### Parameters
-
--   `overrides` **Overrides?** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 

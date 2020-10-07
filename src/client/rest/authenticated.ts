@@ -16,7 +16,7 @@ import { isNode, createHmacRestRequestSignatureHeader } from '../../utils';
  * @property {boolean} sandbox - Must be set to true
  * @property {string} apiKey - Used to authenticate user
  * @property {string} apiSecret - Used to compute HMAC signature
- * @property {string} [privateKey] - If provided, used to create ECDSA signatures
+ * @property {string} [walletPrivateKey] - If provided, used to create ECDSA signatures
  */
 export interface RestAuthenticatedClientOptions {
   sandbox?: boolean;
