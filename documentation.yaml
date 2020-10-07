@@ -129,3 +129,5 @@ toc:
 
 
   - name: Misc Types & Utilities
+    children:
+      - ErrorShortCodes
