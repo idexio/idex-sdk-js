@@ -178,15 +178,15 @@
     -   [Parameters](#parameters-34)
 -   [transferFrom](#transferfrom-3)
     -   [Parameters](#parameters-35)
--   [depositEther](#depositether)
-    -   [Parameters](#parameters-36)
 -   [increaseAllowance](#increaseallowance)
-    -   [Parameters](#parameters-37)
+    -   [Parameters](#parameters-36)
 -   [increaseAllowance](#increaseallowance-1)
-    -   [Parameters](#parameters-38)
+    -   [Parameters](#parameters-37)
 -   [increaseAllowance](#increaseallowance-2)
-    -   [Parameters](#parameters-39)
+    -   [Parameters](#parameters-38)
 -   [increaseAllowance](#increaseallowance-3)
+    -   [Parameters](#parameters-39)
+-   [depositEther](#depositether)
     -   [Parameters](#parameters-40)
 -   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
 -   [decreaseAllowance](#decreaseallowance)
@@ -2792,22 +2792,6 @@ See {IERC20-transferFrom}.     _ Emits an {Approval} event indicating the update
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
 
-## depositEther
-
-Deposits ETH into the exchange contract for the configured wallet
-
-### Parameters
-
--   `action` **A** 
--   `wallet` **EthereumWalletConfig** 
--   `transaction` **TransactionOptions** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;DepositEthResponse&lt;A>>** 
-
-## 
-
-Deposits an ERC-20 token into the exchange by the given address
-
 ## increaseAllowance
 
 Atomically increases the allowance granted to `spender` by the caller.     _ This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     _ Emits an {Approval} event indicating the updated allowance.     _ Requirements:     _ - `spender` cannot be the zero address.
@@ -2855,6 +2839,22 @@ Atomically increases the allowance granted to `spender` by the caller.     _ Thi
 -   `overrides` **Overrides?** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## depositEther
+
+Deposits ETH into the exchange contract for the configured wallet
+
+### Parameters
+
+-   `action` **A** 
+-   `wallet` **EthereumWalletConfig** 
+-   `transaction` **TransactionOptions** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;DepositEthResponse&lt;A>>** 
+
+## 
+
+Deposits an ERC-20 token into the exchange by the given address
 
 ## WebSocketResponseL2OrderBookChange
 

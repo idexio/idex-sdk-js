@@ -183,12 +183,15 @@ const getSignerByAction = {
  */
 export type EthereumClientOptions = {
   sandbox?: boolean;
-  rpc?: string;
-  walletPrivateKey?: string;
+  rpc: string;
+  walletPrivateKey: string;
   defaultGasLimit?: string;
 };
 
-const CLIENT_OPTIONS = new WeakMap<EthereumClient, EthereumClientOptions>();
+const CLIENT_OPTIONS = new WeakMap<
+  EthereumClient,
+  Required<EthereumClientOptions>
+>();
 
 export class EthereumClient {
   public contract: string;
@@ -196,12 +199,14 @@ export class EthereumClient {
   public provider: ethers.providers.JsonRpcProvider;
 
   constructor(options: EthereumClientOptions) {
-    this.contract = CONTRACTS[options.sandbox ? 'sandbox' : 'mainnet'];
-    this.provider = new providers.JsonRpcProvider(options.rpc);
-    CLIENT_OPTIONS.set(this, {
+    const clientOptions = {
+      sandbox: !!options.sandbox,
       ...DEFAULT_CLIENT_OPTIONS,
       ...options,
-    });
+    };
+    this.contract = CONTRACTS[clientOptions.sandbox ? 'sandbox' : 'mainnet'];
+    this.provider = new providers.JsonRpcProvider(clientOptions.rpc);
+    CLIENT_OPTIONS.set(this, clientOptions);
   }
 
   /**
