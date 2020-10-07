@@ -186,39 +186,44 @@
     -   [Parameters](#parameters-38)
 -   [increaseAllowance](#increaseallowance-3)
     -   [Parameters](#parameters-39)
--   [depositEther](#depositether)
+-   [getExchangeContract](#getexchangecontract)
     -   [Parameters](#parameters-40)
+-   [getTokenContract](#gettokencontract)
+    -   [Parameters](#parameters-41)
+-   [depositEther](#depositether)
+    -   [Parameters](#parameters-42)
+    -   [Examples](#examples)
 -   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
 -   [decreaseAllowance](#decreaseallowance)
-    -   [Parameters](#parameters-41)
--   [decreaseAllowance](#decreaseallowance-1)
-    -   [Parameters](#parameters-42)
--   [decreaseAllowance](#decreaseallowance-2)
     -   [Parameters](#parameters-43)
--   [decreaseAllowance](#decreaseallowance-3)
+-   [decreaseAllowance](#decreaseallowance-1)
     -   [Parameters](#parameters-44)
--   [name](#name-4)
+-   [decreaseAllowance](#decreaseallowance-2)
     -   [Parameters](#parameters-45)
--   [symbol](#symbol-4)
+-   [decreaseAllowance](#decreaseallowance-3)
     -   [Parameters](#parameters-46)
--   [decimals](#decimals-4)
+-   [name](#name-4)
     -   [Parameters](#parameters-47)
--   [totalSupply](#totalsupply-4)
+-   [symbol](#symbol-4)
     -   [Parameters](#parameters-48)
--   [balanceOf](#balanceof-4)
+-   [decimals](#decimals-4)
     -   [Parameters](#parameters-49)
--   [transfer](#transfer-4)
+-   [totalSupply](#totalsupply-4)
     -   [Parameters](#parameters-50)
--   [allowance](#allowance-4)
+-   [balanceOf](#balanceof-4)
     -   [Parameters](#parameters-51)
--   [approve](#approve-4)
+-   [transfer](#transfer-4)
     -   [Parameters](#parameters-52)
--   [transferFrom](#transferfrom-4)
+-   [allowance](#allowance-4)
     -   [Parameters](#parameters-53)
--   [increaseAllowance](#increaseallowance-4)
+-   [approve](#approve-4)
     -   [Parameters](#parameters-54)
--   [decreaseAllowance](#decreaseallowance-4)
+-   [transferFrom](#transferfrom-4)
     -   [Parameters](#parameters-55)
+-   [increaseAllowance](#increaseallowance-4)
+    -   [Parameters](#parameters-56)
+-   [decreaseAllowance](#decreaseallowance-4)
+    -   [Parameters](#parameters-57)
 -   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
     -   [Properties](#properties-2)
 -   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
@@ -226,101 +231,101 @@
 -   [WebSocketRequest](#websocketrequest)
 -   [WebSocketRequest](#websocketrequest-1)
 -   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress)
-    -   [Parameters](#parameters-56)
--   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-1)
-    -   [Parameters](#parameters-57)
--   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-2)
     -   [Parameters](#parameters-58)
--   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-3)
+-   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-1)
     -   [Parameters](#parameters-59)
--   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol)
+-   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-2)
     -   [Parameters](#parameters-60)
--   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-1)
+-   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-3)
     -   [Parameters](#parameters-61)
--   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-2)
+-   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol)
     -   [Parameters](#parameters-62)
--   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-3)
+-   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-1)
     -   [Parameters](#parameters-63)
--   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress)
+-   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-2)
     -   [Parameters](#parameters-64)
--   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-1)
+-   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-3)
     -   [Parameters](#parameters-65)
--   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-2)
+-   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress)
     -   [Parameters](#parameters-66)
--   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-3)
+-   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-1)
     -   [Parameters](#parameters-67)
--   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol)
+-   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-2)
     -   [Parameters](#parameters-68)
--   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-1)
+-   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-3)
     -   [Parameters](#parameters-69)
--   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-2)
+-   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol)
     -   [Parameters](#parameters-70)
--   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-3)
+-   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-1)
     -   [Parameters](#parameters-71)
--   [depositEther](#depositether-1)
+-   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-2)
     -   [Parameters](#parameters-72)
--   [depositEther](#depositether-2)
+-   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-3)
     -   [Parameters](#parameters-73)
--   [depositEther](#depositether-3)
+-   [depositEther](#depositether-1)
     -   [Parameters](#parameters-74)
--   [depositEther](#depositether-4)
+-   [depositEther](#depositether-2)
     -   [Parameters](#parameters-75)
--   [depositTokenByAddress](#deposittokenbyaddress)
+-   [depositEther](#depositether-3)
     -   [Parameters](#parameters-76)
--   [depositTokenByAddress](#deposittokenbyaddress-1)
+-   [depositEther](#depositether-4)
     -   [Parameters](#parameters-77)
--   [depositTokenByAddress](#deposittokenbyaddress-2)
+-   [depositTokenByAddress](#deposittokenbyaddress)
     -   [Parameters](#parameters-78)
--   [depositTokenByAddress](#deposittokenbyaddress-3)
+-   [depositTokenByAddress](#deposittokenbyaddress-1)
     -   [Parameters](#parameters-79)
--   [depositTokenBySymbol](#deposittokenbysymbol)
+-   [depositTokenByAddress](#deposittokenbyaddress-2)
     -   [Parameters](#parameters-80)
--   [depositTokenBySymbol](#deposittokenbysymbol-1)
+-   [depositTokenByAddress](#deposittokenbyaddress-3)
     -   [Parameters](#parameters-81)
--   [depositTokenBySymbol](#deposittokenbysymbol-2)
+-   [depositTokenBySymbol](#deposittokenbysymbol)
     -   [Parameters](#parameters-82)
--   [depositTokenBySymbol](#deposittokenbysymbol-3)
+-   [depositTokenBySymbol](#deposittokenbysymbol-1)
     -   [Parameters](#parameters-83)
--   [exitWallet](#exitwallet)
+-   [depositTokenBySymbol](#deposittokenbysymbol-2)
     -   [Parameters](#parameters-84)
--   [exitWallet](#exitwallet-1)
+-   [depositTokenBySymbol](#deposittokenbysymbol-3)
     -   [Parameters](#parameters-85)
--   [exitWallet](#exitwallet-2)
+-   [exitWallet](#exitwallet)
     -   [Parameters](#parameters-86)
--   [exitWallet](#exitwallet-3)
+-   [exitWallet](#exitwallet-1)
     -   [Parameters](#parameters-87)
--   [withdrawExit](#withdrawexit)
+-   [exitWallet](#exitwallet-2)
     -   [Parameters](#parameters-88)
--   [withdrawExit](#withdrawexit-1)
+-   [exitWallet](#exitwallet-3)
     -   [Parameters](#parameters-89)
--   [withdrawExit](#withdrawexit-2)
+-   [withdrawExit](#withdrawexit)
     -   [Parameters](#parameters-90)
--   [withdrawExit](#withdrawexit-3)
+-   [withdrawExit](#withdrawexit-1)
     -   [Parameters](#parameters-91)
--   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-4)
+-   [withdrawExit](#withdrawexit-2)
     -   [Parameters](#parameters-92)
--   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-4)
+-   [withdrawExit](#withdrawexit-3)
     -   [Parameters](#parameters-93)
--   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-4)
+-   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-4)
     -   [Parameters](#parameters-94)
--   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-4)
+-   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-4)
     -   [Parameters](#parameters-95)
--   [depositEther](#depositether-5)
+-   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-4)
     -   [Parameters](#parameters-96)
--   [depositTokenByAddress](#deposittokenbyaddress-4)
+-   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-4)
     -   [Parameters](#parameters-97)
--   [depositTokenBySymbol](#deposittokenbysymbol-4)
+-   [depositEther](#depositether-5)
     -   [Parameters](#parameters-98)
--   [exitWallet](#exitwallet-4)
+-   [depositTokenByAddress](#deposittokenbyaddress-4)
     -   [Parameters](#parameters-99)
--   [withdrawExit](#withdrawexit-4)
+-   [depositTokenBySymbol](#deposittokenbysymbol-4)
     -   [Parameters](#parameters-100)
--   [removeDispatcher](#removedispatcher)
+-   [exitWallet](#exitwallet-4)
     -   [Parameters](#parameters-101)
+-   [withdrawExit](#withdrawexit-4)
+    -   [Parameters](#parameters-102)
+-   [removeDispatcher](#removedispatcher)
+    -   [Parameters](#parameters-103)
 -   [WebSocketResponseSubscriptionMessageShort](#websocketresponsesubscriptionmessageshort)
 -   [WebSocketResponseSubscriptionMessageLong](#websocketresponsesubscriptionmessagelong)
 -   [invalidateOrderNonce](#invalidateordernonce)
-    -   [Parameters](#parameters-102)
+    -   [Parameters](#parameters-104)
 
 ## Clients
 
@@ -2840,9 +2845,32 @@ Atomically increases the allowance granted to `spender` by the caller.     _ Thi
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
 
+## getExchangeContract
+
+Gets the ethers contract supplemented with the public contract calls
+
+### Parameters
+
+-   `action` **RequestType** 
+-   `wallet` **EthereumWalletConfig** 
+
+Returns **ReturnType&lt;any>** 
+
+## getTokenContract
+
+Gets the ethers erc20 contract supplemented with types
+
+### Parameters
+
+-   `action` **RequestType** 
+-   `address` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `wallet` **EthereumWalletConfig** 
+
+Returns **ReturnType&lt;any>** 
+
 ## depositEther
 
-Deposits ETH into the exchange contract for the configured wallet
+Deposits ETH into the exchange contract for the configured wallet.
 
 ### Parameters
 
@@ -2850,11 +2878,18 @@ Deposits ETH into the exchange contract for the configured wallet
 -   `wallet` **EthereumWalletConfig** 
 -   `transaction` **TransactionOptions** 
 
+### Examples
+
+```javascript
+const transaction = await client.depositEther('request', wallet, {
+   amount: '4',
+   gasPriceGwei: '25'
+ });
+ // wait until tx confirmed
+ await transaction.wait()
+```
+
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;DepositEthResponse&lt;A>>** 
-
-## 
-
-Deposits an ERC-20 token into the exchange by the given address
 
 ## WebSocketResponseL2OrderBookChange
 
@@ -3033,6 +3068,10 @@ Atomically decreases the allowance granted to `spender` by the caller.     _ Thi
 -   `overrides` **Overrides?** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## 
+
+Deposits an ERC-20 token into the exchange by the given address
 
 ## WebSocketRequestUnsubscribe
 

@@ -6,7 +6,7 @@ import {
 } from 'ethers';
 
 import { ExchangeFactory } from './contracts/ExchangeFactory';
-// import { Erc20Factory } from './contracts/Erc20Factory';
+import { Erc20Factory } from './contracts/Erc20Factory';
 import { CONTRACTS, DEFAULT_CLIENT_OPTIONS } from './constants';
 import { TransactionOverrides } from './contracts';
 
@@ -210,23 +210,55 @@ export class EthereumClient {
   }
 
   /**
-   * Deposits ETH into the exchange contract for the configured wallet
+   * Gets the ethers contract supplemented with the public contract calls
    */
-  public async depositEther<A extends RequestType>(
-    action: A,
+  public getExchangeContract(
+    action: RequestType,
     wallet: EthereumWalletConfig,
-    transaction: TransactionOptions,
-  ): Promise<DepositEthResponse<A>> {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const options = CLIENT_OPTIONS.get(this)!;
-
-    const exchangeContract = ExchangeFactory.connect(
+  ): ReturnType<typeof ExchangeFactory.connect> {
+    return ExchangeFactory.connect(
       this.contract,
       getSignerByAction[action]({
         ...wallet,
         provider: this.provider,
       }),
     );
+  }
+
+  /**
+   * Gets the ethers erc20 contract supplemented with types
+   */
+  public getTokenContract(
+    action: RequestType,
+    address: string,
+    wallet: EthereumWalletConfig,
+  ): ReturnType<typeof Erc20Factory.connect> {
+    return Erc20Factory.connect(
+      address,
+      getSignerByAction[action]({
+        ...wallet,
+        provider: this.provider,
+      }),
+    );
+  }
+
+  /**
+   * Deposits ETH into the exchange contract for the configured wallet.
+   *
+   * @example
+   *  const transaction = await client.depositEther('request', wallet, {
+   *    amount: '4',
+   *    gasPriceGwei: '25'
+   *  });
+   *  // wait until tx confirmed
+   *  await transaction.wait()
+   */
+  public async depositEther<A extends RequestType>(
+    action: A,
+    wallet: EthereumWalletConfig,
+    transaction: TransactionOptions,
+  ): Promise<DepositEthResponse<A>> {
+    const exchangeContract = this.getExchangeContract(action, wallet);
 
     const { gasPriceGwei, amount, ...txOptions } = transaction;
 
@@ -240,7 +272,8 @@ export class EthereumClient {
 
     if (!txOptions.gasLimit) {
       txOptions.gasLimit = ethersUtils.parseUnits(
-        options.defaultGasLimit,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        CLIENT_OPTIONS.get(this)!.defaultGasLimit,
         'wei',
       );
     }
