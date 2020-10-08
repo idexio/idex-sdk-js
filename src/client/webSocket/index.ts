@@ -464,15 +464,6 @@ export class WebSocketClient {
     });
   }
 
-  private destroyWebSocket(): void {
-    this.stopPinging();
-    if (this.webSocket) {
-      this.doNotReconnect = true;
-      this.webSocket.terminate();
-      this.webSocket = null;
-    }
-  }
-
   private handleWebSocketConnect(): void {
     this.resetReconnectionState();
     this.startPinging();
@@ -545,7 +536,7 @@ export class WebSocketClient {
   }
 
   private reconnect(): void {
-    this.destroyWebSocket();
+    this.disconnect();
     this.doNotReconnect = false;
     // Reconnect with exponential backoff
     const backoffSeconds = 2 ** this.reconnectAttempt;
