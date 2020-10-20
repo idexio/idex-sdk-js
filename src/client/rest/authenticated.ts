@@ -56,13 +56,11 @@ export class RestAuthenticatedClient {
   private signer: undefined | signatures.MessageSigner = undefined;
 
   public constructor(options: RestAuthenticatedClientOptions) {
-    const baseURL = options.sandbox
-      ? constants.SANDBOX_REST_API_BASE_URL
-      : options.baseURL;
-
-    if (!baseURL) {
-      throw new Error('Must set sandbox to true');
-    }
+    const baseURL =
+      options.baseURL ??
+      (options.sandbox
+        ? constants.SANDBOX_REST_API_BASE_URL
+        : constants.LIVE_REST_API_BASE_URL);
 
     this.baseURL = baseURL;
 
