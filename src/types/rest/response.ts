@@ -170,7 +170,7 @@ export interface RestResponseOrderFill {
   feeAsset: string;
   gas?: string;
   liquidity: keyof typeof enums.Liquidity;
-  txId?: string;
+  txId?: string | null;
   txStatus: keyof typeof enums.EthTransactionStatus;
 }
 

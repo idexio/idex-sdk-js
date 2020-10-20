@@ -425,7 +425,7 @@ export interface WebSocketResponseOrderFillShort {
   a: string;
   g?: string;
   l: keyof typeof enums.Liquidity;
-  T?: string;
+  T?: string | null;
   S: keyof typeof enums.EthTransactionStatus;
 }
 
