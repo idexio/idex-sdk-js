@@ -207,11 +207,11 @@ export interface RestResponseMarket {
  * @property {string} [clientOrderId] - Client-specified order identifier
  * @property {string} wallet - Ethereum address of placing wallet
  * @property {string} time - Time of initial order processing by the matching engine
- * @property {string} status - Current order status
+ * @property {OrderStatus} status - Current order status
  * @property {string} [errorCode] - Error short code explaining order error or failed batch cancel
  * @property {string} [errorMessage] - Error description explaining order error or failed batch cancel
- * @property {string} type - Order type
- * @property {string} side - Order side
+ * @property {OrderType} type - Order type
+ * @property {OrderSide} side - Order side
  * @property {string} [originalQuantity] - Original quantity specified by the order in base terms, omitted for market orders specified in quote terms
  * @property {string} [originalQuoteQuantity] - Original quantity specified by the order in quote terms, only present for market orders specified in quote terms
  * @property {string} executedQuantity - Quantity that has been executed in base terms
@@ -219,8 +219,8 @@ export interface RestResponseMarket {
  * @property {string} [avgExecutionPrice] - Weighted average price of fills associated with the order; only present with fills
  * @property {string} [price] -	Original price specified by the order in quote terms, omitted for all market orders
  * @property {string} [stopPrice] - Stop loss or take profit price, only present for stopLoss, stopLossLimit, takeProfit, and takeProfitLimit orders
- * @property {string} [timeInForce] - Time in force policy, see values, only present for limit orders
- * @property {string} selfTradePrevention - Self-trade prevention policy, see values
+ * @property {OrderTimeInForce} [timeInForce] - Time in force policy, see values, only present for limit orders
+ * @property {OrderSelfTradePrevention} selfTradePrevention - Self-trade prevention policy, see values
  * @property {RestResponseOrderFill[]} [fills] - Array of order fill objects
  */
 export interface RestResponseOrder {
