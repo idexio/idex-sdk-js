@@ -215,13 +215,13 @@ export interface RestResponseMarket {
  * @property {string} [originalQuantity] - Original quantity specified by the order in base terms, omitted for market orders specified in quote terms
  * @property {string} [originalQuoteQuantity] - Original quantity specified by the order in quote terms, only present for market orders specified in quote terms
  * @property {string} executedQuantity - Quantity that has been executed in base terms
- * @property {string} cumulativeQuoteQuantity - Cumulative quantity that has been spent (buy orders) or received (sell orders) in quote terms, omitted if unavailable for historical orders
+ * @property {string} [cumulativeQuoteQuantity] - Cumulative quantity that has been spent (buy orders) or received (sell orders) in quote terms, omitted if unavailable for historical orders
  * @property {string} [avgExecutionPrice] - Weighted average price of fills associated with the order; only present with fills
  * @property {string} [price] -	Original price specified by the order in quote terms, omitted for all market orders
  * @property {string} [stopPrice] - Stop loss or take profit price, only present for stopLoss, stopLossLimit, takeProfit, and takeProfitLimit orders
- * @property {OrderTimeInForce} [timeInForce] - Time in force policy, see values, only present for all limit orders specifying a non-default (gtc) policy
- * @property {OrderSelfTradePrevention} [selfTradePrevention] - Self-trade prevention policy, see values, only present for orders specifying a non-default (dc) policy
- * @property {RestResponseOrderFill[]} - Array of order fill objects
+ * @property {OrderTimeInForce} [timeInForce] - Time in force policy, see values, only present for limit orders
+ * @property {OrderSelfTradePrevention} selfTradePrevention - Self-trade prevention policy, see values
+ * @property {RestResponseOrderFill[]} [fills] - Array of order fill objects
  */
 export interface RestResponseOrder {
   market: string;
@@ -237,18 +237,18 @@ export interface RestResponseOrder {
   originalQuantity?: string;
   originalQuoteQuantity?: string;
   executedQuantity: string;
-  cumulativeQuoteQuantity: string;
+  cumulativeQuoteQuantity?: string;
   avgExecutionPrice?: string;
   price?: string;
   stopPrice?: string;
-  timeInForce: keyof typeof enums.OrderTimeInForce;
+  timeInForce?: keyof typeof enums.OrderTimeInForce;
   selfTradePrevention: keyof typeof enums.OrderSelfTradePrevention;
   fills?: RestResponseOrderFill[];
 }
 
 /**
- * Response to canceled orders which is an array of {@link CanceledOrder} indicating
- * any successfully canceled orders.
+ * Response to "cancel order" requests (single or multiple orders). Includes
+ * one `{ orderId: string }` object for each successfully canceled order.
  *
  * @typedef {Object[]} RestResponseCanceledOrder
  */

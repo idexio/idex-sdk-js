@@ -1417,18 +1417,18 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `originalQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Original quantity specified by the order in base terms, omitted for market orders specified in quote terms
 -   `originalQuoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Original quantity specified by the order in quote terms, only present for market orders specified in quote terms
 -   `executedQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity that has been executed in base terms
--   `cumulativeQuoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Cumulative quantity that has been spent (buy orders) or received (sell orders) in quote terms, omitted if unavailable for historical orders
+-   `cumulativeQuoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Cumulative quantity that has been spent (buy orders) or received (sell orders) in quote terms, omitted if unavailable for historical orders
 -   `avgExecutionPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Weighted average price of fills associated with the order; only present with fills
 -   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Original price specified by the order in quote terms, omitted for all market orders
 -   `stopPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Stop loss or take profit price, only present for stopLoss, stopLossLimit, takeProfit, and takeProfitLimit orders
--   `timeInForce` **[OrderTimeInForce](#ordertimeinforce)?** Time in force policy, see values, only present for all limit orders specifying a non-default (gtc) policy
--   `selfTradePrevention` **[OrderSelfTradePrevention](#orderselftradeprevention)?** Self-trade prevention policy, see values, only present for orders specifying a non-default (dc) policy
--   `null-null` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseOrderFill](#restresponseorderfill)>** Array of order fill objects
+-   `timeInForce` **[OrderTimeInForce](#ordertimeinforce)?** Time in force policy, see values, only present for limit orders
+-   `selfTradePrevention` **[OrderSelfTradePrevention](#orderselftradeprevention)** Self-trade prevention policy, see values
+-   `fills` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseOrderFill](#restresponseorderfill)>?** Array of order fill objects
 
 ### RestResponseCanceledOrder
 
-Response to canceled orders which is an array of [CanceledOrder](CanceledOrder) indicating
-any successfully canceled orders.
+Response to "cancel order" requests (single or multiple orders). Includes
+one `{ orderId: string }` object for each successfully canceled order.
 
 Type: [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>
 
@@ -1961,11 +1961,11 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `w` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (wallet) Ethereum address of placing wallet
 -   `t` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (executionTime) Timestamp of the most recent update
 -   `T` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (time) Timestamp of initial order processing by the matching engine
--   `x` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (update) Type of order update, see values
--   `X` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (status) Order status, see values
+-   `x` **[OrderStateChange](#orderstatechange)** (update) Type of order update, see values
+-   `X` **[OrderStatus](#orderstatus)** (status) Order status, see values
 -   `u` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** (sequence) order book update sequence number, only included if update type triggers an order book update
--   `o` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (type) Order type, see values
--   `S` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (side) Order side, buy or sell
+-   `o` **[OrderType](#ordertype)** (type) Order type, see values
+-   `S` **[OrderSide](#orderside)** (side) Order side, buy or sell
 -   `q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (originalQuantity) Original quantity specified by the order in base terms, omitted for market orders specified in quote terms
 -   `Q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (originalQuoteQuantity) Original quantity specified by the order in quote terms, only present for market orders specified in quote terms
 -   `z` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (executedQuantity) Quantity that has been executed in base terms
@@ -1973,8 +1973,8 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `v` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (avgExecutionPrice) Weighted average price of fills associated with the order; only present with fills
 -   `p` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (price) Original price specified by the order in quote terms, omitted for all market orders
 -   `P` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (stopPrice) Stop loss or take profit price, only present for stopLoss, stopLossLimit, takeProfit, and takeProfitLimit orders
--   `f` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (timeInForce) Time in force policy, see values, only present for all limit orders specifying a non-default (gtc) policy
--   `V` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** (selfTradePrevention) Self-trade prevention policy, see values, only present for orders specifying a non-default (dc) policy
+-   `f` **[OrderTimeInForce](#ordertimeinforce)?** (timeInForce) Time in force policy, see values, only present for limit orders
+-   `V` **[OrderSelfTradePrevention](#orderselftradeprevention)** (selfTradePrevention) Self-trade prevention policy, see values
 -   `F` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[WebSocketResponseOrderFillShort](#websocketresponseorderfillshort)>?** (fills) Array of order fill objects
 
 ### WebSocketResponseOrderLong
@@ -1992,10 +1992,10 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `executionTime` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Timestamp of the most recent update
 -   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp of initial order processing by the matching engine
 -   `update` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of order update, see values
--   `status` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Order status, see values
+-   `status` **[OrderStatus](#orderstatus)** Order status, see values
 -   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** order book update sequence number, only included if update type triggers an order book update
--   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Order type, see values
--   `side` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Order side, buy or sell
+-   `type` **[OrderType](#ordertype)** Order type, see values
+-   `side` **[OrderSide](#orderside)** Order side, buy or sell
 -   `originalQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Original quantity specified by the order in base terms, omitted for market orders specified in quote terms
 -   `originalQuoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Original quantity specified by the order in quote terms, only present for market orders specified in quote terms
 -   `executedQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity that has been executed in base terms
@@ -2003,9 +2003,9 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `avgExecutionPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Weighted average price of fills associated with the order; only present with fills
 -   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Original price specified by the order in quote terms, omitted for all market orders
 -   `stopPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Stop loss or take profit price, only present for stopLoss, stopLossLimit, takeProfit, and takeProfitLimit orders
--   `timeInForce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Time in force policy, see values, only present for all limit orders specifying a non-default (gtc) policy
--   `selfTradePrevention` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Self-trade prevention policy, see values, only present for orders specifying a non-default (dc) policy
--   `fills` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;WebSocketResponseOrderFillLong>?** Array of order fill objects
+-   `timeInForce` **[OrderTimeInForce](#ordertimeinforce)?** Time in force policy, see values, only present for limit orders
+-   `selfTradePrevention` **[OrderSelfTradePrevention](#orderselftradeprevention)** Self-trade prevention policy, see values
+-   `fills` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseOrderFill](#restresponseorderfill)>?** Array of order fill objects
 
 ### WebSocketResponseOrderFillShort
 
