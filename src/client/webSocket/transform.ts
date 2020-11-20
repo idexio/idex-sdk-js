@@ -121,7 +121,7 @@ const transformOrdersMessage = (
   ...(order.p && { price: order.p }),
   ...(order.P && { stopOrderPrice: order.P }),
   ...(order.f && { timeInForce: order.f }),
-  ...(order.V && { selfTradePrevention: order.V }),
+  selfTradePrevention: order.V,
   ...(order.F && { fills: order.F.map(transformOrderFill) }),
 });
 

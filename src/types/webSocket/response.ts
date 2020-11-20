@@ -304,11 +304,11 @@ export interface WebSocketResponseBalanceLong {
  * @property {string} w  - (wallet) Ethereum address of placing wallet
  * @property {string} t - (executionTime) Timestamp of the most recent update
  * @property {number} T - (time) Timestamp of initial order processing by the matching engine
- * @property {string} x - (update) Type of order update, see values
- * @property {string} X - (status) Order status, see values
+ * @property {OrderStateChange} x - (update) Type of order update, see values
+ * @property {OrderStatus} X - (status) Order status, see values
  * @property {number} [u] - (sequence) order book update sequence number, only included if update type triggers an order book update
- * @property {string} o - (type) Order type, see values
- * @property {string} S - (side) Order side, buy or sell
+ * @property {OrderType} o - (type) Order type, see values
+ * @property {OrderSide} S - (side) Order side, buy or sell
  * @property {string} [q] - (originalQuantity) Original quantity specified by the order in base terms, omitted for market orders specified in quote terms
  * @property {string} [Q] - (originalQuoteQuantity) Original quantity specified by the order in quote terms, only present for market orders specified in quote terms
  * @property {string} z - (executedQuantity) Quantity that has been executed in base terms
@@ -316,8 +316,8 @@ export interface WebSocketResponseBalanceLong {
  * @property {string} [v] - (avgExecutionPrice) Weighted average price of fills associated with the order; only present with fills
  * @property {string} [p] - (price) Original price specified by the order in quote terms, omitted for all market orders
  * @property {string} [P] - (stopPrice) Stop loss or take profit price, only present for stopLoss, stopLossLimit, takeProfit, and takeProfitLimit orders
- * @property {string} [f] - (timeInForce) Time in force policy, see values, only present for all limit orders specifying a non-default (gtc) policy
- * @property {string} [V] - (selfTradePrevention) Self-trade prevention policy, see values, only present for orders specifying a non-default (dc) policy
+ * @property {OrderTimeInForce} [f] - (timeInForce) Time in force policy, see values, only present for limit orders
+ * @property {OrderSelfTradePrevention} V - (selfTradePrevention) Self-trade prevention policy, see values
  * @property {WebSocketResponseOrderFillShort[]} [F] - (fills) Array of order fill objects
  */
 export interface WebSocketResponseOrderShort {
@@ -340,7 +340,7 @@ export interface WebSocketResponseOrderShort {
   p?: string;
   P?: string;
   f?: keyof typeof enums.OrderTimeInForce;
-  V?: keyof typeof enums.OrderSelfTradePrevention;
+  V: keyof typeof enums.OrderSelfTradePrevention;
   F?: WebSocketResponseOrderFillShort[];
 }
 
@@ -355,10 +355,10 @@ export interface WebSocketResponseOrderShort {
  * @property {string} executionTime - Timestamp of the most recent update
  * @property {number} time - Timestamp of initial order processing by the matching engine
  * @property {string} update - Type of order update, see values
- * @property {string} status - Order status, see values
+ * @property {OrderStatus} status - Order status, see values
  * @property {number} [sequence] - order book update sequence number, only included if update type triggers an order book update
- * @property {string} type - Order type, see values
- * @property {string} side - Order side, buy or sell
+ * @property {OrderType} type - Order type, see values
+ * @property {OrderSide} side - Order side, buy or sell
  * @property {string} [originalQuantity] - Original quantity specified by the order in base terms, omitted for market orders specified in quote terms
  * @property {string} [originalQuoteQuantity] - Original quantity specified by the order in quote terms, only present for market orders specified in quote terms
  * @property {string} executedQuantity - Quantity that has been executed in base terms
@@ -366,9 +366,9 @@ export interface WebSocketResponseOrderShort {
  * @property {string} [avgExecutionPrice] - Weighted average price of fills associated with the order; only present with fills
  * @property {string} [price] - Original price specified by the order in quote terms, omitted for all market orders
  * @property {string} [stopPrice] - Stop loss or take profit price, only present for stopLoss, stopLossLimit, takeProfit, and takeProfitLimit orders
- * @property {string} [timeInForce] - Time in force policy, see values, only present for all limit orders specifying a non-default (gtc) policy
- * @property {string} [selfTradePrevention] - Self-trade prevention policy, see values, only present for orders specifying a non-default (dc) policy
- * @property {WebSocketResponseOrderFillLong[]} [fills] - Array of order fill objects
+ * @property {OrderTimeInForce} [timeInForce] - Time in force policy, see values, only present for limit orders
+ * @property {OrderSelfTradePrevention} selfTradePrevention - Self-trade prevention policy, see values
+ * @property {RestResponseOrderFill[]} [fills] - Array of order fill objects
  */
 export interface WebSocketResponseOrderLong {
   market: string; // m
@@ -390,7 +390,7 @@ export interface WebSocketResponseOrderLong {
   price?: string; // p
   stopPrice?: string; // P
   timeInForce?: keyof typeof enums.OrderTimeInForce; // f
-  selfTradePrevention?: keyof typeof enums.OrderSelfTradePrevention; // V
+  selfTradePrevention: keyof typeof enums.OrderSelfTradePrevention; // V
   fills?: restResponse.RestResponseOrderFill[]; // F
 }
 
