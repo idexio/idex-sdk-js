@@ -18,6 +18,7 @@
     "outDir": "dist",
     "removeComments": false,
     "strict": true,
+    "strictNullChecks": true,
     "target": "es5",
     "typeRoots": ["./node_modules/@types", "./types"]
   },

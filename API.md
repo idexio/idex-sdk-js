@@ -97,22 +97,235 @@
     -   [MessageSigner](#messagesigner)
 -   [Misc Types & Utilities](#misc-types--utilities)
     -   [ErrorShortCodes](#errorshortcodes)
+-   [name](#name)
+    -   [Parameters](#parameters)
+-   [name](#name-1)
+    -   [Parameters](#parameters-1)
+-   [name](#name-2)
+    -   [Parameters](#parameters-2)
+-   [name](#name-3)
+    -   [Parameters](#parameters-3)
+-   [symbol](#symbol)
+    -   [Parameters](#parameters-4)
+-   [symbol](#symbol-1)
+    -   [Parameters](#parameters-5)
+-   [symbol](#symbol-2)
+    -   [Parameters](#parameters-6)
+-   [symbol](#symbol-3)
+    -   [Parameters](#parameters-7)
 -   [WebSocketRequestAuthenticatedSubscription](#websocketrequestauthenticatedsubscription)
 -   [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription)
+-   [decimals](#decimals)
+    -   [Parameters](#parameters-8)
+-   [decimals](#decimals-1)
+    -   [Parameters](#parameters-9)
+-   [decimals](#decimals-2)
+    -   [Parameters](#parameters-10)
+-   [decimals](#decimals-3)
+    -   [Parameters](#parameters-11)
+-   [totalSupply](#totalsupply)
+    -   [Parameters](#parameters-12)
+-   [totalSupply](#totalsupply-1)
+    -   [Parameters](#parameters-13)
+-   [totalSupply](#totalsupply-2)
+    -   [Parameters](#parameters-14)
+-   [totalSupply](#totalsupply-3)
+    -   [Parameters](#parameters-15)
 -   [AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription)
 -   [AuthTokenWebSocketRequestSubscription](#authtokenwebsocketrequestsubscription)
+-   [balanceOf](#balanceof)
+    -   [Parameters](#parameters-16)
+-   [balanceOf](#balanceof-1)
+    -   [Parameters](#parameters-17)
+-   [balanceOf](#balanceof-2)
+    -   [Parameters](#parameters-18)
+-   [balanceOf](#balanceof-3)
+    -   [Parameters](#parameters-19)
 -   [WebSocketRequestSubscription](#websocketrequestsubscription)
+-   [transfer](#transfer)
+    -   [Parameters](#parameters-20)
+-   [transfer](#transfer-1)
+    -   [Parameters](#parameters-21)
+-   [transfer](#transfer-2)
+    -   [Parameters](#parameters-22)
+-   [transfer](#transfer-3)
+    -   [Parameters](#parameters-23)
+-   [allowance](#allowance)
+    -   [Parameters](#parameters-24)
+-   [allowance](#allowance-1)
+    -   [Parameters](#parameters-25)
+-   [allowance](#allowance-2)
+    -   [Parameters](#parameters-26)
+-   [allowance](#allowance-3)
+    -   [Parameters](#parameters-27)
 -   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
     -   [Properties](#properties)
--   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
--   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
+-   [EthereumClientOptions](#ethereumclientoptions)
     -   [Properties](#properties-1)
--   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
+-   [approve](#approve)
+    -   [Parameters](#parameters-28)
+-   [approve](#approve-1)
+    -   [Parameters](#parameters-29)
+-   [approve](#approve-2)
+    -   [Parameters](#parameters-30)
+-   [approve](#approve-3)
+    -   [Parameters](#parameters-31)
+-   [transferFrom](#transferfrom)
+    -   [Parameters](#parameters-32)
+-   [transferFrom](#transferfrom-1)
+    -   [Parameters](#parameters-33)
+-   [transferFrom](#transferfrom-2)
+    -   [Parameters](#parameters-34)
+-   [transferFrom](#transferfrom-3)
+    -   [Parameters](#parameters-35)
+-   [increaseAllowance](#increaseallowance)
+    -   [Parameters](#parameters-36)
+-   [increaseAllowance](#increaseallowance-1)
+    -   [Parameters](#parameters-37)
+-   [increaseAllowance](#increaseallowance-2)
+    -   [Parameters](#parameters-38)
+-   [increaseAllowance](#increaseallowance-3)
+    -   [Parameters](#parameters-39)
+-   [getExchangeContract](#getexchangecontract)
+    -   [Parameters](#parameters-40)
+-   [getTokenContract](#gettokencontract)
+    -   [Parameters](#parameters-41)
+-   [depositEther](#depositether)
+    -   [Parameters](#parameters-42)
+    -   [Examples](#examples)
+-   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
+-   [decreaseAllowance](#decreaseallowance)
+    -   [Parameters](#parameters-43)
+-   [decreaseAllowance](#decreaseallowance-1)
+    -   [Parameters](#parameters-44)
+-   [decreaseAllowance](#decreaseallowance-2)
+    -   [Parameters](#parameters-45)
+-   [decreaseAllowance](#decreaseallowance-3)
+    -   [Parameters](#parameters-46)
+-   [name](#name-4)
+    -   [Parameters](#parameters-47)
+-   [symbol](#symbol-4)
+    -   [Parameters](#parameters-48)
+-   [decimals](#decimals-4)
+    -   [Parameters](#parameters-49)
+-   [totalSupply](#totalsupply-4)
+    -   [Parameters](#parameters-50)
+-   [balanceOf](#balanceof-4)
+    -   [Parameters](#parameters-51)
+-   [transfer](#transfer-4)
+    -   [Parameters](#parameters-52)
+-   [allowance](#allowance-4)
+    -   [Parameters](#parameters-53)
+-   [approve](#approve-4)
+    -   [Parameters](#parameters-54)
+-   [transferFrom](#transferfrom-4)
+    -   [Parameters](#parameters-55)
+-   [increaseAllowance](#increaseallowance-4)
+    -   [Parameters](#parameters-56)
+-   [decreaseAllowance](#decreaseallowance-4)
+    -   [Parameters](#parameters-57)
+-   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
     -   [Properties](#properties-2)
+-   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
+    -   [Properties](#properties-3)
 -   [WebSocketRequest](#websocketrequest)
 -   [WebSocketRequest](#websocketrequest-1)
+-   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress)
+    -   [Parameters](#parameters-58)
+-   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-1)
+    -   [Parameters](#parameters-59)
+-   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-2)
+    -   [Parameters](#parameters-60)
+-   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-3)
+    -   [Parameters](#parameters-61)
+-   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol)
+    -   [Parameters](#parameters-62)
+-   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-1)
+    -   [Parameters](#parameters-63)
+-   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-2)
+    -   [Parameters](#parameters-64)
+-   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-3)
+    -   [Parameters](#parameters-65)
+-   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress)
+    -   [Parameters](#parameters-66)
+-   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-1)
+    -   [Parameters](#parameters-67)
+-   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-2)
+    -   [Parameters](#parameters-68)
+-   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-3)
+    -   [Parameters](#parameters-69)
+-   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol)
+    -   [Parameters](#parameters-70)
+-   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-1)
+    -   [Parameters](#parameters-71)
+-   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-2)
+    -   [Parameters](#parameters-72)
+-   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-3)
+    -   [Parameters](#parameters-73)
+-   [depositEther](#depositether-1)
+    -   [Parameters](#parameters-74)
+-   [depositEther](#depositether-2)
+    -   [Parameters](#parameters-75)
+-   [depositEther](#depositether-3)
+    -   [Parameters](#parameters-76)
+-   [depositEther](#depositether-4)
+    -   [Parameters](#parameters-77)
+-   [depositTokenByAddress](#deposittokenbyaddress)
+    -   [Parameters](#parameters-78)
+-   [depositTokenByAddress](#deposittokenbyaddress-1)
+    -   [Parameters](#parameters-79)
+-   [depositTokenByAddress](#deposittokenbyaddress-2)
+    -   [Parameters](#parameters-80)
+-   [depositTokenByAddress](#deposittokenbyaddress-3)
+    -   [Parameters](#parameters-81)
+-   [depositTokenBySymbol](#deposittokenbysymbol)
+    -   [Parameters](#parameters-82)
+-   [depositTokenBySymbol](#deposittokenbysymbol-1)
+    -   [Parameters](#parameters-83)
+-   [depositTokenBySymbol](#deposittokenbysymbol-2)
+    -   [Parameters](#parameters-84)
+-   [depositTokenBySymbol](#deposittokenbysymbol-3)
+    -   [Parameters](#parameters-85)
+-   [exitWallet](#exitwallet)
+    -   [Parameters](#parameters-86)
+-   [exitWallet](#exitwallet-1)
+    -   [Parameters](#parameters-87)
+-   [exitWallet](#exitwallet-2)
+    -   [Parameters](#parameters-88)
+-   [exitWallet](#exitwallet-3)
+    -   [Parameters](#parameters-89)
+-   [withdrawExit](#withdrawexit)
+    -   [Parameters](#parameters-90)
+-   [withdrawExit](#withdrawexit-1)
+    -   [Parameters](#parameters-91)
+-   [withdrawExit](#withdrawexit-2)
+    -   [Parameters](#parameters-92)
+-   [withdrawExit](#withdrawexit-3)
+    -   [Parameters](#parameters-93)
+-   [loadBalanceInAssetUnitsByAddress](#loadbalanceinassetunitsbyaddress-4)
+    -   [Parameters](#parameters-94)
+-   [loadBalanceInAssetUnitsBySymbol](#loadbalanceinassetunitsbysymbol-4)
+    -   [Parameters](#parameters-95)
+-   [loadBalanceInPipsByAddress](#loadbalanceinpipsbyaddress-4)
+    -   [Parameters](#parameters-96)
+-   [loadBalanceInPipsBySymbol](#loadbalanceinpipsbysymbol-4)
+    -   [Parameters](#parameters-97)
+-   [depositEther](#depositether-5)
+    -   [Parameters](#parameters-98)
+-   [depositTokenByAddress](#deposittokenbyaddress-4)
+    -   [Parameters](#parameters-99)
+-   [depositTokenBySymbol](#deposittokenbysymbol-4)
+    -   [Parameters](#parameters-100)
+-   [exitWallet](#exitwallet-4)
+    -   [Parameters](#parameters-101)
+-   [withdrawExit](#withdrawexit-4)
+    -   [Parameters](#parameters-102)
+-   [removeDispatcher](#removedispatcher)
+    -   [Parameters](#parameters-103)
 -   [WebSocketResponseSubscriptionMessageShort](#websocketresponsesubscriptionmessageshort)
 -   [WebSocketResponseSubscriptionMessageLong](#websocketresponsesubscriptionmessagelong)
+-   [invalidateOrderNonce](#invalidateordernonce)
+    -   [Parameters](#parameters-104)
 
 ## Clients
 
@@ -661,7 +874,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Must be set to true
 -   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to authenticate user
 -   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to compute HMAC signature
--   `privateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, used to create ECDSA signatures
+-   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, used to create ECDSA signatures
 
 ### WebSocketClient
 
@@ -2138,6 +2351,86 @@ The possible error short codes when interacting with the IDEX API's.
 
 Type: (`"TOKEN_NOT_FOUND"` \| `"ORDER_NOT_FOUND"` \| `"MARKET_NOT_FOUND"` \| `"DEPOSIT_NOT_FOUND"` \| `"WITHDRAWAL_NOT_FOUND"` \| `"FILL_NOT_FOUND"` \| `"USER_NOT_FOUND"` \| `"ENDPOINT_NOT_FOUND"` \| `"EXCEEDED_RATE_LIMIT"` \| `"INSUFFICIENT_FUNDS"` \| `"USER_MIGRATION_REQUIRED"` \| `"WALLET_NOT_ASSOCIATED"` \| `"EMAIL_VERIFICATION_REQUIRED"` \| `"INVALID_WALLET_SIGNATURE"` \| `"INVALID_API_KEY"` \| `"REQUIRED_API_KEY"` \| `"INVALID_HMAC_SIGNATURE"` \| `"REQUIRED_HMAC_SIGNATURE"` \| `"REQUIRED_API_KEY_READ_SCOPE"` \| `"REQUIRED_API_KEY_TRADE_SCOPE"` \| `"REQUIRED_API_KEY_WITHDRAW_SCOPE"` \| `"TRADING_RESTRICTED_FOR_LOCATION"` \| `"EXCEEDED_WITHDRAWAL_LIMIT"` \| `"CANCELS_DISABLED"` \| `"TRADING_DISABLED"` \| `"WITHDRAWALS_DISABLED"` \| `"INTERNAL_SERVER_ERROR"` \| `"BAD_REQUEST"` \| `"SERVICE_UNAVAILABLE"` \| `"INVALID_API_VERSION"` \| `"REQUIRED_PARAMETER"` \| `"INVALID_PARAMETER"` \| `"INVALID_WITHDRAWAL_QUANTITY"` \| `"INVALID_ORDER_QUANTITY"` \| `"INVALID_ORDER_PRICE_CROSSES_SPREAD"`)
 
+## name
+
+Returns the name of the token.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{0: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)}>** 
+
+## name
+
+Returns the name of the token.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+
+## name
+
+Returns the name of the token.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## name
+
+Returns the name of the token.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## symbol
+
+Returns the symbol of the token, usually a shorter version of the name.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{0: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)}>** 
+
+## symbol
+
+Returns the symbol of the token, usually a shorter version of the name.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+
+## symbol
+
+Returns the symbol of the token, usually a shorter version of the name.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## symbol
+
+Returns the symbol of the token, usually a shorter version of the name.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
 ## WebSocketRequestAuthenticatedSubscription
 
 Type: ([WebSocketRequestBalancesSubscription](#websocketrequestbalancessubscription) \| [WebSocketRequestOrdersSubscription](#websocketrequestorderssubscription))
@@ -2145,6 +2438,86 @@ Type: ([WebSocketRequestBalancesSubscription](#websocketrequestbalancessubscript
 ## WebSocketRequestUnauthenticatedSubscription
 
 Type: ([WebSocketRequestCandlesSubscription](#websocketrequestcandlessubscription) \| [WebSocketRequestL1OrderBookSubscription](#websocketrequestl1orderbooksubscription) \| [WebSocketRequestL2OrderBookSubscription](#websocketrequestl2orderbooksubscription) \| [WebSocketRequestTickersSubscription](#websocketrequesttickerssubscription) \| [WebSocketRequestTradesSubscription](#websocketrequesttradessubscription))
+
+## decimals
+
+Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5,05` (`505 / 10 ** 2`).     _ Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the value {ERC20} uses, unless {\_setupDecimals} is called.     _ NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{0: [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)}>** 
+
+## decimals
+
+Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5,05` (`505 / 10 ** 2`).     _ Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the value {ERC20} uses, unless {\_setupDecimals} is called.     _ NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)>** 
+
+## decimals
+
+Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5,05` (`505 / 10 ** 2`).     _ Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the value {ERC20} uses, unless {\_setupDecimals} is called.     _ NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## decimals
+
+Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5,05` (`505 / 10 ** 2`).     _ Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the value {ERC20} uses, unless {\_setupDecimals} is called.     _ NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## totalSupply
+
+See {IERC20-totalSupply}.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{0: BigNumber}>** 
+
+## totalSupply
+
+See {IERC20-totalSupply}.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## totalSupply
+
+See {IERC20-totalSupply}.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## totalSupply
+
+See {IERC20-totalSupply}.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
 
 ## AuthTokenWebSocketRequestAuthenticatedSubscription
 
@@ -2154,9 +2527,149 @@ Type: ([AuthTokenWebSocketRequestBalancesSubscription](#authtokenwebsocketreques
 
 Type: ([AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription) \| [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription))
 
+## balanceOf
+
+See {IERC20-balanceOf}.
+
+### Parameters
+
+-   `account` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{0: BigNumber}>** 
+
+## balanceOf
+
+See {IERC20-balanceOf}.
+
+### Parameters
+
+-   `account` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## balanceOf
+
+See {IERC20-balanceOf}.
+
+### Parameters
+
+-   `account` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## balanceOf
+
+See {IERC20-balanceOf}.
+
+### Parameters
+
+-   `account` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
 ## WebSocketRequestSubscription
 
 Type: ([AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription) \| [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription))
+
+## transfer
+
+See {IERC20-transfer}.     _ Requirements:     _ - `recipient` cannot be the zero address. - the caller must have a balance of at least `amount`.
+
+### Parameters
+
+-   `recipient` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `amount` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## transfer
+
+See {IERC20-transfer}.     _ Requirements:     _ - `recipient` cannot be the zero address. - the caller must have a balance of at least `amount`.
+
+### Parameters
+
+-   `recipient` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `amount` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)>** 
+
+## transfer
+
+See {IERC20-transfer}.     _ Requirements:     _ - `recipient` cannot be the zero address. - the caller must have a balance of at least `amount`.
+
+### Parameters
+
+-   `recipient` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `amount` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## transfer
+
+See {IERC20-transfer}.     _ Requirements:     _ - `recipient` cannot be the zero address. - the caller must have a balance of at least `amount`.
+
+### Parameters
+
+-   `recipient` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `amount` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## allowance
+
+See {IERC20-allowance}.
+
+### Parameters
+
+-   `owner` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{0: BigNumber}>** 
+
+## allowance
+
+See {IERC20-allowance}.
+
+### Parameters
+
+-   `owner` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## allowance
+
+See {IERC20-allowance}.
+
+### Parameters
+
+-   `owner` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## allowance
+
+See {IERC20-allowance}.
+
+### Parameters
+
+-   `owner` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
 
 ## WebSocketRequestSubscriptionsByName
 
@@ -2172,11 +2685,393 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `tickers` **[WebSocketRequestTickersSubscription](#websocketrequesttickerssubscription)** 
 -   `trades` **[WebSocketRequestTradesSubscription](#websocketrequesttradessubscription)** 
 
+## EthereumClientOptions
+
+Ethereum Client configuration options
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** When true, interacts with the sandbox contract
+-   `rpc` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** \-The Ethereum RPC url to use
+-   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, used to create ECDSA signatures
+
+## approve
+
+See {IERC20-approve}.     _ Requirements:     _ - `spender` cannot be the zero address.
+
+### Parameters
+
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `amount` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## approve
+
+See {IERC20-approve}.     _ Requirements:     _ - `spender` cannot be the zero address.
+
+### Parameters
+
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `amount` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)>** 
+
+## approve
+
+See {IERC20-approve}.     _ Requirements:     _ - `spender` cannot be the zero address.
+
+### Parameters
+
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `amount` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## approve
+
+See {IERC20-approve}.     _ Requirements:     _ - `spender` cannot be the zero address.
+
+### Parameters
+
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `amount` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## transferFrom
+
+See {IERC20-transferFrom}.     _ Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20};     _ Requirements: - `sender` and `recipient` cannot be the zero address. - `sender` must have a balance of at least `amount`. - the caller must have allowance for `sender`'s tokens of at least `amount`.
+
+### Parameters
+
+-   `sender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `recipient` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `amount` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## transferFrom
+
+See {IERC20-transferFrom}.     _ Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20};     _ Requirements: - `sender` and `recipient` cannot be the zero address. - `sender` must have a balance of at least `amount`. - the caller must have allowance for `sender`'s tokens of at least `amount`.
+
+### Parameters
+
+-   `sender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `recipient` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `amount` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)>** 
+
+## transferFrom
+
+See {IERC20-transferFrom}.     _ Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20};     _ Requirements: - `sender` and `recipient` cannot be the zero address. - `sender` must have a balance of at least `amount`. - the caller must have allowance for `sender`'s tokens of at least `amount`.
+
+### Parameters
+
+-   `sender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `recipient` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `amount` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## transferFrom
+
+See {IERC20-transferFrom}.     _ Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20};     _ Requirements: - `sender` and `recipient` cannot be the zero address. - `sender` must have a balance of at least `amount`. - the caller must have allowance for `sender`'s tokens of at least `amount`.
+
+### Parameters
+
+-   `sender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `recipient` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `amount` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## increaseAllowance
+
+Atomically increases the allowance granted to `spender` by the caller.     _ This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     _ Emits an {Approval} event indicating the updated allowance.     _ Requirements:     _ - `spender` cannot be the zero address.
+
+### Parameters
+
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `addedValue` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## increaseAllowance
+
+Atomically increases the allowance granted to `spender` by the caller.     _ This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     _ Emits an {Approval} event indicating the updated allowance.     _ Requirements:     _ - `spender` cannot be the zero address.
+
+### Parameters
+
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `addedValue` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)>** 
+
+## increaseAllowance
+
+Atomically increases the allowance granted to `spender` by the caller.     _ This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     _ Emits an {Approval} event indicating the updated allowance.     _ Requirements:     _ - `spender` cannot be the zero address.
+
+### Parameters
+
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `addedValue` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## increaseAllowance
+
+Atomically increases the allowance granted to `spender` by the caller.     _ This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     _ Emits an {Approval} event indicating the updated allowance.     _ Requirements:     _ - `spender` cannot be the zero address.
+
+### Parameters
+
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `addedValue` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## getExchangeContract
+
+Gets the ethers contract supplemented with the public contract calls
+
+### Parameters
+
+-   `action` **RequestType** 
+-   `wallet` **EthereumWalletConfig** 
+
+Returns **ReturnType&lt;any>** 
+
+## getTokenContract
+
+Gets the ethers erc20 contract supplemented with types
+
+### Parameters
+
+-   `action` **RequestType** 
+-   `address` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `wallet` **EthereumWalletConfig** 
+
+Returns **ReturnType&lt;any>** 
+
+## depositEther
+
+Deposits ETH into the exchange contract for the configured wallet.
+
+### Parameters
+
+-   `action` **A** 
+-   `wallet` **EthereumWalletConfig** 
+-   `transaction` **TransactionOptions** 
+
+### Examples
+
+```javascript
+const transaction = await client.depositEther('request', wallet, {
+   amount: '4',
+   gasPriceGwei: '25'
+ });
+ // wait until tx confirmed
+ await transaction.wait()
+```
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;DepositEthResponse&lt;A>>** 
+
 ## WebSocketResponseL2OrderBookChange
 
 L2OrderBookChange
 
 Type: \[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)]
+
+## decreaseAllowance
+
+Atomically decreases the allowance granted to `spender` by the caller.     _ This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     _ Emits an {Approval} event indicating the updated allowance.     _ Requirements:     _ - `spender` cannot be the zero address. - `spender` must have allowance for the caller of at least `subtractedValue`.
+
+### Parameters
+
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `subtractedValue` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## decreaseAllowance
+
+Atomically decreases the allowance granted to `spender` by the caller.     _ This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     _ Emits an {Approval} event indicating the updated allowance.     _ Requirements:     _ - `spender` cannot be the zero address. - `spender` must have allowance for the caller of at least `subtractedValue`.
+
+### Parameters
+
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `subtractedValue` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)>** 
+
+## decreaseAllowance
+
+Atomically decreases the allowance granted to `spender` by the caller.     _ This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     _ Emits an {Approval} event indicating the updated allowance.     _ Requirements:     _ - `spender` cannot be the zero address. - `spender` must have allowance for the caller of at least `subtractedValue`.
+
+### Parameters
+
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `subtractedValue` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## decreaseAllowance
+
+Atomically decreases the allowance granted to `spender` by the caller.     _ This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     _ Emits an {Approval} event indicating the updated allowance.     _ Requirements:     _ - `spender` cannot be the zero address. - `spender` must have allowance for the caller of at least `subtractedValue`.
+
+### Parameters
+
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `subtractedValue` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## name
+
+Returns the name of the token.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+
+## symbol
+
+Returns the symbol of the token, usually a shorter version of the name.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+
+## decimals
+
+Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5,05` (`505 / 10 ** 2`).     _ Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the value {ERC20} uses, unless {\_setupDecimals} is called.     _ NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)>** 
+
+## totalSupply
+
+See {IERC20-totalSupply}.
+
+### Parameters
+
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## balanceOf
+
+See {IERC20-balanceOf}.
+
+### Parameters
+
+-   `account` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## transfer
+
+See {IERC20-transfer}.     _ Requirements:     _ - `recipient` cannot be the zero address. - the caller must have a balance of at least `amount`.
+
+### Parameters
+
+-   `recipient` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `amount` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## allowance
+
+See {IERC20-allowance}.
+
+### Parameters
+
+-   `owner` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## approve
+
+See {IERC20-approve}.     _ Requirements:     _ - `spender` cannot be the zero address.
+
+### Parameters
+
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `amount` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## transferFrom
+
+See {IERC20-transferFrom}.     _ Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20};     _ Requirements: - `sender` and `recipient` cannot be the zero address. - `sender` must have a balance of at least `amount`. - the caller must have allowance for `sender`'s tokens of at least `amount`.
+
+### Parameters
+
+-   `sender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `recipient` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `amount` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## increaseAllowance
+
+Atomically increases the allowance granted to `spender` by the caller.     _ This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     _ Emits an {Approval} event indicating the updated allowance.     _ Requirements:     _ - `spender` cannot be the zero address.
+
+### Parameters
+
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `addedValue` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## decreaseAllowance
+
+Atomically decreases the allowance granted to `spender` by the caller.     _ This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     _ Emits an {Approval} event indicating the updated allowance.     _ Requirements:     _ - `spender` cannot be the zero address. - `spender` must have allowance for the caller of at least `subtractedValue`.
+
+### Parameters
+
+-   `spender` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `subtractedValue` **BigNumberish** 
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## 
+
+Deposits an ERC-20 token into the exchange by the given address
 
 ## WebSocketRequestUnsubscribe
 
@@ -2210,6 +3105,531 @@ Type: (WebSocketRequestSubscribeStrict | [WebSocketRequestSubscriptions](#websoc
 
 Type: (WebSocketRequestSubscribe | [WebSocketRequestSubscriptions](#websocketrequestsubscriptions) \| [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe))
 
+## loadBalanceInAssetUnitsByAddress
+
+Load a wallet's balance by asset address, in asset units
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset address to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{0: BigNumber}>** 
+
+## loadBalanceInAssetUnitsByAddress
+
+Load a wallet's balance by asset address, in asset units
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset address to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## loadBalanceInAssetUnitsByAddress
+
+Load a wallet's balance by asset address, in asset units
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset address to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## loadBalanceInAssetUnitsByAddress
+
+Load a wallet's balance by asset address, in asset units
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset address to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## loadBalanceInAssetUnitsBySymbol
+
+Load a wallet's balance by asset address, in asset units
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset symbol to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{0: BigNumber}>** 
+
+## loadBalanceInAssetUnitsBySymbol
+
+Load a wallet's balance by asset address, in asset units
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset symbol to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## loadBalanceInAssetUnitsBySymbol
+
+Load a wallet's balance by asset address, in asset units
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset symbol to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## loadBalanceInAssetUnitsBySymbol
+
+Load a wallet's balance by asset address, in asset units
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset symbol to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## loadBalanceInPipsByAddress
+
+Load a wallet's balance by asset address, in pips
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset address to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{0: BigNumber}>** 
+
+## loadBalanceInPipsByAddress
+
+Load a wallet's balance by asset address, in pips
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset address to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## loadBalanceInPipsByAddress
+
+Load a wallet's balance by asset address, in pips
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset address to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## loadBalanceInPipsByAddress
+
+Load a wallet's balance by asset address, in pips
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset address to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## loadBalanceInPipsBySymbol
+
+Load a wallet's balance by asset symbol, in pips
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset symbol to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;{0: BigNumber}>** 
+
+## loadBalanceInPipsBySymbol
+
+Load a wallet's balance by asset symbol, in pips
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset symbol to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## loadBalanceInPipsBySymbol
+
+Load a wallet's balance by asset symbol, in pips
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset symbol to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## loadBalanceInPipsBySymbol
+
+Load a wallet's balance by asset symbol, in pips
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset symbol to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## depositEther
+
+Deposit ETH
+
+### Parameters
+
+-   `overrides` **PayableOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## depositEther
+
+Deposit ETH
+
+### Parameters
+
+-   `overrides` **PayableOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
+
+## depositEther
+
+Deposit ETH
+
+### Parameters
+
+-   `overrides` **PayableOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## depositEther
+
+Deposit ETH
+
+### Parameters
+
+-   `overrides` **PayableOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## depositTokenByAddress
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token contract address
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## depositTokenByAddress
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token contract address
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
+
+## depositTokenByAddress
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token contract address
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## depositTokenByAddress
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token contract address
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## depositTokenBySymbol
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The case-sensitive symbol string for the token
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## depositTokenBySymbol
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The case-sensitive symbol string for the token
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
+
+## depositTokenBySymbol
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The case-sensitive symbol string for the token
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## depositTokenBySymbol
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The case-sensitive symbol string for the token
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## exitWallet
+
+Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
+
+### Parameters
+
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## exitWallet
+
+Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
+
+### Parameters
+
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
+
+## exitWallet
+
+Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
+
+### Parameters
+
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## exitWallet
+
+Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
+
+### Parameters
+
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## withdrawExit
+
+Withdraw the entire balance of an asset for an exited wallet. The Chain Propagation Period must have already passed since calling `exitWallet` on `assetAddress`
+
+### Parameters
+
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the asset to withdraw
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## withdrawExit
+
+Withdraw the entire balance of an asset for an exited wallet. The Chain Propagation Period must have already passed since calling `exitWallet` on `assetAddress`
+
+### Parameters
+
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the asset to withdraw
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** 
+
+## withdrawExit
+
+Withdraw the entire balance of an asset for an exited wallet. The Chain Propagation Period must have already passed since calling `exitWallet` on `assetAddress`
+
+### Parameters
+
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the asset to withdraw
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## withdrawExit
+
+Withdraw the entire balance of an asset for an exited wallet. The Chain Propagation Period must have already passed since calling `exitWallet` on `assetAddress`
+
+### Parameters
+
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the asset to withdraw
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
+
+## loadBalanceInAssetUnitsByAddress
+
+Load a wallet's balance by asset address, in asset units
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset address to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## loadBalanceInAssetUnitsBySymbol
+
+Load a wallet's balance by asset address, in asset units
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset symbol to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## loadBalanceInPipsByAddress
+
+Load a wallet's balance by asset address, in pips
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset address to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## loadBalanceInPipsBySymbol
+
+Load a wallet's balance by asset symbol, in pips
+
+### Parameters
+
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The wallet address to load the balance for. Can be different from `msg.sender`
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The asset symbol to load the wallet's balance for
+-   `overrides` **CallOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;BigNumber>** 
+
+## depositEther
+
+Deposit ETH
+
+### Parameters
+
+-   `overrides` **PayableOverrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## depositTokenByAddress
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `tokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The token contract address
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## depositTokenBySymbol
+
+Deposit `IERC20` compliant tokens
+
+### Parameters
+
+-   `assetSymbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The case-sensitive symbol string for the token
+-   `quantityInAssetUnits` **BigNumberish** The quantity to deposit. The sending wallet must first call the `approve` method on the token contract for at least this quantity first
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## exitWallet
+
+Permanently flags the sending wallet as exited, immediately disabling deposits upon mining. After the Chain Propagation Period passes trades and withdrawals are also disabled for the wallet, and assets may then be withdrawn one at a time via `withdrawExit`
+
+### Parameters
+
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## withdrawExit
+
+Withdraw the entire balance of an asset for an exited wallet. The Chain Propagation Period must have already passed since calling `exitWallet` on `assetAddress`
+
+### Parameters
+
+-   `assetAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The address of the asset to withdraw
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
+## removeDispatcher
+
+Clears the currently set whitelisted dispatcher wallet, effectively disabling calling the `executeTrade` and `withdraw` functions until a new wallet is set with `setDispatcher`
+
+### Parameters
+
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;ContractTransaction>** 
+
 ## WebSocketResponseSubscriptionMessageShort
 
 Short-hand response payloads
@@ -2221,3 +3641,14 @@ Type: ({type: `"tickers"`, data: [WebSocketResponseTickerShort](#websocketrespon
 Transformer (long-form) response payloads
 
 Type: ({type: `"tickers"`, data: [WebSocketResponseTickerLong](#websocketresponsetickerlong)} | {type: `"trades"`, data: [WebSocketResponseTradeLong](#websocketresponsetradelong)} | {type: `"candles"`, data: [WebSocketResponseCandleLong](#websocketresponsecandlelong)} | {type: `"l1orderbook"`, data: [WebSocketResponseL1OrderBookLong](#websocketresponsel1orderbooklong)} | {type: `"l2orderbook"`, data: [WebSocketResponseL2OrderBookLong](#websocketresponsel2orderbooklong)} | {type: `"balances"`, data: [WebSocketResponseBalanceLong](#websocketresponsebalancelong)} | {type: `"orders"`, data: [WebSocketResponseOrderLong](#websocketresponseorderlong)})
+
+## invalidateOrderNonce
+
+Invalidate all order nonces with a timestampInMs lower than the one provided
+
+### Parameters
+
+-   `nonce` **BigNumberish** A Version 1 UUID. After calling and once the Chain Propagation Period has elapsed, `executeTrade` will reject order nonces from this wallet with a timestampInMs component lower than the one provided
+-   `overrides` **Overrides?** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PopulatedTransaction>** 
