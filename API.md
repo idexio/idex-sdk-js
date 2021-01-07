@@ -97,6 +97,9 @@
     -   [MessageSigner](#messagesigner)
 -   [Misc Types & Utilities](#misc-types--utilities)
     -   [ErrorShortCodes](#errorshortcodes)
+-   [MultiverseChain](#multiversechain)
+    -   [eth](#eth)
+    -   [bsc](#bsc)
 -   [WebSocketRequestAuthenticatedSubscription](#websocketrequestauthenticatedsubscription)
 -   [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription)
 -   [AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription)
@@ -658,10 +661,11 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ##### Properties
 
--   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Must be set to true
 -   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to authenticate user
 -   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to compute HMAC signature
--   `privateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, used to create ECDSA signatures
+-   `multiverseChain` **[MultiverseChain](#multiversechain)?** Which multiverse chain the client will point to
+-   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** If true, client will point to API sandbox
+-   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, used to create ECDSA signatures
 
 ### WebSocketClient
 
@@ -2137,6 +2141,22 @@ Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Sta
 The possible error short codes when interacting with the IDEX API's.
 
 Type: (`"TOKEN_NOT_FOUND"` \| `"ORDER_NOT_FOUND"` \| `"MARKET_NOT_FOUND"` \| `"DEPOSIT_NOT_FOUND"` \| `"WITHDRAWAL_NOT_FOUND"` \| `"FILL_NOT_FOUND"` \| `"USER_NOT_FOUND"` \| `"ENDPOINT_NOT_FOUND"` \| `"EXCEEDED_RATE_LIMIT"` \| `"INSUFFICIENT_FUNDS"` \| `"USER_MIGRATION_REQUIRED"` \| `"WALLET_NOT_ASSOCIATED"` \| `"EMAIL_VERIFICATION_REQUIRED"` \| `"INVALID_WALLET_SIGNATURE"` \| `"INVALID_API_KEY"` \| `"REQUIRED_API_KEY"` \| `"INVALID_HMAC_SIGNATURE"` \| `"REQUIRED_HMAC_SIGNATURE"` \| `"REQUIRED_API_KEY_READ_SCOPE"` \| `"REQUIRED_API_KEY_TRADE_SCOPE"` \| `"REQUIRED_API_KEY_WITHDRAW_SCOPE"` \| `"TRADING_RESTRICTED_FOR_LOCATION"` \| `"EXCEEDED_WITHDRAWAL_LIMIT"` \| `"CANCELS_DISABLED"` \| `"TRADING_DISABLED"` \| `"WITHDRAWALS_DISABLED"` \| `"INTERNAL_SERVER_ERROR"` \| `"BAD_REQUEST"` \| `"SERVICE_UNAVAILABLE"` \| `"INVALID_API_VERSION"` \| `"REQUIRED_PARAMETER"` \| `"INVALID_PARAMETER"` \| `"INVALID_WITHDRAWAL_QUANTITY"` \| `"INVALID_ORDER_QUANTITY"` \| `"INVALID_ORDER_PRICE_CROSSES_SPREAD"`)
+
+## MultiverseChain
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### eth
+
+Ethereum
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### bsc
+
+Binance Smart Chain
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 ## WebSocketRequestAuthenticatedSubscription
 
