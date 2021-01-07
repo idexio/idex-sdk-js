@@ -13,16 +13,18 @@ import { isNode, createHmacRestRequestSignatureHeader } from '../../utils';
  * Authenticated API client configuration options.
  *
  * @typedef {Object} RestAuthenticatedClientOptions
- * @property {boolean} sandbox - Must be set to true
  * @property {string} apiKey - Used to authenticate user
  * @property {string} apiSecret - Used to compute HMAC signature
- * @property {string} [privateKey] - If provided, used to create ECDSA signatures
+ * @property {MultiverseChain} [multiverseChain=eth] - Which multiverse chain the client will point to
+ * @property {boolean} [sandbox] - If true, client will point to API sandbox
+ * @property {string} [walletPrivateKey] - If provided, used to create ECDSA signatures
  */
 export interface RestAuthenticatedClientOptions {
-  sandbox?: boolean;
-  baseURL?: string;
   apiKey: string;
   apiSecret: string;
+  baseURL?: string;
+  multiverseChain?: keyof typeof types.MultiverseChain;
+  sandbox?: boolean;
   walletPrivateKey?: string;
 }
 
@@ -51,9 +53,11 @@ export class RestAuthenticatedClient {
 
   private apiSecret: string;
 
-  protected autoCreateHmacHeader = true;
+  private multiverseChain: keyof typeof types.MultiverseChain;
 
   private signer: undefined | signatures.MessageSigner = undefined;
+
+  protected autoCreateHmacHeader = true;
 
   public constructor(options: RestAuthenticatedClientOptions) {
     const baseURL =
@@ -65,6 +69,8 @@ export class RestAuthenticatedClient {
     this.baseURL = baseURL;
 
     this.apiSecret = options.apiSecret;
+
+    this.multiverseChain = options.multiverseChain ?? 'eth';
 
     if (options.walletPrivateKey) {
       this.signer = signatures.privateKeySigner(options.walletPrivateKey);
@@ -198,7 +204,9 @@ export class RestAuthenticatedClient {
 
     return this.post('/orders', {
       parameters: order,
-      signature: await signer(signatures.createOrderSignature(order)),
+      signature: await signer(
+        signatures.createOrderSignature(order, this.multiverseChain),
+      ),
     });
   }
 
@@ -237,7 +245,9 @@ export class RestAuthenticatedClient {
 
     return this.post('/orders/test', {
       parameters: order,
-      signature: await signer(signatures.createOrderSignature(order)),
+      signature: await signer(
+        signatures.createOrderSignature(order, this.multiverseChain),
+      ),
     });
   }
 

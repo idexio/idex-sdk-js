@@ -1,7 +1,9 @@
 export const REST_API_KEY_HEADER = 'IDEX-API-Key';
 export const REST_HMAC_SIGNATURE_HEADER = 'IDEX-HMAC-Signature';
 
-export const ORDER_SIGNATURE_HASH_VERSION = 1;
+export const ORDER_SIGNATURE_HASH_VERSION_ETH = 1;
+
+export const ORDER_SIGNATURE_HASH_VERSION_BSC = 2;
 
 /**
  * The URI for the sandbox REST API.
