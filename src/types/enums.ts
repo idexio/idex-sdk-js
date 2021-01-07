@@ -117,6 +117,23 @@ export enum MarketStatus {
  * @readonly
  * @enum {string}
  */
+export enum MultiverseChain {
+  /**
+   * Ethereum
+   * @type {string}
+   */
+  eth,
+  /**
+   * Binance Smart Chain
+   * @type {string}
+   */
+  bsc,
+}
+
+/**
+ * @readonly
+ * @enum {string}
+ */
 export enum OrderSelfTradePrevention {
   /**
    * Decrement And Cancel (DC) - When two orders from the same user cross, the smaller order will

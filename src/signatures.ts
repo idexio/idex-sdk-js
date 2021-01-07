@@ -19,6 +19,7 @@ import {
   isRestRequestCancelOrder,
   isRestRequestCancelOrders,
   RestRequestAssociateWallet,
+  MultiverseChain,
 } from './types';
 
 /**
@@ -37,15 +38,29 @@ export const privateKeySigner = function getPrivateKeyMessageSigner(
     );
 };
 
-export function createOrderSignature(order: RestRequestOrder): string {
+export function createOrderSignature(
+  order: RestRequestOrder,
+  multiverseChain: keyof typeof MultiverseChain,
+): string {
   const quantity =
     (order as RestRequestOrderByBaseQuantity).quantity ||
     (order as RestRequestOrderByQuoteQuantity).quoteOrderQuantity;
   const isQuantityInQuote = !!(order as RestRequestOrderByQuoteQuantity)
     .quoteOrderQuantity;
 
+  let orderSignatureHashVersion:
+    | typeof constants.ORDER_SIGNATURE_HASH_VERSION_ETH
+    | typeof constants.ORDER_SIGNATURE_HASH_VERSION_BSC;
+  if (multiverseChain === 'eth') {
+    orderSignatureHashVersion = constants.ORDER_SIGNATURE_HASH_VERSION_ETH;
+  } else if (multiverseChain === 'bsc') {
+    orderSignatureHashVersion = constants.ORDER_SIGNATURE_HASH_VERSION_BSC;
+  } else {
+    throw new Error(`Invalid multiverse chain: ${multiverseChain}`);
+  }
+
   return solidityHashOfParams([
-    ['uint8', constants.ORDER_SIGNATURE_HASH_VERSION],
+    ['uint8', orderSignatureHashVersion],
     ['uint128', uuidToUint8Array(order.nonce)],
     ['address', order.wallet],
     ['string', order.market],
