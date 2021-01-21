@@ -97,7 +97,9 @@ export interface RestResponseDeposit {
  * @property {string} takerTradeMinimum - Minimum order size that is accepted by the matching engine for execution in ETH, applies to both ETH and tokens
  * @property {string} withdrawMinimum - Minimum withdrawal amount in ETH, applies to both ETH and tokens
  */
-export interface RestResponseExchangeInfo {
+export type RestResponseExchangeInfo<
+  C extends enums.MultiverseChain = 'eth'
+> = {
   timeZone: string;
   serverTime: number;
   ethereumDepositContractAddress: string;
@@ -109,7 +111,11 @@ export interface RestResponseExchangeInfo {
   makerTradeMinimum: string;
   takerTradeMinimum: string;
   withdrawMinimum: string;
-}
+} & (C extends 'bsc'
+  ? {
+      extraProp: string;
+    }
+  : { [key: string]: never });
 
 /**
  * Fill

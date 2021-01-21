@@ -118,7 +118,9 @@ export class RestPublicClient<C extends RestPublicClientOptions> {
    *
    * @returns {Promise<RestResponseExchangeInfo>}
    */
-  public async getExchangeInfo(): Promise<types.RestResponseExchangeInfo> {
+  public async getExchangeInfo(): Promise<
+    types.RestResponseExchangeInfo<this['config']['multiverseChain']>
+  > {
     return this.get('/exchange');
   }
 
