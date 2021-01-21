@@ -38,7 +38,9 @@ export interface RestPublicClientOptions {
  *
  * @param {RestPublicClientOptions} options
  */
-export class RestPublicClient<C extends RestPublicClientOptions> {
+export class RestPublicClient<
+  C extends RestPublicClientOptions = RestPublicClientOptions
+> {
   private axios: AxiosInstance;
 
   public readonly config: Readonly<{

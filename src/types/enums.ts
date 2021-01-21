@@ -119,7 +119,7 @@ export enum MarketStatus {
  * The available multiverse chains to define when creating a client.
  *
  * @readonly
- * @type {keyof typeof URLS[keyof typeof URLS]}
+ * @enum {'eth' | 'bsc'}
  */
 export type MultiverseChain = keyof typeof URLS[keyof typeof URLS];
 

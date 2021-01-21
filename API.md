@@ -2144,7 +2144,7 @@ Type: (`"TOKEN_NOT_FOUND"` \| `"ORDER_NOT_FOUND"` \| `"MARKET_NOT_FOUND"` \| `"D
 
 The available multiverse chains to define when creating a client.
 
-Type: any
+Type: (`"eth"` \| `"bsc"`)
 
 ## WebSocketRequestAuthenticatedSubscription
 

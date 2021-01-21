@@ -29,14 +29,14 @@ import {
  */
 export type MessageSigner = (message: string) => Promise<string>;
 
-export const privateKeySigner = function getPrivateKeyMessageSigner(
+export function getPrivateKeyMessageSigner(
   walletPrivateKey: string,
 ): MessageSigner {
   return (message: string) =>
     new ethers.Wallet(walletPrivateKey).signMessage(
       ethers.utils.arrayify(message),
     );
-};
+}
 
 export function createOrderSignature(
   order: RestRequestOrder,
