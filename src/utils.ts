@@ -22,10 +22,12 @@ export function createHmacRestRequestSignatureHeader(
 
 export function deepObjectFreeze<A extends AnyObj | unknown[]>(obj: A): A {
   Object.entries(obj).forEach(([, value]) => {
-    if (typeof value === 'object') {
+    if (typeof value === 'object' && value !== null) {
       deepObjectFreeze(obj);
     }
   });
-  Object.freeze(obj);
+  if (!Object.isFrozen(obj)) {
+    Object.freeze(obj);
+  }
   return obj;
 }
