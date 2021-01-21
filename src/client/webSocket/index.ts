@@ -1,14 +1,24 @@
 import WebSocket, { CONNECTING, OPEN } from 'isomorphic-ws';
 
-import * as types from '../../types';
+import type {
+  AuthTokenWebSocketRequestAuthenticatedSubscription,
+  AuthTokenWebSocketRequestSubscription,
+  MultiverseChain,
+  WebSocketRequest,
+  WebSocketRequestSubscription,
+  WebSocketRequestUnauthenticatedSubscription,
+  WebSocketRequestUnsubscribeShortNames,
+  WebSocketRequestUnsubscribeSubscription,
+  WebSocketResponse,
+} from '../../types';
+import { isWebSocketAuthenticatedSubscription } from '../../types';
 import * as constants from '../../constants';
 import { isNode } from '../../utils';
-import { isWebSocketAuthenticatedSubscription } from '../../types';
 
-import { transformMessage } from './transform';
+import { transformWebsocketShortResponseMessage } from './transform';
 import { removeWalletFromSdkSubscription } from './utils';
 
-export { transformMessage as transformWebsocketShortResponseMessage };
+export { transformWebsocketShortResponseMessage };
 
 export type WebSocketListenerConnect = () => unknown;
 
@@ -18,8 +28,9 @@ export type WebSocketListenerDisconnect = (
 ) => unknown;
 
 export type WebSocketListenerError = (error: Error) => unknown;
+
 export type WebSocketListenerResponse = (
-  response: types.WebSocketResponse,
+  response: WebSocketResponse,
 ) => unknown;
 
 const NODE_USER_AGENT = 'idex-sdk-js';
@@ -55,7 +66,7 @@ export interface WebSocketClientOptions {
   websocketAuthTokenFetch?: (wallet: string) => Promise<string>;
   shouldReconnectAutomatically?: boolean;
   connectTimeout?: number;
-  multiverseChain?: types.MultiverseChain;
+  multiverseChain?: MultiverseChain;
 }
 
 /**
@@ -89,6 +100,16 @@ export class WebSocketClient<
      */
     reconnectAttempt: 0,
     connectTimeout: 5000,
+    /**
+     * When the ping timeout is scheduled, it saves its id to this property.  Since
+     * the type from Node & dom are not compatible, using it may require casting
+     *
+     * @example
+     * clearTimeout(this.state.pingTimeoutId as number);
+     *
+     * @private
+     */
+    pingTimeoutId: undefined as undefined | number | NodeJS.Timeout,
     connectListeners: new Set<WebSocketListenerConnect>(),
     disconnectListeners: new Set<WebSocketListenerDisconnect>(),
     errorListeners: new Set<WebSocketListenerError>(),
@@ -96,7 +117,7 @@ export class WebSocketClient<
   };
 
   public readonly config: Readonly<{
-    multiverseChain: C['multiverseChain'] extends types.MultiverseChain
+    multiverseChain: C['multiverseChain'] extends MultiverseChain
       ? C['multiverseChain']
       : 'eth';
     baseURL: string;
@@ -109,12 +130,6 @@ export class WebSocketClient<
   public shouldReconnectAutomatically = false;
 
   private ws: null | WebSocket = null;
-
-  private pathSubscription: string | null = null;
-
-  // typescript cant type this nicely between both node and browser
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private pingTimeoutId: any;
 
   constructor(options: WebSocketClientOptions) {
     const { multiverseChain = 'eth', sandbox = false } = options;
@@ -225,8 +240,8 @@ export class WebSocketClient<
    */
   public subscribe(
     subscriptions: Array<
-      | types.AuthTokenWebSocketRequestSubscription
-      | types.WebSocketRequestUnauthenticatedSubscription['name']
+      | AuthTokenWebSocketRequestSubscription
+      | WebSocketRequestUnauthenticatedSubscription['name']
     >,
     markets?: string[],
     cid?: string,
@@ -250,7 +265,7 @@ export class WebSocketClient<
    * @param {string} [cid] - A custom identifier to identify the matching response
    */
   public subscribeAuthenticated(
-    subscriptions: types.AuthTokenWebSocketRequestAuthenticatedSubscription[],
+    subscriptions: AuthTokenWebSocketRequestAuthenticatedSubscription[],
     markets?: string[],
     cid?: string,
   ): this {
@@ -266,7 +281,7 @@ export class WebSocketClient<
    * @param {string} [cid] - A custom identifier to identify the matching response
    */
   public subscribeUnauthenticated(
-    subscriptions: types.WebSocketRequestUnauthenticatedSubscription[],
+    subscriptions: WebSocketRequestUnauthenticatedSubscription[],
     markets?: string[],
     cid?: string,
   ): this {
@@ -276,8 +291,8 @@ export class WebSocketClient<
 
   public unsubscribe(
     subscriptions?: Array<
-      | types.WebSocketRequestUnsubscribeSubscription
-      | types.WebSocketRequestUnsubscribeShortNames
+      | WebSocketRequestUnsubscribeSubscription
+      | WebSocketRequestUnsubscribeShortNames
     >,
     markets?: string[],
     cid?: string,
@@ -294,8 +309,8 @@ export class WebSocketClient<
 
   private async subscribeRequest(
     subscriptions: Array<
-      | types.AuthTokenWebSocketRequestSubscription
-      | types.WebSocketRequestUnauthenticatedSubscription['name']
+      | AuthTokenWebSocketRequestSubscription
+      | WebSocketRequestUnauthenticatedSubscription['name']
     >,
     markets?: string[],
     cid?: string,
@@ -504,7 +519,7 @@ export class WebSocketClient<
       }
     } finally {
       if (this.isConnected()) {
-        this.pingTimeoutId = setTimeout(
+        this.state.pingTimeoutId = setTimeout(
           this.startPinging.bind(this),
           PING_TIMEOUT,
         );
@@ -513,8 +528,11 @@ export class WebSocketClient<
   }
 
   private stopPinging() {
-    clearTimeout(this.pingTimeoutId);
-    this.pingTimeoutId = undefined;
+    if (this.state.pingTimeoutId !== undefined) {
+      clearTimeout(this.state.pingTimeoutId as number);
+    }
+
+    this.state.pingTimeoutId = undefined;
   }
 
   private handleWebSocketClose(event: WebSocket.CloseEvent): void {
@@ -538,7 +556,9 @@ export class WebSocketClient<
       throw new Error('Malformed response data'); // Shouldn't happen
     }
 
-    const message = transformMessage(JSON.parse(String(event.data)));
+    const message = transformWebsocketShortResponseMessage(
+      JSON.parse(String(event.data)),
+    );
     this.state.responseListeners.forEach((listener) => listener(message));
   }
 
@@ -556,7 +576,7 @@ export class WebSocketClient<
     this.state.reconnectAttempt = 0;
   }
 
-  private sendMessage(payload: types.WebSocketRequest): this {
+  private sendMessage(payload: WebSocketRequest): this {
     const { ws } = this;
 
     this.throwIfDisconnected(ws);
@@ -582,8 +602,8 @@ export class WebSocketClient<
 // types
 function isPublicSubscription(
   subscription:
-    | types.WebSocketRequestUnauthenticatedSubscription['name']
-    | types.WebSocketRequestSubscription,
+    | WebSocketRequestUnauthenticatedSubscription['name']
+    | WebSocketRequestSubscription,
 ): boolean {
   return !isWebSocketAuthenticatedSubscription(subscription);
 }

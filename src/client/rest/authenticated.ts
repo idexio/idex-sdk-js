@@ -3,7 +3,32 @@ import https from 'https';
 import qs from 'qs';
 import Axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
 
-import * as types from '../../types';
+import type {
+  MultiverseChain,
+  RestRequestAssociateWallet,
+  RestRequestCancelOrder,
+  RestRequestCancelOrders,
+  RestRequestFindBalances,
+  RestRequestFindDeposit,
+  RestRequestFindDeposits,
+  RestRequestFindFill,
+  RestRequestFindFills,
+  RestRequestFindOrder,
+  RestRequestFindOrders,
+  RestRequestFindWithdrawal,
+  RestRequestFindWithdrawals,
+  RestRequestOrder,
+  RestRequestWithdrawal,
+  RestResponseAssociateWallet,
+  RestResponseBalance,
+  RestResponseCanceledOrder,
+  RestResponseDeposit,
+  RestResponseFill,
+  RestResponseOrder,
+  RestResponseUser,
+  RestResponseWallet,
+  RestResponseWithdrawal,
+} from '../../types';
 
 import * as constants from '../../constants';
 import * as signatures from '../../signatures';
@@ -23,7 +48,7 @@ export interface RestAuthenticatedClientOptions {
   apiKey: string;
   apiSecret: string;
   baseURL?: string;
-  multiverseChain?: types.MultiverseChain;
+  multiverseChain?: MultiverseChain;
   sandbox?: boolean;
   walletPrivateKey?: string;
 }
@@ -54,7 +79,7 @@ export class RestAuthenticatedClient<
   private apiSecret: string;
 
   public readonly config: Readonly<{
-    multiverseChain: C['multiverseChain'] extends types.MultiverseChain
+    multiverseChain: C['multiverseChain'] extends MultiverseChain
       ? C['multiverseChain']
       : 'eth';
     baseURL: string;
@@ -117,7 +142,7 @@ export class RestAuthenticatedClient<
    * @param {string} nonce - UUIDv1
    * @returns {Promise<RestResponseUser>}
    */
-  public async getUser(nonce: string): Promise<types.RestResponseUser> {
+  public async getUser(nonce: string): Promise<RestResponseUser> {
     return this.get('/user', { nonce });
   }
 
@@ -129,7 +154,7 @@ export class RestAuthenticatedClient<
    * @param {string} nonce - UUIDv1
    * @returns {Promise<RestResponseWallet[]>}
    */
-  public async getWallets(nonce: string): Promise<types.RestResponseWallet[]> {
+  public async getWallets(nonce: string): Promise<RestResponseWallet[]> {
     return this.get('/wallets', { nonce });
   }
 
@@ -142,8 +167,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseBalance[]>}
    */
   public async getBalances(
-    findBalances: types.RestRequestFindBalances,
-  ): Promise<types.RestResponseBalance[]> {
+    findBalances: RestRequestFindBalances,
+  ): Promise<RestResponseBalance[]> {
     return this.get('/balances', findBalances);
   }
 
@@ -169,9 +194,9 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseAssociateWallet>}
    */
   public async associateWallet(
-    associate: types.RestRequestAssociateWallet,
+    associate: RestRequestAssociateWallet,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<types.RestResponseAssociateWallet> {
+  ): Promise<RestResponseAssociateWallet> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -211,9 +236,9 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseOrder>}
    */
   public async createOrder(
-    order: types.RestRequestOrder,
+    order: RestRequestOrder,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<types.RestResponseOrder> {
+  ): Promise<RestResponseOrder> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -252,9 +277,9 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseOrder>}
    */
   public async createTestOrder(
-    order: types.RestRequestOrder,
+    order: RestRequestOrder,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<types.RestResponseOrder> {
+  ): Promise<RestResponseOrder> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -299,9 +324,9 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseCanceledOrder>}
    */
   public async cancelOrder(
-    cancelOrder: types.RestRequestCancelOrder,
+    cancelOrder: RestRequestCancelOrder,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<types.RestResponseCanceledOrder> {
+  ): Promise<RestResponseCanceledOrder> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -344,9 +369,9 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseCanceledOrder>}
    */
   public async cancelOrders(
-    cancelOrders: types.RestRequestCancelOrders,
+    cancelOrders: RestRequestCancelOrders,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<types.RestResponseCanceledOrder> {
+  ): Promise<RestResponseCanceledOrder> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -370,8 +395,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseOrder>}
    */
   public async getOrder(
-    findOrder: types.RestRequestFindOrder,
-  ): Promise<types.RestResponseOrder> {
+    findOrder: RestRequestFindOrder,
+  ): Promise<RestResponseOrder> {
     return this.get('/orders', findOrder);
   }
 
@@ -384,8 +409,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseOrder[]>}
    */
   public async getOrders(
-    findOrders: types.RestRequestFindOrders,
-  ): Promise<types.RestResponseOrder[]> {
+    findOrders: RestRequestFindOrders,
+  ): Promise<RestResponseOrder[]> {
     return this.get('/orders', findOrders);
   }
 
@@ -398,8 +423,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseFill>}
    */
   public async getFill(
-    findFill: types.RestRequestFindFill,
-  ): Promise<types.RestResponseFill> {
+    findFill: RestRequestFindFill,
+  ): Promise<RestResponseFill> {
     return this.get('/fills', findFill);
   }
 
@@ -412,8 +437,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseFill[]>}
    */
   public async getFills(
-    findFills: types.RestRequestFindFills,
-  ): Promise<types.RestResponseFill[]> {
+    findFills: RestRequestFindFills,
+  ): Promise<RestResponseFill[]> {
     return this.get('/fills', findFills);
   }
 
@@ -428,8 +453,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseDeposit>}
    */
   public async getDeposit(
-    findDeposit: types.RestRequestFindDeposit,
-  ): Promise<types.RestResponseDeposit> {
+    findDeposit: RestRequestFindDeposit,
+  ): Promise<RestResponseDeposit> {
     return this.get('/deposits', findDeposit);
   }
 
@@ -442,8 +467,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseDeposit[]>}
    */
   public async getDeposits(
-    findDeposits: types.RestRequestFindDeposits,
-  ): Promise<types.RestResponseDeposit[]> {
+    findDeposits: RestRequestFindDeposits,
+  ): Promise<RestResponseDeposit[]> {
     return this.get('/deposits', findDeposits);
   }
 
@@ -471,9 +496,9 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseWithdrawal>}
    */
   public async withdraw(
-    withdrawal: types.RestRequestWithdrawal,
+    withdrawal: RestRequestWithdrawal,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<types.RestResponseWithdrawal> {
+  ): Promise<RestResponseWithdrawal> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -494,8 +519,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseWithdrawal>}
    */
   public async getWithdrawal(
-    findWithdrawal: types.RestRequestFindWithdrawal,
-  ): Promise<types.RestResponseWithdrawal> {
+    findWithdrawal: RestRequestFindWithdrawal,
+  ): Promise<RestResponseWithdrawal> {
     return this.get('/withdrawals', findWithdrawal);
   }
 
@@ -508,8 +533,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseWithdrawal[]>}
    */
   public async getWithdrawals(
-    findWithdrawals: types.RestRequestFindWithdrawals,
-  ): Promise<types.RestResponseWithdrawal[]> {
+    findWithdrawals: RestRequestFindWithdrawals,
+  ): Promise<RestResponseWithdrawal[]> {
     return this.get('/withdrawals', findWithdrawals);
   }
 

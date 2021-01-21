@@ -125,7 +125,7 @@ const transformOrdersMessage = (
   ...(order.F && { fills: order.F.map(transformOrderFill) }),
 });
 
-export const transformMessage = (
+export const transformWebsocketShortResponseMessage = (
   message:
     | types.WebSocketResponseError
     | types.WebSocketResponseSubscriptions
