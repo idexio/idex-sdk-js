@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 
+import type { AnyObj } from './types/utils';
 import * as constants from './constants';
 
 export const isNode =
@@ -17,4 +18,14 @@ export function createHmacRestRequestSignatureHeader(
     .digest('hex');
 
   return { [constants.REST_HMAC_SIGNATURE_HEADER]: hmacRestRequestSignature };
+}
+
+export function deepObjectFreeze<A extends AnyObj | unknown[]>(obj: A): A {
+  Object.entries(obj).forEach(([, value]) => {
+    if (typeof value === 'object') {
+      deepObjectFreeze(obj);
+    }
+  });
+  Object.freeze(obj);
+  return obj;
 }

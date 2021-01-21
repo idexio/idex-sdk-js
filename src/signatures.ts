@@ -40,7 +40,7 @@ export const privateKeySigner = function getPrivateKeyMessageSigner(
 
 export function createOrderSignature(
   order: RestRequestOrder,
-  multiverseChain: keyof typeof MultiverseChain,
+  multiverseChain: MultiverseChain,
 ): string {
   const quantity =
     (order as RestRequestOrderByBaseQuantity).quantity ||

@@ -55,6 +55,7 @@ export interface WebSocketClientOptions {
   websocketAuthTokenFetch?: (wallet: string) => Promise<string>;
   shouldReconnectAutomatically?: boolean;
   connectTimeout?: number;
+  multiverseChain?: types.MultiverseChain;
 }
 
 /**
@@ -106,15 +107,23 @@ export class WebSocketClient {
    */
   private doNotReconnect = false;
 
+  private multiverseChain: Exclude<types.MultiverseChain, undefined>;
+
   constructor(options: WebSocketClientOptions) {
+    this.multiverseChain = options.multiverseChain ?? 'eth';
+
     const baseURL =
       options.baseURL ??
-      (options.sandbox
-        ? constants.SANDBOX_WEBSOCKET_API_BASE_URL
-        : constants.LIVE_WEBSOCKET_API_BASE_URL);
+      constants.URLS[options.sandbox ? 'sandbox' : 'production']?.[
+        this.multiverseChain
+      ]?.websocket;
 
     if (!baseURL) {
-      throw new Error('Must set sandbox to true');
+      throw new Error(
+        `Invalid configuration, baseURL could not be derived (sandbox? ${String(
+          options.sandbox,
+        )}) (chain: ${this.multiverseChain})`,
+      );
     }
 
     this.baseURL = baseURL;
@@ -457,7 +466,7 @@ export class WebSocketClient {
       const listener = () => {
         clearTimeout(timeoutId);
         ws.removeEventListener('open', listener);
-        resolve();
+        resolve(true);
       };
 
       ws.addEventListener('open', listener);

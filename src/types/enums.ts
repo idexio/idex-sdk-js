@@ -1,3 +1,5 @@
+import { URLS } from '../constants';
+
 // appear to be affected by https://github.com/typescript-eslint/typescript-eslint/issues/2360
 /* eslint-disable no-shadow */
 /**
@@ -114,21 +116,12 @@ export enum MarketStatus {
 }
 
 /**
+ * The available multiverse chains to define when creating a client.
+ *
  * @readonly
- * @enum {string}
+ * @type {keyof typeof URLS[keyof typeof URLS]}
  */
-export enum MultiverseChain {
-  /**
-   * Ethereum
-   * @type {string}
-   */
-  eth,
-  /**
-   * Binance Smart Chain
-   * @type {string}
-   */
-  bsc,
-}
+export type MultiverseChain = keyof typeof URLS[keyof typeof URLS];
 
 /**
  * @readonly

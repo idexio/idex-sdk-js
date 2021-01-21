@@ -19,7 +19,7 @@ export interface RestPublicClientOptions {
   sandbox?: boolean;
   baseURL?: string;
   apiKey?: string;
-  multiverseChain?: keyof typeof types.MultiverseChain;
+  multiverseChain?: types.MultiverseChain;
 }
 
 /**
@@ -41,20 +41,28 @@ export interface RestPublicClientOptions {
 export class RestPublicClient {
   public baseURL: string;
 
-  private multiverseChain: keyof typeof types.MultiverseChain;
+  private multiverseChain: Exclude<types.MultiverseChain, undefined>;
 
   private axios: AxiosInstance;
 
   public constructor(options: RestPublicClientOptions) {
+    this.multiverseChain = options.multiverseChain ?? 'eth';
+
     const baseURL =
       options.baseURL ??
-      (options.sandbox
-        ? constants.SANDBOX_REST_API_BASE_URL
-        : constants.LIVE_REST_API_BASE_URL);
+      constants.URLS[options.sandbox ? 'sandbox' : 'production']?.[
+        this.multiverseChain
+      ]?.rest;
+
+    if (!baseURL) {
+      throw new Error(
+        `Invalid configuration, baseURL could not be derived (sandbox? ${String(
+          options.sandbox,
+        )}) (chain: ${this.multiverseChain})`,
+      );
+    }
 
     this.baseURL = baseURL;
-
-    this.multiverseChain = options.multiverseChain ?? 'eth';
 
     const headers = options.apiKey
       ? { [constants.REST_API_KEY_HEADER]: options.apiKey }

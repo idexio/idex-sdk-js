@@ -23,7 +23,7 @@ export interface RestAuthenticatedClientOptions {
   apiKey: string;
   apiSecret: string;
   baseURL?: string;
-  multiverseChain?: keyof typeof types.MultiverseChain;
+  multiverseChain?: types.MultiverseChain;
   sandbox?: boolean;
   walletPrivateKey?: string;
 }
@@ -53,24 +53,32 @@ export class RestAuthenticatedClient {
 
   private apiSecret: string;
 
-  private multiverseChain: keyof typeof types.MultiverseChain;
+  private multiverseChain: Exclude<types.MultiverseChain, undefined>;
 
   private signer: undefined | signatures.MessageSigner = undefined;
 
   protected autoCreateHmacHeader = true;
 
   public constructor(options: RestAuthenticatedClientOptions) {
+    this.multiverseChain = options.multiverseChain ?? 'eth';
+
     const baseURL =
       options.baseURL ??
-      (options.sandbox
-        ? constants.SANDBOX_REST_API_BASE_URL
-        : constants.LIVE_REST_API_BASE_URL);
+      constants.URLS[options.sandbox ? 'sandbox' : 'production']?.[
+        this.multiverseChain
+      ]?.rest;
+
+    if (!baseURL) {
+      throw new Error(
+        `Invalid configuration, baseURL could not be derived (sandbox? ${String(
+          options.sandbox,
+        )}) (chain: ${this.multiverseChain})`,
+      );
+    }
 
     this.baseURL = baseURL;
 
     this.apiSecret = options.apiSecret;
-
-    this.multiverseChain = options.multiverseChain ?? 'eth';
 
     if (options.walletPrivateKey) {
       this.signer = signatures.privateKeySigner(options.walletPrivateKey);
