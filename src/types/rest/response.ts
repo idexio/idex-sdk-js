@@ -115,11 +115,15 @@ export type RestResponseExchangeInfo<
   ? {
       ethUsdPrice: string;
       ethereumDepositContractAddress: string;
+      bnbUsdPrice?: void;
+      bscDepositContractAddress?: void;
     }
   : C extends 'bsc'
   ? {
       bnbUsdPrice: string;
       bscDepositContractAddress: string;
+      ethereumDepositContractAddress?: void;
+      ethUsdPrice?: void;
     }
   : never);
 
