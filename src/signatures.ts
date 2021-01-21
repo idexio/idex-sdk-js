@@ -33,6 +33,9 @@ export type MessageSigner = (message: string) => Promise<string>;
  * Returns an ethers Wallet signer which takes a message and signs
  * it with the originally provided private key.
  *
+ * @param {string} walletPrivateKey - The private key to use when signing any given messages
+ * @returns {MessageSigner}
+ *
  * @example
  * const signMessage = createPrivateKeyMessageSigner(myPrivateKey)
  * const signed = await signMessage(myMessageToSign)
@@ -47,7 +50,10 @@ export function createPrivateKeyMessageSigner(
 }
 
 // compatibility layer for previously documented method
-/** @deprecated use {@link createPrivateKeyMessageSigner} instead */
+/**
+ * @deprecated - use createPrivateKeyMessageSigner directly
+ * @see {createPrivateKeyMessageSigner}
+ */
 export const privateKeySigner = createPrivateKeyMessageSigner;
 
 export function createOrderSignature(

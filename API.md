@@ -2153,7 +2153,7 @@ it with the originally provided private key.
 
 ### Parameters
 
--   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The private key to use when signing any given messages
 
 ### Examples
 
@@ -2166,9 +2166,12 @@ Returns **[MessageSigner](#messagesigner)**
 
 ## privateKeySigner
 
+-   **See: {createPrivateKeyMessageSigner}
+    **
+
 **Meta**
 
--   **deprecated**: use [createPrivateKeyMessageSigner](#createprivatekeymessagesigner) instead
+-   **deprecated**: use createPrivateKeyMessageSigner directly
 
 
 ## MultiverseChain
