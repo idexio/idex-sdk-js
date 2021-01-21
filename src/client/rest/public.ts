@@ -19,6 +19,7 @@ export interface RestPublicClientOptions {
   sandbox?: boolean;
   baseURL?: string;
   apiKey?: string;
+  multiverseChain?: keyof typeof types.MultiverseChain;
 }
 
 /**
@@ -40,6 +41,8 @@ export interface RestPublicClientOptions {
 export class RestPublicClient {
   public baseURL: string;
 
+  private multiverseChain: keyof typeof types.MultiverseChain;
+
   private axios: AxiosInstance;
 
   public constructor(options: RestPublicClientOptions) {
@@ -50,6 +53,8 @@ export class RestPublicClient {
         : constants.LIVE_REST_API_BASE_URL);
 
     this.baseURL = baseURL;
+
+    this.multiverseChain = options.multiverseChain ?? 'eth';
 
     const headers = options.apiKey
       ? { [constants.REST_API_KEY_HEADER]: options.apiKey }
