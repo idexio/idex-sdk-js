@@ -20,12 +20,26 @@ export function createHmacRestRequestSignatureHeader(
   return { [constants.REST_HMAC_SIGNATURE_HEADER]: hmacRestRequestSignature };
 }
 
-export function deepObjectFreeze<A extends AnyObj | unknown[]>(obj: A): A {
-  Object.entries(obj).forEach(([, value]) => {
-    if (typeof value === 'object' && value !== null) {
-      deepObjectFreeze(obj);
-    }
-  });
+/**
+ * Deeply freeze an object, provides an object inline with ({ ...values } as const) which adds
+ * readonly deeply to all keys in the object deeply.
+ *
+ * @private
+ */
+export function deepObjectFreeze<A extends AnyObj | unknown[]>(
+  /** @private The object you wish to deeply freeze */
+  obj: A,
+  /** @private The max depth to deep freeze before stopping, to prevent accidental infinite recursion */
+  maxDepth = 100,
+  depth = 0,
+): A {
+  if (maxDepth <= depth) {
+    Object.entries(obj).forEach(([, value]) => {
+      if (typeof value === 'object' && value !== null) {
+        deepObjectFreeze(obj, maxDepth, depth + 1);
+      }
+    });
+  }
   if (!Object.isFrozen(obj)) {
     Object.freeze(obj);
   }
