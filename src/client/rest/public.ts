@@ -2,7 +2,20 @@ import http from 'http';
 import https from 'https';
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 
-import * as types from '../../types';
+import type {
+  MultiverseChain,
+  RestRequestFindCandles,
+  RestRequestFindMarkets,
+  RestRequestFindTrades,
+  RestResponseAsset,
+  RestResponseCandle,
+  RestResponseExchangeInfo,
+  RestResponseMarket,
+  RestResponseOrderBookLevel1,
+  RestResponseOrderBookLevel2,
+  RestResponseTicker,
+  RestResponseTrade,
+} from '../../types';
 
 import * as constants from '../../constants';
 
@@ -19,6 +32,7 @@ export interface RestPublicClientOptions {
   sandbox?: boolean;
   baseURL?: string;
   apiKey?: string;
+  multiverseChain?: MultiverseChain;
 }
 
 /**
@@ -37,19 +51,41 @@ export interface RestPublicClientOptions {
  *
  * @param {RestPublicClientOptions} options
  */
-export class RestPublicClient {
-  public baseURL: string;
-
+export class RestPublicClient<
+  C extends RestPublicClientOptions = RestPublicClientOptions
+> {
   private axios: AxiosInstance;
 
-  public constructor(options: RestPublicClientOptions) {
+  public readonly config: Readonly<{
+    multiverseChain: C['multiverseChain'] extends MultiverseChain
+      ? C['multiverseChain']
+      : 'eth';
+    baseURL: string;
+    sandbox: boolean;
+  }>;
+
+  public constructor(options: C) {
+    const { multiverseChain = 'eth', sandbox = false } = options;
+
     const baseURL =
       options.baseURL ??
-      (options.sandbox
-        ? constants.SANDBOX_REST_API_BASE_URL
-        : constants.LIVE_REST_API_BASE_URL);
+      constants.URLS[options.sandbox ? 'sandbox' : 'production']?.[
+        multiverseChain
+      ]?.rest;
 
-    this.baseURL = baseURL;
+    if (!baseURL) {
+      throw new Error(
+        `Invalid configuration, baseURL could not be derived (sandbox? ${String(
+          sandbox,
+        )}) (chain: ${multiverseChain})`,
+      );
+    }
+
+    this.config = Object.freeze({
+      sandbox,
+      baseURL,
+      multiverseChain: multiverseChain as this['config']['multiverseChain'],
+    } as const);
 
     const headers = options.apiKey
       ? { [constants.REST_API_KEY_HEADER]: options.apiKey }
@@ -97,7 +133,9 @@ export class RestPublicClient {
    *
    * @returns {Promise<RestResponseExchangeInfo>}
    */
-  public async getExchangeInfo(): Promise<types.RestResponseExchangeInfo> {
+  public async getExchangeInfo(): Promise<
+    RestResponseExchangeInfo<this['config']['multiverseChain']>
+  > {
     return this.get('/exchange');
   }
 
@@ -108,7 +146,7 @@ export class RestPublicClient {
    *
    * @returns {Promise<RestResponseAsset[]>}
    */
-  public async getAssets(): Promise<types.RestResponseAsset[]> {
+  public async getAssets(): Promise<RestResponseAsset[]> {
     return this.get('/assets');
   }
 
@@ -121,8 +159,8 @@ export class RestPublicClient {
    * @returns {Promise<RestResponseMarket[]>}
    */
   public async getMarkets(
-    findMarkets: types.RestRequestFindMarkets,
-  ): Promise<types.RestResponseMarket[]> {
+    findMarkets: RestRequestFindMarkets,
+  ): Promise<RestResponseMarket[]> {
     return this.get('/markets', findMarkets);
   }
 
@@ -136,9 +174,7 @@ export class RestPublicClient {
    * @param {string} [market] - Base-quote pair e.g. 'IDEX-ETH', if provided limits ticker data to a single market
    * @returns {Promise<RestResponseTicker[]>}
    */
-  public async getTickers(
-    market?: string,
-  ): Promise<types.RestResponseTicker[]> {
+  public async getTickers(market?: string): Promise<RestResponseTicker[]> {
     return this.get('/tickers', market ? { market } : undefined);
   }
 
@@ -151,8 +187,8 @@ export class RestPublicClient {
    * @returns {Promise<RestResponseCandle[]>}
    */
   public async getCandles(
-    findCandles: types.RestRequestFindCandles,
-  ): Promise<types.RestResponseCandle[]> {
+    findCandles: RestRequestFindCandles,
+  ): Promise<RestResponseCandle[]> {
     return this.get('/candles', findCandles);
   }
 
@@ -165,8 +201,8 @@ export class RestPublicClient {
    * @returns {Promise<RestResponseTrade[]>}
    */
   public async getTrades(
-    findTrades: types.RestRequestFindTrades,
-  ): Promise<types.RestResponseTrade[]> {
+    findTrades: RestRequestFindTrades,
+  ): Promise<RestResponseTrade[]> {
     return this.get('/trades', findTrades);
   }
 
@@ -180,7 +216,7 @@ export class RestPublicClient {
    */
   public async getOrderBookLevel1(
     market: string,
-  ): Promise<types.RestResponseOrderBookLevel1> {
+  ): Promise<RestResponseOrderBookLevel1> {
     return this.get('/orderbook', { level: 1, market });
   }
 
@@ -196,7 +232,7 @@ export class RestPublicClient {
   public async getOrderBookLevel2(
     market: string,
     limit = 50,
-  ): Promise<types.RestResponseOrderBookLevel2> {
+  ): Promise<RestResponseOrderBookLevel2> {
     return this.get('/orderbook', { level: 2, market, limit });
   }
 
@@ -209,7 +245,7 @@ export class RestPublicClient {
     return (
       await this.axios({
         method: 'GET',
-        url: `${this.baseURL}${endpoint}`,
+        url: `${this.config.baseURL}${endpoint}`,
         params: RestRequestParams,
       })
     ).data;

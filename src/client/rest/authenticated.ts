@@ -3,7 +3,32 @@ import https from 'https';
 import qs from 'qs';
 import Axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
 
-import * as types from '../../types';
+import type {
+  MultiverseChain,
+  RestRequestAssociateWallet,
+  RestRequestCancelOrder,
+  RestRequestCancelOrders,
+  RestRequestFindBalances,
+  RestRequestFindDeposit,
+  RestRequestFindDeposits,
+  RestRequestFindFill,
+  RestRequestFindFills,
+  RestRequestFindOrder,
+  RestRequestFindOrders,
+  RestRequestFindWithdrawal,
+  RestRequestFindWithdrawals,
+  RestRequestOrder,
+  RestRequestWithdrawal,
+  RestResponseAssociateWallet,
+  RestResponseBalance,
+  RestResponseCanceledOrder,
+  RestResponseDeposit,
+  RestResponseFill,
+  RestResponseOrder,
+  RestResponseUser,
+  RestResponseWallet,
+  RestResponseWithdrawal,
+} from '../../types';
 
 import * as constants from '../../constants';
 import * as signatures from '../../signatures';
@@ -13,16 +38,18 @@ import { isNode, createHmacRestRequestSignatureHeader } from '../../utils';
  * Authenticated API client configuration options.
  *
  * @typedef {Object} RestAuthenticatedClientOptions
- * @property {boolean} sandbox - Must be set to true
  * @property {string} apiKey - Used to authenticate user
  * @property {string} apiSecret - Used to compute HMAC signature
- * @property {string} [privateKey] - If provided, used to create ECDSA signatures
+ * @property {MultiverseChain} [multiverseChain=eth] - Which multiverse chain the client will point to
+ * @property {boolean} [sandbox] - If true, client will point to API sandbox
+ * @property {string} [walletPrivateKey] - If provided, used to create ECDSA signatures
  */
 export interface RestAuthenticatedClientOptions {
-  sandbox?: boolean;
-  baseURL?: string;
   apiKey: string;
   apiSecret: string;
+  baseURL?: string;
+  multiverseChain?: MultiverseChain;
+  sandbox?: boolean;
   walletPrivateKey?: string;
 }
 
@@ -44,43 +71,65 @@ export interface RestAuthenticatedClientOptions {
  *
  * @param {RestAuthenticatedClientOptions} options
  */
-export class RestAuthenticatedClient {
-  public baseURL: string;
-
+export class RestAuthenticatedClient<
+  C extends RestAuthenticatedClientOptions = RestAuthenticatedClientOptions
+> {
   private axios: AxiosInstance;
 
   private apiSecret: string;
 
-  protected autoCreateHmacHeader = true;
+  public readonly config: Readonly<{
+    multiverseChain: C['multiverseChain'] extends MultiverseChain
+      ? C['multiverseChain']
+      : 'eth';
+    baseURL: string;
+    sandbox: boolean;
+  }>;
 
   private signer: undefined | signatures.MessageSigner = undefined;
 
-  public constructor(options: RestAuthenticatedClientOptions) {
+  protected autoCreateHmacHeader = true;
+
+  public constructor(options: C) {
+    const { multiverseChain = 'eth', sandbox = false } = options;
+
     const baseURL =
       options.baseURL ??
-      (options.sandbox
-        ? constants.SANDBOX_REST_API_BASE_URL
-        : constants.LIVE_REST_API_BASE_URL);
+      constants.URLS[options.sandbox ? 'sandbox' : 'production']?.[
+        multiverseChain
+      ]?.rest;
 
-    this.baseURL = baseURL;
+    if (!baseURL) {
+      throw new Error(
+        `Invalid configuration, baseURL could not be derived (sandbox? ${String(
+          sandbox,
+        )}) (chain: ${multiverseChain})`,
+      );
+    }
+
+    this.config = Object.freeze({
+      sandbox,
+      baseURL,
+      multiverseChain: multiverseChain as this['config']['multiverseChain'],
+    } as const);
 
     this.apiSecret = options.apiSecret;
 
     if (options.walletPrivateKey) {
-      this.signer = signatures.privateKeySigner(options.walletPrivateKey);
+      this.signer = signatures.createPrivateKeyMessageSigner(
+        options.walletPrivateKey,
+      );
     }
+
+    const headers = { [constants.REST_API_KEY_HEADER]: options.apiKey };
 
     this.axios = isNode
       ? Axios.create({
-          headers: {
-            [constants.REST_API_KEY_HEADER]: options.apiKey,
-          },
+          headers,
           httpAgent: new http.Agent({ keepAlive: true }),
           httpsAgent: new https.Agent({ keepAlive: true }),
         })
-      : Axios.create({
-          headers: { [constants.REST_API_KEY_HEADER]: options.apiKey },
-        });
+      : Axios.create({ headers });
   }
 
   // User Data Endpoints
@@ -93,7 +142,7 @@ export class RestAuthenticatedClient {
    * @param {string} nonce - UUIDv1
    * @returns {Promise<RestResponseUser>}
    */
-  public async getUser(nonce: string): Promise<types.RestResponseUser> {
+  public async getUser(nonce: string): Promise<RestResponseUser> {
     return this.get('/user', { nonce });
   }
 
@@ -105,7 +154,7 @@ export class RestAuthenticatedClient {
    * @param {string} nonce - UUIDv1
    * @returns {Promise<RestResponseWallet[]>}
    */
-  public async getWallets(nonce: string): Promise<types.RestResponseWallet[]> {
+  public async getWallets(nonce: string): Promise<RestResponseWallet[]> {
     return this.get('/wallets', { nonce });
   }
 
@@ -118,8 +167,8 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseBalance[]>}
    */
   public async getBalances(
-    findBalances: types.RestRequestFindBalances,
-  ): Promise<types.RestResponseBalance[]> {
+    findBalances: RestRequestFindBalances,
+  ): Promise<RestResponseBalance[]> {
     return this.get('/balances', findBalances);
   }
 
@@ -135,7 +184,7 @@ export class RestAuthenticatedClient {
    *     nonce: uuidv1(),
    *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
    *   },
-   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   *   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
    * @see {@link https://docs.idex.io/#associate-wallet|Associate Wallet}
@@ -145,9 +194,9 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseAssociateWallet>}
    */
   public async associateWallet(
-    associate: types.RestRequestAssociateWallet,
+    associate: RestRequestAssociateWallet,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<types.RestResponseAssociateWallet> {
+  ): Promise<RestResponseAssociateWallet> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -177,7 +226,7 @@ export class RestAuthenticatedClient {
    *     price: '0.10000000',
    *     quantity: '1.50000000",
    *   },
-   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   *   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
    * @see https://docs.idex.io/#create-order
@@ -187,9 +236,9 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseOrder>}
    */
   public async createOrder(
-    order: types.RestRequestOrder,
+    order: RestRequestOrder,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<types.RestResponseOrder> {
+  ): Promise<RestResponseOrder> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -198,7 +247,9 @@ export class RestAuthenticatedClient {
 
     return this.post('/orders', {
       parameters: order,
-      signature: await signer(signatures.createOrderSignature(order)),
+      signature: await signer(
+        signatures.createOrderSignature(order, this.config.multiverseChain),
+      ),
     });
   }
 
@@ -216,7 +267,7 @@ export class RestAuthenticatedClient {
    *     price: '0.10000000',
    *     quantity: '1.50000000",
    *   },
-   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   *   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
    * @see https://docs.idex.io/#test-create-order
@@ -226,9 +277,9 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseOrder>}
    */
   public async createTestOrder(
-    order: types.RestRequestOrder,
+    order: RestRequestOrder,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<types.RestResponseOrder> {
+  ): Promise<RestResponseOrder> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -237,7 +288,9 @@ export class RestAuthenticatedClient {
 
     return this.post('/orders/test', {
       parameters: order,
-      signature: await signer(signatures.createOrderSignature(order)),
+      signature: await signer(
+        signatures.createOrderSignature(order, this.config.multiverseChain),
+      ),
     });
   }
 
@@ -251,7 +304,7 @@ export class RestAuthenticatedClient {
    *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
    *     orderId: 'f077a010-ce18-11ea-9557-a9d3f954788d',
    *   },
-   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   *   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
    * const clientOrderId = '0001_23234_18863_IDEX_ETH';
@@ -261,7 +314,7 @@ export class RestAuthenticatedClient {
    *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
    *     orderId: `client:${clientOrderId}`,
    *   },
-   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   *   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
    * @see https://docs.idex.io/#cancel-order
@@ -271,9 +324,9 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseCanceledOrder>}
    */
   public async cancelOrder(
-    cancelOrder: types.RestRequestCancelOrder,
+    cancelOrder: RestRequestCancelOrder,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<types.RestResponseCanceledOrder> {
+  ): Promise<RestResponseCanceledOrder> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -297,7 +350,7 @@ export class RestAuthenticatedClient {
    *     nonce: uuidv1(),
    *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
    *   },
-   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   *   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
    * const ordersForMarket = authenticatedClient.cancelOrders(
@@ -306,7 +359,7 @@ export class RestAuthenticatedClient {
    *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
    *     market: 'IDEX-ETH'
    *   },
-   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   *   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
    * @see https://docs.idex.io/#cancel-order
@@ -316,9 +369,9 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseCanceledOrder>}
    */
   public async cancelOrders(
-    cancelOrders: types.RestRequestCancelOrders,
+    cancelOrders: RestRequestCancelOrders,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<types.RestResponseCanceledOrder> {
+  ): Promise<RestResponseCanceledOrder> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -342,8 +395,8 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseOrder>}
    */
   public async getOrder(
-    findOrder: types.RestRequestFindOrder,
-  ): Promise<types.RestResponseOrder> {
+    findOrder: RestRequestFindOrder,
+  ): Promise<RestResponseOrder> {
     return this.get('/orders', findOrder);
   }
 
@@ -356,8 +409,8 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseOrder[]>}
    */
   public async getOrders(
-    findOrders: types.RestRequestFindOrders,
-  ): Promise<types.RestResponseOrder[]> {
+    findOrders: RestRequestFindOrders,
+  ): Promise<RestResponseOrder[]> {
     return this.get('/orders', findOrders);
   }
 
@@ -370,8 +423,8 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseFill>}
    */
   public async getFill(
-    findFill: types.RestRequestFindFill,
-  ): Promise<types.RestResponseFill> {
+    findFill: RestRequestFindFill,
+  ): Promise<RestResponseFill> {
     return this.get('/fills', findFill);
   }
 
@@ -384,8 +437,8 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseFill[]>}
    */
   public async getFills(
-    findFills: types.RestRequestFindFills,
-  ): Promise<types.RestResponseFill[]> {
+    findFills: RestRequestFindFills,
+  ): Promise<RestResponseFill[]> {
     return this.get('/fills', findFills);
   }
 
@@ -400,8 +453,8 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseDeposit>}
    */
   public async getDeposit(
-    findDeposit: types.RestRequestFindDeposit,
-  ): Promise<types.RestResponseDeposit> {
+    findDeposit: RestRequestFindDeposit,
+  ): Promise<RestResponseDeposit> {
     return this.get('/deposits', findDeposit);
   }
 
@@ -414,8 +467,8 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseDeposit[]>}
    */
   public async getDeposits(
-    findDeposits: types.RestRequestFindDeposits,
-  ): Promise<types.RestResponseDeposit[]> {
+    findDeposits: RestRequestFindDeposits,
+  ): Promise<RestResponseDeposit[]> {
     return this.get('/deposits', findDeposits);
   }
 
@@ -433,7 +486,7 @@ export class RestAuthenticatedClient {
    *     asset: 'ETH',
    *     quantity: '0.04000000',
    *   },
-   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   *   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
    * @see https://docs.idex.io/#withdraw-funds
@@ -443,9 +496,9 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseWithdrawal>}
    */
   public async withdraw(
-    withdrawal: types.RestRequestWithdrawal,
+    withdrawal: RestRequestWithdrawal,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<types.RestResponseWithdrawal> {
+  ): Promise<RestResponseWithdrawal> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -466,8 +519,8 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseWithdrawal>}
    */
   public async getWithdrawal(
-    findWithdrawal: types.RestRequestFindWithdrawal,
-  ): Promise<types.RestResponseWithdrawal> {
+    findWithdrawal: RestRequestFindWithdrawal,
+  ): Promise<RestResponseWithdrawal> {
     return this.get('/withdrawals', findWithdrawal);
   }
 
@@ -480,8 +533,8 @@ export class RestAuthenticatedClient {
    * @returns {Promise<RestResponseWithdrawal[]>}
    */
   public async getWithdrawals(
-    findWithdrawals: types.RestRequestFindWithdrawals,
-  ): Promise<types.RestResponseWithdrawal[]> {
+    findWithdrawals: RestRequestFindWithdrawals,
+  ): Promise<RestResponseWithdrawal[]> {
     return this.get('/withdrawals', findWithdrawals);
   }
 
@@ -577,7 +630,7 @@ export class RestAuthenticatedClient {
     const request: AxiosRequestConfig = {
       headers: {},
       ...config,
-      url: `${this.baseURL}${endpoint}`,
+      url: `${this.config.baseURL}${endpoint}`,
     };
 
     if (createHmacSignatureHeader) {

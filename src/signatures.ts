@@ -19,6 +19,7 @@ import {
   isRestRequestCancelOrder,
   isRestRequestCancelOrders,
   RestRequestAssociateWallet,
+  MultiverseChain,
 } from './types';
 
 /**
@@ -28,24 +29,56 @@ import {
  */
 export type MessageSigner = (message: string) => Promise<string>;
 
-export const privateKeySigner = function getPrivateKeyMessageSigner(
+/**
+ * Returns an ethers Wallet signer which takes a message and signs
+ * it with the originally provided private key.
+ *
+ * @param {string} walletPrivateKey - The private key to use when signing any given messages
+ * @returns {MessageSigner}
+ *
+ * @example
+ * const signMessage = createPrivateKeyMessageSigner(myPrivateKey)
+ * const signed = await signMessage(myMessageToSign)
+ */
+export function createPrivateKeyMessageSigner(
   walletPrivateKey: string,
 ): MessageSigner {
   return (message: string) =>
     new ethers.Wallet(walletPrivateKey).signMessage(
       ethers.utils.arrayify(message),
     );
-};
+}
 
-export function createOrderSignature(order: RestRequestOrder): string {
+// compatibility layer for previously documented method
+/**
+ * @deprecated - use createPrivateKeyMessageSigner directly
+ * @see {createPrivateKeyMessageSigner}
+ */
+export const privateKeySigner = createPrivateKeyMessageSigner;
+
+export function createOrderSignature(
+  order: RestRequestOrder,
+  multiverseChain: MultiverseChain,
+): string {
   const quantity =
     (order as RestRequestOrderByBaseQuantity).quantity ||
     (order as RestRequestOrderByQuoteQuantity).quoteOrderQuantity;
   const isQuantityInQuote = !!(order as RestRequestOrderByQuoteQuantity)
     .quoteOrderQuantity;
 
+  let orderSignatureHashVersion:
+    | typeof constants.ORDER_SIGNATURE_HASH_VERSION_ETH
+    | typeof constants.ORDER_SIGNATURE_HASH_VERSION_BSC;
+  if (multiverseChain === 'eth') {
+    orderSignatureHashVersion = constants.ORDER_SIGNATURE_HASH_VERSION_ETH;
+  } else if (multiverseChain === 'bsc') {
+    orderSignatureHashVersion = constants.ORDER_SIGNATURE_HASH_VERSION_BSC;
+  } else {
+    throw new Error(`Invalid multiverse chain: ${multiverseChain}`);
+  }
+
   return solidityHashOfParams([
-    ['uint8', constants.ORDER_SIGNATURE_HASH_VERSION],
+    ['uint8', orderSignatureHashVersion],
     ['uint128', uuidToUint8Array(order.nonce)],
     ['address', order.wallet],
     ['string', order.market],
