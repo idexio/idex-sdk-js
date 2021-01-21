@@ -87,8 +87,10 @@ export interface RestResponseDeposit {
  * @typedef {Object} RestResponseExchangeInfo
  * @property {string} timeZone - Server time zone, always UTC
  * @property {number} serverTime - Current server time
- * @property {string} ethereumDepositContractAddress - Ethereum address of the exchange custody contract for deposits
- * @property {string} ethUsdPrice - Current price of ETH in USD
+ * @property {string} ethereumDepositContractAddress - Ethereum address of the exchange custody contract for deposits, only when multiverse chain is "eth"
+ * @property {string} bscDepositContractAddress - Ethereum address of the exchange custody contract for deposits, only when multiverse chain is "bsc"
+ * @property {string} ethUsdPrice - Current price of ETH in USD, only provided if multiverse chain is "eth"
+ * @property {string} bnbUsdPrice - Current price of BNB in USD, only provided if multiverse chain is "bsc"
  * @property {number} gasPrice - Current gas price used by the exchange for trade settlement and withdrawal transactions in Gwei
  * @property {string} volume24hUsd - Total exchange trading volume for the trailing 24 hours in USD
  * @property {string} makerFeeRate - Maker trade fee rate
@@ -102,8 +104,6 @@ export type RestResponseExchangeInfo<
 > = {
   timeZone: string;
   serverTime: number;
-  ethereumDepositContractAddress: string;
-  ethUsdPrice: string;
   gasPrice: number;
   volume24hUsd: string;
   makerFeeRate: string;
@@ -111,11 +111,17 @@ export type RestResponseExchangeInfo<
   makerTradeMinimum: string;
   takerTradeMinimum: string;
   withdrawMinimum: string;
-} & (C extends 'bsc'
+} & (C extends 'eth'
   ? {
-      extraProp: string;
+      ethUsdPrice: string;
+      ethereumDepositContractAddress: string;
     }
-  : { [key: string]: never });
+  : C extends 'bsc'
+  ? {
+      bnbUsdPrice: string;
+      bscDepositContractAddress: string;
+    }
+  : never);
 
 /**
  * Fill
