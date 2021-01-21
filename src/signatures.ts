@@ -34,10 +34,10 @@ export type MessageSigner = (message: string) => Promise<string>;
  * it with the originally provided private key.
  *
  * @example
- * const signMessage = getPrivateKeyMessageSigner(myPrivateKey)
+ * const signMessage = createPrivateKeyMessageSigner(myPrivateKey)
  * const signed = await signMessage(myMessageToSign)
  */
-export function getPrivateKeyMessageSigner(
+export function createPrivateKeyMessageSigner(
   walletPrivateKey: string,
 ): MessageSigner {
   return (message: string) =>
@@ -47,8 +47,8 @@ export function getPrivateKeyMessageSigner(
 }
 
 // compatibility layer for previously documented method
-/** @deprecated use getPrivateKeyMessageSigner instead */
-export const privateKeySigner = getPrivateKeyMessageSigner;
+/** @deprecated use {@link createPrivateKeyMessageSigner} instead */
+export const privateKeySigner = createPrivateKeyMessageSigner;
 
 export function createOrderSignature(
   order: RestRequestOrder,
