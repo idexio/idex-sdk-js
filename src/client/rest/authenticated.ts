@@ -23,7 +23,7 @@ export interface RestAuthenticatedClientOptions {
   apiKey: string;
   apiSecret: string;
   baseURL?: string;
-  multiverseChain?: keyof typeof types.MultiverseChain;
+  multiverseChain?: types.MultiverseChain;
   sandbox?: boolean;
   walletPrivateKey?: string;
 }
@@ -46,47 +46,65 @@ export interface RestAuthenticatedClientOptions {
  *
  * @param {RestAuthenticatedClientOptions} options
  */
-export class RestAuthenticatedClient {
-  public baseURL: string;
-
+export class RestAuthenticatedClient<
+  C extends RestAuthenticatedClientOptions = RestAuthenticatedClientOptions
+> {
   private axios: AxiosInstance;
 
   private apiSecret: string;
 
-  private multiverseChain: keyof typeof types.MultiverseChain;
+  public readonly config: Readonly<{
+    multiverseChain: C['multiverseChain'] extends types.MultiverseChain
+      ? C['multiverseChain']
+      : 'eth';
+    baseURL: string;
+    sandbox: boolean;
+  }>;
 
   private signer: undefined | signatures.MessageSigner = undefined;
 
   protected autoCreateHmacHeader = true;
 
-  public constructor(options: RestAuthenticatedClientOptions) {
+  public constructor(options: C) {
+    const { multiverseChain = 'eth', sandbox = false } = options;
+
     const baseURL =
       options.baseURL ??
-      (options.sandbox
-        ? constants.SANDBOX_REST_API_BASE_URL
-        : constants.LIVE_REST_API_BASE_URL);
+      constants.URLS[options.sandbox ? 'sandbox' : 'production']?.[
+        multiverseChain
+      ]?.rest;
 
-    this.baseURL = baseURL;
+    if (!baseURL) {
+      throw new Error(
+        `Invalid configuration, baseURL could not be derived (sandbox? ${String(
+          sandbox,
+        )}) (chain: ${multiverseChain})`,
+      );
+    }
+
+    this.config = Object.freeze({
+      sandbox,
+      baseURL,
+      multiverseChain: multiverseChain as this['config']['multiverseChain'],
+    } as const);
 
     this.apiSecret = options.apiSecret;
 
-    this.multiverseChain = options.multiverseChain ?? 'eth';
-
     if (options.walletPrivateKey) {
-      this.signer = signatures.privateKeySigner(options.walletPrivateKey);
+      this.signer = signatures.getPrivateKeyMessageSigner(
+        options.walletPrivateKey,
+      );
     }
+
+    const headers = { [constants.REST_API_KEY_HEADER]: options.apiKey };
 
     this.axios = isNode
       ? Axios.create({
-          headers: {
-            [constants.REST_API_KEY_HEADER]: options.apiKey,
-          },
+          headers,
           httpAgent: new http.Agent({ keepAlive: true }),
           httpsAgent: new https.Agent({ keepAlive: true }),
         })
-      : Axios.create({
-          headers: { [constants.REST_API_KEY_HEADER]: options.apiKey },
-        });
+      : Axios.create({ headers });
   }
 
   // User Data Endpoints
@@ -205,7 +223,7 @@ export class RestAuthenticatedClient {
     return this.post('/orders', {
       parameters: order,
       signature: await signer(
-        signatures.createOrderSignature(order, this.multiverseChain),
+        signatures.createOrderSignature(order, this.config.multiverseChain),
       ),
     });
   }
@@ -246,7 +264,7 @@ export class RestAuthenticatedClient {
     return this.post('/orders/test', {
       parameters: order,
       signature: await signer(
-        signatures.createOrderSignature(order, this.multiverseChain),
+        signatures.createOrderSignature(order, this.config.multiverseChain),
       ),
     });
   }
@@ -587,7 +605,7 @@ export class RestAuthenticatedClient {
     const request: AxiosRequestConfig = {
       headers: {},
       ...config,
-      url: `${this.baseURL}${endpoint}`,
+      url: `${this.config.baseURL}${endpoint}`,
     };
 
     if (createHmacSignatureHeader) {

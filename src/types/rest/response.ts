@@ -87,8 +87,10 @@ export interface RestResponseDeposit {
  * @typedef {Object} RestResponseExchangeInfo
  * @property {string} timeZone - Server time zone, always UTC
  * @property {number} serverTime - Current server time
- * @property {string} ethereumDepositContractAddress - Ethereum address of the exchange custody contract for deposits
- * @property {string} ethUsdPrice - Current price of ETH in USD
+ * @property {string} ethereumDepositContractAddress - Ethereum address of the exchange custody contract for deposits, only when multiverse chain is "eth"
+ * @property {string} bscDepositContractAddress - Ethereum address of the exchange custody contract for deposits, only when multiverse chain is "bsc"
+ * @property {string} ethUsdPrice - Current price of ETH in USD, only provided if multiverse chain is "eth"
+ * @property {string} bnbUsdPrice - Current price of BNB in USD, only provided if multiverse chain is "bsc"
  * @property {number} gasPrice - Current gas price used by the exchange for trade settlement and withdrawal transactions in Gwei
  * @property {string} volume24hUsd - Total exchange trading volume for the trailing 24 hours in USD
  * @property {string} makerFeeRate - Maker trade fee rate
@@ -97,11 +99,11 @@ export interface RestResponseDeposit {
  * @property {string} takerTradeMinimum - Minimum order size that is accepted by the matching engine for execution in ETH, applies to both ETH and tokens
  * @property {string} withdrawMinimum - Minimum withdrawal amount in ETH, applies to both ETH and tokens
  */
-export interface RestResponseExchangeInfo {
+export type RestResponseExchangeInfo<
+  C extends enums.MultiverseChain = 'eth'
+> = {
   timeZone: string;
   serverTime: number;
-  ethereumDepositContractAddress: string;
-  ethUsdPrice: string;
   gasPrice: number;
   volume24hUsd: string;
   makerFeeRate: string;
@@ -109,7 +111,17 @@ export interface RestResponseExchangeInfo {
   makerTradeMinimum: string;
   takerTradeMinimum: string;
   withdrawMinimum: string;
-}
+} & (C extends 'eth'
+  ? {
+      ethUsdPrice: string;
+      ethereumDepositContractAddress: string;
+    }
+  : C extends 'bsc'
+  ? {
+      bnbUsdPrice: string;
+      bscDepositContractAddress: string;
+    }
+  : never);
 
 /**
  * Fill

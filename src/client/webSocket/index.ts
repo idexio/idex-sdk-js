@@ -55,6 +55,7 @@ export interface WebSocketClientOptions {
   websocketAuthTokenFetch?: (wallet: string) => Promise<string>;
   shouldReconnectAutomatically?: boolean;
   connectTimeout?: number;
+  multiverseChain?: types.MultiverseChain;
 }
 
 /**
@@ -73,24 +74,41 @@ export interface WebSocketClientOptions {
  *
  * @param {WebSocketClientOptions} options
  */
-export class WebSocketClient {
-  private baseURL: string;
+export class WebSocketClient<
+  C extends WebSocketClientOptions = WebSocketClientOptions
+> {
+  private state = {
+    /**
+     * Set to true when the reconnect logic should not be run.
+     * @private
+     */
+    doNotReconnect: false,
+    /**
+     * Used to track the number of reconnect attempts for exponential backoff
+     * @private
+     */
+    reconnectAttempt: 0,
+    connectTimeout: 5000,
+    connectListeners: new Set<WebSocketListenerConnect>(),
+    disconnectListeners: new Set<WebSocketListenerDisconnect>(),
+    errorListeners: new Set<WebSocketListenerError>(),
+    responseListeners: new Set<WebSocketListenerResponse>(),
+  };
 
-  private shouldReconnectAutomatically = false;
+  public readonly config: Readonly<{
+    multiverseChain: C['multiverseChain'] extends types.MultiverseChain
+      ? C['multiverseChain']
+      : 'eth';
+    baseURL: string;
+    sandbox: boolean;
+    connectTimeout: number;
+    pathSubscription?: string | null;
+    websocketAuthTokenFetch?: WebSocketClientOptions['websocketAuthTokenFetch'];
+  }>;
 
-  private reconnectAttempt = 0;
+  public shouldReconnectAutomatically = false;
 
-  private connectListeners = new Set<WebSocketListenerConnect>();
-
-  private disconnectListeners = new Set<WebSocketListenerDisconnect>();
-
-  private errorListeners = new Set<WebSocketListenerError>();
-
-  private responseListeners = new Set<WebSocketListenerResponse>();
-
-  private webSocket: null | WebSocket = null;
-
-  private websocketAuthTokenFetch?: WebSocketClientOptions['websocketAuthTokenFetch'];
+  private ws: null | WebSocket = null;
 
   private pathSubscription: string | null = null;
 
@@ -98,40 +116,38 @@ export class WebSocketClient {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private pingTimeoutId: any;
 
-  private connectTimeout = 5000;
-
-  /**
-   * Set to true when the reconnect logic should not be run.
-   * @private
-   */
-  private doNotReconnect = false;
-
   constructor(options: WebSocketClientOptions) {
+    const { multiverseChain = 'eth', sandbox = false } = options;
+
     const baseURL =
       options.baseURL ??
-      (options.sandbox
-        ? constants.SANDBOX_WEBSOCKET_API_BASE_URL
-        : constants.LIVE_WEBSOCKET_API_BASE_URL);
+      constants.URLS[options.sandbox ? 'sandbox' : 'production']?.[
+        multiverseChain
+      ]?.websocket;
 
     if (!baseURL) {
-      throw new Error('Must set sandbox to true');
+      throw new Error(
+        `Invalid configuration, baseURL could not be derived (sandbox? ${String(
+          sandbox,
+        )}) (chain: ${multiverseChain})`,
+      );
     }
 
-    this.baseURL = baseURL;
+    this.config = Object.freeze({
+      sandbox,
+      baseURL,
+      multiverseChain: multiverseChain as this['config']['multiverseChain'],
+      connectTimeout:
+        typeof options.connectTimeout === 'number'
+          ? options.connectTimeout
+          : 5000,
+      pathSubscription: options.pathSubscription ?? null,
+      websocketAuthTokenFetch: options.websocketAuthTokenFetch,
+    } as const);
 
     if (options.shouldReconnectAutomatically) {
       this.shouldReconnectAutomatically = true;
     }
-
-    if (options.pathSubscription) {
-      this.pathSubscription = options.pathSubscription;
-    }
-
-    if (typeof options.connectTimeout === 'number') {
-      this.connectTimeout = options.connectTimeout;
-    }
-
-    this.websocketAuthTokenFetch = options.websocketAuthTokenFetch;
   }
 
   /* Connection management */
@@ -141,12 +157,12 @@ export class WebSocketClient {
       return this;
     }
 
-    this.doNotReconnect = false;
+    this.state.doNotReconnect = false;
 
     // connect and await connection to succeed
     await this.createWebSocketIfNeeded(awaitConnected);
 
-    this.connectListeners.forEach((listener) => listener());
+    this.state.connectListeners.forEach((listener) => listener());
 
     return this;
   }
@@ -154,40 +170,40 @@ export class WebSocketClient {
   public disconnect(): this {
     this.stopPinging();
 
-    if (!this.webSocket) {
+    if (!this.ws) {
       return this; // Already disconnected
     }
 
-    this.doNotReconnect = true;
-    this.webSocket.close();
-    this.webSocket = null;
+    this.state.doNotReconnect = true;
+    this.ws.close();
+    this.ws = null;
 
     return this;
   }
 
   public isConnected(): boolean {
-    return this.webSocket?.readyState === OPEN;
+    return this.ws?.readyState === OPEN;
   }
 
   /* Event listeners */
 
   public onConnect(listener: WebSocketListenerConnect): this {
-    this.connectListeners.add(listener);
+    this.state.connectListeners.add(listener);
     return this;
   }
 
   public onDisconnect(listener: WebSocketListenerDisconnect): this {
-    this.disconnectListeners.add(listener);
+    this.state.disconnectListeners.add(listener);
     return this;
   }
 
   public onError(listener: WebSocketListenerError): this {
-    this.errorListeners.add(listener);
+    this.state.errorListeners.add(listener);
     return this;
   }
 
   public onResponse(listener: WebSocketListenerResponse): this {
-    this.responseListeners.add(listener);
+    this.state.responseListeners.add(listener);
     return this;
   }
 
@@ -298,7 +314,7 @@ export class WebSocketClient {
       });
     }
 
-    const { websocketAuthTokenFetch } = this;
+    const { websocketAuthTokenFetch } = this.config;
 
     // For authenticated, we do require token manager
     if (!websocketAuthTokenFetch) {
@@ -372,16 +388,16 @@ export class WebSocketClient {
     awaitConnect = false,
   ): Promise<WebSocket> {
     try {
-      this.doNotReconnect = false;
+      this.state.doNotReconnect = false;
 
-      if (this.webSocket) {
-        return this.webSocket;
+      if (this.ws) {
+        return this.ws;
       }
 
-      this.webSocket = new WebSocket(
-        this.pathSubscription
-          ? `${this.baseURL}/${this.pathSubscription}`
-          : this.baseURL,
+      this.ws = new WebSocket(
+        this.config.pathSubscription
+          ? `${this.config.baseURL}/${this.config.pathSubscription}`
+          : this.config.baseURL,
         isNode
           ? {
               headers: { 'User-Agent': NODE_USER_AGENT },
@@ -389,28 +405,19 @@ export class WebSocketClient {
           : undefined,
       );
 
-      this.webSocket.addEventListener(
+      this.ws.addEventListener(
         'message',
         this.handleWebSocketMessage.bind(this),
       );
-      this.webSocket.addEventListener(
-        'close',
-        this.handleWebSocketClose.bind(this),
-      );
-      this.webSocket.addEventListener(
-        'error',
-        this.handleWebSocketError.bind(this),
-      );
-      this.webSocket.addEventListener(
-        'open',
-        this.handleWebSocketConnect.bind(this),
-      );
+      this.ws.addEventListener('close', this.handleWebSocketClose.bind(this));
+      this.ws.addEventListener('error', this.handleWebSocketError.bind(this));
+      this.ws.addEventListener('open', this.handleWebSocketConnect.bind(this));
 
       if (awaitConnect) {
         await this.resolveWhenConnected();
       }
 
-      return this.webSocket;
+      return this.ws;
     } catch (err) {
       if (this.shouldReconnectAutomatically) {
         this.reconnect();
@@ -426,9 +433,9 @@ export class WebSocketClient {
    * Waits until the WebSocket is connected before returning
    */
   private async resolveWhenConnected(
-    timeout = this.connectTimeout,
+    timeout = this.config.connectTimeout,
   ): Promise<void> {
-    const { webSocket: ws } = this;
+    const { ws } = this;
 
     if (!ws) {
       throw new Error(
@@ -448,7 +455,7 @@ export class WebSocketClient {
 
     await new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
-        if (this.webSocket === ws) {
+        if (this.ws === ws) {
           this.disconnect();
         }
         reject(new Error('timed out while waiting for WebSocket to connect'));
@@ -457,7 +464,7 @@ export class WebSocketClient {
       const listener = () => {
         clearTimeout(timeoutId);
         ws.removeEventListener('open', listener);
-        resolve();
+        resolve(true);
       };
 
       ws.addEventListener('open', listener);
@@ -484,7 +491,7 @@ export class WebSocketClient {
     }
 
     try {
-      const { webSocket: ws } = this;
+      const { ws } = this;
 
       if (!ws) {
         return;
@@ -512,18 +519,18 @@ export class WebSocketClient {
 
   private handleWebSocketClose(event: WebSocket.CloseEvent): void {
     this.stopPinging();
-    this.webSocket = null;
-    this.disconnectListeners.forEach((listener) =>
+    this.ws = null;
+    this.state.disconnectListeners.forEach((listener) =>
       listener(event.code, event.reason),
     );
 
-    if (this.shouldReconnectAutomatically && !this.doNotReconnect) {
+    if (this.shouldReconnectAutomatically && !this.state.doNotReconnect) {
       this.reconnect();
     }
   }
 
   private handleWebSocketError(event: WebSocket.ErrorEvent): void {
-    this.errorListeners.forEach((listener) => listener(event.error));
+    this.state.errorListeners.forEach((listener) => listener(event.error));
   }
 
   private handleWebSocketMessage(event: WebSocket.MessageEvent): void {
@@ -532,36 +539,36 @@ export class WebSocketClient {
     }
 
     const message = transformMessage(JSON.parse(String(event.data)));
-    this.responseListeners.forEach((listener) => listener(message));
+    this.state.responseListeners.forEach((listener) => listener(message));
   }
 
   private reconnect(): void {
     this.disconnect();
-    this.doNotReconnect = false;
+    this.state.doNotReconnect = false;
     // Reconnect with exponential backoff
-    const backoffSeconds = 2 ** this.reconnectAttempt;
-    this.reconnectAttempt += 1;
+    const backoffSeconds = 2 ** this.state.reconnectAttempt;
+    this.state.reconnectAttempt += 1;
     console.log(`Reconnecting after ${backoffSeconds} seconds...`);
     setTimeout(this.connect.bind(this), backoffSeconds * 1000);
   }
 
   private resetReconnectionState(): void {
-    this.reconnectAttempt = 0;
+    this.state.reconnectAttempt = 0;
   }
 
   private sendMessage(payload: types.WebSocketRequest): this {
-    const { webSocket } = this;
+    const { ws } = this;
 
-    this.throwIfDisconnected(webSocket);
+    this.throwIfDisconnected(ws);
 
-    webSocket.send(JSON.stringify(payload));
+    ws.send(JSON.stringify(payload));
 
     return this;
   }
 
   private throwIfDisconnected(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    webSocket: WebSocketClient['webSocket'],
+    webSocket: WebSocketClient['ws'],
   ): asserts webSocket is WebSocket {
     if (!this.isConnected()) {
       throw new Error(

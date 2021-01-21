@@ -19,6 +19,7 @@ export interface RestPublicClientOptions {
   sandbox?: boolean;
   baseURL?: string;
   apiKey?: string;
+  multiverseChain?: types.MultiverseChain;
 }
 
 /**
@@ -37,19 +38,41 @@ export interface RestPublicClientOptions {
  *
  * @param {RestPublicClientOptions} options
  */
-export class RestPublicClient {
-  public baseURL: string;
-
+export class RestPublicClient<
+  C extends RestPublicClientOptions = RestPublicClientOptions
+> {
   private axios: AxiosInstance;
 
-  public constructor(options: RestPublicClientOptions) {
+  public readonly config: Readonly<{
+    multiverseChain: C['multiverseChain'] extends types.MultiverseChain
+      ? C['multiverseChain']
+      : 'eth';
+    baseURL: string;
+    sandbox: boolean;
+  }>;
+
+  public constructor(options: C) {
+    const { multiverseChain = 'eth', sandbox = false } = options;
+
     const baseURL =
       options.baseURL ??
-      (options.sandbox
-        ? constants.SANDBOX_REST_API_BASE_URL
-        : constants.LIVE_REST_API_BASE_URL);
+      constants.URLS[options.sandbox ? 'sandbox' : 'production']?.[
+        multiverseChain
+      ]?.rest;
 
-    this.baseURL = baseURL;
+    if (!baseURL) {
+      throw new Error(
+        `Invalid configuration, baseURL could not be derived (sandbox? ${String(
+          sandbox,
+        )}) (chain: ${multiverseChain})`,
+      );
+    }
+
+    this.config = Object.freeze({
+      sandbox,
+      baseURL,
+      multiverseChain: multiverseChain as this['config']['multiverseChain'],
+    } as const);
 
     const headers = options.apiKey
       ? { [constants.REST_API_KEY_HEADER]: options.apiKey }
@@ -97,7 +120,9 @@ export class RestPublicClient {
    *
    * @returns {Promise<RestResponseExchangeInfo>}
    */
-  public async getExchangeInfo(): Promise<types.RestResponseExchangeInfo> {
+  public async getExchangeInfo(): Promise<
+    types.RestResponseExchangeInfo<this['config']['multiverseChain']>
+  > {
     return this.get('/exchange');
   }
 
@@ -209,7 +234,7 @@ export class RestPublicClient {
     return (
       await this.axios({
         method: 'GET',
-        url: `${this.baseURL}${endpoint}`,
+        url: `${this.config.baseURL}${endpoint}`,
         params: RestRequestParams,
       })
     ).data;

@@ -98,8 +98,6 @@
 -   [Misc Types & Utilities](#misc-types--utilities)
     -   [ErrorShortCodes](#errorshortcodes)
 -   [MultiverseChain](#multiversechain)
-    -   [eth](#eth)
-    -   [bsc](#bsc)
 -   [WebSocketRequestAuthenticatedSubscription](#websocketrequestauthenticatedsubscription)
 -   [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription)
 -   [AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription)
@@ -1345,8 +1343,10 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 -   `timeZone` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Server time zone, always UTC
 -   `serverTime` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Current server time
--   `ethereumDepositContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum address of the exchange custody contract for deposits
--   `ethUsdPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Current price of ETH in USD
+-   `ethereumDepositContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum address of the exchange custody contract for deposits, only when multiverse chain is "eth"
+-   `bscDepositContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum address of the exchange custody contract for deposits, only when multiverse chain is "bsc"
+-   `ethUsdPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Current price of ETH in USD, only provided if multiverse chain is "eth"
+-   `bnbUsdPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Current price of BNB in USD, only provided if multiverse chain is "bsc"
 -   `gasPrice` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Current gas price used by the exchange for trade settlement and withdrawal transactions in Gwei
 -   `volume24hUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total exchange trading volume for the trailing 24 hours in USD
 -   `makerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Maker trade fee rate
@@ -2144,19 +2144,9 @@ Type: (`"TOKEN_NOT_FOUND"` \| `"ORDER_NOT_FOUND"` \| `"MARKET_NOT_FOUND"` \| `"D
 
 ## MultiverseChain
 
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+The available multiverse chains to define when creating a client.
 
-### eth
-
-Ethereum
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### bsc
-
-Binance Smart Chain
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+Type: (`"eth"` \| `"bsc"`)
 
 ## WebSocketRequestAuthenticatedSubscription
 
