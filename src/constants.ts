@@ -20,22 +20,22 @@ export const ORDER_SIGNATURE_HASH_VERSION_BSC = 2;
 export const URLS = deepObjectFreeze({
   sandbox: {
     eth: {
-      rest: 'https://api-sandbox.idex.io/v1',
-      websocket: 'wss://websocket-sandbox.idex.io/v1',
+      rest: 'https://api-sandbox-eth.idex.io/v1',
+      websocket: 'wss://websocket-sandbox-eth.idex.io/v1',
     },
     bsc: {
-      rest: 'https://api-sandbox.idex.io/v1',
-      websocket: 'wss://websocket-sandbox.idex.io/v1',
+      rest: 'https://api-sandbox-bsc.idex.io/v1',
+      websocket: 'wss://websocket-sandbox-bsc.idex.io/v1',
     },
   },
   production: {
     eth: {
-      rest: 'https://api.idex.io/v1',
-      websocket: 'wss://websocket.idex.io/v1',
+      rest: 'https://api-eth.idex.io/v1',
+      websocket: 'wss://websocket-eth.idex.io/v1',
     },
     bsc: {
-      rest: 'https://api.idex.io/v1',
-      websocket: 'wss://websocket.idex.io/v1',
+      rest: 'https://api-bsc.idex.io/v1',
+      websocket: 'wss://websocket-bsc.idex.io/v1',
     },
   },
 } as const);
