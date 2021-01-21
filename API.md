@@ -97,6 +97,10 @@
     -   [MessageSigner](#messagesigner)
 -   [Misc Types & Utilities](#misc-types--utilities)
     -   [ErrorShortCodes](#errorshortcodes)
+-   [getPrivateKeyMessageSigner](#getprivatekeymessagesigner)
+    -   [Parameters](#parameters)
+    -   [Examples](#examples)
+-   [privateKeySigner](#privatekeysigner)
 -   [MultiverseChain](#multiversechain)
 -   [WebSocketRequestAuthenticatedSubscription](#websocketrequestauthenticatedsubscription)
 -   [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription)
@@ -365,7 +369,7 @@ const wallet = await authenticatedClient.associateWallet(
     nonce: uuidv1(),
     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
   },
-  idex.signatures.privateKeySigner(config.walletPrivateKey),
+  idex.signatures.getPrivateKeyMessageSigner(config.walletPrivateKey),
 );
 ```
 
@@ -396,7 +400,7 @@ const order = await authenticatedClient.createOrder(
     price: '0.10000000',
     quantity: '1.50000000",
   },
-  idex.signatures.privateKeySigner(config.walletPrivateKey),
+  idex.signatures.getPrivateKeyMessageSigner(config.walletPrivateKey),
 );
 ```
 
@@ -427,7 +431,7 @@ const order = await authenticatedClient.createTestOrder(
     price: '0.10000000',
     quantity: '1.50000000",
   },
-  idex.signatures.privateKeySigner(config.walletPrivateKey),
+  idex.signatures.getPrivateKeyMessageSigner(config.walletPrivateKey),
 );
 ```
 
@@ -454,7 +458,7 @@ const responseByOrderId = await authenticatedClient.cancelOrder(
     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
     orderId: 'f077a010-ce18-11ea-9557-a9d3f954788d',
   },
-  idex.signatures.privateKeySigner(config.walletPrivateKey),
+  idex.signatures.getPrivateKeyMessageSigner(config.walletPrivateKey),
 );
 
 const clientOrderId = '0001_23234_18863_IDEX_ETH';
@@ -464,7 +468,7 @@ const responseByClientId = await authenticatedClient.cancelOrder(
     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
     orderId: `client:${clientOrderId}`,
   },
-  idex.signatures.privateKeySigner(config.walletPrivateKey),
+  idex.signatures.getPrivateKeyMessageSigner(config.walletPrivateKey),
 );
 ```
 
@@ -2141,6 +2145,31 @@ Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Sta
 The possible error short codes when interacting with the IDEX API's.
 
 Type: (`"TOKEN_NOT_FOUND"` \| `"ORDER_NOT_FOUND"` \| `"MARKET_NOT_FOUND"` \| `"DEPOSIT_NOT_FOUND"` \| `"WITHDRAWAL_NOT_FOUND"` \| `"FILL_NOT_FOUND"` \| `"USER_NOT_FOUND"` \| `"ENDPOINT_NOT_FOUND"` \| `"EXCEEDED_RATE_LIMIT"` \| `"INSUFFICIENT_FUNDS"` \| `"USER_MIGRATION_REQUIRED"` \| `"WALLET_NOT_ASSOCIATED"` \| `"EMAIL_VERIFICATION_REQUIRED"` \| `"INVALID_WALLET_SIGNATURE"` \| `"INVALID_API_KEY"` \| `"REQUIRED_API_KEY"` \| `"INVALID_HMAC_SIGNATURE"` \| `"REQUIRED_HMAC_SIGNATURE"` \| `"REQUIRED_API_KEY_READ_SCOPE"` \| `"REQUIRED_API_KEY_TRADE_SCOPE"` \| `"REQUIRED_API_KEY_WITHDRAW_SCOPE"` \| `"TRADING_RESTRICTED_FOR_LOCATION"` \| `"EXCEEDED_WITHDRAWAL_LIMIT"` \| `"CANCELS_DISABLED"` \| `"TRADING_DISABLED"` \| `"WITHDRAWALS_DISABLED"` \| `"INTERNAL_SERVER_ERROR"` \| `"BAD_REQUEST"` \| `"SERVICE_UNAVAILABLE"` \| `"INVALID_API_VERSION"` \| `"REQUIRED_PARAMETER"` \| `"INVALID_PARAMETER"` \| `"INVALID_WITHDRAWAL_QUANTITY"` \| `"INVALID_ORDER_QUANTITY"` \| `"INVALID_ORDER_PRICE_CROSSES_SPREAD"`)
+
+## getPrivateKeyMessageSigner
+
+Returns an ethers Wallet signer which takes a message and signs
+it with the originally provided private key.
+
+### Parameters
+
+-   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+### Examples
+
+```javascript
+const signMessage = getPrivateKeyMessageSigner(myPrivateKey)
+const signed = await signMessage(myMessageToSign)
+```
+
+Returns **[MessageSigner](#messagesigner)** 
+
+## privateKeySigner
+
+**Meta**
+
+-   **deprecated**: use getPrivateKeyMessageSigner instead
+
 
 ## MultiverseChain
 

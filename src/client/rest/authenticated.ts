@@ -184,7 +184,7 @@ export class RestAuthenticatedClient<
    *     nonce: uuidv1(),
    *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
    *   },
-   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   *   idex.signatures.getPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
    * @see {@link https://docs.idex.io/#associate-wallet|Associate Wallet}
@@ -226,7 +226,7 @@ export class RestAuthenticatedClient<
    *     price: '0.10000000',
    *     quantity: '1.50000000",
    *   },
-   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   *   idex.signatures.getPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
    * @see https://docs.idex.io/#create-order
@@ -267,7 +267,7 @@ export class RestAuthenticatedClient<
    *     price: '0.10000000',
    *     quantity: '1.50000000",
    *   },
-   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   *   idex.signatures.getPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
    * @see https://docs.idex.io/#test-create-order
@@ -304,7 +304,7 @@ export class RestAuthenticatedClient<
    *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
    *     orderId: 'f077a010-ce18-11ea-9557-a9d3f954788d',
    *   },
-   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   *   idex.signatures.getPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
    * const clientOrderId = '0001_23234_18863_IDEX_ETH';
@@ -314,7 +314,7 @@ export class RestAuthenticatedClient<
    *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
    *     orderId: `client:${clientOrderId}`,
    *   },
-   *   idex.signatures.privateKeySigner(config.walletPrivateKey),
+   *   idex.signatures.getPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
    * @see https://docs.idex.io/#cancel-order

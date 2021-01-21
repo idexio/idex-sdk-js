@@ -29,6 +29,14 @@ import {
  */
 export type MessageSigner = (message: string) => Promise<string>;
 
+/**
+ * Returns an ethers Wallet signer which takes a message and signs
+ * it with the originally provided private key.
+ *
+ * @example
+ * const signMessage = getPrivateKeyMessageSigner(myPrivateKey)
+ * const signed = await signMessage(myMessageToSign)
+ */
 export function getPrivateKeyMessageSigner(
   walletPrivateKey: string,
 ): MessageSigner {
@@ -37,6 +45,10 @@ export function getPrivateKeyMessageSigner(
       ethers.utils.arrayify(message),
     );
 }
+
+// compatibility layer for previously documented method
+/** @deprecated use getPrivateKeyMessageSigner instead */
+export const privateKeySigner = getPrivateKeyMessageSigner;
 
 export function createOrderSignature(
   order: RestRequestOrder,
