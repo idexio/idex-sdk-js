@@ -38,31 +38,39 @@ export interface RestPublicClientOptions {
  *
  * @param {RestPublicClientOptions} options
  */
-export class RestPublicClient {
-  public baseURL: string;
-
-  private multiverseChain: Exclude<types.MultiverseChain, undefined>;
-
+export class RestPublicClient<C extends RestPublicClientOptions> {
   private axios: AxiosInstance;
 
-  public constructor(options: RestPublicClientOptions) {
-    this.multiverseChain = options.multiverseChain ?? 'eth';
+  public readonly config: Readonly<{
+    multiverseChain: C['multiverseChain'] extends types.MultiverseChain
+      ? C['multiverseChain']
+      : 'eth';
+    baseURL: string;
+    sandbox: boolean;
+  }>;
+
+  public constructor(options: C) {
+    const { multiverseChain = 'eth', sandbox = false } = options;
 
     const baseURL =
       options.baseURL ??
       constants.URLS[options.sandbox ? 'sandbox' : 'production']?.[
-        this.multiverseChain
+        multiverseChain
       ]?.rest;
 
     if (!baseURL) {
       throw new Error(
         `Invalid configuration, baseURL could not be derived (sandbox? ${String(
-          options.sandbox,
-        )}) (chain: ${this.multiverseChain})`,
+          sandbox,
+        )}) (chain: ${multiverseChain})`,
       );
     }
 
-    this.baseURL = baseURL;
+    this.config = Object.freeze({
+      sandbox,
+      baseURL,
+      multiverseChain: multiverseChain as this['config']['multiverseChain'],
+    } as const);
 
     const headers = options.apiKey
       ? { [constants.REST_API_KEY_HEADER]: options.apiKey }
@@ -222,7 +230,7 @@ export class RestPublicClient {
     return (
       await this.axios({
         method: 'GET',
-        url: `${this.baseURL}${endpoint}`,
+        url: `${this.config.baseURL}${endpoint}`,
         params: RestRequestParams,
       })
     ).data;
