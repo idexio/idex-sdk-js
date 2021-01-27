@@ -69,7 +69,7 @@ export interface RestResponseCandle {
  * @property {string} asset - Asset by symbol
  * @property {string} quantity - Deposit amount in asset terms
  * @property {string} txId - Ethereum transaction hash
- * @property {number} txTime - Timestamp of the Ethereum deposit tx
+ * @property {number} txTime - Timestamp of the Ethereum deposit transaction
  * @property {number} confirmationTime - Timestamp of credit on IDEX including block confirmations
  */
 export interface RestResponseDeposit {
@@ -145,9 +145,9 @@ export type RestResponseExchangeInfo<
  * @property {OrderSide} side
  * @property {Liquidity} liquidity
  * @property {string} time - Fill timestamp
- * @property {string} sequence - Last trade sequence number for the market
- * @property {string} [txId] - Ethereum transaction id, if available
- * @property {string} txStatus - Eth Tx Status
+ * @property {number} sequence - Last trade sequence number for the market
+ * @property {string | null} txId - Ethereum transaction ID, if available
+ * @property {string} txStatus - Ethereum transaction status
  */
 export interface RestResponseFill extends RestResponseOrderFill {
   orderId: string;
@@ -171,8 +171,8 @@ export interface RestResponseFill extends RestResponseOrderFill {
  * @property {Liquidity} liquidity
  * @property {string} time - Fill timestamp
  * @property {number} sequence - Last trade sequence number for the market
- * @property {string} [txId] - Ethereum transaction id, if available
- * @property {string} txStatus - Eth Tx Status
+ * @property {string | null} txId - Ethereum transaction ID, if available
+ * @property {string} txStatus - Ethereum transaction status
  */
 export interface RestResponseOrderFill {
   fillId: string;
@@ -186,7 +186,7 @@ export interface RestResponseOrderFill {
   feeAsset: string;
   gas?: string;
   liquidity: keyof typeof enums.Liquidity;
-  txId?: string | null;
+  txId: string | null;
   txStatus: keyof typeof enums.EthTransactionStatus;
 }
 
@@ -330,16 +330,16 @@ export type RestResponsePing = { [key: string]: never };
  * @property {string} percentChange - % change from open to close
  * @property {string} baseVolume - 24h volume in base terms
  * @property {string} quoteVolume - 24h volume in quote terms
- * @property {?string} low - Lowest traded price in the period in quote terms
- * @property {?string} high - Highest traded price in the period in quote terms
- * @property {?string} bid - Best bid price on the order book
- * @property {?string} ask - Best ask price on the order book
- * @property {?string} open - Price of the first trade for the period in quote terms
- * @property {?string} close - Same as last
- * @property {?string} closeQuantity - Quantity of the last period in base terms
+ * @property {string | null} low - Lowest traded price in the period in quote terms
+ * @property {string | null} high - Highest traded price in the period in quote terms
+ * @property {string | null} bid - Best bid price on the order book
+ * @property {string | null} ask - Best ask price on the order book
+ * @property {string | null} open - Price of the first trade for the period in quote terms
+ * @property {string | null} close - Same as last
+ * @property {string | null} closeQuantity - Quantity of the last period in base terms
  * @property {number} time - Time when data was calculated, open and change is assumed to be trailing 24h
  * @property {number} numTrades - Number of fills for the market in the period
- * @property {?number} sequence - Last trade sequence number for the market
+ * @property {number | null} sequence - Last trade sequence number for the market
  */
 export interface RestResponseTicker {
   market: string;
@@ -443,7 +443,7 @@ interface RestResponseWithdrawalBase {
   quantity: string;
   time: number;
   fee: string;
-  txId?: string;
+  txId: string | null;
   txStatus: keyof typeof enums.EthTransactionStatus;
 }
 
@@ -455,8 +455,8 @@ interface RestResponseWithdrawalBase {
  * @property {string} quantity - Quantity of the withdrawal
  * @property {number} time - Timestamp of withdrawal API request
  * @property {string} fee - Amount deducted from withdrawal to cover IDEX-paid gas
- * @property {string} [txId] - Ethereum id of the withdrawal transaction
- * @property {string} txStatus - Status of the withdrawal settlement transaction
+ * @property {string | null} txId - Ethereum transaction ID, if available
+ * @property {string} txStatus - Ethereum transaction status
  */
 export interface RestResponseWithdrawal extends RestResponseWithdrawalBase {
   asset: string;
@@ -465,7 +465,7 @@ export interface RestResponseWithdrawal extends RestResponseWithdrawalBase {
 
 /**
  * @typedef {Object} RestResponseAssociateWallet
- * @property {string} address - 	Ethereum address of the wallet
+ * @property {string} address - Ethereum address of the wallet
  * @property {string} totalPortfolioValueUsd - Total value of all holdings deposited on the exchange for the wallet in USD
  * @property {number} time - Timestamp of association of the wallet with the user account
  */

@@ -95,7 +95,7 @@ const transformOrderFill = (
   feeAsset: fill.a,
   ...(fill.g && { gas: fill.g }),
   liquidity: fill.l,
-  ...(fill.T && { txId: fill.T }),
+  txId: fill.T,
   txStatus: fill.S,
 });
 

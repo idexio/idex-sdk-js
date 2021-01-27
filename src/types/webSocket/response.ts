@@ -410,7 +410,7 @@ export interface WebSocketResponseOrderLong {
  * @property {string} a - (feeAsset) Symbol of asset in which fees collected
  * @property {string} [g] - (gas) Amount collected to cover trade settlement gas costs, only present for taker
  * @property {string} l - (liquidity) Whether the fill is the maker or taker in the trade from the perspective of the requesting user account, maker or taker
- * @property {string} T - (txId) Ethereum id of the trade settlement transaction
+ * @property {string} T - (txId) Ethereum ID of the trade settlement transaction
  * @property {string} S - (txStatus) Status of the trade settlement transaction, see values
  */
 export interface WebSocketResponseOrderFillShort {
@@ -425,7 +425,7 @@ export interface WebSocketResponseOrderFillShort {
   a: string;
   g?: string;
   l: keyof typeof enums.Liquidity;
-  T?: string | null;
+  T: string | null;
   S: keyof typeof enums.EthTransactionStatus;
 }
 
