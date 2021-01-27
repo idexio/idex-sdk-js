@@ -1,6 +1,6 @@
 {
   "name": "@idexio/idex-sdk",
-  "version": "1.6.0",
+  "version": "1.6.1-beta.1",
   "description": "IDEX SDK for Javascript in the browser and Node.js",
   "license": "MIT",
   "repository": "git@github.com:idexio/idex-sdk-js.git",
@@ -17,9 +17,7 @@
     "lint:fix:package": "pretty-quick --pattern package.json",
     "lint:fix:staged": "lint-staged",
     "lint:types": "tsc --noEmit",
-    "rebuild": "npx tsc",
-    "run:quick": "ts-node -T -s -H ./test/quick.ts",
-    "start": "node dist/index.js"
+    "run:quick": "ts-node -T -s -H ./test/quick.ts"
   },
   "files": [
     ".eslintignore",
