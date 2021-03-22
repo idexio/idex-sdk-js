@@ -1,0 +1,4 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npx npm-run-all -p lint:fix:* generate:docs:commit

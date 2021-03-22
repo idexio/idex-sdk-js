@@ -6,12 +6,10 @@
   },
 
   // ESLint
-  "eslint.enable": true,
   "eslint.format.enable": true,
 
   // NPM / Yarn
   "npm.packageManager": "yarn",
-  "npm.bin": "yarn",
 
   // TypeScript
   "typescript.tsdk": "node_modules/typescript/lib",

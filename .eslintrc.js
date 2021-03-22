@@ -8,7 +8,6 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:import/typescript',
     'prettier',
-    'prettier/@typescript-eslint',
     'plugin:prettier/recommended',
   ],
   globals: { BigInt: true },
