@@ -97,10 +97,18 @@
     -   [MessageSigner](#messagesigner)
 -   [Misc Types & Utilities](#misc-types--utilities)
     -   [ErrorShortCodes](#errorshortcodes)
+-   [RestRequestAddLiquidity](#restrequestaddliquidity)
+    -   [Properties](#properties)
+-   [RestRequestGetLiquidityAdditions](#restrequestgetliquidityadditions)
+    -   [Properties](#properties-1)
 -   [createPrivateKeyMessageSigner](#createprivatekeymessagesigner)
     -   [Parameters](#parameters)
     -   [Examples](#examples)
+-   [RestRequestGetLiquidityRemovals](#restrequestgetliquidityremovals)
+    -   [Properties](#properties-2)
 -   [privateKeySigner](#privatekeysigner)
+-   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
+    -   [Properties](#properties-3)
 -   [MultiverseChain](#multiversechain)
 -   [WebSocketRequestAuthenticatedSubscription](#websocketrequestauthenticatedsubscription)
 -   [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription)
@@ -108,12 +116,16 @@
 -   [AuthTokenWebSocketRequestSubscription](#authtokenwebsocketrequestsubscription)
 -   [WebSocketRequestSubscription](#websocketrequestsubscription)
 -   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
-    -   [Properties](#properties)
+    -   [Properties](#properties-4)
+-   [RestResponseLiquidityAddition](#restresponseliquidityaddition)
+    -   [Properties](#properties-5)
+-   [RestResponseLiquidityRemoval](#restresponseliquidityremoval)
+    -   [Properties](#properties-6)
 -   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
 -   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
-    -   [Properties](#properties-1)
+    -   [Properties](#properties-7)
 -   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
-    -   [Properties](#properties-2)
+    -   [Properties](#properties-8)
 -   [WebSocketRequest](#websocketrequest)
 -   [WebSocketRequest](#websocketrequest-1)
 -   [WebSocketResponseSubscriptionMessageShort](#websocketresponsesubscriptionmessageshort)
@@ -2146,6 +2158,32 @@ The possible error short codes when interacting with the IDEX API's.
 
 Type: (`"TOKEN_NOT_FOUND"` \| `"ORDER_NOT_FOUND"` \| `"MARKET_NOT_FOUND"` \| `"DEPOSIT_NOT_FOUND"` \| `"WITHDRAWAL_NOT_FOUND"` \| `"FILL_NOT_FOUND"` \| `"USER_NOT_FOUND"` \| `"ENDPOINT_NOT_FOUND"` \| `"EXCEEDED_RATE_LIMIT"` \| `"INSUFFICIENT_FUNDS"` \| `"USER_MIGRATION_REQUIRED"` \| `"WALLET_NOT_ASSOCIATED"` \| `"EMAIL_VERIFICATION_REQUIRED"` \| `"INVALID_WALLET_SIGNATURE"` \| `"INVALID_API_KEY"` \| `"REQUIRED_API_KEY"` \| `"INVALID_HMAC_SIGNATURE"` \| `"REQUIRED_HMAC_SIGNATURE"` \| `"REQUIRED_API_KEY_READ_SCOPE"` \| `"REQUIRED_API_KEY_TRADE_SCOPE"` \| `"REQUIRED_API_KEY_WITHDRAW_SCOPE"` \| `"TRADING_RESTRICTED_FOR_LOCATION"` \| `"EXCEEDED_WITHDRAWAL_LIMIT"` \| `"CANCELS_DISABLED"` \| `"TRADING_DISABLED"` \| `"WITHDRAWALS_DISABLED"` \| `"INTERNAL_SERVER_ERROR"` \| `"BAD_REQUEST"` \| `"SERVICE_UNAVAILABLE"` \| `"INVALID_API_VERSION"` \| `"REQUIRED_PARAMETER"` \| `"INVALID_PARAMETER"` \| `"INVALID_WITHDRAWAL_QUANTITY"` \| `"INVALID_ORDER_QUANTITY"` \| `"INVALID_ORDER_PRICE_CROSSES_SPREAD"`)
 
+## RestRequestAddLiquidity
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by address
+-   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by address
+-   `amountADesired` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Maximum amount of tokenA to add to the liquidity pool
+-   `amountBDesired` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Maximum amount of tokenB to add to the liquidity pool
+-   `amountAMin-null` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenA to add to the liquidity pool
+-   `amountBMin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenB to add to the liquidity pool
+-   `to` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Wallet to credit LP tokens, or the custodian contract address to leave on exchange
+-   `deadline` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp in seconds by which this request must be settled on-chain
+
+## RestRequestGetLiquidityAdditions
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
 ## createPrivateKeyMessageSigner
 
 Returns an ethers Wallet signer which takes a message and signs
@@ -2164,6 +2202,15 @@ const signed = await signMessage(myMessageToSign)
 
 Returns **[MessageSigner](#messagesigner)** 
 
+## RestRequestGetLiquidityRemovals
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
 ## privateKeySigner
 
 -   **See: {createPrivateKeyMessageSigner}
@@ -2173,6 +2220,22 @@ Returns **[MessageSigner](#messagesigner)**
 
 -   **deprecated**: use createPrivateKeyMessageSigner directly
 
+
+## RestRequestRemoveLiquidity
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by address
+-   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by address
+-   `liquidity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** LP tokens to burn
+-   `amountAMin-null` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenA to add to the liquidity pool
+-   `amountBMin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenB to add to the liquidity pool
+-   `to` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Wallet to credit LP tokens, or the custodian contract address to leave on exchange
+-   `deadline` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp in seconds by which this request must be settled on-chain
 
 ## MultiverseChain
 
@@ -2213,6 +2276,50 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `l2orderbook` **[WebSocketRequestL2OrderBookSubscription](#websocketrequestl2orderbooksubscription)** 
 -   `tickers` **[WebSocketRequestTickersSubscription](#websocketrequesttickerssubscription)** 
 -   `trades` **[WebSocketRequestTradesSubscription](#websocketrequesttradessubscription)** 
+
+## RestResponseLiquidityAddition
+
+LiquidityAddition
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `liquidityAdditionId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of liquidity addition
+-   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset symbol
+-   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset symbol
+-   `amountA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenA added to the liquidity pool
+-   `amountB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenB added to the liquidity pool
+-   `liquidity` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+-   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Liquidity addition timestamp
+-   `initiatingTxId` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** On chain initiated transaction ID, if available
+-   `validated` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether on-chain tx was validated, or true
+-   `feeTokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenA collected as fees
+-   `feeTokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenB collected as fees
+-   `txId` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Ethereum transaction ID, if available
+-   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum transaction status
+
+## RestResponseLiquidityRemoval
+
+LiquidityRemoval
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `liquidityAdditionId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of liquidity removal
+-   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset symbol
+-   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset symbol
+-   `amountA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenA removed from the liquidity pool
+-   `amountB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenB removed from the liquidity pool
+-   `liquidity` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+-   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Liquidity addition timestamp
+-   `initiatingTxId` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** On chain initiated transaction ID, if available
+-   `validated` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether on-chain tx was validated, or true
+-   `feeTokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenA collected as fees
+-   `feeTokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenB collected as fees
+-   `txId` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Ethereum transaction ID, if available
+-   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum transaction status
 
 ## WebSocketResponseL2OrderBookChange
 
