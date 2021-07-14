@@ -3,11 +3,13 @@ import { ethers } from 'ethers';
 import * as constants from './constants';
 
 import {
+  RestRequestAddLiquidity,
   RestRequestOrder,
   RestRequestOrderByBaseQuantity,
   RestRequestOrderByQuoteQuantity,
   RestRequestOrderWithPrice,
   RestRequestOrderWithStopPrice,
+  RestRequestRemoveLiquidity,
   RestRequestWithdrawal,
   OrderType,
   OrderSide,
@@ -109,6 +111,7 @@ type TypeValuePairings = {
   uint128: Uint8Array;
   uint8: number;
   uint64: number;
+  uint256: string;
   bool: boolean;
 };
 
@@ -156,6 +159,84 @@ export function createWithdrawalSignature(
       : ['address', withdrawal.assetContractAddress],
     ['string', withdrawal.quantity],
     ['bool', true], // Auto-dispatch
+  ]);
+}
+
+export function createAddLiquiditySignature(
+  addLiquidity: RestRequestAddLiquidity,
+): string {
+  const signatureHashVersion = 2;
+  const liquidityChangeType = 0; // addition
+  const origination = 1; // off chain
+
+  console.log('signed ', [
+    ['uint8', signatureHashVersion],
+    ['uint8', liquidityChangeType],
+    ['uint8', origination],
+    ['uint128', uuidToUint8Array(addLiquidity.nonce)],
+    ['address', addLiquidity.wallet],
+    ['address', addLiquidity.tokenA],
+    ['address', addLiquidity.tokenB],
+    ['uint256', addLiquidity.amountADesired],
+    ['uint256', addLiquidity.amountBDesired],
+    ['uint256', addLiquidity.amountAMin],
+    ['uint256', addLiquidity.amountBMin],
+    ['address', addLiquidity.to],
+    ['uint256', 0], // off chain deadline
+  ]);
+
+  return solidityHashOfParams([
+    ['uint8', signatureHashVersion],
+    ['uint8', liquidityChangeType],
+    ['uint8', origination],
+    ['uint128', uuidToUint8Array(addLiquidity.nonce)],
+    ['address', addLiquidity.wallet],
+    ['address', addLiquidity.tokenA],
+    ['address', addLiquidity.tokenB],
+    ['uint256', addLiquidity.amountADesired],
+    ['uint256', addLiquidity.amountBDesired],
+    ['uint256', addLiquidity.amountAMin],
+    ['uint256', addLiquidity.amountBMin],
+    ['address', addLiquidity.to],
+    ['uint256', 0], // off chain deadline
+  ]);
+}
+
+export function createRemoveLiquiditySignature(
+  removeLiquidity: RestRequestRemoveLiquidity,
+): string {
+  const signatureHashVersion = 2;
+  const liquidityChangeType = 1; // removal
+  const origination = 1; // off chain
+
+  console.log('signed ', [
+    ['uint8', signatureHashVersion],
+    ['uint8', liquidityChangeType],
+    ['uint8', origination],
+    ['uint128', uuidToUint8Array(removeLiquidity.nonce)],
+    ['address', removeLiquidity.wallet],
+    ['address', removeLiquidity.tokenA],
+    ['address', removeLiquidity.tokenB],
+    ['uint256', removeLiquidity.liquidity.toString()],
+    ['uint256', removeLiquidity.amountAMin],
+    ['uint256', removeLiquidity.amountBMin],
+    ['address', removeLiquidity.to],
+    ['uint256', 0], // off chain deadline
+  ]);
+
+  return solidityHashOfParams([
+    ['uint8', signatureHashVersion],
+    ['uint8', liquidityChangeType],
+    ['uint8', origination],
+    ['uint128', uuidToUint8Array(removeLiquidity.nonce)],
+    ['address', removeLiquidity.wallet],
+    ['address', removeLiquidity.tokenA],
+    ['address', removeLiquidity.tokenB],
+    ['uint256', removeLiquidity.liquidity.toString()],
+    ['uint256', removeLiquidity.amountAMin],
+    ['uint256', removeLiquidity.amountBMin],
+    ['address', removeLiquidity.to],
+    ['uint256', 0], // off chain deadline
   ]);
 }
 

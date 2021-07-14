@@ -1,6 +1,80 @@
 import * as enums from '../enums';
 import { XOR } from '../utils';
 
+/**
+ * @typedef {Object} RestRequestAddLiquidity
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ * @property {string} tokenA - Asset by address
+ * @property {string} tokenB - Asset by address
+ * @property {string} amountADesired - Maximum amount of tokenA to add to the liquidity pool
+ * @property {string} amountBDesired - Maximum amount of tokenB to add to the liquidity pool
+ * @property {string} amountAMin- Minimum amount of tokenA to add to the liquidity pool
+ * @property {string} amountBMin - Minimum amount of tokenB to add to the liquidity pool
+ * @property {string} to - Wallet to credit LP tokens, or the custodian contract address to leave on exchange
+ * @property {number} deadline - Timestamp in seconds by which this request must be settled on-chain
+ */
+
+export interface RestRequestAddLiquidity {
+  nonce: string;
+  wallet: string;
+  tokenA: string;
+  tokenB: string;
+  amountADesired: string;
+  amountBDesired: string;
+  amountAMin: string;
+  amountBMin: string;
+  to: string;
+  deadline: number;
+}
+
+/**
+ * @typedef {Object} RestRequestGetLiquidityAdditions
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ */
+
+export interface RestRequestGetLiquidityAdditions {
+  nonce: string;
+  wallet: string;
+}
+
+/**
+ * @typedef {Object} RestRequestGetLiquidityRemovals
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ */
+
+export interface RestRequestGetLiquidityRemovals {
+  nonce: string;
+  wallet: string;
+}
+
+/**
+ * @typedef {Object} RestRequestRemoveLiquidity
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet
+ * @property {string} tokenA - Asset by address
+ * @property {string} tokenB - Asset by address
+ * @property {string} liquidity - LP tokens to burn
+ * @property {string} amountAMin- Minimum amount of tokenA to add to the liquidity pool
+ * @property {string} amountBMin - Minimum amount of tokenB to add to the liquidity pool
+ * @property {string} to - Wallet to credit LP tokens, or the custodian contract address to leave on exchange
+ * @property {number} deadline - Timestamp in seconds by which this request must be settled on-chain
+ */
+
+export interface RestRequestRemoveLiquidity {
+  nonce: string;
+  wallet: string;
+  tokenA: string;
+  tokenB: string;
+  liquidity: string;
+  amountAMin: string;
+  amountBMin: string;
+  to: string;
+  deadline: number;
+}
+
 interface RestRequestCancelOrdersBase {
   nonce: string;
   wallet: string;
