@@ -7,6 +7,8 @@ export const ORDER_SIGNATURE_HASH_VERSION_ETH = 1;
 
 export const ORDER_SIGNATURE_HASH_VERSION_BSC = 2;
 
+export const ORDER_SIGNATURE_HASH_VERSION_MATIC = 3;
+
 /**
  * The URI that will be used based on the configuration given.  This includes
  * sandbox vs production as well as the multi-verse chain that should be used
@@ -27,6 +29,10 @@ export const URLS = deepObjectFreeze({
       rest: 'https://api-sandbox-bsc.idex.io/v1',
       websocket: 'wss://websocket-sandbox-bsc.idex.io/v1',
     },
+    matic: {
+      rest: 'https://api-sandbox-matic.idex.io/v1',
+      websocket: 'wss://websocket-sandbox-matic.idex.io/v1',
+    },
   },
   production: {
     eth: {
@@ -36,6 +42,10 @@ export const URLS = deepObjectFreeze({
     bsc: {
       rest: 'https://api-bsc.idex.io/v1',
       websocket: 'wss://websocket-bsc.idex.io/v1',
+    },
+    matic: {
+      rest: 'https://api-matic.idex.io/v1',
+      websocket: 'wss://websocket-matic.idex.io/v1',
     },
   },
 } as const);

@@ -68,11 +68,14 @@ export function createOrderSignature(
 
   let orderSignatureHashVersion:
     | typeof constants.ORDER_SIGNATURE_HASH_VERSION_ETH
-    | typeof constants.ORDER_SIGNATURE_HASH_VERSION_BSC;
+    | typeof constants.ORDER_SIGNATURE_HASH_VERSION_BSC
+    | typeof constants.ORDER_SIGNATURE_HASH_VERSION_MATIC;
   if (multiverseChain === 'eth') {
     orderSignatureHashVersion = constants.ORDER_SIGNATURE_HASH_VERSION_ETH;
   } else if (multiverseChain === 'bsc') {
     orderSignatureHashVersion = constants.ORDER_SIGNATURE_HASH_VERSION_BSC;
+  } else if (multiverseChain === 'matic') {
+    orderSignatureHashVersion = constants.ORDER_SIGNATURE_HASH_VERSION_MATIC;
   } else {
     throw new Error(`Invalid multiverse chain: ${multiverseChain}`);
   }
