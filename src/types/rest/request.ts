@@ -25,7 +25,6 @@ export interface RestRequestAddLiquidity {
   amountAMin: string;
   amountBMin: string;
   to: string;
-  deadline: number;
 }
 
 /**
@@ -37,6 +36,12 @@ export interface RestRequestAddLiquidity {
 export interface RestRequestGetLiquidityAdditions {
   nonce: string;
   wallet: string;
+  fromId?: string;
+  initiatingTxId?: string;
+  liquidityAdditionId?: string;
+  start?: number;
+  end?: number;
+  limit?: number;
 }
 
 /**
@@ -48,6 +53,12 @@ export interface RestRequestGetLiquidityAdditions {
 export interface RestRequestGetLiquidityRemovals {
   nonce: string;
   wallet: string;
+  fromId?: string;
+  initiatingTxId?: string;
+  liquidityAdditionId?: string;
+  start?: number;
+  end?: number;
+  limit?: number;
 }
 
 /**
@@ -72,7 +83,6 @@ export interface RestRequestRemoveLiquidity {
   amountAMin: string;
   amountBMin: string;
   to: string;
-  deadline: number;
 }
 
 interface RestRequestCancelOrdersBase {

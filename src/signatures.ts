@@ -169,22 +169,6 @@ export function createAddLiquiditySignature(
   const liquidityChangeType = 0; // addition
   const origination = 1; // off chain
 
-  console.log('signed ', [
-    ['uint8', signatureHashVersion],
-    ['uint8', liquidityChangeType],
-    ['uint8', origination],
-    ['uint128', uuidToUint8Array(addLiquidity.nonce)],
-    ['address', addLiquidity.wallet],
-    ['address', addLiquidity.tokenA],
-    ['address', addLiquidity.tokenB],
-    ['uint256', addLiquidity.amountADesired],
-    ['uint256', addLiquidity.amountBDesired],
-    ['uint256', addLiquidity.amountAMin],
-    ['uint256', addLiquidity.amountBMin],
-    ['address', addLiquidity.to],
-    ['uint256', 0], // off chain deadline
-  ]);
-
   return solidityHashOfParams([
     ['uint8', signatureHashVersion],
     ['uint8', liquidityChangeType],
@@ -217,7 +201,7 @@ export function createRemoveLiquiditySignature(
     ['address', removeLiquidity.wallet],
     ['address', removeLiquidity.tokenA],
     ['address', removeLiquidity.tokenB],
-    ['uint256', removeLiquidity.liquidity.toString()],
+    ['uint256', removeLiquidity.liquidity],
     ['uint256', removeLiquidity.amountAMin],
     ['uint256', removeLiquidity.amountBMin],
     ['address', removeLiquidity.to],
@@ -232,7 +216,7 @@ export function createRemoveLiquiditySignature(
     ['address', removeLiquidity.wallet],
     ['address', removeLiquidity.tokenA],
     ['address', removeLiquidity.tokenB],
-    ['uint256', removeLiquidity.liquidity.toString()],
+    ['uint256', removeLiquidity.liquidity],
     ['uint256', removeLiquidity.amountAMin],
     ['uint256', removeLiquidity.amountBMin],
     ['address', removeLiquidity.to],

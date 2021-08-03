@@ -196,13 +196,13 @@ export class RestAuthenticatedClient<
 
   public async getLiquidityAdditions(
     getLiquidityAdditionsRequest: RestRequestGetLiquidityAdditions,
-  ): Promise<RestResponseLiquidityAddition> {
+  ): Promise<RestResponseLiquidityAddition[]> {
     return this.get('/liquidityAdditions', getLiquidityAdditionsRequest);
   }
 
   public async getLiquidityRemovals(
     getLiquidityRemovalsRequest: RestRequestGetLiquidityRemovals,
-  ): Promise<RestResponseLiquidityAddition> {
+  ): Promise<RestResponseLiquidityAddition[]> {
     return this.get('/liquidityRemovals', getLiquidityRemovalsRequest);
   }
 
