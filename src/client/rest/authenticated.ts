@@ -189,7 +189,10 @@ export class RestAuthenticatedClient<
     return this.post('/addLiquidity', {
       parameters: addLiquidityRequest,
       signature: await signer(
-        signatures.createAddLiquiditySignature(addLiquidityRequest),
+        signatures.createAddLiquiditySignature(
+          addLiquidityRequest,
+          this.config.multiverseChain,
+        ),
       ),
     });
   }
@@ -218,7 +221,10 @@ export class RestAuthenticatedClient<
     return this.post('/removeLiquidity', {
       parameters: removeLiquidityRequest,
       signature: await signer(
-        signatures.createRemoveLiquiditySignature(removeLiquidityRequest),
+        signatures.createRemoveLiquiditySignature(
+          removeLiquidityRequest,
+          this.config.multiverseChain,
+        ),
       ),
     });
   }
