@@ -193,21 +193,6 @@ export function createRemoveLiquiditySignature(
   const liquidityChangeType = 1; // removal
   const origination = 1; // off chain
 
-  console.log('signed ', [
-    ['uint8', signatureHashVersion],
-    ['uint8', liquidityChangeType],
-    ['uint8', origination],
-    ['uint128', uuidToUint8Array(removeLiquidity.nonce)],
-    ['address', removeLiquidity.wallet],
-    ['address', removeLiquidity.tokenA],
-    ['address', removeLiquidity.tokenB],
-    ['uint256', removeLiquidity.liquidity],
-    ['uint256', removeLiquidity.amountAMin],
-    ['uint256', removeLiquidity.amountBMin],
-    ['address', removeLiquidity.to],
-    ['uint256', 0], // off chain deadline
-  ]);
-
   return solidityHashOfParams([
     ['uint8', signatureHashVersion],
     ['uint8', liquidityChangeType],
