@@ -3,11 +3,13 @@ import { ethers } from 'ethers';
 import * as constants from './constants';
 
 import {
+  RestRequestAddLiquidity,
   RestRequestOrder,
   RestRequestOrderByBaseQuantity,
   RestRequestOrderByQuoteQuantity,
   RestRequestOrderWithPrice,
   RestRequestOrderWithStopPrice,
+  RestRequestRemoveLiquidity,
   RestRequestWithdrawal,
   OrderType,
   OrderSide,
@@ -56,16 +58,12 @@ export function createPrivateKeyMessageSigner(
  */
 export const privateKeySigner = createPrivateKeyMessageSigner;
 
-export function createOrderSignature(
-  order: RestRequestOrder,
+function signatureHashVersion(
   multiverseChain: MultiverseChain,
-): string {
-  const quantity =
-    (order as RestRequestOrderByBaseQuantity).quantity ||
-    (order as RestRequestOrderByQuoteQuantity).quoteOrderQuantity;
-  const isQuantityInQuote = !!(order as RestRequestOrderByQuoteQuantity)
-    .quoteOrderQuantity;
-
+):
+  | typeof constants.ORDER_SIGNATURE_HASH_VERSION_ETH
+  | typeof constants.ORDER_SIGNATURE_HASH_VERSION_BSC
+  | typeof constants.ORDER_SIGNATURE_HASH_VERSION_MATIC {
   let orderSignatureHashVersion:
     | typeof constants.ORDER_SIGNATURE_HASH_VERSION_ETH
     | typeof constants.ORDER_SIGNATURE_HASH_VERSION_BSC
@@ -79,9 +77,21 @@ export function createOrderSignature(
   } else {
     throw new Error(`Invalid multiverse chain: ${multiverseChain}`);
   }
+  return orderSignatureHashVersion;
+}
+
+export function createOrderSignature(
+  order: RestRequestOrder,
+  multiverseChain: MultiverseChain,
+): string {
+  const quantity =
+    (order as RestRequestOrderByBaseQuantity).quantity ||
+    (order as RestRequestOrderByQuoteQuantity).quoteOrderQuantity;
+  const isQuantityInQuote = !!(order as RestRequestOrderByQuoteQuantity)
+    .quoteOrderQuantity;
 
   return solidityHashOfParams([
-    ['uint8', orderSignatureHashVersion],
+    ['uint8', signatureHashVersion(multiverseChain)],
     ['uint128', uuidToUint8Array(order.nonce)],
     ['address', order.wallet],
     ['string', order.market],
@@ -109,6 +119,7 @@ type TypeValuePairings = {
   uint128: Uint8Array;
   uint8: number;
   uint64: number;
+  uint256: string;
   bool: boolean;
 };
 
@@ -156,6 +167,53 @@ export function createWithdrawalSignature(
       : ['address', withdrawal.assetContractAddress],
     ['string', withdrawal.quantity],
     ['bool', true], // Auto-dispatch
+  ]);
+}
+
+export function createAddLiquiditySignature(
+  addLiquidity: RestRequestAddLiquidity,
+  multiverseChain: MultiverseChain,
+): string {
+  const liquidityChangeType = 0; // addition
+  const origination = 1; // off chain
+
+  return solidityHashOfParams([
+    ['uint8', signatureHashVersion(multiverseChain)],
+    ['uint8', liquidityChangeType],
+    ['uint8', origination],
+    ['uint128', uuidToUint8Array(addLiquidity.nonce)],
+    ['address', addLiquidity.wallet],
+    ['address', addLiquidity.tokenA],
+    ['address', addLiquidity.tokenB],
+    ['uint256', addLiquidity.amountADesired],
+    ['uint256', addLiquidity.amountBDesired],
+    ['uint256', addLiquidity.amountAMin],
+    ['uint256', addLiquidity.amountBMin],
+    ['address', addLiquidity.to],
+    ['uint256', 0], // off chain deadline
+  ]);
+}
+
+export function createRemoveLiquiditySignature(
+  removeLiquidity: RestRequestRemoveLiquidity,
+  multiverseChain: MultiverseChain,
+): string {
+  const liquidityChangeType = 1; // removal
+  const origination = 1; // off chain
+
+  return solidityHashOfParams([
+    ['uint8', signatureHashVersion(multiverseChain)],
+    ['uint8', liquidityChangeType],
+    ['uint8', origination],
+    ['uint128', uuidToUint8Array(removeLiquidity.nonce)],
+    ['address', removeLiquidity.wallet],
+    ['address', removeLiquidity.tokenA],
+    ['address', removeLiquidity.tokenB],
+    ['uint256', removeLiquidity.liquidity],
+    ['uint256', removeLiquidity.amountAMin],
+    ['uint256', removeLiquidity.amountBMin],
+    ['address', removeLiquidity.to],
+    ['uint256', 0], // off chain deadline
   ]);
 }
 

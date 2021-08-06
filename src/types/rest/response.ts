@@ -156,6 +156,63 @@ export interface RestResponseFill extends RestResponseOrderFill {
   side: keyof typeof enums.OrderSide;
 }
 
+interface RestResponseLiquidityBase {
+  liquidityAdditionId: string;
+  tokenA: string;
+  tokenB: string;
+  amountA: string;
+  amountB: string;
+  liquidity: string;
+  time: number;
+  initiatingTxId: string | null;
+  validated: boolean;
+  feeTokenA: string;
+  feeTokenB: string;
+  txId: string | null;
+  txStatus: keyof typeof enums.EthTransactionStatus;
+}
+
+/**
+ * LiquidityAddition
+ *
+ * @typedef {Object} RestResponseLiquidityAddition
+ * @property {string} liquidityAdditionId - Internal ID of liquidity addition
+ * @property {string} tokenA - Asset symbol
+ * @property {string} tokenB - Asset symbol
+ * @property {string} amountA - Amount of tokenA added to the liquidity pool
+ * @property {string} amountB - Amount of tokenB added to the liquidity pool
+ * @property {number} liquidity
+ * @property {string} time - Liquidity addition timestamp
+ * @property {string | null} initiatingTxId - On chain initiated transaction ID, if available
+ * @property {boolean} validated - Whether on-chain tx was validated, or true
+ * @property {string} feeTokenA - Amount of tokenA collected as fees
+ * @property {string} feeTokenB - Amount of tokenB collected as fees
+ * @property {string | null} txId - Ethereum transaction ID, if available
+ * @property {string} txStatus - Ethereum transaction status
+ */
+
+export type RestResponseLiquidityAddition = RestResponseLiquidityBase;
+
+/**
+ * LiquidityRemoval
+ *
+ * @typedef {Object} RestResponseLiquidityRemoval
+ * @property {string} liquidityAdditionId - Internal ID of liquidity removal
+ * @property {string} tokenA - Asset symbol
+ * @property {string} tokenB - Asset symbol
+ * @property {string} amountA - Amount of tokenA removed from the liquidity pool
+ * @property {string} amountB - Amount of tokenB removed from the liquidity pool
+ * @property {number} liquidity
+ * @property {string} time - Liquidity addition timestamp
+ * @property {string | null} initiatingTxId - On chain initiated transaction ID, if available
+ * @property {boolean} validated - Whether on-chain tx was validated, or true
+ * @property {string} feeTokenA - Amount of tokenA collected as fees
+ * @property {string} feeTokenB - Amount of tokenB collected as fees
+ * @property {string | null} txId - Ethereum transaction ID, if available
+ * @property {string} txStatus - Ethereum transaction status
+ */
+export type RestResponseLiquidityRemoval = RestResponseLiquidityBase;
+
 /**
  * OrderFill
  *
