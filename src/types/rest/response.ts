@@ -111,12 +111,23 @@ export type RestResponseExchangeInfo<
   makerTradeMinimum: string;
   takerTradeMinimum: string;
   withdrawMinimum: string;
-} & (C extends 'eth'
+} & (C extends 'matic'
+  ? {
+      maticUsdPrice: string;
+      maticDepositContractAddress: string;
+      ethereumDepositContractAddress?: void;
+      ethUsdPrice?: void;
+      bnbUsdPrice?: void;
+      bscDepositContractAddress?: void;
+    }
+  : C extends 'eth'
   ? {
       ethUsdPrice: string;
       ethereumDepositContractAddress: string;
       bnbUsdPrice?: void;
       bscDepositContractAddress?: void;
+      maticUsdPrice?: string;
+      maticDepositContractAddress?: string;
     }
   : C extends 'bsc'
   ? {
@@ -124,6 +135,8 @@ export type RestResponseExchangeInfo<
       bscDepositContractAddress: string;
       ethereumDepositContractAddress?: void;
       ethUsdPrice?: void;
+      maticUsdPrice?: string;
+      maticDepositContractAddress?: string;
     }
   : never);
 
