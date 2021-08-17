@@ -170,12 +170,10 @@ export interface RestResponseFill extends RestResponseOrderFill {
 }
 
 interface RestResponseLiquidityBase {
-  liquidityAdditionId: string;
   tokenA: string;
   tokenB: string;
   amountA: string;
   amountB: string;
-  liquidity: string;
   time: number;
   initiatingTxId: string | null;
   validated: boolean;
@@ -194,7 +192,7 @@ interface RestResponseLiquidityBase {
  * @property {string} tokenB - Asset symbol
  * @property {string} amountA - Amount of tokenA added to the liquidity pool
  * @property {string} amountB - Amount of tokenB added to the liquidity pool
- * @property {number} liquidity
+ * @property {number} liquidity - Amount of liquidity provided (LP) tokens minted
  * @property {string} time - Liquidity addition timestamp
  * @property {string | null} initiatingTxId - On chain initiated transaction ID, if available
  * @property {boolean} validated - Whether on-chain tx was validated, or true
@@ -204,18 +202,21 @@ interface RestResponseLiquidityBase {
  * @property {string} txStatus - Ethereum transaction status
  */
 
-export type RestResponseLiquidityAddition = RestResponseLiquidityBase;
+export interface RestResponseLiquidityAddition
+  extends RestResponseLiquidityBase {
+  liquidityAdditionId: string;
+  liquidity: string;
+}
 
 /**
  * LiquidityRemoval
  *
  * @typedef {Object} RestResponseLiquidityRemoval
- * @property {string} liquidityAdditionId - Internal ID of liquidity removal
+ * @property {string} liquidityRemovalId - Internal ID of liquidity removal
  * @property {string} tokenA - Asset symbol
  * @property {string} tokenB - Asset symbol
  * @property {string} amountA - Amount of tokenA removed from the liquidity pool
  * @property {string} amountB - Amount of tokenB removed from the liquidity pool
- * @property {number} liquidity
  * @property {string} time - Liquidity addition timestamp
  * @property {string | null} initiatingTxId - On chain initiated transaction ID, if available
  * @property {boolean} validated - Whether on-chain tx was validated, or true
@@ -224,7 +225,10 @@ export type RestResponseLiquidityAddition = RestResponseLiquidityBase;
  * @property {string | null} txId - Ethereum transaction ID, if available
  * @property {string} txStatus - Ethereum transaction status
  */
-export type RestResponseLiquidityRemoval = RestResponseLiquidityBase;
+export interface RestResponseLiquidityRemoval
+  extends RestResponseLiquidityBase {
+  liquidityRemovalId: string;
+}
 
 /**
  * OrderFill
