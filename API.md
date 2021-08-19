@@ -109,10 +109,16 @@
 -   [privateKeySigner](#privatekeysigner)
 -   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
     -   [Properties](#properties-3)
--   [MultiverseChain](#multiversechain)
+-   [LiquidityChangeOrigination](#liquiditychangeorigination)
+    -   [OnChain](#onchain)
+    -   [OffChain](#offchain)
 -   [WebSocketRequestAuthenticatedSubscription](#websocketrequestauthenticatedsubscription)
+-   [LiquidityChangeType](#liquiditychangetype)
+    -   [Addition](#addition)
+    -   [Removal](#removal)
 -   [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription)
 -   [AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription)
+-   [MultiverseChain](#multiversechain)
 -   [AuthTokenWebSocketRequestSubscription](#authtokenwebsocketrequestsubscription)
 -   [WebSocketRequestSubscription](#websocketrequestsubscription)
 -   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
@@ -2237,15 +2243,41 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `to` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Wallet to credit LP tokens, or the custodian contract address to leave on exchange
 -   `deadline` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp in seconds by which this request must be settled on-chain
 
-## MultiverseChain
+## LiquidityChangeOrigination
 
-The available multiverse chains to define when creating a client.
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-Type: (`"eth"` \| `"bsc"` \| `"matic"`)
+### OnChain
+
+Initiation on-chain via contract call
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### OffChain
+
+Initiated off-chain via API
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 ## WebSocketRequestAuthenticatedSubscription
 
 Type: ([WebSocketRequestBalancesSubscription](#websocketrequestbalancessubscription) \| [WebSocketRequestOrdersSubscription](#websocketrequestorderssubscription))
+
+## LiquidityChangeType
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### Addition
+
+Adding reserve assets to pool and minting LP tokens
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### Removal
+
+Removing reserve assets from pool and burning LP tokens
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 ## WebSocketRequestUnauthenticatedSubscription
 
@@ -2254,6 +2286,12 @@ Type: ([WebSocketRequestCandlesSubscription](#websocketrequestcandlessubscriptio
 ## AuthTokenWebSocketRequestAuthenticatedSubscription
 
 Type: ([AuthTokenWebSocketRequestBalancesSubscription](#authtokenwebsocketrequestbalancessubscription) \| [AuthTokenWebSocketRequestOrdersSubscription](#authtokenwebsocketrequestorderssubscription))
+
+## MultiverseChain
+
+The available multiverse chains to define when creating a client.
+
+Type: (`"eth"` \| `"bsc"` \| `"matic"`)
 
 ## AuthTokenWebSocketRequestSubscription
 
