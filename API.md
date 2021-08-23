@@ -99,16 +99,18 @@
     -   [ErrorShortCodes](#errorshortcodes)
 -   [RestRequestAddLiquidity](#restrequestaddliquidity)
     -   [Properties](#properties)
--   [RestRequestGetLiquidityAdditions](#restrequestgetliquidityadditions)
+-   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
     -   [Properties](#properties-1)
 -   [createPrivateKeyMessageSigner](#createprivatekeymessagesigner)
     -   [Parameters](#parameters)
     -   [Examples](#examples)
--   [RestRequestGetLiquidityRemovals](#restrequestgetliquidityremovals)
-    -   [Properties](#properties-2)
 -   [privateKeySigner](#privatekeysigner)
--   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
+-   [RestRequestFindLiquidityAddition](#restrequestfindliquidityaddition)
+    -   [Properties](#properties-2)
+-   [RestRequestFindLiquidityRemoval](#restrequestfindliquidityremoval)
     -   [Properties](#properties-3)
+-   [RestRequestFindLiquidityChanges](#restrequestfindliquiditychanges)
+    -   [Properties](#properties-4)
 -   [LiquidityChangeOrigination](#liquiditychangeorigination)
     -   [OnChain](#onchain)
     -   [OffChain](#offchain)
@@ -122,16 +124,16 @@
 -   [AuthTokenWebSocketRequestSubscription](#authtokenwebsocketrequestsubscription)
 -   [WebSocketRequestSubscription](#websocketrequestsubscription)
 -   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
-    -   [Properties](#properties-4)
--   [RestResponseLiquidityAddition](#restresponseliquidityaddition)
     -   [Properties](#properties-5)
+-   [RestResponseLiquidityAddition](#restresponseliquidityaddition)
+    -   [Properties](#properties-6)
 -   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
 -   [RestResponseLiquidityRemoval](#restresponseliquidityremoval)
-    -   [Properties](#properties-6)
--   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
     -   [Properties](#properties-7)
--   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
+-   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
     -   [Properties](#properties-8)
+-   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
+    -   [Properties](#properties-9)
 -   [WebSocketRequest](#websocketrequest)
 -   [WebSocketRequest](#websocketrequest-1)
 -   [WebSocketResponseSubscriptionMessageShort](#websocketresponsesubscriptionmessageshort)
@@ -327,6 +329,69 @@ const authenticatedClient = new RestAuthenticatedClient({
   walletPrivateKey: '0x3141592653589793238462643383279502884197169399375105820974944592'
 });
 ```
+
+##### addLiquidity
+
+Add liquidity to a hybrid liquidity pool from assets held by a wallet on the exchange
+
+###### Parameters
+
+-   `addLiquidityRequest` **[RestRequestAddLiquidity](#restrequestaddliquidity)** 
+-   `signer` **[MessageSigner](#messagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseLiquidityAddition](#restresponseliquidityaddition)>** 
+
+##### removeLiquidity
+
+Remove liquidity from a hybrid liquidity pool represented by LP tokens held by a wallet on the
+exchange
+
+###### Parameters
+
+-   `removeLiquidityRequest` **[RestRequestRemoveLiquidity](#restrequestremoveliquidity)** 
+-   `signer` **[MessageSigner](#messagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseLiquidityRemoval](#restresponseliquidityremoval)>** 
+
+##### getLiquidityAddition
+
+Returns information about a single Liquidity Addition from a wallet
+
+###### Parameters
+
+-   `findLiquidityAddition` **[RestRequestFindLiquidityAddition](#restrequestfindliquidityaddition)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseLiquidityAddition](#restresponseliquidityaddition)>** 
+
+##### getLiquidityAdditions
+
+Returns information about multiple Liquidity Additions from a wallet
+
+###### Parameters
+
+-   `findLiquidityAdditions` **[RestRequestFindLiquidityChanges](#restrequestfindliquiditychanges)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseLiquidityAddition](#restresponseliquidityaddition)>>** 
+
+##### getLiquidityRemoval
+
+Returns information about a single Liquidity Removal from a wallet
+
+###### Parameters
+
+-   `findLiquidityRemoval` **[RestRequestFindLiquidityRemoval](#restrequestfindliquidityremoval)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseLiquidityAddition](#restresponseliquidityaddition)>** 
+
+##### getLiquidityRemovals
+
+Returns information about multiple Liquidity Removals from a wallet
+
+###### Parameters
+
+-   `findLiquidityRemovals` **[RestRequestFindLiquidityChanges](#restrequestfindliquiditychanges)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseLiquidityRemoval](#restresponseliquidityremoval)>>** 
 
 ##### getUser
 
@@ -1143,7 +1208,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
 -   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
--   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Fills created at the same timestamp or after fillId
+-   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Deposits created at the same timestamp or after fromId
 
 ### RestRequestFindFill
 
@@ -2171,7 +2236,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 ### Properties
 
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum wallet address
 -   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by address
 -   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by address
 -   `amountADesired` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Maximum amount of tokenA to add to the liquidity pool
@@ -2179,16 +2244,21 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `amountAMin-null` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenA to add to the liquidity pool
 -   `amountBMin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenB to add to the liquidity pool
 -   `to` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Wallet to credit LP tokens, or the custodian contract address to leave on exchange
--   `deadline` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp in seconds by which this request must be settled on-chain
 
-## RestRequestGetLiquidityAdditions
+## RestRequestRemoveLiquidity
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
 ### Properties
 
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum wallet address
+-   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by address
+-   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by address
+-   `liquidity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** LP tokens to burn
+-   `amountAMin-null` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenA to add to the liquidity pool
+-   `amountBMin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenB to add to the liquidity pool
+-   `to` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Wallet to credit LP tokens, or the custodian contract address to leave on exchange
 
 ## createPrivateKeyMessageSigner
 
@@ -2208,15 +2278,6 @@ const signed = await signMessage(myMessageToSign)
 
 Returns **[MessageSigner](#messagesigner)** 
 
-## RestRequestGetLiquidityRemovals
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
--   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
 ## privateKeySigner
 
 -   **See: {createPrivateKeyMessageSigner}
@@ -2227,21 +2288,40 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   **deprecated**: use createPrivateKeyMessageSigner directly
 
 
-## RestRequestRemoveLiquidity
+## RestRequestFindLiquidityAddition
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
 ### Properties
 
 -   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by address
--   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by address
--   `liquidity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** LP tokens to burn
--   `amountAMin-null` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenA to add to the liquidity pool
--   `amountBMin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenB to add to the liquidity pool
--   `to` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Wallet to credit LP tokens, or the custodian contract address to leave on exchange
--   `deadline` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp in seconds by which this request must be settled on-chain
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum wallet address
+-   `initiatingTxId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
+-   `liquidityAdditionId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
+
+## RestRequestFindLiquidityRemoval
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum wallet address
+-   `initiatingTxId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
+-   `liquidityRemovalId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
+
+## RestRequestFindLiquidityChanges
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum wallet address
+-   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
+-   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
+-   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
+-   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Deposits created at the same timestamp or after fromId
 
 ## LiquidityChangeOrigination
 
