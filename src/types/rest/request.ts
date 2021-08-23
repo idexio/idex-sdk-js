@@ -4,7 +4,7 @@ import { XOR } from '../utils';
 /**
  * @typedef {Object} RestRequestAddLiquidity
  * @property {string} nonce - UUIDv1
- * @property {string} wallet
+ * @property {string} wallet - Ethereum wallet address
  * @property {string} tokenA - Asset by address
  * @property {string} tokenB - Asset by address
  * @property {string} amountADesired - Maximum amount of tokenA to add to the liquidity pool
@@ -12,9 +12,7 @@ import { XOR } from '../utils';
  * @property {string} amountAMin- Minimum amount of tokenA to add to the liquidity pool
  * @property {string} amountBMin - Minimum amount of tokenB to add to the liquidity pool
  * @property {string} to - Wallet to credit LP tokens, or the custodian contract address to leave on exchange
- * @property {number} deadline - Timestamp in seconds by which this request must be settled on-chain
  */
-
 export interface RestRequestAddLiquidity {
   nonce: string;
   wallet: string;
@@ -28,52 +26,16 @@ export interface RestRequestAddLiquidity {
 }
 
 /**
- * @typedef {Object} RestRequestGetLiquidityAdditions
- * @property {string} nonce - UUIDv1
- * @property {string} wallet
- */
-
-export interface RestRequestGetLiquidityAdditions {
-  nonce: string;
-  wallet: string;
-  fromId?: string;
-  initiatingTxId?: string;
-  liquidityAdditionId?: string;
-  start?: number;
-  end?: number;
-  limit?: number;
-}
-
-/**
- * @typedef {Object} RestRequestGetLiquidityRemovals
- * @property {string} nonce - UUIDv1
- * @property {string} wallet
- */
-
-export interface RestRequestGetLiquidityRemovals {
-  nonce: string;
-  wallet: string;
-  fromId?: string;
-  initiatingTxId?: string;
-  liquidityAdditionId?: string;
-  start?: number;
-  end?: number;
-  limit?: number;
-}
-
-/**
  * @typedef {Object} RestRequestRemoveLiquidity
  * @property {string} nonce - UUIDv1
- * @property {string} wallet
+ * @property {string} wallet - Ethereum wallet address
  * @property {string} tokenA - Asset by address
  * @property {string} tokenB - Asset by address
  * @property {string} liquidity - LP tokens to burn
  * @property {string} amountAMin- Minimum amount of tokenA to add to the liquidity pool
  * @property {string} amountBMin - Minimum amount of tokenB to add to the liquidity pool
  * @property {string} to - Wallet to credit LP tokens, or the custodian contract address to leave on exchange
- * @property {number} deadline - Timestamp in seconds by which this request must be settled on-chain
  */
-
 export interface RestRequestRemoveLiquidity {
   nonce: string;
   wallet: string;
@@ -83,6 +45,53 @@ export interface RestRequestRemoveLiquidity {
   amountAMin: string;
   amountBMin: string;
   to: string;
+}
+
+export interface RestRequestFindLiquidityChange {
+  nonce: string;
+  wallet: string;
+  initiatingTxId?: string;
+  publicId?: string;
+}
+
+/**
+ * @typedef {Object}RestRequestFindLiquidityAddition
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet - Ethereum wallet address
+ * @property {string} [initiatingTxId]
+ * @property {string} [liquidityAdditionId]
+ */
+export interface RestRequestFindLiquidityAddition
+  extends RestRequestFindLiquidityChange {
+  liquidityAdditionId?: string;
+}
+
+/**
+ * @typedef {Object} RestRequestFindLiquidityRemoval
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet - Ethereum wallet address
+ * @property {string} [initiatingTxId]
+ * @property {string} [liquidityRemovalId]
+ */
+export interface RestRequestFindLiquidityRemoval
+  extends RestRequestFindLiquidityChange {
+  liquidityRemovalId?: string;
+}
+
+/**
+ * @typedef {Object} RestRequestFindLiquidityChanges
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet - Ethereum wallet address
+ * @property {number} [start] - Starting timestamp (inclusive)
+ * @property {number} [end] - Ending timestamp (inclusive)
+ * @property {number} [limit=50] - Max results to return from 1-1000
+ * @property {string} [fromId] - Deposits created at the same timestamp or after fromId
+ */
+export interface RestRequestFindLiquidityChanges
+  extends RestRequestFindWithPagination {
+  nonce: string;
+  wallet: string;
+  fromId?: string;
 }
 
 interface RestRequestCancelOrdersBase {
@@ -167,7 +176,7 @@ export interface RestRequestFindDeposit extends RestRequestFindByWallet {
  * @property {number} [start] - Starting timestamp (inclusive)
  * @property {number} [end] - Ending timestamp (inclusive)
  * @property {number} [limit=50] - Max results to return from 1-1000
- * @property {string} [fromId] - Fills created at the same timestamp or after fillId
+ * @property {string} [fromId] - Deposits created at the same timestamp or after fromId
  */
 export interface RestRequestFindDeposits
   extends RestRequestFindByWallet,

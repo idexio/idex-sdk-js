@@ -6,8 +6,9 @@ import Axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
 import type {
   MultiverseChain,
   RestRequestAddLiquidity,
-  RestRequestGetLiquidityAdditions,
-  RestRequestGetLiquidityRemovals,
+  RestRequestFindLiquidityAddition,
+  RestRequestFindLiquidityRemoval,
+  RestRequestFindLiquidityChanges,
   RestRequestRemoveLiquidity,
   RestRequestAssociateWallet,
   RestRequestCancelOrder,
@@ -29,6 +30,7 @@ import type {
   RestResponseDeposit,
   RestResponseFill,
   RestResponseLiquidityAddition,
+  RestResponseLiquidityRemoval,
   RestResponseOrder,
   RestResponseUser,
   RestResponseWallet,
@@ -137,6 +139,98 @@ export class RestAuthenticatedClient<
       : Axios.create({ headers });
   }
 
+  // Liquidity pool endpoints
+
+  /**
+   * Add liquidity to a hybrid liquidity pool from assets held by a wallet on the exchange
+   *
+   * @param {RestRequestAddLiquidity} addLiquidityRequest
+   * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   */
+  public async addLiquidity(
+    addLiquidityRequest: RestRequestAddLiquidity,
+    signer: undefined | signatures.MessageSigner = this.signer,
+  ): Promise<RestResponseLiquidityAddition> {
+    if (!signer) {
+      throw new Error(
+        'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
+      );
+    }
+    return this.post('/addLiquidity', {
+      parameters: addLiquidityRequest,
+      signature: await signer(
+        signatures.createAddLiquiditySignature(
+          addLiquidityRequest,
+          this.config.multiverseChain,
+        ),
+      ),
+    });
+  }
+
+  /**
+   * Remove liquidity from a hybrid liquidity pool represented by LP tokens held by a wallet on the
+   * exchange
+   *
+   * @param {RestRequestRemoveLiquidity} removeLiquidityRequest
+   * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
+   */
+  public async removeLiquidity(
+    removeLiquidityRequest: RestRequestRemoveLiquidity,
+    signer: undefined | signatures.MessageSigner = this.signer,
+  ): Promise<RestResponseLiquidityRemoval> {
+    if (!signer) {
+      throw new Error(
+        'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
+      );
+    }
+    return this.post('/removeLiquidity', {
+      parameters: removeLiquidityRequest,
+      signature: await signer(
+        signatures.createRemoveLiquiditySignature(
+          removeLiquidityRequest,
+          this.config.multiverseChain,
+        ),
+      ),
+    });
+  }
+
+  /**
+   * Returns information about a single Liquidity Addition from a wallet
+   */
+  public async getLiquidityAddition(
+    findLiquidityAddition: RestRequestFindLiquidityAddition,
+  ): Promise<RestResponseLiquidityAddition> {
+    return this.get('/liquidityAdditions', findLiquidityAddition);
+  }
+
+  /**
+   * Returns information about multiple Liquidity Additions from a wallet
+   */
+  public async getLiquidityAdditions(
+    findLiquidityAdditions: RestRequestFindLiquidityChanges,
+  ): Promise<RestResponseLiquidityAddition[]> {
+    return this.get('/liquidityAdditions', findLiquidityAdditions);
+  }
+
+  /**
+   * Returns information about a single Liquidity Removal from a wallet
+   */
+
+  public async getLiquidityRemoval(
+    findLiquidityRemoval: RestRequestFindLiquidityRemoval,
+  ): Promise<RestResponseLiquidityAddition> {
+    return this.get('/liquidityRemovals', findLiquidityRemoval);
+  }
+
+  /**
+   * Returns information about multiple Liquidity Removals from a wallet
+   */
+  public async getLiquidityRemovals(
+    findLiquidityRemovals: RestRequestFindLiquidityChanges,
+  ): Promise<RestResponseLiquidityRemoval[]> {
+    return this.get('/liquidityRemovals', findLiquidityRemovals);
+  }
+
   // User Data Endpoints
 
   /**
@@ -175,58 +269,6 @@ export class RestAuthenticatedClient<
     findBalances: RestRequestFindBalances,
   ): Promise<RestResponseBalance[]> {
     return this.get('/balances', findBalances);
-  }
-
-  public async addLiquidity(
-    addLiquidityRequest: RestRequestAddLiquidity,
-    signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<RestResponseLiquidityAddition> {
-    if (!signer) {
-      throw new Error(
-        'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
-      );
-    }
-    return this.post('/addLiquidity', {
-      parameters: addLiquidityRequest,
-      signature: await signer(
-        signatures.createAddLiquiditySignature(
-          addLiquidityRequest,
-          this.config.multiverseChain,
-        ),
-      ),
-    });
-  }
-
-  public async getLiquidityAdditions(
-    getLiquidityAdditionsRequest: RestRequestGetLiquidityAdditions,
-  ): Promise<RestResponseLiquidityAddition[]> {
-    return this.get('/liquidityAdditions', getLiquidityAdditionsRequest);
-  }
-
-  public async getLiquidityRemovals(
-    getLiquidityRemovalsRequest: RestRequestGetLiquidityRemovals,
-  ): Promise<RestResponseLiquidityAddition[]> {
-    return this.get('/liquidityRemovals', getLiquidityRemovalsRequest);
-  }
-
-  public async removeLiquidity(
-    removeLiquidityRequest: RestRequestRemoveLiquidity,
-    signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<RestResponseLiquidityAddition> {
-    if (!signer) {
-      throw new Error(
-        'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
-      );
-    }
-    return this.post('/removeLiquidity', {
-      parameters: removeLiquidityRequest,
-      signature: await signer(
-        signatures.createRemoveLiquiditySignature(
-          removeLiquidityRequest,
-          this.config.multiverseChain,
-        ),
-      ),
-    });
   }
 
   // Wallet Association Endpoint
