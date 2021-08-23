@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 
 import * as constants from './constants';
 
+import { LiquidityChangeType, LiquidityChangeOrigination } from './types/enums';
 import {
   RestRequestAddLiquidity,
   RestRequestOrder,
@@ -174,13 +175,10 @@ export function createAddLiquiditySignature(
   addLiquidity: RestRequestAddLiquidity,
   multiverseChain: MultiverseChain,
 ): string {
-  const liquidityChangeType = 0; // addition
-  const origination = 1; // off chain
-
   return solidityHashOfParams([
     ['uint8', signatureHashVersion(multiverseChain)],
-    ['uint8', liquidityChangeType],
-    ['uint8', origination],
+    ['uint8', LiquidityChangeType.Addition],
+    ['uint8', LiquidityChangeOrigination.OffChain],
     ['uint128', uuidToUint8Array(addLiquidity.nonce)],
     ['address', addLiquidity.wallet],
     ['address', addLiquidity.tokenA],
@@ -198,13 +196,10 @@ export function createRemoveLiquiditySignature(
   removeLiquidity: RestRequestRemoveLiquidity,
   multiverseChain: MultiverseChain,
 ): string {
-  const liquidityChangeType = 1; // removal
-  const origination = 1; // off chain
-
   return solidityHashOfParams([
     ['uint8', signatureHashVersion(multiverseChain)],
-    ['uint8', liquidityChangeType],
-    ['uint8', origination],
+    ['uint8', LiquidityChangeType.Removal],
+    ['uint8', LiquidityChangeOrigination.OffChain],
     ['uint128', uuidToUint8Array(removeLiquidity.nonce)],
     ['address', removeLiquidity.wallet],
     ['address', removeLiquidity.tokenA],
