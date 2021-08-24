@@ -177,8 +177,8 @@ interface RestResponseLiquidityBase {
   time: number;
   initiatingTxId: string | null;
   validated: boolean;
-  feeTokenA: string;
-  feeTokenB: string;
+  feeTokenA: string | null;
+  feeTokenB: string | null;
   txId: string | null;
   txStatus: keyof typeof enums.EthTransactionStatus;
 }
@@ -204,8 +204,8 @@ interface RestResponseLiquidityBase {
 
 export interface RestResponseLiquidityAddition
   extends RestResponseLiquidityBase {
-  liquidityAdditionId: string;
-  liquidity: string;
+  liquidityAdditionId: string | null;
+  liquidity: string | null;
 }
 
 /**
@@ -227,7 +227,7 @@ export interface RestResponseLiquidityAddition
  */
 export interface RestResponseLiquidityRemoval
   extends RestResponseLiquidityBase {
-  liquidityRemovalId: string;
+  liquidityRemovalId: string | null;
 }
 
 /**
