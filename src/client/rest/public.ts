@@ -5,11 +5,14 @@ import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 import type {
   MultiverseChain,
   RestRequestFindCandles,
+  RestRequestFindLiquidityPool,
+  RestRequestFindLiquidityPools,
   RestRequestFindMarkets,
   RestRequestFindTrades,
   RestResponseAsset,
   RestResponseCandle,
   RestResponseExchangeInfo,
+  RestResponseLiquidityPool,
   RestResponseMarket,
   RestResponseOrderBookLevel1,
   RestResponseOrderBookLevel2,
@@ -148,6 +151,34 @@ export class RestPublicClient<
    */
   public async getAssets(): Promise<RestResponseAsset[]> {
     return this.get('/assets');
+  }
+
+  /**
+   * Returns information about liquidity pools supported by the exchange
+   *
+   * @see https://docs.idex.io/#get-liquidity-pools
+   *
+   * @param {RestRequestFindLiquidityPool} findLiquidityPool
+   * @returns {Promise<RestResponseLiquidityPool>}
+   */
+  public async getLiquidityPool(
+    findLiquidityPool: RestRequestFindLiquidityPool,
+  ): Promise<RestResponseLiquidityPool> {
+    return this.get('/liquidityPools', findLiquidityPool);
+  }
+
+  /**
+   * Returns information about liquidity pools supported by the exchange
+   *
+   * @see https://docs.idex.io/#get-liquidity-pools
+   *
+   * @param {RestRequestFindLiquidityPools} findLiquidityPools
+   * @returns {Promise<RestResponseLiquidityPool[]>}
+   */
+  public async getLiquidityPools(
+    findLiquidityPools: RestRequestFindLiquidityPools,
+  ): Promise<RestResponseLiquidityPool[]> {
+    return this.get('/liquidityPools', findLiquidityPools);
   }
 
   /**

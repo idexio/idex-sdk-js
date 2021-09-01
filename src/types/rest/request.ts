@@ -2,6 +2,24 @@ import * as enums from '../enums';
 import { XOR } from '../utils';
 
 /**
+ * @typedef {Object} RestRequestFindLiquidityPool
+ * @property {string} market - Target market
+ */
+export interface RestRequestFindLiquidityPool {
+  market: string;
+}
+
+/**
+ * @typedef {Object} RestRequestFindLiquidityPools
+ * @property {string} tokenA - Address of one reserve token
+ * @property {string} tokenB - Address of one reserve token
+ */
+export interface RestRequestFindLiquidityPools {
+  tokenA: string;
+  tokenB: string;
+}
+
+/**
  * @typedef {Object} RestRequestAddLiquidity
  * @property {string} nonce - UUIDv1
  * @property {string} wallet - Ethereum wallet address

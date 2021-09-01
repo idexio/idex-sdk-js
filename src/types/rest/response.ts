@@ -169,18 +169,44 @@ export interface RestResponseFill extends RestResponseOrderFill {
   side: keyof typeof enums.OrderSide;
 }
 
+/**
+ * Liquidity Pool
+ *
+ * @typedef {Object} RestResponseLiquidityPool
+ * @property {string} tokenA - Address of one reserve token
+ * @property {string} tokenB - Address of one reserve token
+ * @property {string} reserveA - Quantity of token A held as reserve in token precision, not pips
+ * @property {string} reserveB - Quantity of token B held as reserve in token precision, not pips
+ * @property {string} liquidityToken - Address of the liquidity provider (LP) token
+ * @property {string} totalLiquidity - Total quantity of liquidity provider (LP) tokens minted in token precision, not pips
+ * @property {string} reserveUsd - Total value of reserves in USD
+ * @property {string} market - Market symbol of pool’s associated hybrid market
+ */
+export interface RestResponseLiquidityPool {
+  tokenA: string;
+  tokenB: string;
+  reserveA: string;
+  reserveB: string;
+  liquidityToken: string;
+  totalLiquidity: string;
+  reserveUsd: string;
+  market: string;
+}
+
 interface RestResponseLiquidityBase {
   tokenA: string;
   tokenB: string;
-  amountA: string;
-  amountB: string;
+  amountA: string | null;
+  amountB: string | null;
+  liquidity: string | null;
   time: number;
   initiatingTxId: string | null;
-  validated: boolean;
+  errorCode?: string;
+  errorMessage?: string;
   feeTokenA: string | null;
   feeTokenB: string | null;
   txId: string | null;
-  txStatus: keyof typeof enums.EthTransactionStatus;
+  txStatus: keyof typeof enums.EthTransactionStatus | null;
 }
 
 /**
@@ -205,7 +231,6 @@ interface RestResponseLiquidityBase {
 export interface RestResponseLiquidityAddition
   extends RestResponseLiquidityBase {
   liquidityAdditionId: string | null;
-  liquidity: string | null;
 }
 
 /**
