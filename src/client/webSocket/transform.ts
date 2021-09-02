@@ -22,6 +22,7 @@ const transformTickersMessage = (
 const transformTradesMessage = (
   trade: types.WebSocketResponseTradeShort,
 ): types.WebSocketResponseTradeLong => ({
+  type: trade.y,
   market: trade.m,
   fillId: trade.i,
   price: trade.p,

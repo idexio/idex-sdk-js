@@ -113,6 +113,32 @@ export enum MarketStatus {
    * @type {string}
    */
   active,
+  /**
+   * Trades and cancels accepted
+   * @type {string}
+   */
+  /**
+   * Hybrid trades and cancels accepted
+   * @type {string}
+   */
+  activeHybrid,
+}
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+export enum MarketType {
+  /**
+   * Orderbook trades accepted
+   * @type {string}
+   */
+  orderBook,
+  /**
+   * Orderbook, pool, and hybrid trades accepted
+   * @type {string}
+   */
+  hybrid,
 }
 
 /**
@@ -331,4 +357,23 @@ export enum OrderType {
   takeProfit,
   /** @type {string} */
   takeProfitLimit,
+}
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+export enum TradeType {
+  /**
+   * @type {string}
+   */
+  orderBook,
+  /**
+   * @type {string}
+   */
+  pool,
+  /**
+   * @type {string}
+   */
+  hybrid,
 }

@@ -127,6 +127,7 @@ export interface WebSocketResponseCandleLong
  * TradeShort
  *
  * @typedef {Object} WebSocketResponseTradeShort
+ * @property {string} y - (type) orderBook, pool, or hybrid
  * @property {string} m - (market) Market symbol
  * @property {string} i - (fillId) Trade identifier
  * @property {string} p - (price) Price of the trade in quote terms
@@ -137,6 +138,7 @@ export interface WebSocketResponseCandleLong
  * @property {number} u - (sequence) Fill sequence number of the trade
  */
 export interface WebSocketResponseTradeShort {
+  y: keyof typeof enums.TradeType;
   m: string;
   i: string;
   p: string;
