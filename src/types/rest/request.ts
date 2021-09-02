@@ -69,7 +69,6 @@ export interface RestRequestFindLiquidityChange {
   nonce: string;
   wallet: string;
   initiatingTxId?: string;
-  publicId?: string;
 }
 
 /**

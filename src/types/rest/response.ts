@@ -307,6 +307,7 @@ export interface RestResponseOrderFill {
 export interface RestResponseMarket {
   market: string;
   status: keyof typeof enums.MarketStatus;
+  type: keyof typeof enums.MarketType;
   baseAsset: string;
   baseAssetPrecision: number;
   quoteAsset: string;
@@ -471,6 +472,7 @@ export interface RestResponseTime {
  * Trade
  *
  * @typedef {Object} RestResponseTrade
+ * @property {TradeType} type - orderBook, pool, or hybrid
  * @property {string} fillId - Internal ID of fill
  * @property {string} price - Executed price of trade in quote terms
  * @property {string} quantity - Executed quantity of trade in base terms
@@ -480,6 +482,7 @@ export interface RestResponseTime {
  * @property {number} sequence - Last trade sequence number for the market
  */
 export interface RestResponseTrade {
+  type: keyof typeof enums.TradeType;
   fillId: string;
   price: string;
   quantity: string;
