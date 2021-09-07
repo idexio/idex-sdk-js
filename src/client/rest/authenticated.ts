@@ -18,6 +18,8 @@ import type {
   RestRequestFindDeposits,
   RestRequestFindFill,
   RestRequestFindFills,
+  RestRequestFindLiquidityPool,
+  RestRequestFindLiquidityPools,
   RestRequestFindOrder,
   RestRequestFindOrders,
   RestRequestFindWithdrawal,
@@ -30,6 +32,7 @@ import type {
   RestResponseDeposit,
   RestResponseFill,
   RestResponseLiquidityAddition,
+  RestResponseLiquidityPool,
   RestResponseLiquidityRemoval,
   RestResponseOrder,
   RestResponseUser,
@@ -140,6 +143,28 @@ export class RestAuthenticatedClient<
   }
 
   // Liquidity pool endpoints
+
+  /**
+   * Returns information about a single Liquidity Pool from a wallet
+   *
+   * @param {RestRequestFindLiquidityPool} findLiquidityPool
+   */
+  public async getLiquidityPool(
+    findLiquidityPool: RestRequestFindLiquidityPool,
+  ): Promise<RestResponseLiquidityPool> {
+    return this.get('/liquidityPools', findLiquidityPool);
+  }
+
+  /**
+   * Returns information about multiple Liquidity Pools from a wallet
+   *
+   * @param {RestRequestFindLiquidityPools} findLiquidityPools
+   */
+  public async getLiquidityPools(
+    findLiquidityPools: RestRequestFindLiquidityPools,
+  ): Promise<RestResponseLiquidityPool[]> {
+    return this.get('/liquidityPools', findLiquidityPools);
+  }
 
   /**
    * Add liquidity to a hybrid liquidity pool from assets held by a wallet on the exchange

@@ -401,10 +401,15 @@ export interface WebSocketResponseOrderLong {
  *
  *  @typedef {Object} WebSocketResponseOrderFillShort
  *
+ * @property {TradeType} type - orderBook, pool, or hybrid
  * @property {string} i - (fillId) Fill identifier
  * @property {string} p - (price) Price of the fill in quote terms
  * @property {string} q - (quantity) Quantity of the fill in base terms
  * @property {string} Q - (quoteQuantity) Quantity of the fill in quote terms
+ * @property {string} [oq] - Quantity of the fill in base terms supplied by order book liquidity, omitted for pool fills
+ * @property {string} [oQ] - Quantity of the fill in quote terms supplied by order book liquidity, omitted for pool fills
+ * @property {string} [pq] - Quantity of the fill in base terms supplied by pool liquidity, omitted for orderBook fills
+ * @property {string} [pQ] - Quantity of the fill in quote terms supplied by pool liquidity, omitted for orderBook fills
  * @property {number} t - (time) Timestamp of the fill
  * @property {string} s - (makerSide) Maker side of the fill, buy or sell
  * @property {string} u - (sequence) Fill sequence number
@@ -416,10 +421,15 @@ export interface WebSocketResponseOrderLong {
  * @property {string} S - (txStatus) Status of the trade settlement transaction, see values
  */
 export interface WebSocketResponseOrderFillShort {
+  y: keyof typeof enums.TradeType;
   i: string;
   p: string;
   q: string;
   Q: string;
+  oq?: string;
+  oQ?: string;
+  pq?: string;
+  pQ?: string;
   t: number;
   s: keyof typeof enums.OrderSide;
   u: number;
