@@ -369,6 +369,26 @@ const authenticatedClient = new RestAuthenticatedClient({
 });
 ```
 
+##### getLiquidityPool
+
+Returns information about a single Liquidity Pool from a wallet
+
+###### Parameters
+
+-   `findLiquidityPool` **[RestRequestFindLiquidityPool](#restrequestfindliquiditypool)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseLiquidityPool](#restresponseliquiditypool)>** 
+
+##### getLiquidityPools
+
+Returns information about multiple Liquidity Pools from a wallet
+
+###### Parameters
+
+-   `findLiquidityPools` **[RestRequestFindLiquidityPools](#restrequestfindliquiditypools)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseLiquidityPool](#restresponseliquiditypool)>>** 
+
 ##### addLiquidity
 
 Add liquidity to a hybrid liquidity pool from assets held by a wallet on the exchange
@@ -1610,10 +1630,15 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
+-   `type` **[TradeType](#tradetype)** orderBook, pool, or hybrid
 -   `fillId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of fill
 -   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed price of fill in quote terms
 -   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of fill in base terms
 -   `quoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of trade in quote terms
+-   `orderBookQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Quantity of the fill in base terms supplied by order book liquidity, omitted for pool fills
+-   `orderBookQuoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Quantity of the fill in quote terms supplied by order book liquidity, omitted for pool fills
+-   `poolQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Quantity of the fill in base terms supplied by pool liquidity, omitted for orderBook fills
+-   `poolQuoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Quantity of the fill in quote terms supplied by pool liquidity, omitted for orderBook fills
 -   `makerSide` **[OrderSide](#orderside)** Which side of the order the liquidity maker was on
 -   `fee` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fee amount on fill
 -   `feeAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Which token the fee was taken in
@@ -2159,10 +2184,15 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
+-   `type` **[TradeType](#tradetype)** orderBook, pool, or hybrid
 -   `i` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (fillId) Fill identifier
 -   `p` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (price) Price of the fill in quote terms
 -   `q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (quantity) Quantity of the fill in base terms
 -   `Q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (quoteQuantity) Quantity of the fill in quote terms
+-   `oq` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Quantity of the fill in base terms supplied by order book liquidity, omitted for pool fills
+-   `oQ` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Quantity of the fill in quote terms supplied by order book liquidity, omitted for pool fills
+-   `pq` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Quantity of the fill in base terms supplied by pool liquidity, omitted for orderBook fills
+-   `pQ` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Quantity of the fill in quote terms supplied by pool liquidity, omitted for orderBook fills
 -   `t` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (time) Timestamp of the fill
 -   `s` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (makerSide) Maker side of the fill, buy or sell
 -   `u` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (sequence) Fill sequence number
