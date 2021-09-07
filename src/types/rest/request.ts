@@ -14,9 +14,11 @@ export interface RestRequestFindLiquidityPool {
  * @property {string} tokenA - Address of one reserve token
  * @property {string} tokenB - Address of one reserve token
  */
+// TODO Specifying both tokens will return a single pool, whereas specifying one or none will
+// return an array
 export interface RestRequestFindLiquidityPools {
-  tokenA: string;
-  tokenB: string;
+  tokenA?: string;
+  tokenB?: string;
 }
 
 /**
