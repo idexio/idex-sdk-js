@@ -85,10 +85,15 @@ const transformBalancesMessage = (
 const transformOrderFill = (
   fill: types.WebSocketResponseOrderFillShort,
 ): types.RestResponseOrderFill => ({
+  type: fill.y,
   fillId: fill.i,
   price: fill.p,
   quantity: fill.q,
   quoteQuantity: fill.Q,
+  orderBookQuantity: fill.oq,
+  orderBookQuoteQuantity: fill.oQ,
+  poolQuantity: fill.pq,
+  poolQuoteQuantity: fill.pQ,
   time: fill.t,
   makerSide: fill.s,
   sequence: fill.u,

@@ -259,10 +259,15 @@ export interface RestResponseLiquidityRemoval
  * OrderFill
  *
  * @typedef {Object} RestResponseOrderFill
+ * @property {TradeType} type - orderBook, pool, or hybrid
  * @property {string} fillId - Internal ID of fill
  * @property {string} price - Executed price of fill in quote terms
  * @property {string} quantity - Executed quantity of fill in base terms
  * @property {string} quoteQuantity - Executed quantity of trade in quote terms
+ * @property {string} orderBookQuantity - Quantity of the fill in base terms supplied by order book liquidity, omitted for pool fills
+ * @property {string} orderBookQuoteQuantity - Quantity of the fill in quote terms supplied by order book liquidity, omitted for pool fills
+ * @property {string} poolQuantity - Quantity of the fill in base terms supplied by pool liquidity, omitted for orderBook fills
+ * @property {string} poolQuoteQuantity - Quantity of the fill in quote terms supplied by pool liquidity, omitted for orderBook fills
  * @property {OrderSide} makerSide - Which side of the order the liquidity maker was on
  * @property {string} fee - Fee amount on fill
  * @property {string} feeAsset - Which token the fee was taken in
@@ -274,10 +279,15 @@ export interface RestResponseLiquidityRemoval
  * @property {string} txStatus - Ethereum transaction status
  */
 export interface RestResponseOrderFill {
+  type: keyof typeof enums.TradeType;
   fillId: string;
   price: string;
   quantity: string;
   quoteQuantity: string;
+  orderBookQuantity?: string;
+  orderBookQuoteQuantity?: string;
+  poolQuantity?: string;
+  poolQuoteQuantity?: string;
   time: number;
   makerSide: keyof typeof enums.OrderSide;
   sequence: number;
