@@ -97,24 +97,22 @@
     -   [MessageSigner](#messagesigner)
 -   [Misc Types & Utilities](#misc-types--utilities)
     -   [ErrorShortCodes](#errorshortcodes)
--   [RestRequestFindLiquidityPool](#restrequestfindliquiditypool)
-    -   [Properties](#properties)
 -   [RestRequestFindLiquidityPools](#restrequestfindliquiditypools)
-    -   [Properties](#properties-1)
+    -   [Properties](#properties)
 -   [RestRequestAddLiquidity](#restrequestaddliquidity)
-    -   [Properties](#properties-2)
+    -   [Properties](#properties-1)
 -   [createPrivateKeyMessageSigner](#createprivatekeymessagesigner)
     -   [Parameters](#parameters)
     -   [Examples](#examples)
 -   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
-    -   [Properties](#properties-3)
+    -   [Properties](#properties-2)
 -   [privateKeySigner](#privatekeysigner)
 -   [RestRequestFindLiquidityAddition](#restrequestfindliquidityaddition)
-    -   [Properties](#properties-4)
+    -   [Properties](#properties-3)
 -   [RestRequestFindLiquidityRemoval](#restrequestfindliquidityremoval)
-    -   [Properties](#properties-5)
+    -   [Properties](#properties-4)
 -   [RestRequestFindLiquidityChanges](#restrequestfindliquiditychanges)
-    -   [Properties](#properties-6)
+    -   [Properties](#properties-5)
 -   [MarketType](#markettype)
     -   [orderBook](#orderbook)
     -   [hybrid](#hybrid)
@@ -130,19 +128,19 @@
     -   [Removal](#removal)
 -   [WebSocketRequestSubscription](#websocketrequestsubscription)
 -   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
-    -   [Properties](#properties-7)
+    -   [Properties](#properties-6)
 -   [MultiverseChain](#multiversechain)
 -   [RestResponseLiquidityPool](#restresponseliquiditypool)
-    -   [Properties](#properties-8)
+    -   [Properties](#properties-7)
 -   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
 -   [RestResponseLiquidityAddition](#restresponseliquidityaddition)
-    -   [Properties](#properties-9)
+    -   [Properties](#properties-8)
 -   [RestResponseLiquidityRemoval](#restresponseliquidityremoval)
-    -   [Properties](#properties-10)
+    -   [Properties](#properties-9)
 -   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
-    -   [Properties](#properties-11)
+    -   [Properties](#properties-10)
 -   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
-    -   [Properties](#properties-12)
+    -   [Properties](#properties-11)
 -   [WebSocketRequest](#websocketrequest)
 -   [WebSocketRequest](#websocketrequest-1)
 -   [TradeType](#tradetype)
@@ -221,19 +219,6 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 Returns information about assets supported by the exchange
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseAsset](#restresponseasset)>>** 
-
-##### getLiquidityPool
-
--   **See: <https://docs.idex.io/#get-liquidity-pools>
-    **
-
-Returns information about liquidity pools supported by the exchange
-
-###### Parameters
-
--   `findLiquidityPool` **[RestRequestFindLiquidityPool](#restrequestfindliquiditypool)** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseLiquidityPool](#restresponseliquiditypool)>** 
 
 ##### getLiquidityPools
 
@@ -368,26 +353,6 @@ const authenticatedClient = new RestAuthenticatedClient({
   walletPrivateKey: '0x3141592653589793238462643383279502884197169399375105820974944592'
 });
 ```
-
-##### getLiquidityPool
-
-Returns information about a single Liquidity Pool from a wallet
-
-###### Parameters
-
--   `findLiquidityPool` **[RestRequestFindLiquidityPool](#restrequestfindliquiditypool)** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseLiquidityPool](#restresponseliquiditypool)>** 
-
-##### getLiquidityPools
-
-Returns information about multiple Liquidity Pools from a wallet
-
-###### Parameters
-
--   `findLiquidityPools` **[RestRequestFindLiquidityPools](#restrequestfindliquiditypools)** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[RestResponseLiquidityPool](#restresponseliquiditypool)>>** 
 
 ##### addLiquidity
 
@@ -2312,22 +2277,15 @@ The possible error short codes when interacting with the IDEX API's.
 
 Type: (`"TOKEN_NOT_FOUND"` \| `"ORDER_NOT_FOUND"` \| `"MARKET_NOT_FOUND"` \| `"DEPOSIT_NOT_FOUND"` \| `"WITHDRAWAL_NOT_FOUND"` \| `"FILL_NOT_FOUND"` \| `"USER_NOT_FOUND"` \| `"ENDPOINT_NOT_FOUND"` \| `"EXCEEDED_RATE_LIMIT"` \| `"INSUFFICIENT_FUNDS"` \| `"USER_MIGRATION_REQUIRED"` \| `"WALLET_NOT_ASSOCIATED"` \| `"EMAIL_VERIFICATION_REQUIRED"` \| `"INVALID_WALLET_SIGNATURE"` \| `"INVALID_API_KEY"` \| `"REQUIRED_API_KEY"` \| `"INVALID_HMAC_SIGNATURE"` \| `"REQUIRED_HMAC_SIGNATURE"` \| `"REQUIRED_API_KEY_READ_SCOPE"` \| `"REQUIRED_API_KEY_TRADE_SCOPE"` \| `"REQUIRED_API_KEY_WITHDRAW_SCOPE"` \| `"TRADING_RESTRICTED_FOR_LOCATION"` \| `"EXCEEDED_WITHDRAWAL_LIMIT"` \| `"CANCELS_DISABLED"` \| `"TRADING_DISABLED"` \| `"WITHDRAWALS_DISABLED"` \| `"INTERNAL_SERVER_ERROR"` \| `"BAD_REQUEST"` \| `"SERVICE_UNAVAILABLE"` \| `"INVALID_API_VERSION"` \| `"REQUIRED_PARAMETER"` \| `"INVALID_PARAMETER"` \| `"INVALID_WITHDRAWAL_QUANTITY"` \| `"INVALID_ORDER_QUANTITY"` \| `"INVALID_ORDER_PRICE_CROSSES_SPREAD"`)
 
-## RestRequestFindLiquidityPool
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
--   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Target market
-
 ## RestRequestFindLiquidityPools
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
 ### Properties
 
--   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Address of one reserve token
--   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Address of one reserve token
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Target market
+-   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Address of one reserve token
+-   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Address of one reserve token
 
 ## RestRequestAddLiquidity
 

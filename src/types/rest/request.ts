@@ -2,21 +2,13 @@ import * as enums from '../enums';
 import { XOR } from '../utils';
 
 /**
- * @typedef {Object} RestRequestFindLiquidityPool
- * @property {string} market - Target market
- */
-export interface RestRequestFindLiquidityPool {
-  market: string;
-}
-
-/**
  * @typedef {Object} RestRequestFindLiquidityPools
- * @property {string} tokenA - Address of one reserve token
- * @property {string} tokenB - Address of one reserve token
+ * @property {string} [market] - Target market
+ * @property {string} [tokenA] - Address of one reserve token
+ * @property {string} [tokenB] - Address of one reserve token
  */
-// TODO Specifying both tokens will return a single pool, whereas specifying one or none will
-// return an array
 export interface RestRequestFindLiquidityPools {
+  market?: string;
   tokenA?: string;
   tokenB?: string;
 }
