@@ -9,6 +9,8 @@ export const ORDER_SIGNATURE_HASH_VERSION_BSC = 2;
 
 export const ORDER_SIGNATURE_HASH_VERSION_MATIC = 3;
 
+export const ORDER_SIGNATURE_HASH_VERSION_MATIC_SANDBOX = 103;
+
 /**
  * The URI that will be used based on the configuration given.  This includes
  * sandbox vs production as well as the multi-verse chain that should be used

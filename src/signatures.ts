@@ -61,29 +61,31 @@ export const privateKeySigner = createPrivateKeyMessageSigner;
 
 function signatureHashVersion(
   multiverseChain: MultiverseChain,
+  sandbox: boolean,
 ):
   | typeof constants.ORDER_SIGNATURE_HASH_VERSION_ETH
   | typeof constants.ORDER_SIGNATURE_HASH_VERSION_BSC
-  | typeof constants.ORDER_SIGNATURE_HASH_VERSION_MATIC {
-  let orderSignatureHashVersion:
-    | typeof constants.ORDER_SIGNATURE_HASH_VERSION_ETH
-    | typeof constants.ORDER_SIGNATURE_HASH_VERSION_BSC
-    | typeof constants.ORDER_SIGNATURE_HASH_VERSION_MATIC;
+  | typeof constants.ORDER_SIGNATURE_HASH_VERSION_MATIC
+  | typeof constants.ORDER_SIGNATURE_HASH_VERSION_MATIC_SANDBOX {
   if (multiverseChain === 'eth') {
-    orderSignatureHashVersion = constants.ORDER_SIGNATURE_HASH_VERSION_ETH;
-  } else if (multiverseChain === 'bsc') {
-    orderSignatureHashVersion = constants.ORDER_SIGNATURE_HASH_VERSION_BSC;
-  } else if (multiverseChain === 'matic') {
-    orderSignatureHashVersion = constants.ORDER_SIGNATURE_HASH_VERSION_MATIC;
-  } else {
-    throw new Error(`Invalid multiverse chain: ${multiverseChain}`);
+    return constants.ORDER_SIGNATURE_HASH_VERSION_ETH;
   }
-  return orderSignatureHashVersion;
+  if (multiverseChain === 'bsc') {
+    return constants.ORDER_SIGNATURE_HASH_VERSION_BSC;
+  }
+  if (multiverseChain === 'matic') {
+    return sandbox
+      ? constants.ORDER_SIGNATURE_HASH_VERSION_MATIC_SANDBOX
+      : constants.ORDER_SIGNATURE_HASH_VERSION_MATIC;
+  }
+
+  throw new Error(`Invalid multiverse chain: ${multiverseChain}`);
 }
 
 export function createOrderSignature(
   order: RestRequestOrder,
   multiverseChain: MultiverseChain,
+  sandbox: boolean,
 ): string {
   const quantity =
     (order as RestRequestOrderByBaseQuantity).quantity ||
@@ -92,7 +94,7 @@ export function createOrderSignature(
     .quoteOrderQuantity;
 
   return solidityHashOfParams([
-    ['uint8', signatureHashVersion(multiverseChain)],
+    ['uint8', signatureHashVersion(multiverseChain, sandbox)],
     ['uint128', uuidToUint8Array(order.nonce)],
     ['address', order.wallet],
     ['string', order.market],
@@ -174,9 +176,10 @@ export function createWithdrawalSignature(
 export function createAddLiquiditySignature(
   addLiquidity: RestRequestAddLiquidity,
   multiverseChain: MultiverseChain,
+  sandbox: boolean,
 ): string {
   return solidityHashOfParams([
-    ['uint8', signatureHashVersion(multiverseChain)],
+    ['uint8', signatureHashVersion(multiverseChain, sandbox)],
     ['uint8', LiquidityChangeType.Addition],
     ['uint8', LiquidityChangeOrigination.OffChain],
     ['uint128', uuidToUint8Array(addLiquidity.nonce)],
@@ -195,9 +198,10 @@ export function createAddLiquiditySignature(
 export function createRemoveLiquiditySignature(
   removeLiquidity: RestRequestRemoveLiquidity,
   multiverseChain: MultiverseChain,
+  sandbox: boolean,
 ): string {
   return solidityHashOfParams([
-    ['uint8', signatureHashVersion(multiverseChain)],
+    ['uint8', signatureHashVersion(multiverseChain, sandbox)],
     ['uint8', LiquidityChangeType.Removal],
     ['uint8', LiquidityChangeOrigination.OffChain],
     ['uint128', uuidToUint8Array(removeLiquidity.nonce)],
