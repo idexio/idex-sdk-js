@@ -1,6 +1,7 @@
 export * from './types';
 export * from './client';
 export * from './constants';
+export * from './orderbook';
 export * from './signatures';
 
 // legacy exports - remove once migrated

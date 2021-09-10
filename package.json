@@ -36,6 +36,7 @@
   ],
   "dependencies": {
     "axios": "^0.21.1",
+    "bignumber.js": "^9.0.1",
     "ethers": "^5.0.32",
     "isomorphic-ws": "^4.0.1",
     "qs": "^6.9.6",
