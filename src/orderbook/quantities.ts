@@ -210,11 +210,6 @@ export const calculateQuoteQuantityOut = function calculateQuoteQuantityOut(
   if (baseAssetQuantity === BigInt(0) || grossBaseQuantityIn === BigInt(0)) {
     return BigInt(0);
   }
-  /**
-   * The result needs to be rounded down to prevent the pool's constant
-   * product from decreasing, ie. the second part of the subtraction (the
-   * division) needs to be rounded up.
-   */
   const numerator = baseAssetQuantity * quoteAssetQuantity * oneInPips;
   const denominator =
     baseAssetQuantity * oneInPips +
