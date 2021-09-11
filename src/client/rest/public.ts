@@ -232,9 +232,8 @@ export class RestPublicClient<
    */
   public async getOrderBookLevel1(
     market: string,
-    limitOrderOnly = false,
   ): Promise<RestResponseOrderBookLevel1> {
-    return this.get('/orderbook', { level: 1, market, limitOrderOnly });
+    return this.get('/orderbook', { level: 1, market });
   }
 
   /**
@@ -249,9 +248,8 @@ export class RestPublicClient<
   public async getOrderBookLevel2(
     market: string,
     limit = 50,
-    limitOrderOnly = false,
   ): Promise<RestResponseOrderBookLevel2> {
-    return this.get('/orderbook', { level: 2, market, limit, limitOrderOnly });
+    return this.get('/orderbook', { level: 2, market, limit });
   }
 
   // Internal methods exposed for advanced usage
