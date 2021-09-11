@@ -179,8 +179,6 @@ export interface WebSocketResponseTradeLong
  * @property {string} B - (bidQuantity) Quantity available at the best bid price
  * @property {string} a - (askPrice) Best ask price
  * @property {string} A - (askQuantity) Quantity available at the best ask price
- * @property {string} q - (baseAssetQuantity) Quantity of base asset in the liquidity pool
- * @property {string} Q - (quoteAssetQuantity) Quantity of quote asset in the liquidity pool
  */
 export interface WebSocketResponseL1OrderBookShort {
   m: string;
@@ -189,8 +187,6 @@ export interface WebSocketResponseL1OrderBookShort {
   B: string;
   a: string;
   A: string;
-  q: string;
-  Q: string;
 }
 
 /**
@@ -203,8 +199,6 @@ export interface WebSocketResponseL1OrderBookShort {
  * @property {string} bidQuantity - Quantity available at the best bid price
  * @property {string} askPrice - Best ask price
  * @property {string} askQuantity - Quantity available at the best ask price
- * @property {string} baseAssetQuantity - Quantity of base asset in the liquidity pool
- * @property {string} quoteAssetQuantity - Quantity of quote asset in the liquidity pool
  */
 export interface WebSocketResponseL1OrderBookLong {
   market: string; // m
@@ -213,8 +207,6 @@ export interface WebSocketResponseL1OrderBookLong {
   bidQuantity: string; // B
   askPrice: string; // a
   askQuantity: string; // A
-  baseAssetQuantity: string; // q
-  quoteAssetQuantity: string; // Q
 }
 
 /**
@@ -222,7 +214,7 @@ export interface WebSocketResponseL1OrderBookLong {
  *
  * @typedef {[string, string, number]} WebSocketResponseL2OrderBookChange
  */
-type WebSocketResponseL2OrderBookChange = restResponse.RestResponseOrderBookL2PriceLevel;
+type WebSocketResponseL2OrderBookChange = restResponse.RestResponseOrderBookPriceLevel;
 
 /**
  * L2OrderBookShort
@@ -233,8 +225,6 @@ type WebSocketResponseL2OrderBookChange = restResponse.RestResponseOrderBookL2Pr
  * @property {number} u - (sequence) Order book update sequence number of the update
  * @property {WebSocketResponseL2OrderBookChange[]} b - (bids) Array of bid price level updates
  * @property {WebSocketResponseL2OrderBookChange[]} a - (asks) Array of ask price level updates
- * @property {string} q - (baseAssetQuantity) Quantity of base asset in the liquidity pool
- * @property {string} Q - (quoteAssetQuantity) Quantity of quote asset in the liquidity pool
  */
 export interface WebSocketResponseL2OrderBookShort {
   m: string;
@@ -242,8 +232,6 @@ export interface WebSocketResponseL2OrderBookShort {
   u: number;
   b: WebSocketResponseL2OrderBookChange[];
   a: WebSocketResponseL2OrderBookChange[];
-  q: string;
-  Q: string;
 }
 
 /**
@@ -255,8 +243,6 @@ export interface WebSocketResponseL2OrderBookShort {
  * @property {number} sequence - Order book update sequence number of the update
  * @property {WebSocketResponseL2OrderBookChange[]} bids - Array of bid price level updates
  * @property {WebSocketResponseL2OrderBookChange[]} asks - Array of ask price level updates
- * @property {string} baseAssetQuantity - Quantity of base asset in the liquidity pool
- * @property {string} quoteAssetQuantity - Quantity of quote asset in the liquidity pool
  */
 export interface WebSocketResponseL2OrderBookLong {
   market: string; // m
@@ -264,8 +250,6 @@ export interface WebSocketResponseL2OrderBookLong {
   sequence: number; // u
   bids: WebSocketResponseL2OrderBookChange[]; // b
   asks: WebSocketResponseL2OrderBookChange[]; // a
-  baseAssetQuantity: string; // q
-  quoteAssetQuantity: string; // Q
 }
 
 // balances
