@@ -397,8 +397,9 @@ export type RestResponseOrderBookPriceLevel = [Price, Size, NumOrders];
 
 interface RestResponseOrderBook {
   sequence: number;
-  bids: unknown[];
-  asks: unknown[];
+  bids: RestResponseOrderBookPriceLevel[];
+  asks: RestResponseOrderBookPriceLevel[];
+  pool: LiquidityPoolReserves | null;
 }
 
 /**
@@ -408,9 +409,11 @@ interface RestResponseOrderBook {
  * @property {[RestResponseOrderBookPriceLevel]|[]} bids
  * @property {[RestResponseOrderBookPriceLevel]|[]} asks
  */
-export interface RestResponseOrderBookLevel1 extends RestResponseOrderBook {
+export interface RestResponseOrderBookLevel1 {
+  sequence: number;
   bids: [RestResponseOrderBookPriceLevel] | [];
   asks: [RestResponseOrderBookPriceLevel] | [];
+  pool: LiquidityPoolReserves | null;
 }
 
 /**
