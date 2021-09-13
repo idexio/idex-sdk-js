@@ -399,7 +399,7 @@ interface RestResponseOrderBook {
   sequence: number;
   bids: RestResponseOrderBookPriceLevel[];
   asks: RestResponseOrderBookPriceLevel[];
-  pool: LiquidityPoolReserves | null;
+  pool: { baseReserveQuantity: string; quoteReserveQuantity: string } | null;
 }
 
 /**
@@ -413,7 +413,7 @@ export interface RestResponseOrderBookLevel1 {
   sequence: number;
   bids: [RestResponseOrderBookPriceLevel] | [];
   asks: [RestResponseOrderBookPriceLevel] | [];
-  pool: LiquidityPoolReserves | null;
+  pool: { baseReserveQuantity: string; quoteReserveQuantity: string } | null;
 }
 
 /**

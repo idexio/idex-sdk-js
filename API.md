@@ -132,6 +132,7 @@
 -   [MultiverseChain](#multiversechain)
 -   [RestResponseLiquidityPool](#restresponseliquiditypool)
     -   [Properties](#properties-7)
+-   [numerator](#numerator)
 -   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
 -   [RestResponseLiquidityAddition](#restresponseliquidityaddition)
     -   [Properties](#properties-8)
@@ -2007,6 +2008,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `B` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (bidQuantity) Quantity available at the best bid price
 -   `a` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (askPrice) Best ask price
 -   `A` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (askQuantity) Quantity available at the best ask price
+-   `a` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (askPrice) Best ask price
 
 ### WebSocketResponseL1OrderBookLong
 
@@ -2485,6 +2487,12 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `totalLiquidity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total quantity of liquidity provider (LP) tokens minted in token precision, not pips
 -   `reserveUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of reserves in USD
 -   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Market symbol of pool’s associated hybrid market
+
+## numerator
+
+The result needs to be rounded down to prevent the pool's constant
+product from decreasing, ie. the second part of the subtraction (the
+division) needs to be rounded up.
 
 ## WebSocketResponseL2OrderBookChange
 
