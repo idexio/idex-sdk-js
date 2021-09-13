@@ -170,6 +170,32 @@ export interface WebSocketResponseTradeLong
 // l1orderbook
 
 /**
+ * LiquidityPoolShort
+ *
+ * @typedef {Object} WebSocketResponseLiquidityPoolShort
+ * @property {string} q - (baseReserveQuantity) quantity of base asset held in the liquidity pool
+ * @property {string} Q - (quoteReserveQuantity) quantity of quote asset held in the liquidity pool
+ */
+
+export interface WebSocketResponseLiquidityPoolShort {
+  q: string;
+  Q: string;
+}
+
+/**
+ * LiquidityPoolLong
+ *
+ * @typedef {Object} WebSocketResponseLiquidityPoolLong
+ * @property {string} baseReserveQuantity - quantity of base asset held in the liquidity pool
+ * @property {string} quoteReserveQuantity - quantity of quote asset held in the liquidity pool
+ */
+
+export interface WebSocketResponseLiquidityPoolLong {
+  baseReserveQuantity: string;
+  quoteReserveQuantity: string;
+}
+
+/**
  * L1OrderBookShort
  *
  * @typedef {Object} WebSocketResponseL1OrderBookShort
@@ -179,7 +205,7 @@ export interface WebSocketResponseTradeLong
  * @property {string} B - (bidQuantity) Quantity available at the best bid price
  * @property {string} a - (askPrice) Best ask price
  * @property {string} A - (askQuantity) Quantity available at the best ask price
- * @property {string} a - (askPrice) Best ask price
+ * @property {WebSocketResponseLiquidityPoolShort | null} p - Liquidity pool reserves for this market
  */
 export interface WebSocketResponseL1OrderBookShort {
   m: string;
@@ -188,7 +214,7 @@ export interface WebSocketResponseL1OrderBookShort {
   B: string;
   a: string;
   A: string;
-  p: { q: string; Q: string } | null;
+  p: WebSocketResponseLiquidityPoolShort | null;
 }
 
 /**
@@ -201,6 +227,7 @@ export interface WebSocketResponseL1OrderBookShort {
  * @property {string} bidQuantity - Quantity available at the best bid price
  * @property {string} askPrice - Best ask price
  * @property {string} askQuantity - Quantity available at the best ask price
+ * @property {WebSocketResponseLiquidityPoolLong | null} pool - Liquidity pool reserves for this market
  */
 export interface WebSocketResponseL1OrderBookLong {
   market: string; // m
@@ -209,7 +236,7 @@ export interface WebSocketResponseL1OrderBookLong {
   bidQuantity: string; // B
   askPrice: string; // a
   askQuantity: string; // A
-  pool: { baseReserveQuantity: string; quoteReserveQuantity: string } | null;
+  pool: WebSocketResponseLiquidityPoolLong | null;
 }
 
 /**
@@ -228,6 +255,7 @@ type WebSocketResponseL2OrderBookChange = restResponse.RestResponseOrderBookPric
  * @property {number} u - (sequence) Order book update sequence number of the update
  * @property {WebSocketResponseL2OrderBookChange[]} b - (bids) Array of bid price level updates
  * @property {WebSocketResponseL2OrderBookChange[]} a - (asks) Array of ask price level updates
+ * @property {WebSocketResponseLiquidityPoolShort | null} p - Liquidity pool reserves for this market
  */
 export interface WebSocketResponseL2OrderBookShort {
   m: string;
@@ -235,7 +263,7 @@ export interface WebSocketResponseL2OrderBookShort {
   u: number;
   b: WebSocketResponseL2OrderBookChange[];
   a: WebSocketResponseL2OrderBookChange[];
-  p: { q: string; Q: string } | null;
+  p: WebSocketResponseLiquidityPoolShort | null;
 }
 
 /**
@@ -248,6 +276,7 @@ export interface WebSocketResponseL2OrderBookShort {
  * @property {WebSocketResponseL2OrderBookChange[]} bids - Array of bid price level updates
  * @property {WebSocketResponseL2OrderBookChange[]} asks - Array of ask price level updates
  * @property {baseReserveQuantity: string; quoteReserveQuantity: string} pool - liquidity pool reserves
+ * @property {WebSocketResponseLiquidityPoolLong | null} p - Liquidity pool reserves for this market
  */
 export interface WebSocketResponseL2OrderBookLong {
   market: string; // m
@@ -255,7 +284,7 @@ export interface WebSocketResponseL2OrderBookLong {
   sequence: number; // u
   bids: WebSocketResponseL2OrderBookChange[]; // b
   asks: WebSocketResponseL2OrderBookChange[]; // a
-  pool: { baseReserveQuantity: string; quoteReserveQuantity: string } | null;
+  pool: WebSocketResponseLiquidityPoolLong | null;
 }
 
 // balances
