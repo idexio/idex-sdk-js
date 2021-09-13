@@ -389,8 +389,6 @@ type LiquidityPoolReserves = {
 
 type Price = string;
 
-type PriceLevelType = 'hybrid' | 'limit' | 'pool';
-
 type Size = string;
 
 type NumOrders = number;
@@ -400,19 +398,12 @@ type NumOrders = number;
  *
  * @typedef {[string, string, number, string]} RestResponseOrderBookPriceLevel
  */
-export type RestResponseOrderBookL1PriceLevel = [Price, Size, NumOrders];
-
-export type RestResponseOrderBookL2PriceLevel = [
-  Price,
-  Size,
-  NumOrders,
-  PriceLevelType,
-];
+export type RestResponseOrderBookPriceLevel = [Price, Size, NumOrders];
 
 interface RestResponseOrderBook {
   sequence: number;
-  bids: RestResponseOrderBookL2PriceLevel[];
-  asks: RestResponseOrderBookL2PriceLevel[];
+  bids: RestResponseOrderBookPriceLevel[];
+  asks: RestResponseOrderBookPriceLevel[];
   pool: LiquidityPoolReserves | null;
 }
 
@@ -425,8 +416,8 @@ interface RestResponseOrderBook {
  */
 export interface RestResponseOrderBookLevel1 {
   sequence: number;
-  bids: [RestResponseOrderBookL1PriceLevel] | [];
-  asks: [RestResponseOrderBookL1PriceLevel] | [];
+  bids: [RestResponseOrderBookPriceLevel] | [];
+  asks: [RestResponseOrderBookPriceLevel] | [];
   pool: LiquidityPoolReserves | null;
 }
 
@@ -438,8 +429,8 @@ export interface RestResponseOrderBookLevel1 {
  * @property {RestResponseOrderBookPriceLevel[]} asks
  */
 export interface RestResponseOrderBookLevel2 extends RestResponseOrderBook {
-  bids: RestResponseOrderBookL2PriceLevel[];
-  asks: RestResponseOrderBookL2PriceLevel[];
+  bids: RestResponseOrderBookPriceLevel[];
+  asks: RestResponseOrderBookPriceLevel[];
 }
 
 /**

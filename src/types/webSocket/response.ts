@@ -222,7 +222,7 @@ export interface WebSocketResponseL1OrderBookLong {
  *
  * @typedef {[string, string, number]} WebSocketResponseL2OrderBookChange
  */
-type WebSocketResponseL2OrderBookChange = restResponse.RestResponseOrderBookL2PriceLevel;
+type WebSocketResponseL2OrderBookChange = restResponse.RestResponseOrderBookPriceLevel;
 
 /**
  * L2OrderBookShort
