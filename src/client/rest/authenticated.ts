@@ -160,6 +160,7 @@ export class RestAuthenticatedClient<
         signatures.createAddLiquiditySignature(
           addLiquidityRequest,
           this.config.multiverseChain,
+          this.config.sandbox,
         ),
       ),
     });
@@ -187,6 +188,7 @@ export class RestAuthenticatedClient<
         signatures.createRemoveLiquiditySignature(
           removeLiquidityRequest,
           this.config.multiverseChain,
+          this.config.sandbox,
         ),
       ),
     });
@@ -345,7 +347,11 @@ export class RestAuthenticatedClient<
     return this.post('/orders', {
       parameters: order,
       signature: await signer(
-        signatures.createOrderSignature(order, this.config.multiverseChain),
+        signatures.createOrderSignature(
+          order,
+          this.config.multiverseChain,
+          this.config.sandbox,
+        ),
       ),
     });
   }
@@ -386,7 +392,11 @@ export class RestAuthenticatedClient<
     return this.post('/orders/test', {
       parameters: order,
       signature: await signer(
-        signatures.createOrderSignature(order, this.config.multiverseChain),
+        signatures.createOrderSignature(
+          order,
+          this.config.multiverseChain,
+          this.config.sandbox,
+        ),
       ),
     });
   }

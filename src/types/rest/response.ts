@@ -382,11 +382,6 @@ export type RestResponseCanceledOrder = {
   orderId: string;
 }[];
 
-type LiquidityPoolReserves = {
-  baseReserveQuantity: string;
-  quoteReserveQuantity: string;
-};
-
 type Price = string;
 
 type Size = string;
@@ -396,7 +391,7 @@ type NumOrders = number;
 /**
  * OrderBookPriceLevel
  *
- * @typedef {[string, string, number, string]} RestResponseOrderBookPriceLevel
+ * @typedef {[string, string, number]} RestResponseOrderBookPriceLevel
  */
 export type RestResponseOrderBookPriceLevel = [Price, Size, NumOrders];
 

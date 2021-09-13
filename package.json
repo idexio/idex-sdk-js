@@ -1,6 +1,6 @@
 {
   "name": "@idexio/idex-sdk",
-  "version": "1.7.0-beta.10",
+  "version": "1.7.0-alpha.1",
   "description": "IDEX SDK for Javascript in the browser and Node.js",
   "license": "MIT",
   "repository": "git@github.com:idexio/idex-sdk-js.git",
@@ -36,7 +36,6 @@
   ],
   "dependencies": {
     "axios": "^0.21.1",
-    "bignumber.js": "^9.0.1",
     "ethers": "^5.0.32",
     "isomorphic-ws": "^4.0.1",
     "qs": "^6.9.6",
