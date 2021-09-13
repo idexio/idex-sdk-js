@@ -139,13 +139,15 @@
 -   [numerator](#numerator)
 -   [RestResponseLiquidityAddition](#restresponseliquidityaddition)
     -   [Properties](#properties-10)
+-   [RestResponseLiquidityPoolReserves](#restresponseliquiditypoolreserves)
+    -   [Properties](#properties-11)
 -   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
 -   [RestResponseLiquidityRemoval](#restresponseliquidityremoval)
-    -   [Properties](#properties-11)
--   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
     -   [Properties](#properties-12)
--   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
+-   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
     -   [Properties](#properties-13)
+-   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
+    -   [Properties](#properties-14)
 -   [WebSocketRequest](#websocketrequest)
 -   [WebSocketRequest](#websocketrequest-1)
 -   [TradeType](#tradetype)
@@ -2544,6 +2546,17 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `feeTokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenB collected as fees
 -   `txId` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Ethereum transaction ID, if available
 -   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum transaction status
+
+## RestResponseLiquidityPoolReserves
+
+LiquidityPoolReserves
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `baseReserveQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** reserve quantity of base asset in pool
+-   `quoteReserveQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** reserve quantity of quote asset in pool
 
 ## WebSocketResponseL2OrderBookChange
 

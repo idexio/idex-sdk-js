@@ -234,6 +234,18 @@ export interface RestResponseLiquidityAddition
 }
 
 /**
+ * LiquidityPoolReserves
+ *
+ * @typedef {Object} RestResponseLiquidityPoolReserves
+ * @property {string} baseReserveQuantity - reserve quantity of base asset in pool
+ * @property {string} quoteReserveQuantity - reserve quantity of quote asset in pool
+ */
+export interface RestResponseLiquidityPoolReserves {
+  baseReserveQuantity: string;
+  quoteReserveQuantity: string;
+}
+
+/**
  * LiquidityRemoval
  *
  * @typedef {Object} RestResponseLiquidityRemoval
@@ -399,7 +411,7 @@ interface RestResponseOrderBook {
   sequence: number;
   bids: RestResponseOrderBookPriceLevel[];
   asks: RestResponseOrderBookPriceLevel[];
-  pool: { baseReserveQuantity: string; quoteReserveQuantity: string } | null;
+  pool: RestResponseLiquidityPoolReserves | null;
 }
 
 /**
@@ -413,7 +425,7 @@ export interface RestResponseOrderBookLevel1 {
   sequence: number;
   bids: [RestResponseOrderBookPriceLevel] | [];
   asks: [RestResponseOrderBookPriceLevel] | [];
-  pool: { baseReserveQuantity: string; quoteReserveQuantity: string } | null;
+  pool: RestResponseLiquidityPoolReserves | null;
 }
 
 /**
