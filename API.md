@@ -136,9 +136,9 @@
     -   [Properties](#properties-8)
 -   [WebSocketResponseLiquidityPoolLong](#websocketresponseliquiditypoollong)
     -   [Properties](#properties-9)
--   [numerator](#numerator)
 -   [RestResponseLiquidityAddition](#restresponseliquidityaddition)
     -   [Properties](#properties-10)
+-   [numerator](#numerator)
 -   [RestResponseLiquidityPoolReserves](#restresponseliquiditypoolreserves)
     -   [Properties](#properties-11)
 -   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
@@ -302,6 +302,7 @@ Get current top bid/ask price levels of order book for a market
 ###### Parameters
 
 -   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
+-   `limitOrderOnly`   (optional, default `false`)
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseOrderBookLevel1](#restresponseorderbooklevel1)>** 
 
@@ -316,6 +317,7 @@ Get current order book price levels for a market
 
 -   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
 -   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Number of bids and asks to return. Default is 50, 0 returns the entire book (optional, default `50`)
+-   `limitOrderOnly`   (optional, default `false`)
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[RestResponseOrderBookLevel2](#restresponseorderbooklevel2)>** 
 
@@ -2519,12 +2521,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `baseReserveQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** quantity of base asset held in the liquidity pool
 -   `quoteReserveQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** quantity of quote asset held in the liquidity pool
 
-## numerator
-
-The result needs to be rounded down to prevent the pool's constant
-product from decreasing, ie. the second part of the subtraction (the
-division) needs to be rounded up.
-
 ## RestResponseLiquidityAddition
 
 LiquidityAddition
@@ -2546,6 +2542,12 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `feeTokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenB collected as fees
 -   `txId` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Ethereum transaction ID, if available
 -   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum transaction status
+
+## numerator
+
+The result needs to be rounded down to prevent the pool's constant
+product from decreasing, ie. the second part of the subtraction (the
+division) needs to be rounded up.
 
 ## RestResponseLiquidityPoolReserves
 
