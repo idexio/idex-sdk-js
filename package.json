@@ -17,6 +17,7 @@
     "lint:fix:package": "pretty-quick --pattern package.json",
     "lint:fix:staged": "lint-staged",
     "lint:types": "tsc --noEmit",
+    "orderbook:demo": "node dist/orderbook/demo.js",
     "prepare": "husky install",
     "run:quick": "ts-node -T -s -H ./test/quick.ts"
   },

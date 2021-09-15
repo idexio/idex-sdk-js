@@ -3,6 +3,10 @@ import { deepObjectFreeze } from './utils';
 export const REST_API_KEY_HEADER = 'IDEX-API-Key';
 export const REST_HMAC_SIGNATURE_HEADER = 'IDEX-HMAC-Signature';
 
+export const ORDER_BOOK_MAX_L2_LEVELS = 500;
+
+export const ORDER_BOOK_HYBRID_SLIPPAGE = 100; // 0.1%
+
 export const ORDER_SIGNATURE_HASH_VERSION_ETH = 1;
 
 export const ORDER_SIGNATURE_HASH_VERSION_BSC = 2;
@@ -32,8 +36,8 @@ export const URLS = deepObjectFreeze({
       websocket: 'wss://websocket-sandbox-bsc.idex.io/v1',
     },
     matic: {
-      rest: 'https://api-sandbox-matic.idex.io/v1',
-      websocket: 'wss://websocket-sandbox-matic.idex.io/v1',
+      rest: 'https://api-dev-sub-matic-1.idex-dev.com/v1', // 'https://api-sandbox-matic.idex.io/v1',
+      websocket: 'wss://websocket-dev-sub-matic-1.idex-dev.com/v1', // 'wss://websocket-sandbox-matic.idex.io/v1',
     },
   },
   production: {
