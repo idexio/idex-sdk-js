@@ -264,6 +264,8 @@ export default class OrderBookRealTimeClient extends EventEmitter {
     poolFeeRate = decimalToPip('0.0020'),
     idexFeeRate = decimalToPip('0.0005'),
     takerMinimumInQuote = decimalToPip('0.49'),
+    restApiUrl?: string,
+    webSocketApiUrl?: string,
   ) {
     super();
 
@@ -274,11 +276,13 @@ export default class OrderBookRealTimeClient extends EventEmitter {
     this.publicClient = new RestPublicClient({
       multiverseChain,
       sandbox,
+      ...(restApiUrl ? { baseUrl: restApiUrl } : {}),
     });
     const wsClient = new WebSocketClient({
       multiverseChain,
       sandbox,
       shouldReconnectAutomatically: true,
+      ...(restApiUrl ? { baseUrl: webSocketApiUrl } : {}),
     });
     wsClient.onConnect(() => {
       wsClient.subscribe([{ name: 'l2orderbook', markets }]);

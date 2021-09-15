@@ -36,8 +36,8 @@ export const URLS = deepObjectFreeze({
       websocket: 'wss://websocket-sandbox-bsc.idex.io/v1',
     },
     matic: {
-      rest: 'https://api-dev-sub-matic-1.idex-dev.com/v1', // 'https://api-sandbox-matic.idex.io/v1',
-      websocket: 'wss://websocket-dev-sub-matic-1.idex-dev.com/v1', // 'wss://websocket-sandbox-matic.idex.io/v1',
+      rest: 'https://api-sandbox-matic.idex.io/v1',
+      websocket: 'wss://websocket-sandbox-matic.idex.io/v1',
     },
   },
   production: {
