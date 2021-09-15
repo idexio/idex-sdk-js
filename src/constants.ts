@@ -3,6 +3,10 @@ import { deepObjectFreeze } from './utils';
 export const REST_API_KEY_HEADER = 'IDEX-API-Key';
 export const REST_HMAC_SIGNATURE_HEADER = 'IDEX-HMAC-Signature';
 
+export const ORDER_BOOK_MAX_L2_LEVELS = 500;
+
+export const ORDER_BOOK_HYBRID_SLIPPAGE = 100; // 0.1%
+
 export const ORDER_SIGNATURE_HASH_VERSION_ETH = 1;
 
 export const ORDER_SIGNATURE_HASH_VERSION_BSC = 2;

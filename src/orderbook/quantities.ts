@@ -15,7 +15,7 @@ import {
   L1OrderBook,
   L2OrderBook,
   SyntheticL2OrderBook,
-} from './types';
+} from '../types';
 
 /*
  * internal helper functions

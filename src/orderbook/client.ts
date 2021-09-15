@@ -1,16 +1,18 @@
 import { EventEmitter } from 'events';
 
-import {
-  OrderBookLevelType,
-  L1OrderBook,
-  L2OrderBook,
-  OrderBookLevelL2,
-} from './types';
 import { RestPublicClient } from '../client/rest';
 import { WebSocketClient } from '../client/webSocket';
+import {
+  ORDER_BOOK_MAX_L2_LEVELS,
+  ORDER_BOOK_HYBRID_SLIPPAGE,
+} from '../constants';
 
 import {
+  L1OrderBook,
+  L2OrderBook,
   MultiverseChain,
+  OrderBookLevelType,
+  OrderBookLevelL2,
   RestResponseOrderBookLevel1,
   RestResponseOrderBookLevel2,
   RestResponseOrderBookPriceLevel,
@@ -235,6 +237,8 @@ function webSocketResponseToL2OrderBook(
 }
 
 export default class OrderBookRealTimeClient extends EventEmitter {
+  private readonly idexFeeRate: bigint;
+
   private readonly l1OrderBooks: Map<string, L1OrderBook> = new Map();
 
   private readonly l2OrderBooks: Map<string, L2OrderBook> = new Map();
@@ -243,7 +247,11 @@ export default class OrderBookRealTimeClient extends EventEmitter {
 
   private readonly marketIsLoading = new Set<string>();
 
+  private readonly poolFeeRate: bigint;
+
   private readonly publicClient: RestPublicClient;
+
+  private readonly takerMinimumInQuote: bigint;
 
   private webSocketClient: WebSocketClient;
 
@@ -253,8 +261,15 @@ export default class OrderBookRealTimeClient extends EventEmitter {
     sandbox = false,
     multiverseChain: MultiverseChain,
     markets: string[],
+    poolFeeRate = decimalToPip('0.0020'),
+    idexFeeRate = decimalToPip('0.0005'),
+    takerMinimumInQuote = decimalToPip('0.49'),
   ) {
     super();
+
+    this.poolFeeRate = poolFeeRate;
+    this.idexFeeRate = idexFeeRate;
+    this.takerMinimumInQuote = takerMinimumInQuote;
 
     this.publicClient = new RestPublicClient({
       multiverseChain,
@@ -364,12 +379,12 @@ export default class OrderBookRealTimeClient extends EventEmitter {
 
     const [l1] = L2LimitOrderBookToHybridOrderBooks(
       orderBook,
-      500,
-      100,
-      decimalToPip('0.0020'),
-      decimalToPip('0.0005'),
+      ORDER_BOOK_MAX_L2_LEVELS,
+      ORDER_BOOK_HYBRID_SLIPPAGE,
+      this.poolFeeRate,
+      this.idexFeeRate,
       true,
-      decimalToPip('0.49'),
+      this.takerMinimumInQuote,
     );
 
     return L1OrderBookToRestResponse(l1);
@@ -394,12 +409,12 @@ export default class OrderBookRealTimeClient extends EventEmitter {
 
     const [, l2] = L2LimitOrderBookToHybridOrderBooks(
       orderBook,
-      500,
-      100,
-      decimalToPip('0.0020'),
-      decimalToPip('0.0005'),
+      ORDER_BOOK_MAX_L2_LEVELS,
+      ORDER_BOOK_HYBRID_SLIPPAGE,
+      this.poolFeeRate,
+      this.idexFeeRate,
       true,
-      decimalToPip('0.49'),
+      this.takerMinimumInQuote,
     );
 
     return L2OrderBookToRestResponse(l2, limit);
