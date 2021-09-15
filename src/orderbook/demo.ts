@@ -1,10 +1,19 @@
+import { decimalToPip } from '.';
 import {
   RestResponseOrderBookLevel1,
   RestResponseOrderBookLevel2,
 } from '../types';
 import OrderBookRealTimeClient from './client';
 
-const client = new OrderBookRealTimeClient(true, 'matic', ['DIL-MATIC']);
+// @todo retrieve these configs from exchange endpoint
+const client = new OrderBookRealTimeClient(
+  true,
+  'matic',
+  ['DIL-MATIC'],
+  decimalToPip('0.002'),
+  decimalToPip('0.0005'),
+  decimalToPip('0.49'),
+);
 
 const demo = async function demo(): Promise<
   [RestResponseOrderBookLevel1, RestResponseOrderBookLevel2]
