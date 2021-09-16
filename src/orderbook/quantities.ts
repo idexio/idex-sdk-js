@@ -624,7 +624,7 @@ export function L1L2OrderBooksWithMinimumTaker(
     l2Values.asks.unshift({
       price: bestAvailableBuyPrice,
       size: quoteReceived,
-      numOrders: 1,
+      numOrders: 0,
       type: 'pool',
     });
     if (l2Values.asks.length > 1) {
@@ -636,7 +636,7 @@ export function L1L2OrderBooksWithMinimumTaker(
     l2Values.bids.unshift({
       price: bestAvailableSellPrice,
       size: quoteReceived,
-      numOrders: 1,
+      numOrders: 0,
       type: 'pool',
     });
     if (l2Values.bids.length > 1) {
