@@ -660,6 +660,11 @@ export const L2LimitOrderBookToHybridOrderBooks = function L2LimitOrderBookToHyb
     return [L2toL1OrderBook(orderBook), orderBook];
   }
 
+  // this can happen if there is no currency conversion available
+  if (minimumTakerInQuote === BigInt(0)) {
+    includeMinimumTakerLevels = false; // eslint-disable-line
+  }
+
   const synthetic = calculateSyntheticPriceLevels(
     orderBook.pool.baseReserveQuantity,
     orderBook.pool.quoteReserveQuantity,
