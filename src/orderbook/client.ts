@@ -134,8 +134,10 @@ function restResponseToL2OrderBook(
     bids,
     pool: restResponseL2.pool
       ? {
-          baseReserveQuantity: BigInt(restResponseL2.pool.baseReserveQuantity),
-          quoteReserveQuantity: BigInt(
+          baseReserveQuantity: decimalToPip(
+            restResponseL2.pool.baseReserveQuantity,
+          ),
+          quoteReserveQuantity: decimalToPip(
             restResponseL2.pool.quoteReserveQuantity,
           ),
         }
@@ -276,13 +278,13 @@ export default class OrderBookRealTimeClient extends EventEmitter {
     this.publicClient = new RestPublicClient({
       multiverseChain,
       sandbox,
-      ...(restApiUrl ? { baseUrl: restApiUrl } : {}),
+      ...(restApiUrl ? { baseURL: restApiUrl } : {}),
     });
     const wsClient = new WebSocketClient({
       multiverseChain,
       sandbox,
       shouldReconnectAutomatically: true,
-      ...(restApiUrl ? { baseUrl: webSocketApiUrl } : {}),
+      ...(restApiUrl ? { baseURL: webSocketApiUrl } : {}),
     });
     wsClient.onConnect(() => {
       wsClient.subscribe([{ name: 'l2orderbook', markets }]);
@@ -314,7 +316,7 @@ export default class OrderBookRealTimeClient extends EventEmitter {
     );
     while (book.sequence < sequence) {
       await new Promise((resolve) => setTimeout(resolve, 1000)); // eslint-disable-line
-      book = restResponseToL2OrderBook(await this.publicClient.getOrderBookLevel2(market, 500)); // eslint-disable-line
+      book = restResponseToL2OrderBook(await this.publicClient.getOrderBookLevel2(market, 500, true)); // eslint-disable-line
     }
     this.l2OrderBooks.set(market, book);
     this.applyOrderBookUpdates(market, book);
@@ -373,7 +375,7 @@ export default class OrderBookRealTimeClient extends EventEmitter {
 
     if (!orderBook) {
       orderBook = restResponseToL2OrderBook(
-        await this.publicClient.getOrderBookLevel2(market, 1, false),
+        await this.publicClient.getOrderBookLevel2(market, 1, true),
       );
     }
 
@@ -381,12 +383,13 @@ export default class OrderBookRealTimeClient extends EventEmitter {
       return L1OrderBookToRestResponse(getL1BookFromL2Book(orderBook));
     }
 
+    // convert currency here
     const [l1] = L2LimitOrderBookToHybridOrderBooks(
       orderBook,
       ORDER_BOOK_MAX_L2_LEVELS,
       ORDER_BOOK_HYBRID_SLIPPAGE,
-      this.poolFeeRate,
       this.idexFeeRate,
+      this.poolFeeRate,
       true,
       this.takerMinimumInQuote,
     );
@@ -403,7 +406,7 @@ export default class OrderBookRealTimeClient extends EventEmitter {
 
     if (!orderBook) {
       orderBook = restResponseToL2OrderBook(
-        await this.publicClient.getOrderBookLevel2(market, 500, false),
+        await this.publicClient.getOrderBookLevel2(market, 500, true),
       );
     }
 
@@ -415,8 +418,8 @@ export default class OrderBookRealTimeClient extends EventEmitter {
       orderBook,
       ORDER_BOOK_MAX_L2_LEVELS,
       ORDER_BOOK_HYBRID_SLIPPAGE,
-      this.poolFeeRate,
       this.idexFeeRate,
+      this.poolFeeRate,
       true,
       this.takerMinimumInQuote,
     );
