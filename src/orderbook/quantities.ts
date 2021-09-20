@@ -362,7 +362,7 @@ export const recalculateHybridLevelAmounts = function recalculateHybridLevelAmou
           level.price,
           idexFeeRate,
           poolFeeRate,
-        ).grossQuote -
+        ).grossBase -
         (prevAskLevel.price
           ? quantitiesAvailableFromPoolAtAskPrice(
               orderbook.pool.baseReserveQuantity,
@@ -370,7 +370,7 @@ export const recalculateHybridLevelAmounts = function recalculateHybridLevelAmou
               prevAskLevel.price,
               idexFeeRate,
               poolFeeRate,
-            ).grossQuote
+            ).grossBase
           : BigInt(0));
     }
 
@@ -383,14 +383,14 @@ export const recalculateHybridLevelAmounts = function recalculateHybridLevelAmou
           level.price,
           idexFeeRate,
           poolFeeRate,
-        ).grossQuote -
+        ).grossBase -
         quantitiesAvailableFromPoolAtAskPrice(
           orderbook.pool.baseReserveQuantity,
           orderbook.pool.quoteReserveQuantity,
           prevAskLevel.price,
           idexFeeRate,
           poolFeeRate,
-        ).grossQuote;
+        ).grossBase;
     }
     prevAskLevel = level;
   }
@@ -417,7 +417,7 @@ export const recalculateHybridLevelAmounts = function recalculateHybridLevelAmou
           level.price,
           idexFeeRate,
           poolFeeRate,
-        ).grossQuote -
+        ).grossBase -
         (prevBidLevel.price
           ? quantitiesAvailableFromPoolAtBidPrice(
               orderbook.pool.baseReserveQuantity,
@@ -425,7 +425,7 @@ export const recalculateHybridLevelAmounts = function recalculateHybridLevelAmou
               prevBidLevel.price,
               idexFeeRate,
               poolFeeRate,
-            ).grossQuote
+            ).grossBase
           : BigInt(0));
     }
 
@@ -438,7 +438,7 @@ export const recalculateHybridLevelAmounts = function recalculateHybridLevelAmou
           level.price,
           idexFeeRate,
           poolFeeRate,
-        ).grossQuote -
+        ).grossBase -
         (prevBidLevel.price
           ? quantitiesAvailableFromPoolAtBidPrice(
               orderbook.pool.baseReserveQuantity,
@@ -446,7 +446,7 @@ export const recalculateHybridLevelAmounts = function recalculateHybridLevelAmou
               prevBidLevel.price,
               idexFeeRate,
               poolFeeRate,
-            ).grossQuote
+            ).grossBase
           : BigInt(0));
     }
     prevBidLevel = level;
