@@ -670,6 +670,8 @@ export const L2LimitOrderBookToHybridOrderBooks = function L2LimitOrderBookToHyb
     orderBook.pool.quoteReserveQuantity,
     visibleLevels,
     visibleSlippage,
+    idexFeeRate,
+    poolFeeRate,
   );
 
   const adjustedL2OrderBook = recalculateHybridLevelAmounts(
