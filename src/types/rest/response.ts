@@ -8,10 +8,9 @@ import * as enums from '../enums';
  * @property {string} name
  * @property {string} symbol
  * @property {string} contractAddress
- * @property {string} decimals
- * @property {string} depositMinimum
- * @property {string} tradeMinimum
- * @property {string} withdrawalMinimum
+ * @property {number} assetDecimals
+ * @property {number} exchangeDecimals
+ * @property {string} maticPrice
  */
 export interface RestResponseAsset {
   name: string;
@@ -19,6 +18,7 @@ export interface RestResponseAsset {
   contractAddress: string;
   assetDecimals: number;
   exchangeDecimals: 8; // this is hardcoded everywhere and should not be changed
+  maticPrice: string | null;
 }
 
 /**
@@ -317,12 +317,15 @@ export interface RestResponseOrderFill {
  * @typedef {Object} RestResponseMarket
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
  * @property {MarketStatus} status
+ * @property {MarketType} type
  * @property {string} baseAsset - e.g. 'IDEX'
  * @property {number} baseAssetPrecision
  * @property {string} quoteAsset - e.g. 'ETH'
  * @property {number} quoteAssetPrecision
  * @property {string} makerFeeRate
  * @property {string} takerFeeRate
+ * @property {string} takerIdexFeeRate
+ * @property {string} takerLiquidityProviderFeeRate
  * @property {OrderType[]} orderTypes
  * @property {string} tradeMinimum - Minimum quantity in base terms
  */
@@ -334,6 +337,10 @@ export interface RestResponseMarket {
   baseAssetPrecision: number;
   quoteAsset: string;
   quoteAssetPrecision: number;
+  makerFeeRate: string;
+  takerFeeRate: string;
+  takerIdexFeeRate: string;
+  takerLiquidityProviderFeeRate: string;
 }
 
 /**
@@ -525,24 +532,22 @@ export interface RestResponseTrade {
  * @property {boolean} orderEnabled - Placing orders is enabled for the user account
  * @property {boolean} cancelEnabled - Cancelling orders is enabled for the user account
  * @property {boolean} withdrawEnabled - Withdrawals are enabled for the user account
- * @property {number} kycTier - Approved KYC tier; 0, 1, 2
  * @property {string} totalPortfolioValueUsd - Total value of all holdings deposited on the exchange, for all wallets associated with the user account, in USD
- * @property {string} withdrawalLimit - 24-hour withdrawal limit in USD, or unlimited, determined by KYC tier
- * @property {string} withdrawalRemaining - Currently withdrawable amount in USD, or unlimited, based on trailing 24 hour withdrawals and KYC tier
  * @property {string} makerFeeRate - User-specific maker trade fee rate
  * @property {string} takerFeeRate - User-specific taker trade fee rate
+ * @property {string} takerIdexFeeRate - User-specific liquidity pool taker IDEX fee rate
+ * @property {string} takerLiquidityProviderFeeRate - User-specific liquidity pool taker LP provider fee rate
  */
 export interface RestResponseUser {
   depositEnabled: boolean;
   orderEnabled: boolean;
   cancelEnabled: boolean;
   withdrawEnabled: boolean;
-  kycTier: 0 | 1 | 2;
   totalPortfolioValueUsd: string;
-  withdrawalLimit: string;
-  withdrawalRemaining: string;
   makerFeeRate: string;
   takerFeeRate: string;
+  takerIdexFeeRate: string;
+  takerLiquidityProviderFeeRate: string;
 }
 
 /**
