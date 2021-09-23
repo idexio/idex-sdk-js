@@ -234,7 +234,7 @@ export class RestPublicClient<
     market: string,
     limitOrderOnly = false,
   ): Promise<RestResponseOrderBookLevel1> {
-    return this.get('/orderbook', { level: 1, market, limitOrderOnly });
+    return this.get('/orderbook', { level: 1, limitOrderOnly, market });
   }
 
   /**

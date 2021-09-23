@@ -127,20 +127,27 @@
     -   [Addition](#addition)
     -   [Removal](#removal)
 -   [WebSocketRequestSubscription](#websocketrequestsubscription)
--   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
+-   [WebSocketResponseLiquidityPoolShort](#websocketresponseliquiditypoolshort)
     -   [Properties](#properties-6)
+-   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
+    -   [Properties](#properties-7)
 -   [MultiverseChain](#multiversechain)
 -   [RestResponseLiquidityPool](#restresponseliquiditypool)
-    -   [Properties](#properties-7)
--   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
--   [RestResponseLiquidityAddition](#restresponseliquidityaddition)
     -   [Properties](#properties-8)
--   [RestResponseLiquidityRemoval](#restresponseliquidityremoval)
+-   [WebSocketResponseLiquidityPoolLong](#websocketresponseliquiditypoollong)
     -   [Properties](#properties-9)
--   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
+-   [RestResponseLiquidityAddition](#restresponseliquidityaddition)
     -   [Properties](#properties-10)
--   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
+-   [numerator](#numerator)
+-   [RestResponseLiquidityPoolReserves](#restresponseliquiditypoolreserves)
     -   [Properties](#properties-11)
+-   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
+-   [RestResponseLiquidityRemoval](#restresponseliquidityremoval)
+    -   [Properties](#properties-12)
+-   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
+    -   [Properties](#properties-13)
+-   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
+    -   [Properties](#properties-14)
 -   [WebSocketRequest](#websocketrequest)
 -   [WebSocketRequest](#websocketrequest-1)
 -   [TradeType](#tradetype)
@@ -1408,10 +1415,9 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `symbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `contractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `decimals` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `depositMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `tradeMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `withdrawalMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `assetDecimals` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+-   `exchangeDecimals` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+-   `maticPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ### RestResponseBalance
 
@@ -1516,12 +1522,15 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 -   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
 -   `status` **[MarketStatus](#marketstatus)** 
+-   `type` **[MarketType](#markettype)** 
 -   `baseAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** e.g. 'IDEX'
 -   `baseAssetPrecision` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 -   `quoteAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** e.g. 'ETH'
 -   `quoteAssetPrecision` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 -   `makerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `takerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `takerIdexFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `takerLiquidityProviderFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `orderTypes` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[OrderType](#ordertype)>** 
 -   `tradeMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum quantity in base terms
 
@@ -1587,7 +1596,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 OrderBookPriceLevel
 
-Type: \[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number), [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)]
+Type: \[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)]
 
 ### RestResponseOrderFill
 
@@ -1684,12 +1693,11 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `orderEnabled` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Placing orders is enabled for the user account
 -   `cancelEnabled` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Cancelling orders is enabled for the user account
 -   `withdrawEnabled` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Withdrawals are enabled for the user account
--   `kycTier` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Approved KYC tier; 0, 1, 2
 -   `totalPortfolioValueUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of all holdings deposited on the exchange, for all wallets associated with the user account, in USD
--   `withdrawalLimit` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 24-hour withdrawal limit in USD, or unlimited, determined by KYC tier
--   `withdrawalRemaining` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Currently withdrawable amount in USD, or unlimited, based on trailing 24 hour withdrawals and KYC tier
 -   `makerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** User-specific maker trade fee rate
 -   `takerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** User-specific taker trade fee rate
+-   `takerIdexFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** User-specific liquidity pool taker IDEX fee rate
+-   `takerLiquidityProviderFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** User-specific liquidity pool taker LP provider fee rate
 
 ### RestResponseWallet
 
@@ -2009,8 +2017,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `B` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (bidQuantity) Quantity available at the best bid price
 -   `a` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (askPrice) Best ask price
 -   `A` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (askQuantity) Quantity available at the best ask price
--   `q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (baseAssetQuantity) Quantity of base asset in the liquidity pool
--   `Q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (quoteAssetQuantity) Quantity of quote asset in the liquidity pool
+-   `p` **([WebSocketResponseLiquidityPoolShort](#websocketresponseliquiditypoolshort) | null)** Liquidity pool reserves for this market
 
 ### WebSocketResponseL1OrderBookLong
 
@@ -2026,8 +2033,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `bidQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity available at the best bid price
 -   `askPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Best ask price
 -   `askQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity available at the best ask price
--   `baseAssetQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of base asset in the liquidity pool
--   `quoteAssetQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of quote asset in the liquidity pool
+-   `pool` **([WebSocketResponseLiquidityPoolLong](#websocketresponseliquiditypoollong) | null)** Liquidity pool reserves for this market
 
 ### WebSocketResponseL2OrderBookShort
 
@@ -2042,8 +2048,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `u` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (sequence) Order book update sequence number of the update
 -   `b` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)>** (bids) Array of bid price level updates
 -   `a` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)>** (asks) Array of ask price level updates
--   `q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (baseAssetQuantity) Quantity of base asset in the liquidity pool
--   `Q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (quoteAssetQuantity) Quantity of quote asset in the liquidity pool
+-   `p` **([WebSocketResponseLiquidityPoolShort](#websocketresponseliquiditypoolshort) | null)** Liquidity pool reserves for this market
 
 ### WebSocketResponseL2OrderBookLong
 
@@ -2058,8 +2063,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Order book update sequence number of the update
 -   `bids` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)>** Array of bid price level updates
 -   `asks` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)>** Array of ask price level updates
--   `baseAssetQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of base asset in the liquidity pool
--   `quoteAssetQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of quote asset in the liquidity pool
+-   `p` **([WebSocketResponseLiquidityPoolLong](#websocketresponseliquiditypoollong) | null)** Liquidity pool reserves for this market
 
 ### WebSocketResponseBalanceShort
 
@@ -2459,6 +2463,17 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 Type: ([AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription) \| [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription))
 
+## WebSocketResponseLiquidityPoolShort
+
+LiquidityPoolShort
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (baseReserveQuantity) quantity of base asset held in the liquidity pool
+-   `Q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (quoteReserveQuantity) quantity of quote asset held in the liquidity pool
+
 ## WebSocketRequestSubscriptionsByName
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -2496,11 +2511,16 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `reserveUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of reserves in USD
 -   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Market symbol of pool’s associated hybrid market
 
-## WebSocketResponseL2OrderBookChange
+## WebSocketResponseLiquidityPoolLong
 
-L2OrderBookChange
+LiquidityPoolLong
 
-Type: \[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)]
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `baseReserveQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** quantity of base asset held in the liquidity pool
+-   `quoteReserveQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** quantity of quote asset held in the liquidity pool
 
 ## RestResponseLiquidityAddition
 
@@ -2523,6 +2543,29 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `feeTokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenB collected as fees
 -   `txId` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Ethereum transaction ID, if available
 -   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum transaction status
+
+## numerator
+
+The result needs to be rounded down to prevent the pool's constant
+product from decreasing, ie. the second part of the subtraction (the
+division) needs to be rounded up.
+
+## RestResponseLiquidityPoolReserves
+
+LiquidityPoolReserves
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `baseReserveQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** reserve quantity of base asset in pool
+-   `quoteReserveQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** reserve quantity of quote asset in pool
+
+## WebSocketResponseL2OrderBookChange
+
+L2OrderBookChange
+
+Type: \[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)]
 
 ## RestResponseLiquidityRemoval
 

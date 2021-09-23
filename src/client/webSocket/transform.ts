@@ -59,8 +59,10 @@ const transformL1orderbooksMessage = (
   bidQuantity: l1orderbook.B,
   askPrice: l1orderbook.a,
   askQuantity: l1orderbook.A,
-  baseAssetQuantity: l1orderbook.q,
-  quoteAssetQuantity: l1orderbook.Q,
+  pool: l1orderbook.p && {
+    baseReserveQuantity: l1orderbook.p.q,
+    quoteReserveQuantity: l1orderbook.p.Q,
+  },
 });
 
 const transformL2orderbooksMessage = (
@@ -71,8 +73,10 @@ const transformL2orderbooksMessage = (
   sequence: l2orderbook.u,
   ...(l2orderbook.b && { bids: l2orderbook.b }),
   ...(l2orderbook.a && { asks: l2orderbook.a }),
-  baseAssetQuantity: l2orderbook.q,
-  quoteAssetQuantity: l2orderbook.Q,
+  pool: l2orderbook.p && {
+    baseReserveQuantity: l2orderbook.p.q,
+    quoteReserveQuantity: l2orderbook.p.Q,
+  },
 });
 
 const transformBalancesMessage = (
