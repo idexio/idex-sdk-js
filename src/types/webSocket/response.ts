@@ -477,6 +477,30 @@ export interface WebSocketResponseOrderFillShort {
 }
 
 /**
+ * TokenPriceShort
+ *
+ * @typedef {Object} WebSocketResponseTokenPriceShort
+ * @property {string} t - (token) Token symbol
+ * @property {string} p - (price) Current price of token relative to the native asset
+ */
+export interface WebSocketResponseTokenPriceShort {
+  t: string;
+  p: string | null;
+}
+
+/**
+ * TokenPriceLong
+ *
+ * @typedef {Object} WebSocketResponseTokenPriceLong
+ * @property {string} token - Token symbol
+ * @property {string} price - Current price of token relative to the native asset
+ */
+export interface WebSocketResponseTokenPriceLong {
+  token: string;
+  price: string | null;
+}
+
+/**
  * Short-hand response payloads
  */
 export type WebSocketResponseSubscriptionMessageShort =
@@ -486,7 +510,8 @@ export type WebSocketResponseSubscriptionMessageShort =
   | { type: 'l1orderbook'; data: WebSocketResponseL1OrderBookShort }
   | { type: 'l2orderbook'; data: WebSocketResponseL2OrderBookShort }
   | { type: 'balances'; data: WebSocketResponseBalanceShort }
-  | { type: 'orders'; data: WebSocketResponseOrderShort };
+  | { type: 'orders'; data: WebSocketResponseOrderShort }
+  | { type: 'tokenprice'; data: WebSocketResponseTokenPriceShort };
 
 /**
  * Transformer (long-form) response payloads
@@ -498,7 +523,8 @@ export type WebSocketResponseSubscriptionMessageLong =
   | { type: 'l1orderbook'; data: WebSocketResponseL1OrderBookLong }
   | { type: 'l2orderbook'; data: WebSocketResponseL2OrderBookLong }
   | { type: 'balances'; data: WebSocketResponseBalanceLong }
-  | { type: 'orders'; data: WebSocketResponseOrderLong };
+  | { type: 'orders'; data: WebSocketResponseOrderLong }
+  | { type: 'tokenprice'; data: WebSocketResponseTokenPriceLong };
 
 /**
  * Error Response

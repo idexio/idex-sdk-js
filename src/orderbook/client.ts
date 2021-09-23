@@ -6,6 +6,7 @@ import {
   ORDER_BOOK_MAX_L2_LEVELS,
   ORDER_BOOK_HYBRID_SLIPPAGE,
 } from '../constants';
+import { decimalToPip, pipToDecimal } from './numbers';
 
 import {
   L1OrderBook,
@@ -18,9 +19,8 @@ import {
   RestResponseOrderBookPriceLevel,
   WebSocketResponse,
   WebSocketResponseL2OrderBookLong,
+  WebSocketResponseTokenPriceLong,
 } from '../types';
-
-import { decimalToPip, pipToDecimal } from './numbers';
 
 import { L2LimitOrderBookToHybridOrderBooks } from './quantities';
 
@@ -239,6 +239,8 @@ function webSocketResponseToL2OrderBook(
 }
 
 export default class OrderBookRealTimeClient extends EventEmitter {
+  private readonly assetPrices: Map<string, bigint | null> = new Map();
+
   private readonly idexFeeRate: bigint;
 
   private readonly l1OrderBooks: Map<string, L1OrderBook> = new Map();
@@ -280,18 +282,24 @@ export default class OrderBookRealTimeClient extends EventEmitter {
       sandbox,
       ...(restApiUrl ? { baseURL: restApiUrl } : {}),
     });
+
     const wsClient = new WebSocketClient({
       multiverseChain,
       sandbox,
       shouldReconnectAutomatically: true,
       ...(restApiUrl ? { baseURL: webSocketApiUrl } : {}),
     });
+
     wsClient.onConnect(() => {
       wsClient.subscribe([{ name: 'l2orderbook', markets }]);
+      wsClient.subscribe([{ name: 'tokenprice', markets }]);
       markets.forEach((market) => this.webSocketSubscriptions.add(market));
       wsClient.onResponse((response: WebSocketResponse) => {
         if (response.type === 'l2orderbook') {
           return this.handleL2OrderBookMessage(response.data);
+        }
+        if (response.type === 'tokenprice') {
+          return this.handleTokenPriceMessage(response.data);
         }
       });
     });
@@ -365,6 +373,15 @@ export default class OrderBookRealTimeClient extends EventEmitter {
     }
     this.applyOrderBookUpdates(message.market, l2Book);
     this.l2OrderBooks.set(message.market, l2Book);
+  }
+
+  private async handleTokenPriceMessage(
+    message: WebSocketResponseTokenPriceLong,
+  ): Promise<void> {
+    this.assetPrices.set(
+      message.token,
+      message.price ? BigInt(message.price) : null,
+    );
   }
 
   public async getOrderBookL1(

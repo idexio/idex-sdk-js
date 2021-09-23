@@ -8,5 +8,6 @@ export const WEBSOCKET_UNAUTHENTICATED_SUBSCRIPTIONS = [
   'l1orderbook',
   'l2orderbook',
   'tickers',
+  'tokenprice',
   'trades',
 ] as const;
