@@ -139,6 +139,13 @@ const transformOrdersMessage = (
   ...(order.F && { fills: order.F.map(transformOrderFill) }),
 });
 
+const transformTokenPriceMessage = (
+  message: types.WebSocketResponseTokenPriceShort,
+): types.WebSocketResponseTokenPriceLong => ({
+  token: message.t,
+  price: message.p,
+});
+
 export const transformWebsocketShortResponseMessage = (
   message:
     | types.WebSocketResponseError
@@ -163,6 +170,8 @@ export const transformWebsocketShortResponseMessage = (
       return { ...message, data: transformBalancesMessage(message.data) };
     case 'orders':
       return { ...message, data: transformOrdersMessage(message.data) };
+    case 'tokenprice':
+      return { ...message, data: transformTokenPriceMessage(message.data) };
 
     default:
       return message;

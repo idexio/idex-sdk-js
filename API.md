@@ -101,59 +101,65 @@
     -   [Properties](#properties)
 -   [RestRequestAddLiquidity](#restrequestaddliquidity)
     -   [Properties](#properties-1)
+-   [WebSocketRequestTokenPriceSubscription](#websocketrequesttokenpricesubscription)
+    -   [Properties](#properties-2)
 -   [createPrivateKeyMessageSigner](#createprivatekeymessagesigner)
     -   [Parameters](#parameters)
     -   [Examples](#examples)
 -   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
-    -   [Properties](#properties-2)
+    -   [Properties](#properties-3)
 -   [privateKeySigner](#privatekeysigner)
 -   [RestRequestFindLiquidityAddition](#restrequestfindliquidityaddition)
-    -   [Properties](#properties-3)
--   [RestRequestFindLiquidityRemoval](#restrequestfindliquidityremoval)
     -   [Properties](#properties-4)
--   [RestRequestFindLiquidityChanges](#restrequestfindliquiditychanges)
+-   [RestRequestFindLiquidityRemoval](#restrequestfindliquidityremoval)
     -   [Properties](#properties-5)
+-   [RestRequestFindLiquidityChanges](#restrequestfindliquiditychanges)
+    -   [Properties](#properties-6)
 -   [MarketType](#markettype)
     -   [orderBook](#orderbook)
     -   [hybrid](#hybrid)
--   [WebSocketRequestAuthenticatedSubscription](#websocketrequestauthenticatedsubscription)
--   [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription)
 -   [LiquidityChangeOrigination](#liquiditychangeorigination)
     -   [OnChain](#onchain)
     -   [OffChain](#offchain)
--   [AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription)
--   [AuthTokenWebSocketRequestSubscription](#authtokenwebsocketrequestsubscription)
+-   [WebSocketRequestAuthenticatedSubscription](#websocketrequestauthenticatedsubscription)
+-   [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription)
 -   [LiquidityChangeType](#liquiditychangetype)
     -   [Addition](#addition)
     -   [Removal](#removal)
+-   [AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription)
+-   [AuthTokenWebSocketRequestSubscription](#authtokenwebsocketrequestsubscription)
 -   [WebSocketRequestSubscription](#websocketrequestsubscription)
 -   [WebSocketResponseLiquidityPoolShort](#websocketresponseliquiditypoolshort)
-    -   [Properties](#properties-6)
--   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
     -   [Properties](#properties-7)
 -   [MultiverseChain](#multiversechain)
 -   [RestResponseLiquidityPool](#restresponseliquiditypool)
     -   [Properties](#properties-8)
 -   [WebSocketResponseLiquidityPoolLong](#websocketresponseliquiditypoollong)
     -   [Properties](#properties-9)
--   [RestResponseLiquidityAddition](#restresponseliquidityaddition)
+-   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
     -   [Properties](#properties-10)
+-   [RestResponseLiquidityAddition](#restresponseliquidityaddition)
+    -   [Properties](#properties-11)
 -   [numerator](#numerator)
 -   [RestResponseLiquidityPoolReserves](#restresponseliquiditypoolreserves)
-    -   [Properties](#properties-11)
+    -   [Properties](#properties-12)
 -   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
 -   [RestResponseLiquidityRemoval](#restresponseliquidityremoval)
-    -   [Properties](#properties-12)
--   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
     -   [Properties](#properties-13)
--   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
+-   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
     -   [Properties](#properties-14)
+-   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
+    -   [Properties](#properties-15)
 -   [WebSocketRequest](#websocketrequest)
 -   [WebSocketRequest](#websocketrequest-1)
 -   [TradeType](#tradetype)
     -   [orderBook](#orderbook-1)
     -   [pool](#pool)
     -   [hybrid](#hybrid-1)
+-   [WebSocketResponseTokenPriceShort](#websocketresponsetokenpriceshort)
+    -   [Properties](#properties-16)
+-   [WebSocketResponseTokenPriceLong](#websocketresponsetokenpricelong)
+    -   [Properties](#properties-17)
 -   [WebSocketResponseSubscriptionMessageShort](#websocketresponsesubscriptionmessageshort)
 -   [WebSocketResponseSubscriptionMessageLong](#websocketresponsesubscriptionmessagelong)
 
@@ -2317,6 +2323,17 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `amountBMin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenB to add to the liquidity pool
 -   `to` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Wallet to credit LP tokens, or the custodian contract address to leave on exchange
 
+## WebSocketRequestTokenPriceSubscription
+
+TokenPriceSubscription
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 'trades'
+-   `tokens` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** array of token symbols
+
 ## createPrivateKeyMessageSigner
 
 Returns an ethers Wallet signer which takes a message and signs
@@ -2411,14 +2428,6 @@ Orderbook, pool, and hybrid trades accepted
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-## WebSocketRequestAuthenticatedSubscription
-
-Type: ([WebSocketRequestBalancesSubscription](#websocketrequestbalancessubscription) \| [WebSocketRequestOrdersSubscription](#websocketrequestorderssubscription))
-
-## WebSocketRequestUnauthenticatedSubscription
-
-Type: ([WebSocketRequestCandlesSubscription](#websocketrequestcandlessubscription) \| [WebSocketRequestL1OrderBookSubscription](#websocketrequestl1orderbooksubscription) \| [WebSocketRequestL2OrderBookSubscription](#websocketrequestl2orderbooksubscription) \| [WebSocketRequestTickersSubscription](#websocketrequesttickerssubscription) \| [WebSocketRequestTradesSubscription](#websocketrequesttradessubscription))
-
 ## LiquidityChangeOrigination
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
@@ -2435,13 +2444,13 @@ Initiated off-chain via API
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-## AuthTokenWebSocketRequestAuthenticatedSubscription
+## WebSocketRequestAuthenticatedSubscription
 
-Type: ([AuthTokenWebSocketRequestBalancesSubscription](#authtokenwebsocketrequestbalancessubscription) \| [AuthTokenWebSocketRequestOrdersSubscription](#authtokenwebsocketrequestorderssubscription))
+Type: ([WebSocketRequestBalancesSubscription](#websocketrequestbalancessubscription) \| [WebSocketRequestOrdersSubscription](#websocketrequestorderssubscription))
 
-## AuthTokenWebSocketRequestSubscription
+## WebSocketRequestUnauthenticatedSubscription
 
-Type: ([AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription) \| [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription))
+Type: ([WebSocketRequestCandlesSubscription](#websocketrequestcandlessubscription) \| [WebSocketRequestL1OrderBookSubscription](#websocketrequestl1orderbooksubscription) \| [WebSocketRequestL2OrderBookSubscription](#websocketrequestl2orderbooksubscription) \| [WebSocketRequestTickersSubscription](#websocketrequesttickerssubscription) \| [WebSocketRequestTradesSubscription](#websocketrequesttradessubscription))
 
 ## LiquidityChangeType
 
@@ -2459,6 +2468,14 @@ Removing reserve assets from pool and burning LP tokens
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
+## AuthTokenWebSocketRequestAuthenticatedSubscription
+
+Type: ([AuthTokenWebSocketRequestBalancesSubscription](#authtokenwebsocketrequestbalancessubscription) \| [AuthTokenWebSocketRequestOrdersSubscription](#authtokenwebsocketrequestorderssubscription))
+
+## AuthTokenWebSocketRequestSubscription
+
+Type: ([AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription) \| [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription))
+
 ## WebSocketRequestSubscription
 
 Type: ([AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription) \| [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription))
@@ -2473,20 +2490,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 -   `q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (baseReserveQuantity) quantity of base asset held in the liquidity pool
 -   `Q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (quoteReserveQuantity) quantity of quote asset held in the liquidity pool
-
-## WebSocketRequestSubscriptionsByName
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
--   `balances` **[WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)** 
--   `orders` **[WebSocketRequestOrdersSubscription](#websocketrequestorderssubscription)** 
--   `candles` **[WebSocketRequestCandlesSubscription](#websocketrequestcandlessubscription)** 
--   `l1orderbook` **[WebSocketRequestL1OrderBookSubscription](#websocketrequestl1orderbooksubscription)** 
--   `l2orderbook` **[WebSocketRequestL2OrderBookSubscription](#websocketrequestl2orderbooksubscription)** 
--   `tickers` **[WebSocketRequestTickersSubscription](#websocketrequesttickerssubscription)** 
--   `trades` **[WebSocketRequestTradesSubscription](#websocketrequesttradessubscription)** 
 
 ## MultiverseChain
 
@@ -2521,6 +2524,20 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 -   `baseReserveQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** quantity of base asset held in the liquidity pool
 -   `quoteReserveQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** quantity of quote asset held in the liquidity pool
+
+## WebSocketRequestSubscriptionsByName
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `balances` **[WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)** 
+-   `orders` **[WebSocketRequestOrdersSubscription](#websocketrequestorderssubscription)** 
+-   `candles` **[WebSocketRequestCandlesSubscription](#websocketrequestcandlessubscription)** 
+-   `l1orderbook` **[WebSocketRequestL1OrderBookSubscription](#websocketrequestl1orderbooksubscription)** 
+-   `l2orderbook` **[WebSocketRequestL2OrderBookSubscription](#websocketrequestl2orderbooksubscription)** 
+-   `tickers` **[WebSocketRequestTickersSubscription](#websocketrequesttickerssubscription)** 
+-   `trades` **[WebSocketRequestTradesSubscription](#websocketrequesttradessubscription)** 
 
 ## RestResponseLiquidityAddition
 
@@ -2636,14 +2653,36 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
+## WebSocketResponseTokenPriceShort
+
+TokenPriceShort
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `t` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (token) Token symbol
+-   `p` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (price) Current price of token relative to the native asset
+
+## WebSocketResponseTokenPriceLong
+
+TokenPriceLong
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `token` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Token symbol
+-   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Current price of token relative to the native asset
+
 ## WebSocketResponseSubscriptionMessageShort
 
 Short-hand response payloads
 
-Type: ({type: `"tickers"`, data: [WebSocketResponseTickerShort](#websocketresponsetickershort)} | {type: `"trades"`, data: [WebSocketResponseTradeShort](#websocketresponsetradeshort)} | {type: `"candles"`, data: [WebSocketResponseCandleShort](#websocketresponsecandleshort)} | {type: `"l1orderbook"`, data: [WebSocketResponseL1OrderBookShort](#websocketresponsel1orderbookshort)} | {type: `"l2orderbook"`, data: [WebSocketResponseL2OrderBookShort](#websocketresponsel2orderbookshort)} | {type: `"balances"`, data: [WebSocketResponseBalanceShort](#websocketresponsebalanceshort)} | {type: `"orders"`, data: [WebSocketResponseOrderShort](#websocketresponseordershort)})
+Type: ({type: `"tickers"`, data: [WebSocketResponseTickerShort](#websocketresponsetickershort)} | {type: `"trades"`, data: [WebSocketResponseTradeShort](#websocketresponsetradeshort)} | {type: `"candles"`, data: [WebSocketResponseCandleShort](#websocketresponsecandleshort)} | {type: `"l1orderbook"`, data: [WebSocketResponseL1OrderBookShort](#websocketresponsel1orderbookshort)} | {type: `"l2orderbook"`, data: [WebSocketResponseL2OrderBookShort](#websocketresponsel2orderbookshort)} | {type: `"balances"`, data: [WebSocketResponseBalanceShort](#websocketresponsebalanceshort)} | {type: `"orders"`, data: [WebSocketResponseOrderShort](#websocketresponseordershort)} | {type: `"tokenprice"`, data: [WebSocketResponseTokenPriceShort](#websocketresponsetokenpriceshort)})
 
 ## WebSocketResponseSubscriptionMessageLong
 
 Transformer (long-form) response payloads
 
-Type: ({type: `"tickers"`, data: [WebSocketResponseTickerLong](#websocketresponsetickerlong)} | {type: `"trades"`, data: [WebSocketResponseTradeLong](#websocketresponsetradelong)} | {type: `"candles"`, data: [WebSocketResponseCandleLong](#websocketresponsecandlelong)} | {type: `"l1orderbook"`, data: [WebSocketResponseL1OrderBookLong](#websocketresponsel1orderbooklong)} | {type: `"l2orderbook"`, data: [WebSocketResponseL2OrderBookLong](#websocketresponsel2orderbooklong)} | {type: `"balances"`, data: [WebSocketResponseBalanceLong](#websocketresponsebalancelong)} | {type: `"orders"`, data: [WebSocketResponseOrderLong](#websocketresponseorderlong)})
+Type: ({type: `"tickers"`, data: [WebSocketResponseTickerLong](#websocketresponsetickerlong)} | {type: `"trades"`, data: [WebSocketResponseTradeLong](#websocketresponsetradelong)} | {type: `"candles"`, data: [WebSocketResponseCandleLong](#websocketresponsecandlelong)} | {type: `"l1orderbook"`, data: [WebSocketResponseL1OrderBookLong](#websocketresponsel1orderbooklong)} | {type: `"l2orderbook"`, data: [WebSocketResponseL2OrderBookLong](#websocketresponsel2orderbooklong)} | {type: `"balances"`, data: [WebSocketResponseBalanceLong](#websocketresponsebalancelong)} | {type: `"orders"`, data: [WebSocketResponseOrderLong](#websocketresponseorderlong)} | {type: `"tokenprice"`, data: [WebSocketResponseTokenPriceLong](#websocketresponsetokenpricelong)})
