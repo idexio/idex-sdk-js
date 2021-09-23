@@ -654,15 +654,10 @@ export const L2LimitOrderBookToHybridOrderBooks = function L2LimitOrderBookToHyb
   idexFeeRate: bigint,
   poolFeeRate: bigint,
   includeMinimumTakerLevels: boolean,
-  minimumTakerInQuote: bigint,
+  minimumTakerInQuote: bigint | null,
 ): [L1OrderBook, L2OrderBook] {
   if (!orderBook.pool) {
     return [L2toL1OrderBook(orderBook), orderBook];
-  }
-
-  // this can happen if there is no currency conversion available
-  if (minimumTakerInQuote === BigInt(0)) {
-    includeMinimumTakerLevels = false; // eslint-disable-line
   }
 
   const synthetic = calculateSyntheticPriceLevels(
@@ -696,7 +691,9 @@ export const L2LimitOrderBookToHybridOrderBooks = function L2LimitOrderBookToHyb
     poolFeeRate,
   );
 
-  return includeMinimumTakerLevels
+  return includeMinimumTakerLevels &&
+    minimumTakerInQuote &&
+    minimumTakerInQuote > BigInt(0)
     ? L1L2OrderBooksWithMinimumTaker(
         adjustedL2OrderBook,
         idexFeeRate,
