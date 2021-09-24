@@ -456,33 +456,29 @@ export const recalculateHybridLevelAmounts = function recalculateHybridLevelAmou
 };
 
 export const sortAndMergeLevelsUnadjusted = function sortAndMergeLevelsUnadjusted(
-  a: OrderBookLevelL2[],
-  b: OrderBookLevelL2[],
+  limitOrderLevels: OrderBookLevelL2[],
+  syntheticLevels: OrderBookLevelL2[],
   isBefore: BeforeComparison,
 ): OrderBookLevelL2[] {
   const c: OrderBookLevelL2[] = [];
-  while (a.length && b.length) {
-    if (a[0].price === b[0].price) {
-      // equal price levels, combined them
-      c.push({
-        price: a[0].price,
-        size: a[0].size + b[0].size,
-        numOrders: a[0].numOrders,
-        type: a[0].type !== b[0].type ? 'hybrid' : a[0].type,
-      });
-      a.shift();
-      b.shift();
-    } else if (isBefore(a[0], b[0])) {
+  while (limitOrderLevels.length && syntheticLevels.length) {
+    if (limitOrderLevels[0].price === syntheticLevels[0].price) {
+      // we can drop synthetic levels that match limit orders
+      // the quantities will be recalculated
+      c.push(limitOrderLevels[0]);
+      limitOrderLevels.shift();
+      syntheticLevels.shift();
+    } else if (isBefore(limitOrderLevels[0], syntheticLevels[0])) {
       // a[0] comes first
-      c.push(a[0]);
-      a.shift();
+      c.push(limitOrderLevels[0]);
+      limitOrderLevels.shift();
     } else {
       // b[0] comes first
-      c.push(b[0]);
-      b.shift();
+      c.push(syntheticLevels[0]);
+      syntheticLevels.shift();
     }
   }
-  return c.concat(a).concat(b);
+  return c.concat(limitOrderLevels).concat(syntheticLevels);
 };
 
 export const quantitiesAvailableFromPoolAtAskPrice = function quantitiesAvailableFromPoolAtAskPrice(
@@ -654,15 +650,10 @@ export const L2LimitOrderBookToHybridOrderBooks = function L2LimitOrderBookToHyb
   idexFeeRate: bigint,
   poolFeeRate: bigint,
   includeMinimumTakerLevels: boolean,
-  minimumTakerInQuote: bigint,
+  minimumTakerInQuote: bigint | null,
 ): [L1OrderBook, L2OrderBook] {
   if (!orderBook.pool) {
     return [L2toL1OrderBook(orderBook), orderBook];
-  }
-
-  // this can happen if there is no currency conversion available
-  if (minimumTakerInQuote === BigInt(0)) {
-    includeMinimumTakerLevels = false; // eslint-disable-line
   }
 
   const synthetic = calculateSyntheticPriceLevels(
@@ -696,7 +687,9 @@ export const L2LimitOrderBookToHybridOrderBooks = function L2LimitOrderBookToHyb
     poolFeeRate,
   );
 
-  return includeMinimumTakerLevels
+  return includeMinimumTakerLevels &&
+    minimumTakerInQuote &&
+    minimumTakerInQuote > BigInt(0)
     ? L1L2OrderBooksWithMinimumTaker(
         adjustedL2OrderBook,
         idexFeeRate,

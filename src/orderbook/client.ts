@@ -6,7 +6,7 @@ import {
   ORDER_BOOK_MAX_L2_LEVELS,
   ORDER_BOOK_HYBRID_SLIPPAGE,
 } from '../constants';
-import { decimalToPip, pipToDecimal } from './numbers';
+import { decimalToPip, multiplyPips, pipToDecimal } from './numbers';
 
 import {
   L1OrderBook,
@@ -388,19 +388,12 @@ export default class OrderBookRealTimeClient extends EventEmitter {
     market: string,
     isHybrid = true,
   ): Promise<RestResponseOrderBookLevel1> {
-    let orderBook = this.l2OrderBooks.get(market);
-
-    if (!orderBook) {
-      orderBook = restResponseToL2OrderBook(
-        await this.publicClient.getOrderBookLevel2(market, 1, true),
-      );
-    }
+    const orderBook = await this.loadL2AndUpdateAssetsFromApi(market);
 
     if (!isHybrid) {
       return L1OrderBookToRestResponse(getL1BookFromL2Book(orderBook));
     }
 
-    // convert currency here
     const [l1] = L2LimitOrderBookToHybridOrderBooks(
       orderBook,
       ORDER_BOOK_MAX_L2_LEVELS,
@@ -408,7 +401,7 @@ export default class OrderBookRealTimeClient extends EventEmitter {
       this.idexFeeRate,
       this.poolFeeRate,
       true,
-      this.takerMinimumInQuote,
+      this.marketMinimum(market, this.takerMinimumInQuote),
     );
 
     return L1OrderBookToRestResponse(l1);
@@ -419,13 +412,7 @@ export default class OrderBookRealTimeClient extends EventEmitter {
     isHybrid = true,
     limit = 50,
   ): Promise<RestResponseOrderBookLevel2> {
-    let orderBook = this.l2OrderBooks.get(market);
-
-    if (!orderBook) {
-      orderBook = restResponseToL2OrderBook(
-        await this.publicClient.getOrderBookLevel2(market, 500, true),
-      );
-    }
+    const orderBook = await this.loadL2AndUpdateAssetsFromApi(market);
 
     if (!isHybrid) {
       return L2OrderBookToRestResponse(orderBook, limit);
@@ -438,9 +425,39 @@ export default class OrderBookRealTimeClient extends EventEmitter {
       this.idexFeeRate,
       this.poolFeeRate,
       true,
-      this.takerMinimumInQuote,
+      this.marketMinimum(market, this.takerMinimumInQuote),
     );
 
     return L2OrderBookToRestResponse(l2, limit);
+  }
+
+  private async loadL2AndUpdateAssetsFromApi(
+    market: string,
+  ): Promise<L2OrderBook> {
+    const orderBook =
+      this.l2OrderBooks.get(market) ||
+      restResponseToL2OrderBook(
+        await this.publicClient.getOrderBookLevel2(market),
+      );
+    const assets = await this.publicClient.getAssets();
+    for (const asset of assets) {
+      this.assetPrices.set(
+        asset.symbol,
+        asset.maticPrice ? BigInt(asset.maticPrice) : null,
+      );
+    }
+    return orderBook;
+  }
+
+  private marketMinimum(
+    market: string,
+    takerMinimumInNativeAsset: bigint | null,
+  ): bigint | null {
+    if (!takerMinimumInNativeAsset) {
+      return null;
+    }
+    const quoteSymbol = market.split(',')[0];
+    const price = this.assetPrices.get(quoteSymbol) || null;
+    return price ? multiplyPips(price, takerMinimumInNativeAsset) : null;
   }
 }
