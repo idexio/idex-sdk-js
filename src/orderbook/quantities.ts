@@ -605,9 +605,9 @@ export function L1L2OrderBooksWithMinimumTaker(
     l2.pool.quoteReserveQuantity;
 
   const {
+    baseReceived,
     bestAvailableBuyPrice,
     bestAvailableSellPrice,
-    quoteReceived,
   } = L1orL2BestAvailablePrices(
     l2.pool,
     idexFeeRate,
@@ -619,24 +619,24 @@ export function L1L2OrderBooksWithMinimumTaker(
   if (!l2.asks[0] || bestAvailableBuyPrice < l2.asks[0].price) {
     l2Values.asks.unshift({
       price: bestAvailableBuyPrice,
-      size: quoteReceived,
+      size: baseReceived,
       numOrders: 0,
       type: 'pool',
     });
     if (l2Values.asks.length > 1) {
-      l2Values.asks[1].size -= quoteReceived;
+      l2Values.asks[1].size -= baseReceived;
     }
   }
 
   if (!l2.bids[0] || bestAvailableSellPrice > l2.bids[0].price) {
     l2Values.bids.unshift({
       price: bestAvailableSellPrice,
-      size: quoteReceived,
+      size: baseReceived,
       numOrders: 0,
       type: 'pool',
     });
     if (l2Values.bids.length > 1) {
-      l2Values.bids[1].size -= quoteReceived;
+      l2Values.bids[1].size -= baseReceived;
     }
   }
 
@@ -650,15 +650,10 @@ export const L2LimitOrderBookToHybridOrderBooks = function L2LimitOrderBookToHyb
   idexFeeRate: bigint,
   poolFeeRate: bigint,
   includeMinimumTakerLevels: boolean,
-  minimumTakerInQuote: bigint,
+  minimumTakerInQuote: bigint | null,
 ): [L1OrderBook, L2OrderBook] {
   if (!orderBook.pool) {
     return [L2toL1OrderBook(orderBook), orderBook];
-  }
-
-  // this can happen if there is no currency conversion available
-  if (minimumTakerInQuote === BigInt(0)) {
-    includeMinimumTakerLevels = false; // eslint-disable-line
   }
 
   const synthetic = calculateSyntheticPriceLevels(
@@ -692,7 +687,9 @@ export const L2LimitOrderBookToHybridOrderBooks = function L2LimitOrderBookToHyb
     poolFeeRate,
   );
 
-  return includeMinimumTakerLevels
+  return includeMinimumTakerLevels &&
+    minimumTakerInQuote &&
+    minimumTakerInQuote > BigInt(0)
     ? L1L2OrderBooksWithMinimumTaker(
         adjustedL2OrderBook,
         idexFeeRate,

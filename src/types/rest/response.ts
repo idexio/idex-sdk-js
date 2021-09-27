@@ -110,6 +110,8 @@ export type RestResponseExchangeInfo<
   takerFeeRate: string;
   makerTradeMinimum: string;
   takerTradeMinimum: string;
+  takerIdexFeeRate: string;
+  takerLiquidityProviderFeeRate: string;
   withdrawMinimum: string;
 } & (C extends 'matic'
   ? {
