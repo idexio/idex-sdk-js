@@ -1,49 +1,29 @@
-import { decimalToPip } from '.';
-import {
-  RestResponseOrderBookLevel1,
-  RestResponseOrderBookLevel2,
-} from '../types';
+import { RestResponseOrderBookLevel2 } from '../types';
 import OrderBookRealTimeClient from './client';
 
-// @todo retrieve these configs from exchange endpoint
-const client = new OrderBookRealTimeClient(
-  true,
-  'matic',
-  ['DIL-MATIC'],
-  decimalToPip('0.002'),
-  decimalToPip('0.0005'),
-  decimalToPip('0.49'),
-);
+const chain = 'matic';
+const isSandbox = true;
+const market = 'MATIC-USD';
+const l2LevelsToDisplay = 5;
 
-const demo = async function demo(): Promise<
-  [RestResponseOrderBookLevel1, RestResponseOrderBookLevel2]
-> {
-  return Promise.all([
-    client.getOrderBookL1('DIL-MATIC', true),
-    client.getOrderBookL2('DIL-MATIC', true),
-  ]);
+const client = new OrderBookRealTimeClient(true, chain);
+
+const demo = async function demo(): Promise<RestResponseOrderBookLevel2> {
+  return client.start([market]).then(() => {
+    client.setCustomFeeRates({
+      idexFeeRate: '0.00000000',
+      takerMinimumInNativeAsset: '0.000001',
+    });
+    return client.getOrderBookL2(market, isSandbox, l2LevelsToDisplay);
+  });
 };
 
-demo().then(
-  ([l1]: [RestResponseOrderBookLevel1, RestResponseOrderBookLevel2]) => {
-    console.log(l1);
+demo().then((l2Initial: RestResponseOrderBookLevel2) => {
+  console.log('Initial order book', l2Initial);
 
-    client.on('l1Changed', () => {
-      console.log('L1 changed');
-      client
-        .getOrderBookL1('DIL-MATIC', true)
-        .then((l1New: RestResponseOrderBookLevel1) => {
-          console.log(l1New);
-        });
-    });
-
-    client.on('l2Changed', () => {
-      console.log('L2 changed');
-      client
-        .getOrderBookL2('DIL-MATIC', true, 3)
-        .then((l2: RestResponseOrderBookLevel2) => {
-          console.log(l2);
-        });
-    });
-  },
-);
+  client.on('l2Changed', () => {
+    client
+      .getOrderBookL2(market, isSandbox, l2LevelsToDisplay)
+      .then(console.log);
+  });
+});

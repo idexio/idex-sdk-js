@@ -6,7 +6,7 @@ import {
   ORDER_BOOK_MAX_L2_LEVELS,
   ORDER_BOOK_HYBRID_SLIPPAGE,
 } from '../constants';
-import { decimalToPip, multiplyPips, pipToDecimal } from './numbers';
+import { decimalToPip, oneInPips, pipToDecimal } from './numbers';
 
 import {
   L1OrderBook,
@@ -241,7 +241,7 @@ function webSocketResponseToL2OrderBook(
 export default class OrderBookRealTimeClient extends EventEmitter {
   private readonly assetPrices: Map<string, bigint | null> = new Map();
 
-  private readonly idexFeeRate: bigint;
+  private idexFeeRate = BigInt(0);
 
   private readonly l1OrderBooks: Map<string, L1OrderBook> = new Map();
 
@@ -249,13 +249,15 @@ export default class OrderBookRealTimeClient extends EventEmitter {
 
   private readonly l2OrderBookUpdates = new Map<string, L2OrderBook[]>();
 
+  private readonly marketsByAssetSymbol = new Map<string, Set<string>>();
+
   private readonly marketIsLoading = new Set<string>();
 
-  private readonly poolFeeRate: bigint;
+  private poolFeeRate = BigInt(0);
 
   private readonly publicClient: RestPublicClient;
 
-  private readonly takerMinimumInQuote: bigint;
+  private takerMinimumInNativeAsset = BigInt(0);
 
   private webSocketClient: WebSocketClient;
 
@@ -264,18 +266,10 @@ export default class OrderBookRealTimeClient extends EventEmitter {
   constructor(
     sandbox = false,
     multiverseChain: MultiverseChain,
-    markets: string[],
-    poolFeeRate = decimalToPip('0.0020'),
-    idexFeeRate = decimalToPip('0.0005'),
-    takerMinimumInQuote = decimalToPip('0.49'),
     restApiUrl?: string,
     webSocketApiUrl?: string,
   ) {
     super();
-
-    this.poolFeeRate = poolFeeRate;
-    this.idexFeeRate = idexFeeRate;
-    this.takerMinimumInQuote = takerMinimumInQuote;
 
     this.publicClient = new RestPublicClient({
       multiverseChain,
@@ -290,11 +284,66 @@ export default class OrderBookRealTimeClient extends EventEmitter {
       ...(restApiUrl ? { baseURL: webSocketApiUrl } : {}),
     });
 
-    wsClient.onConnect(() => {
-      wsClient.subscribe([{ name: 'l2orderbook', markets }]);
-      wsClient.subscribe([{ name: 'tokenprice', markets }]);
+    this.webSocketClient = wsClient;
+  }
+
+  public getCurrentFeeRates(): {
+    idexFeeRate: string;
+    poolFeeRate: string;
+    takerMinimumInNativeAsset: string;
+  } {
+    return {
+      idexFeeRate: pipToDecimal(this.idexFeeRate),
+      poolFeeRate: pipToDecimal(this.poolFeeRate),
+      takerMinimumInNativeAsset: pipToDecimal(this.takerMinimumInNativeAsset),
+    };
+  }
+
+  public setCustomFeeRates(options: {
+    idexFeeRate?: string;
+    poolFeeRate?: string;
+    takerMinimumInNativeAsset?: string;
+  }): void {
+    if (options.idexFeeRate) {
+      this.idexFeeRate = decimalToPip(options.idexFeeRate);
+    }
+    if (options.poolFeeRate) {
+      this.poolFeeRate = decimalToPip(options.poolFeeRate);
+    }
+    if (options.takerMinimumInNativeAsset) {
+      this.takerMinimumInNativeAsset = decimalToPip(
+        options.takerMinimumInNativeAsset,
+      );
+    }
+  }
+
+  public async start(markets: string[]): Promise<void> {
+    // maps tokens to markets, for handling token price updates
+    for (const market of markets) {
+      const [baseSymbol, quoteSymbol] = market.split('-');
+      const marketsByBase =
+        this.marketsByAssetSymbol.get(baseSymbol) || new Set<string>();
+      marketsByBase.add(market);
+      this.marketsByAssetSymbol.set(baseSymbol, marketsByBase);
+      const marketsByQuote =
+        this.marketsByAssetSymbol.get(quoteSymbol) || new Set<string>();
+      marketsByQuote.add(market);
+      this.marketsByAssetSymbol.set(quoteSymbol, marketsByQuote);
+    }
+
+    // global fee settings
+    const exchange = await this.publicClient.getExchangeInfo();
+    this.poolFeeRate = decimalToPip(exchange.takerLiquidityProviderFeeRate);
+    this.idexFeeRate = decimalToPip(exchange.takerIdexFeeRate);
+    this.takerMinimumInNativeAsset =
+      BigInt(2) * decimalToPip(exchange.takerTradeMinimum);
+
+    this.webSocketClient.onConnect(() => {
+      this.webSocketClient.subscribe([{ name: 'l2orderbook', markets }]);
+      this.webSocketClient.subscribe([{ name: 'tokenprice', markets }]);
       markets.forEach((market) => this.webSocketSubscriptions.add(market));
-      wsClient.onResponse((response: WebSocketResponse) => {
+      this.webSocketClient.onResponse((response: WebSocketResponse) => {
+        console.log(response);
         if (response.type === 'l2orderbook') {
           return this.handleL2OrderBookMessage(response.data);
         }
@@ -303,8 +352,7 @@ export default class OrderBookRealTimeClient extends EventEmitter {
         }
       });
     });
-    wsClient.connect(true);
-    this.webSocketClient = wsClient;
+    await this.webSocketClient.connect(true);
   }
 
   public stop(): void {
@@ -337,6 +385,7 @@ export default class OrderBookRealTimeClient extends EventEmitter {
       return;
     }
     for (const update of updates) {
+      // @todo this is not updating on pool additions, because the sequence did not change
       if (book.sequence === update.sequence - 1) {
         updateL2Levels(book, update);
       }
@@ -344,8 +393,8 @@ export default class OrderBookRealTimeClient extends EventEmitter {
 
     this.l1OrderBooks.set(market, getL1BookFromL2Book(book));
 
-    this.emit('l1Changed');
-    this.emit('l2Changed', updates.map(L2OrderBookToRestResponse));
+    this.emit('l1Changed', market);
+    this.emit('l2Changed', market);
 
     this.l2OrderBookUpdates.set(market, []);
   }
@@ -378,22 +427,31 @@ export default class OrderBookRealTimeClient extends EventEmitter {
   private async handleTokenPriceMessage(
     message: WebSocketResponseTokenPriceLong,
   ): Promise<void> {
+    console.log('Token price change ', message);
     this.assetPrices.set(
       message.token,
       message.price ? BigInt(message.price) : null,
     );
+    const markets = this.marketsByAssetSymbol.get(message.token);
+    if (markets) {
+      for (const market of Array.from(markets.values())) {
+        this.emit('l1Changed', market);
+        this.emit('l2Changed', market);
+      }
+    }
   }
 
   public async getOrderBookL1(
     market: string,
     isHybrid = true,
   ): Promise<RestResponseOrderBookLevel1> {
-    const orderBook = await this.loadL2AndUpdateAssetsFromApi(market);
+    const orderBook = await this.loadL2AndAssets(market);
 
     if (!isHybrid) {
       return L1OrderBookToRestResponse(getL1BookFromL2Book(orderBook));
     }
 
+    const minimum = this.marketMinimum(market, this.takerMinimumInNativeAsset);
     const [l1] = L2LimitOrderBookToHybridOrderBooks(
       orderBook,
       ORDER_BOOK_MAX_L2_LEVELS,
@@ -401,7 +459,7 @@ export default class OrderBookRealTimeClient extends EventEmitter {
       this.idexFeeRate,
       this.poolFeeRate,
       true,
-      this.marketMinimum(market, this.takerMinimumInQuote),
+      minimum,
     );
 
     return L1OrderBookToRestResponse(l1);
@@ -412,12 +470,13 @@ export default class OrderBookRealTimeClient extends EventEmitter {
     isHybrid = true,
     limit = 50,
   ): Promise<RestResponseOrderBookLevel2> {
-    const orderBook = await this.loadL2AndUpdateAssetsFromApi(market);
+    const orderBook = await this.loadL2AndAssets(market);
 
     if (!isHybrid) {
       return L2OrderBookToRestResponse(orderBook, limit);
     }
 
+    const minimum = this.marketMinimum(market, this.takerMinimumInNativeAsset);
     const [, l2] = L2LimitOrderBookToHybridOrderBooks(
       orderBook,
       ORDER_BOOK_MAX_L2_LEVELS,
@@ -425,28 +484,34 @@ export default class OrderBookRealTimeClient extends EventEmitter {
       this.idexFeeRate,
       this.poolFeeRate,
       true,
-      this.marketMinimum(market, this.takerMinimumInQuote),
+      minimum,
     );
 
     return L2OrderBookToRestResponse(l2, limit);
   }
 
-  private async loadL2AndUpdateAssetsFromApi(
-    market: string,
-  ): Promise<L2OrderBook> {
-    const orderBook =
-      this.l2OrderBooks.get(market) ||
-      restResponseToL2OrderBook(
-        await this.publicClient.getOrderBookLevel2(market),
-      );
+  private async loadL2AndAssets(market: string): Promise<L2OrderBook> {
+    const orderBook = this.l2OrderBooks.get(market);
+
+    if (orderBook) {
+      return orderBook;
+    }
+
+    const loadedOrderBook = restResponseToL2OrderBook(
+      await this.publicClient.getOrderBookLevel2(market),
+    );
+
     const assets = await this.publicClient.getAssets();
     for (const asset of assets) {
-      this.assetPrices.set(
-        asset.symbol,
-        asset.maticPrice ? BigInt(asset.maticPrice) : null,
-      );
+      if (!this.assetPrices.get(asset.symbol)) {
+        this.assetPrices.set(
+          asset.symbol,
+          asset.maticPrice ? decimalToPip(asset.maticPrice) : null,
+        );
+      }
     }
-    return orderBook;
+
+    return loadedOrderBook;
   }
 
   private marketMinimum(
@@ -456,8 +521,8 @@ export default class OrderBookRealTimeClient extends EventEmitter {
     if (!takerMinimumInNativeAsset) {
       return null;
     }
-    const quoteSymbol = market.split(',')[0];
+    const quoteSymbol = market.split('-')[1];
     const price = this.assetPrices.get(quoteSymbol) || null;
-    return price ? multiplyPips(price, takerMinimumInNativeAsset) : null;
+    return price ? (takerMinimumInNativeAsset * oneInPips) / price : null;
   }
 }
