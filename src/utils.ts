@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios';
+
 import crypto from 'crypto';
 
 import type { AnyObj } from './types/utils';
@@ -44,4 +46,10 @@ export function deepObjectFreeze<A extends AnyObj | unknown[]>(
     Object.freeze(obj);
   }
   return obj;
+}
+
+export function isAxiosError(error: unknown): error is AxiosError {
+  return Boolean(
+    error && typeof error === 'object' && (error as AxiosError).isAxiosError,
+  );
 }

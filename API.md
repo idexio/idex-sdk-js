@@ -99,12 +99,14 @@
     -   [ErrorShortCodes](#errorshortcodes)
 -   [RestRequestFindLiquidityPools](#restrequestfindliquiditypools)
     -   [Properties](#properties)
+-   [L2LimitOrderBookToHybridOrderBooks](#l2limitorderbooktohybridorderbooks)
+    -   [Parameters](#parameters)
 -   [RestRequestAddLiquidity](#restrequestaddliquidity)
     -   [Properties](#properties-1)
 -   [WebSocketRequestTokenPriceSubscription](#websocketrequesttokenpricesubscription)
     -   [Properties](#properties-2)
 -   [createPrivateKeyMessageSigner](#createprivatekeymessagesigner)
-    -   [Parameters](#parameters)
+    -   [Parameters](#parameters-1)
     -   [Examples](#examples)
 -   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
     -   [Properties](#properties-3)
@@ -138,9 +140,9 @@
     -   [Properties](#properties-9)
 -   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
     -   [Properties](#properties-10)
+-   [numerator](#numerator)
 -   [RestResponseLiquidityAddition](#restresponseliquidityaddition)
     -   [Properties](#properties-11)
--   [numerator](#numerator)
 -   [RestResponseLiquidityPoolReserves](#restresponseliquiditypoolreserves)
     -   [Properties](#properties-12)
 -   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
@@ -2307,6 +2309,22 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Address of one reserve token
 -   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Address of one reserve token
 
+## L2LimitOrderBookToHybridOrderBooks
+
+Convert a limit-order orderbook and a liquidity pool to a hybrid order book representation
+
+### Parameters
+
+-   `orderBook` **L2OrderBook** L2 book, e.g. from GET /v1/orderbook?level=2&limitOrderOnly=true
+-   `visibleLevels` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** number of price levels to calculate, default = 10 asks, 10 bids (optional, default `10`)
+-   `visibleSlippage` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** price slippage per level, in increments of 0.001%, default = 100 (0.1%) (optional, default `100`)
+-   `idexFeeRate` **bigint** trade fee rate charged by IDEX, expressed in pips
+-   `poolFeeRate` **bigint** pool fee rate chared by liquidity pool, expressed in pips
+-   `includeMinimumTakerLevels` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** if true, calculate a synthetic price level at twice the minimum trade size
+-   `minimumTakerInQuote` **(bigint | null)** minimum trade size expressed in pips, or null if none available
+
+Returns **{l1: L1OrderBook, l2: L2OrderBook}** 
+
 ## RestRequestAddLiquidity
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -2539,6 +2557,12 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `tickers` **[WebSocketRequestTickersSubscription](#websocketrequesttickerssubscription)** 
 -   `trades` **[WebSocketRequestTradesSubscription](#websocketrequesttradessubscription)** 
 
+## numerator
+
+The result needs to be rounded down to prevent the pool's constant
+product from decreasing, ie. the second part of the subtraction (the
+division) needs to be rounded up.
+
 ## RestResponseLiquidityAddition
 
 LiquidityAddition
@@ -2560,12 +2584,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `feeTokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenB collected as fees
 -   `txId` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Ethereum transaction ID, if available
 -   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum transaction status
-
-## numerator
-
-The result needs to be rounded down to prevent the pool's constant
-product from decreasing, ie. the second part of the subtraction (the
-division) needs to be rounded up.
 
 ## RestResponseLiquidityPoolReserves
 
