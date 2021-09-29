@@ -1,6 +1,18 @@
+import type { RestPublicClient, RestPublicClientOptions } from '../client/rest';
+import type {
+  WebSocketClient,
+  WebSocketClientOptions,
+} from '../client/webSocket';
+
 export type GrossQuantities = {
   grossBase: bigint;
   grossQuote: bigint;
+};
+
+export type OrderBookFeeRates = {
+  idexFeeRate: string;
+  poolFeeRate: string;
+  takerMinimumInNativeAsset: string;
 };
 
 export type OrderBookLevelType = 'limit' | 'pool' | 'hybrid';
@@ -34,9 +46,16 @@ export type L2OrderBook = {
   pool: null | PoolReserveQuantities;
 };
 
-export type BeforeComparison = (
-  a: OrderBookLevelL2,
-  b: OrderBookLevelL2,
-) => boolean;
+export type OrderBookRealTimeClientOptions = Omit<
+  Omit<
+    RestPublicClientOptions &
+      WebSocketClientOptions & {
+        restApiUrl?: string;
+        webSocketApiUrl?: string;
+      },
+    'baseURL'
+  >,
+  'shouldReconnectAutomatically'
+>;
 
 export type SyntheticL2OrderBook = Omit<L2OrderBook, 'sequence'>;

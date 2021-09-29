@@ -5,10 +5,9 @@ import {
   multiplyPips,
   pipToDecimal,
   squareRootBigInt,
-} from './numbers';
+} from '../pipmath';
 
 import {
-  BeforeComparison,
   GrossQuantities,
   OrderBookLevelL2,
   PoolReserveQuantities,
@@ -17,26 +16,9 @@ import {
   SyntheticL2OrderBook,
 } from '../types';
 
-/*
- * internal helper functions
- */
+import { L2toL1OrderBook } from './utils';
 
-const isAskBeforeOrEqual: BeforeComparison = function isAskBeforeOrEqual(
-  a: OrderBookLevelL2,
-  b: OrderBookLevelL2,
-): boolean {
-  return a.price <= b.price;
-};
-
-const isBidBeforeOrEqual: BeforeComparison = function isBidBeforeOrEqual(
-  a: OrderBookLevelL2,
-  b: OrderBookLevelL2,
-): boolean {
-  return a.price >= b.price;
-};
-
-// calculate total liquidity available to buy at a given price level (ask)
-export const calculateBuyQuantitiesForTargetPrice = function calculateBuyQuantitiesForTargetPrice(
+export function calculateBuyQuantitiesForTargetPrice(
   baseAssetQuantity: bigint,
   quoteAssetQuantity: bigint,
   targetPrice: bigint,
@@ -82,10 +64,9 @@ export const calculateBuyQuantitiesForTargetPrice = function calculateBuyQuantit
     ),
     grossQuote: grossQuoteIn,
   };
-};
+}
 
-// calculate total liquidity available to buy at a given price level (bid)
-export const calculateSellQuantitiesForTargetPrice = function calculateSellQuantitiesForTargetPrice(
+export function calculateSellQuantitiesForTargetPrice(
   baseAssetQuantity: bigint,
   quoteAssetQuantity: bigint,
   targetPrice: bigint,
@@ -108,10 +89,9 @@ export const calculateSellQuantitiesForTargetPrice = function calculateSellQuant
       grossBase,
     ),
   };
-};
+}
 
-// base quantity (for a sell)
-export const calculateGrossBaseQuantity = function calculateGrossBaseQuantity(
+export function calculateGrossBaseQuantity(
   baseAssetQuantity: bigint,
   quoteAssetQuantity: bigint,
   targetPrice: bigint,
@@ -136,10 +116,9 @@ export const calculateGrossBaseQuantity = function calculateGrossBaseQuantity(
   const denominator = BigInt(2) * poolFee * (oneInPips - idexFeeRate);
 
   return (numerator * oneInPips) / denominator;
-};
+}
 
-// quote => base, for a buy
-export const calculateGrossBaseValueOfBuyQuantities = function calculateGrossBaseValueOfBuyQuantities(
+export function calculateGrossBaseValueOfBuyQuantities(
   baseAssetQuantity: bigint,
   quoteAssetQuantity: bigint,
   grossQuoteQuantity: bigint,
@@ -149,10 +128,9 @@ export const calculateGrossBaseValueOfBuyQuantities = function calculateGrossBas
     (baseAssetQuantity * quoteAssetQuantity) /
       (quoteAssetQuantity + grossQuoteQuantity)
   );
-};
+}
 
-// quote quantity (for a buy)
-export const calculateGrossQuoteQuantity = function calculateGrossQuoteQuantity(
+export function calculateGrossQuoteQuantity(
   baseAssetQuantity: bigint,
   quoteAssetQuantity: bigint,
   targetPrice: bigint,
@@ -184,10 +162,9 @@ export const calculateGrossQuoteQuantity = function calculateGrossQuoteQuantity(
   const denominator =
     BigInt(2) * poolFee * oneInPips - BigInt(2) * poolFee * idexFeeRate;
   return numerator / denominator;
-};
+}
 
-// base => quote, for a sell
-export const calculateGrossQuoteValueOfSellQuantities = function calculateGrossQuoteValueOfSellQuantities(
+export function calculateGrossQuoteValueOfSellQuantities(
   baseAssetQuantity: bigint,
   quoteAssetQuantity: bigint,
   grossBaseQuantity: bigint,
@@ -197,9 +174,9 @@ export const calculateGrossQuoteValueOfSellQuantities = function calculateGrossQ
     (baseAssetQuantity * quoteAssetQuantity) /
       (baseAssetQuantity + grossBaseQuantity)
   );
-};
+}
 
-export const calculateBaseQuantityOut = function calculateBaseQuantityOut(
+export function calculateBaseQuantityOut(
   baseAssetQuantity: bigint,
   quoteAssetQuantity: bigint,
   grossQuoteQuantityIn: bigint,
@@ -221,9 +198,9 @@ export const calculateBaseQuantityOut = function calculateBaseQuantityOut(
   }
 
   return baseAssetQuantity - quotient;
-};
+}
 
-export const calculateQuoteQuantityOut = function calculateQuoteQuantityOut(
+export function calculateQuoteQuantityOut(
   baseAssetQuantity: bigint,
   quoteAssetQuantity: bigint,
   grossBaseQuantityIn: bigint,
@@ -249,9 +226,9 @@ export const calculateQuoteQuantityOut = function calculateQuoteQuantityOut(
   }
 
   return quoteAssetQuantity - quotient;
-};
+}
 
-export const calculateSyntheticPriceLevels = function calculateSyntheticPriceLevels(
+export function calculateSyntheticPriceLevels(
   baseReserveQuantity: bigint,
   quoteReserveQuantity: bigint,
   visibleLevels: number,
@@ -321,9 +298,9 @@ export const calculateSyntheticPriceLevels = function calculateSyntheticPriceLev
       quoteReserveQuantity,
     },
   };
-};
+}
 
-export const recalculateHybridLevelAmounts = function recalculateHybridLevelAmounts(
+export function recalculateHybridLevelAmounts(
   orderbook: L2OrderBook,
   idexFeeRate: bigint,
   poolFeeRate: bigint,
@@ -453,12 +430,12 @@ export const recalculateHybridLevelAmounts = function recalculateHybridLevelAmou
   }
 
   return orderbook;
-};
+}
 
-export const sortAndMergeLevelsUnadjusted = function sortAndMergeLevelsUnadjusted(
+export function sortAndMergeLevelsUnadjusted(
   limitOrderLevels: OrderBookLevelL2[],
   syntheticLevels: OrderBookLevelL2[],
-  isBefore: BeforeComparison,
+  isBefore: (a: OrderBookLevelL2, b: OrderBookLevelL2) => boolean,
 ): OrderBookLevelL2[] {
   const c: OrderBookLevelL2[] = [];
   while (limitOrderLevels.length && syntheticLevels.length) {
@@ -479,17 +456,15 @@ export const sortAndMergeLevelsUnadjusted = function sortAndMergeLevelsUnadjuste
     }
   }
   return c.concat(limitOrderLevels).concat(syntheticLevels);
-};
+}
 
-export const quantitiesAvailableFromPoolAtAskPrice = function quantitiesAvailableFromPoolAtAskPrice(
+export function quantitiesAvailableFromPoolAtAskPrice(
   baseReserveQuantity: bigint,
   quoteReserveQuantity: bigint,
   askPrice: bigint,
   idexFeeRate: bigint,
   poolFeeRate: bigint,
 ): { grossBase: bigint; grossQuote: bigint } {
-  // logger.server.debug('sdk target askPrice', askPrice);
-
   // if a limit order is equal to the pool price, the pool does not contribute
   if (askPrice === dividePips(quoteReserveQuantity, baseReserveQuantity)) {
     return {
@@ -505,9 +480,9 @@ export const quantitiesAvailableFromPoolAtAskPrice = function quantitiesAvailabl
     idexFeeRate,
     poolFeeRate,
   );
-};
+}
 
-export const quantitiesAvailableFromPoolAtBidPrice = function quantitiesAvailableFromPoolAtBidPrice(
+export function quantitiesAvailableFromPoolAtBidPrice(
   baseReserveQuantity: bigint,
   quoteReserveQuantity: bigint,
   bidPrice: bigint,
@@ -529,7 +504,7 @@ export const quantitiesAvailableFromPoolAtBidPrice = function quantitiesAvailabl
     idexFeeRate,
     poolFeeRate,
   );
-};
+}
 
 export function L1orL2BestAvailablePrices(
   pool: PoolReserveQuantities,
@@ -594,9 +569,9 @@ export function L1L2OrderBooksWithMinimumTaker(
   idexFeeRate: bigint,
   poolFeeRate: bigint,
   takerMinimumInQuote: bigint,
-): [L1OrderBook, L2OrderBook] {
+): { l1: L1OrderBook; l2: L2OrderBook } {
   if (!l2.pool) {
-    return [L2toL1OrderBook(l2), l2];
+    return { l1: L2toL1OrderBook(l2), l2 };
   }
 
   const l2Values = { ...l2 };
@@ -640,77 +615,10 @@ export function L1L2OrderBooksWithMinimumTaker(
     }
   }
 
-  return [L2toL1OrderBook(l2Values), l2Values];
+  return { l1: L2toL1OrderBook(l2Values), l2: l2Values };
 }
 
-export const L2LimitOrderBookToHybridOrderBooks = function L2LimitOrderBookToHybridOrderBooks(
-  orderBook: L2OrderBook,
-  visibleLevels = 10,
-  visibleSlippage = 100,
-  idexFeeRate: bigint,
-  poolFeeRate: bigint,
-  includeMinimumTakerLevels: boolean,
-  minimumTakerInQuote: bigint | null,
-): [L1OrderBook, L2OrderBook] {
-  if (!orderBook.pool) {
-    return [L2toL1OrderBook(orderBook), orderBook];
-  }
-
-  const synthetic = calculateSyntheticPriceLevels(
-    orderBook.pool.baseReserveQuantity,
-    orderBook.pool.quoteReserveQuantity,
-    visibleLevels,
-    visibleSlippage,
-    idexFeeRate,
-    poolFeeRate,
-  );
-
-  const adjustedL2OrderBook = recalculateHybridLevelAmounts(
-    {
-      sequence: orderBook.sequence,
-      asks: sortAndMergeLevelsUnadjusted(
-        orderBook.asks,
-        synthetic.asks,
-        isAskBeforeOrEqual,
-      ),
-      bids: sortAndMergeLevelsUnadjusted(
-        orderBook.bids,
-        synthetic.bids,
-        isBidBeforeOrEqual,
-      ),
-      pool: {
-        baseReserveQuantity: orderBook.pool.baseReserveQuantity,
-        quoteReserveQuantity: orderBook.pool.quoteReserveQuantity,
-      },
-    },
-    idexFeeRate,
-    poolFeeRate,
-  );
-
-  return includeMinimumTakerLevels &&
-    minimumTakerInQuote &&
-    minimumTakerInQuote > BigInt(0)
-    ? L1L2OrderBooksWithMinimumTaker(
-        adjustedL2OrderBook,
-        idexFeeRate,
-        poolFeeRate,
-        minimumTakerInQuote,
-      )
-    : [L2toL1OrderBook(adjustedL2OrderBook), adjustedL2OrderBook];
-};
-
-export const L2toL1OrderBook = function L2toL1OrderBook(
-  l2: L2OrderBook,
-): L1OrderBook {
-  return {
-    sequence: l2.sequence,
-    asks: l2.asks[0],
-    bids: l2.bids[0],
-    pool: l2.pool,
-  };
-};
-
-function validateSyntheticPriceLevelInputs(
+export function validateSyntheticPriceLevelInputs(
   baseAssetQuantity: bigint,
   quoteAssetQuantity: bigint,
   targetPrice: bigint,
