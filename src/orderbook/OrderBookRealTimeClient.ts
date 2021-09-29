@@ -210,7 +210,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
   ): void {
     this.tokenPrices.set(
       message.token,
-      message.price ? BigInt(message.price) : null,
+      message.price ? decimalToPip(message.price) : null,
     );
     const markets = this.marketsByAssetSymbol.get(message.token);
     if (markets) {
