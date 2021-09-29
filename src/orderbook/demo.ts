@@ -6,14 +6,9 @@ const isSandbox = true;
 const market = 'MATIC-USD';
 const l2LevelsToDisplay = 5;
 
-const restApiUrl = 'https://api-dev-sub-matic-1.idex-dev.com/v1';
-const webSocketApiUrl = 'wss://websocket-dev-sub-matic-1.idex-dev.com/v1';
-
 const client = new OrderBookRealTimeClient({
   multiverseChain: chain,
   sandbox: isSandbox,
-  restApiUrl,
-  webSocketApiUrl,
 });
 
 let RECONNECT_TIMEOUT = 1000;
