@@ -27,8 +27,10 @@ import { isNode } from '../../utils';
  * Public REST API client options
  *
  * @typedef {Object} RestPublicClientOptions
- * @property {boolean} sandbox - Must be set to true
+ * @property {boolean} [sandbox]
+ * @property {string} [baseURL] - Override the API url
  * @property {string} [apiKey] - Increases rate limits if provided
+ * @property {MultiverseChain} [multiverseChain]
  */
 export interface RestPublicClientOptions {
   sandbox?: boolean;

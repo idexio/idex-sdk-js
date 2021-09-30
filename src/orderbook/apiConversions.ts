@@ -44,17 +44,21 @@ export function L1OrderBookToRestResponse(
 
 export function L2OrderBookToRestResponse(
   l2: L2OrderBook,
-  limit = 500,
+  limit = 1000,
 ): RestResponseOrderBookLevel2 {
+  if (limit < 2 || limit > 1000) {
+    throw new Error('limit must be between 2 and 1000');
+  }
+  const perSide = Math.ceil(limit / 2);
   const asks: RestResponseOrderBookPriceLevel[] = l2.asks
-    .slice(0, limit)
+    .slice(0, perSide)
     .map((ask) => [
       pipToDecimal(ask.price),
       pipToDecimal(ask.size),
       ask.numOrders,
     ]);
   const bids: RestResponseOrderBookPriceLevel[] = l2.bids
-    .slice(0, limit)
+    .slice(0, perSide)
     .map((bid) => [
       pipToDecimal(bid.price),
       pipToDecimal(bid.size),

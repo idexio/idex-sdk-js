@@ -97,6 +97,8 @@ export interface RestResponseDeposit {
  * @property {string} takerFeeRate - Taker trade fee rate
  * @property {string} makerTradeMinimum - Minimum size of an order that can rest on the order book in ETH, applies to both ETH and tokens
  * @property {string} takerTradeMinimum - Minimum order size that is accepted by the matching engine for execution in ETH, applies to both ETH and tokens
+ * @property {string} takerIdexFeeRate - Minimum order size that is accepted by the matching engine for execution in ETH, applies to both ETH and tokens
+ * @property {string} takerLiquidityProviderFeeRate - Minimum order size that is accepted by the matching engine for execution in ETH, applies to both ETH and tokens
  * @property {string} withdrawMinimum - Minimum withdrawal amount in ETH, applies to both ETH and tokens
  */
 export type RestResponseExchangeInfo<

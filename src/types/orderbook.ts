@@ -1,51 +1,105 @@
-import type { RestPublicClient, RestPublicClientOptions } from '../client/rest';
-import type {
-  WebSocketClient,
-  WebSocketClientOptions,
-} from '../client/webSocket';
+import type { RestPublicClientOptions } from '../client/rest';
+import type { WebSocketClientOptions } from '../client/webSocket';
 
+/**
+ * @typedef {Object} GrossQuantities
+ * @property {bigint} grossBase
+ * @property {bigint} grossQuote
+ */
 export type GrossQuantities = {
   grossBase: bigint;
   grossQuote: bigint;
 };
 
+/**
+ * @typedef {Object} OrderBookFeeRates
+ * @property {string} idexFeeRate
+ * @property {string} poolFeeRate
+ * @property {string} takerMinimumInNativeAsset
+ */
 export type OrderBookFeeRates = {
   idexFeeRate: string;
   poolFeeRate: string;
   takerMinimumInNativeAsset: string;
 };
 
-export type OrderBookLevelType = 'limit' | 'pool' | 'hybrid';
+/**
+ * @typedef {Object} OrderBookLevelType
+ */
+export type OrderBookLevelType = 'limit' | 'pool';
 
+/**
+ * @typedef {Object} OrderBookLevelL1
+ * @property {bigint} price
+ * @property {bigint} size
+ * @property {number} numOrders
+ */
 export type OrderBookLevelL1 = {
   price: bigint;
   size: bigint;
   numOrders: number;
 };
 
+/**
+ * @typedef {Object} OrderBookLevelL2
+ * @property {bigint} price
+ * @property {bigint} size
+ * @property {number} numOrders
+ * @property {OrderBookLevelType} type
+ */
 export type OrderBookLevelL2 = OrderBookLevelL1 & {
   type: OrderBookLevelType;
 };
 
+/**
+ * @typedef {Object} PoolReserveQuantities
+ * @property {bigint} baseReserveQuantity
+ * @property {bigint} quoteReserveQuantity
+ */
 export type PoolReserveQuantities = {
   baseReserveQuantity: bigint;
   quoteReserveQuantity: bigint;
 };
 
+/**
+ * @typedef {Object} L1OrderBook
+ * @property {number} sequence
+ * @property {OrderBookLevelL1} asks
+ * @property {OrderBookLevelL1} bids
+ * @property {PoolReserveQuantities | null} pool
+ */
 export type L1OrderBook = {
   sequence: number;
-  bids: OrderBookLevelL1;
   asks: OrderBookLevelL1;
-  pool: null | PoolReserveQuantities;
+  bids: OrderBookLevelL1;
+  pool: PoolReserveQuantities | null;
 };
 
+/**
+ * @typedef {Object} L2OrderBook
+ * @property {number} sequence
+ * @property {OrderBookLevelL2[]} asks
+ * @property {OrderBookLevelL2[]} bids
+ * @property {PoolReserveQuantities | null} pool
+ */
 export type L2OrderBook = {
   sequence: number;
-  bids: OrderBookLevelL2[];
   asks: OrderBookLevelL2[];
+  bids: OrderBookLevelL2[];
   pool: null | PoolReserveQuantities;
 };
 
+/**
+ * Orderbook Client Options
+ *
+ * @typedef {Object} OrderBookRealTimeClientOptions
+ * @property {boolean} [sandbox]
+ * @property {string} [restApiUrl] - Override the API url for REST requests
+ * @property {string} [webSocketApiUrl] - Override the API url for REST requests
+ * @property {string} [apiKey] - Increases rate limits if provided
+ * @property {MultiverseChain} [multiverseChain]
+ * @property {number} [connectTimeout] - Connection timeout for websocket (default 5000)
+ */
 export type OrderBookRealTimeClientOptions = Omit<
   Omit<
     RestPublicClientOptions &
