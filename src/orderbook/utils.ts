@@ -1,5 +1,8 @@
 import type { L1OrderBook, L2OrderBook, OrderBookLevelL2 } from '../types';
 
+/**
+ * Determine whether two level 1 order books are equal, including pool reserves
+ */
 export function L1Equal(beforeL1: L1OrderBook, afterL1: L1OrderBook): boolean {
   return (
     beforeL1.asks.price === afterL1.asks.price &&
@@ -13,6 +16,9 @@ export function L1Equal(beforeL1: L1OrderBook, afterL1: L1OrderBook): boolean {
   );
 }
 
+/**
+ * Derive the level 1 orderbook from a level 2 orderbook
+ */
 export function L2toL1OrderBook(l2: L2OrderBook): L1OrderBook {
   return {
     sequence: l2.sequence,
@@ -34,6 +40,15 @@ export function L2toL1OrderBook(l2: L2OrderBook): L1OrderBook {
   };
 }
 
+/**
+ * Updates a level 2 orderbook using a partial "diff" received over websockets
+ *
+ * @param {L2OrderBook} book
+ * @param {L2OrderBook} updatedLevels
+ * - level 2 orderbook containing only limit order price levels that have changed
+ *
+ * @returns {void} - orderbook is updated in-place
+ */
 export function updateL2Levels(
   book: L2OrderBook,
   updatedLevels: L2OrderBook,
@@ -46,6 +61,15 @@ export function updateL2Levels(
   /* eslint-enable no-param-reassign */
 }
 
+/**
+ * Applies a changeset to a single side of the orderbook
+ *
+ * @param {boolean} isAscending - true for asks, false for bids (ordering of price levels)
+ * @param {OrderBookLevelL2[]} side
+ * @param {OrderBookLevelL2[]} updates
+ *
+ * @returns {OrderBookLevelL2[]}
+ */
 function updateL2Side(
   isAscending: boolean,
   side: OrderBookLevelL2[],

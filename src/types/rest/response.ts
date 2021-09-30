@@ -414,7 +414,10 @@ type NumOrders = number;
 /**
  * OrderBookPriceLevel
  *
- * @typedef {[string, string, number]} RestResponseOrderBookPriceLevel
+ * price and size as decimal strings
+ * numorders = # of limit orders at this price level (0 for synthetic levels)
+ *
+ * @typedef {[Price, Size, NumOrders]} RestResponseOrderBookPriceLevel
  */
 export type RestResponseOrderBookPriceLevel = [Price, Size, NumOrders];
 

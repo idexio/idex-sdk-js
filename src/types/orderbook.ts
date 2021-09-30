@@ -2,13 +2,45 @@ import type { RestPublicClientOptions } from '../client/rest';
 import type { WebSocketClientOptions } from '../client/webSocket';
 
 /**
- * @typedef {Object} GrossQuantities
- * @property {bigint} grossBase
- * @property {bigint} grossQuote
+ * @typedef {Object} BestAvailablePriceLevels
+ * @property {bigint} baseReceived - actual quantity received, in base units at the best available buy price
+ * @property {bigint} bestAvailableBuyPrice - best available price for buy orders of the minimum size
+ * @property {bigint} bestAvailableSellPrice - best available price for sell orders of the minimum size
+ * @property {bigint} quoteReceived - actual quantity received, in quote units at the best available sell price
  */
-export type GrossQuantities = {
-  grossBase: bigint;
-  grossQuote: bigint;
+export type BestAvailablePriceLevels = {
+  baseReceived: bigint;
+  bestAvailableBuyPrice: bigint;
+  bestAvailableSellPrice: bigint;
+  quoteReceived: bigint;
+};
+
+/**
+ * @typedef {Object} L1OrderBook
+ * @property {number} sequence
+ * @property {OrderBookLevelL1} asks
+ * @property {OrderBookLevelL1} bids
+ * @property {PoolReserveQuantities | null} pool
+ */
+export type L1OrderBook = {
+  sequence: number;
+  asks: OrderBookLevelL1;
+  bids: OrderBookLevelL1;
+  pool: PoolReserveQuantities | null;
+};
+
+/**
+ * @typedef {Object} L2OrderBook
+ * @property {number} sequence
+ * @property {OrderBookLevelL2[]} asks
+ * @property {OrderBookLevelL2[]} bids
+ * @property {PoolReserveQuantities | null} pool
+ */
+export type L2OrderBook = {
+  sequence: number;
+  asks: OrderBookLevelL2[];
+  bids: OrderBookLevelL2[];
+  pool: null | PoolReserveQuantities;
 };
 
 /**
@@ -62,32 +94,11 @@ export type PoolReserveQuantities = {
 };
 
 /**
- * @typedef {Object} L1OrderBook
- * @property {number} sequence
- * @property {OrderBookLevelL1} asks
- * @property {OrderBookLevelL1} bids
- * @property {PoolReserveQuantities | null} pool
+ * @typedef {Object} PriceLevelQuantities
+ * @property {bigint} grossBase
+ * @property {bigint} grossQuote
  */
-export type L1OrderBook = {
-  sequence: number;
-  asks: OrderBookLevelL1;
-  bids: OrderBookLevelL1;
-  pool: PoolReserveQuantities | null;
-};
-
-/**
- * @typedef {Object} L2OrderBook
- * @property {number} sequence
- * @property {OrderBookLevelL2[]} asks
- * @property {OrderBookLevelL2[]} bids
- * @property {PoolReserveQuantities | null} pool
- */
-export type L2OrderBook = {
-  sequence: number;
-  asks: OrderBookLevelL2[];
-  bids: OrderBookLevelL2[];
-  pool: null | PoolReserveQuantities;
-};
+export type PriceLevelQuantities = { grossBase: bigint; grossQuote: bigint };
 
 /**
  * Orderbook Client Options
