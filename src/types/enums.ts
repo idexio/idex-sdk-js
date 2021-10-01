@@ -179,7 +179,7 @@ export enum LiquidityChangeType {
  * The available multiverse chains to define when creating a client.
  *
  * @readonly
- * @enum {'eth' | 'bsc' | 'matic'}
+ * @enum {'matic'}
  */
 export type MultiverseChain = keyof typeof URLS[keyof typeof URLS];
 

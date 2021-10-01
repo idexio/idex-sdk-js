@@ -63,16 +63,8 @@ function signatureHashVersion(
   multiverseChain: MultiverseChain,
   sandbox: boolean,
 ):
-  | typeof constants.ORDER_SIGNATURE_HASH_VERSION_ETH
-  | typeof constants.ORDER_SIGNATURE_HASH_VERSION_BSC
   | typeof constants.ORDER_SIGNATURE_HASH_VERSION_MATIC
   | typeof constants.ORDER_SIGNATURE_HASH_VERSION_MATIC_SANDBOX {
-  if (multiverseChain === 'eth') {
-    return constants.ORDER_SIGNATURE_HASH_VERSION_ETH;
-  }
-  if (multiverseChain === 'bsc') {
-    return constants.ORDER_SIGNATURE_HASH_VERSION_BSC;
-  }
   if (multiverseChain === 'matic') {
     return sandbox
       ? constants.ORDER_SIGNATURE_HASH_VERSION_MATIC_SANDBOX

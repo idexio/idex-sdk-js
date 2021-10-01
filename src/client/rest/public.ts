@@ -63,13 +63,13 @@ export class RestPublicClient<
   public readonly config: Readonly<{
     multiverseChain: C['multiverseChain'] extends MultiverseChain
       ? C['multiverseChain']
-      : 'eth';
+      : 'matic';
     baseURL: string;
     sandbox: boolean;
   }>;
 
   public constructor(options: C) {
-    const { multiverseChain = 'eth', sandbox = false } = options;
+    const { multiverseChain = 'matic', sandbox = false } = options;
 
     const baseURL =
       options.baseURL ??

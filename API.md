@@ -167,14 +167,14 @@
     -   [Addition](#addition)
     -   [Removal](#removal)
 -   [AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription)
+-   [RestResponseLiquidityPool](#restresponseliquiditypool)
+    -   [Properties](#properties-15)
 -   [numerator](#numerator)
 -   [AuthTokenWebSocketRequestSubscription](#authtokenwebsocketrequestsubscription)
 -   [WebSocketRequestSubscription](#websocketrequestsubscription)
 -   [WebSocketResponseLiquidityPoolShort](#websocketresponseliquiditypoolshort)
-    -   [Properties](#properties-15)
--   [MultiverseChain](#multiversechain)
--   [RestResponseLiquidityPool](#restresponseliquiditypool)
     -   [Properties](#properties-16)
+-   [MultiverseChain](#multiversechain)
 -   [WebSocketResponseLiquidityPoolLong](#websocketresponseliquiditypoollong)
     -   [Properties](#properties-17)
 -   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
@@ -786,7 +786,7 @@ const withdrawal = await authenticatedClient.withdraw(
   {
     nonce: uuidv1(),
     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
-    asset: 'ETH',
+    asset: 'MATIC',
     quantity: '0.04000000',
   },
   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
@@ -1688,12 +1688,12 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
--   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-USD'
 -   `status` **[MarketStatus](#marketstatus)** 
 -   `type` **[MarketType](#markettype)** 
 -   `baseAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** e.g. 'IDEX'
 -   `baseAssetPrecision` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
--   `quoteAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** e.g. 'ETH'
+-   `quoteAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** e.g. 'USD'
 -   `quoteAssetPrecision` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 -   `makerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `takerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
@@ -2871,6 +2871,23 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 Type: ([AuthTokenWebSocketRequestBalancesSubscription](#authtokenwebsocketrequestbalancessubscription) \| [AuthTokenWebSocketRequestOrdersSubscription](#authtokenwebsocketrequestorderssubscription))
 
+## RestResponseLiquidityPool
+
+Liquidity Pool
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Address of one reserve token
+-   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Address of one reserve token
+-   `reserveA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of token A held as reserve in token precision, not pips
+-   `reserveB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of token B held as reserve in token precision, not pips
+-   `liquidityToken` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Address of the liquidity provider (LP) token
+-   `totalLiquidity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total quantity of liquidity provider (LP) tokens minted in token precision, not pips
+-   `reserveUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of reserves in USD
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Market symbol of pool’s associated hybrid market
+
 ## numerator
 
 The result needs to be rounded down to prevent the pool's constant
@@ -2900,24 +2917,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 The available multiverse chains to define when creating a client.
 
-Type: (`"eth"` \| `"bsc"` \| `"matic"`)
-
-## RestResponseLiquidityPool
-
-Liquidity Pool
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
--   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Address of one reserve token
--   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Address of one reserve token
--   `reserveA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of token A held as reserve in token precision, not pips
--   `reserveB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of token B held as reserve in token precision, not pips
--   `liquidityToken` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Address of the liquidity provider (LP) token
--   `totalLiquidity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total quantity of liquidity provider (LP) tokens minted in token precision, not pips
--   `reserveUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of reserves in USD
--   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Market symbol of pool’s associated hybrid market
+Type: `"matic"`
 
 ## WebSocketResponseLiquidityPoolLong
 
