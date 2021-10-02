@@ -114,10 +114,6 @@ export enum MarketStatus {
    */
   active,
   /**
-   * Trades and cancels accepted
-   * @type {string}
-   */
-  /**
    * Hybrid trades and cancels accepted
    * @type {string}
    */

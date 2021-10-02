@@ -226,12 +226,9 @@ export interface RestRequestFindFills
 /**
  * @typedef {Object} RestRequestFindMarkets
  * @property {string} market - Target market, all markets are returned if omitted
- * @property {boolean} [regionOnly=false] - true only returns markets available in the geographic region of the request
- * @property {string} depositId
  */
 export interface RestRequestFindMarkets {
   market?: string;
-  regionOnly?: boolean;
 }
 
 /**

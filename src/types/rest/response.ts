@@ -4,7 +4,6 @@ import * as enums from '../enums';
  * Asset
  *
  * @typedef {Object} RestResponseAsset
- * @property {number} id - Internal id of the asset
  * @property {string} name
  * @property {string} symbol
  * @property {string} contractAddress
@@ -87,32 +86,50 @@ export interface RestResponseDeposit {
  * @typedef {Object} RestResponseExchangeInfo
  * @property {string} timeZone - Server time zone, always UTC
  * @property {number} serverTime - Current server time
- * @property {string} maticDepositContractAddress - Ethereum address of the exchange custody contract for deposits, only when multiverse chain is "matic"
- * @property {string} maticUsdPrice - Current price of BNB in USD, only provided if multiverse chain is "matic"
+ * @property {string} maticDepositContractAddress - Polygon address of the exchange smart contract for deposits
+ * @property {string} maticCustodyContractAddress - Polygon address of the custody smart contract for certain add and remove liquidity calls
+ * @property {string} maticUsdPrice - Current price of MATIC in USD
  * @property {number} gasPrice - Current gas price used by the exchange for trade settlement and withdrawal transactions in Gwei
  * @property {string} volume24hUsd - Total exchange trading volume for the trailing 24 hours in USD
+ * @property {string} totalVolumeUsd - Total exchange trading volume for IDEX v3 on Polygon in USD
+ * @property {string} totalTrades - Total number of trade executions for IDEX v3 on Polygon
+ * @property {string} totalValueLockedUsd - Total value locked in IDEX v3 on Polygon in USD
+ * @property {string} idexTokenAddress - Token contract address for the IDEX token on Polygon
+ * @property {string} idexUsdPrice - Current price of the IDEX token in USD
+ * @property {string} idexMarketCapUsd - Market capitalization of the IDEX token in USD
  * @property {string} makerFeeRate - Maker trade fee rate
- * @property {string} takerFeeRate - Taker trade fee rate
- * @property {string} makerTradeMinimum - Minimum size of an order that can rest on the order book in ETH, applies to both ETH and tokens
- * @property {string} takerTradeMinimum - Minimum order size that is accepted by the matching engine for execution in ETH, applies to both ETH and tokens
- * @property {string} takerIdexFeeRate - Minimum order size that is accepted by the matching engine for execution in ETH, applies to both ETH and tokens
- * @property {string} takerLiquidityProviderFeeRate - Minimum order size that is accepted by the matching engine for execution in ETH, applies to both ETH and tokens
- * @property {string} withdrawMinimum - Minimum withdrawal amount in ETH, applies to both ETH and tokens
+ * @property {string} takerFeeRate - Total taker trade fee rate
+ * @property {string} takerIdexFeeRate - Taker trade fee rate collected by IDEX; used in computing synthetic price levels for real-time order books
+ * @property {string} takerLiquidityProviderFeeRate - Taker trade fee rate collected by liquidity providers; used in computing synthetic price levels for real-time order books
+ * @property {string} makerTradeMinimum - Minimum size of an order that can rest on the order book in MATIC, applies to both MATIC and tokens
+ * @property {string} takerTradeMinimum - Minimum order size that is accepted by the matching engine for execution in MATIC, applies to both MATIC and tokens
+ * @property {string} withdrawMinimum - Minimum withdrawal amount in MATIC, applies to both MATIC and tokens
+ * @property {string} liquidityAdditionMinimum - Minimum liquidity addition amount in MATIC, applies to both MATIC and tokens
+ * @property {string} liquidityRemovalMinimum - Minimum withdrawal amount in MATIC, applies to both MATIC and tokens
  */
 export type RestResponseExchangeInfo = {
   timeZone: string;
   serverTime: number;
   maticDepositContractAddress: string;
+  maticCustodyContractAddress: string;
   maticUsdPrice: string;
   gasPrice: number;
   volume24hUsd: string;
+  totalVolumeUsd: string;
+  totalTrades: string;
+  totalValueLockedUsd: string;
+  idexTokenAddress: string;
+  idexUsdPrice: string;
+  idexMarketCapUsd: string;
   makerFeeRate: string;
   takerFeeRate: string;
-  makerTradeMinimum: string;
-  takerTradeMinimum: string;
   takerIdexFeeRate: string;
   takerLiquidityProviderFeeRate: string;
+  makerTradeMinimum: string;
+  takerTradeMinimum: string;
   withdrawMinimum: string;
+  liquidityAdditionMinimum: string;
+  liquidityRemovalMinimum: string;
 };
 
 /**
@@ -291,8 +308,8 @@ export interface RestResponseOrderFill {
  *
  * @typedef {Object} RestResponseMarket
  * @property {string} market - Base-quote pair e.g. 'IDEX-USD'
- * @property {MarketStatus} status
  * @property {MarketType} type
+ * @property {MarketStatus} status
  * @property {string} baseAsset - e.g. 'IDEX'
  * @property {number} baseAssetPrecision
  * @property {string} quoteAsset - e.g. 'USD'
@@ -301,13 +318,11 @@ export interface RestResponseOrderFill {
  * @property {string} takerFeeRate
  * @property {string} takerIdexFeeRate
  * @property {string} takerLiquidityProviderFeeRate
- * @property {OrderType[]} orderTypes
- * @property {string} tradeMinimum - Minimum quantity in base terms
  */
 export interface RestResponseMarket {
   market: string;
-  status: keyof typeof enums.MarketStatus;
   type: keyof typeof enums.MarketType;
+  status: keyof typeof enums.MarketStatus;
   baseAsset: string;
   baseAssetPrecision: number;
   quoteAsset: string;
@@ -403,8 +418,10 @@ interface RestResponseOrderBook {
  * OrderBookLevel1
  *
  * @typedef {Object} RestResponseOrderBookLevel1
+ * @property {number} sequence
  * @property {[RestResponseOrderBookPriceLevel]|[]} bids
  * @property {[RestResponseOrderBookPriceLevel]|[]} asks
+ * @property {RestResponseLiquidityPoolReserves|null} pool
  */
 export interface RestResponseOrderBookLevel1 {
   sequence: number;
@@ -417,8 +434,10 @@ export interface RestResponseOrderBookLevel1 {
  * OrderBookLevel2
  *
  * @typedef {Object} RestResponseOrderBookLevel2
+ * @property {number} sequence
  * @property {RestResponseOrderBookPriceLevel[]} bids
  * @property {RestResponseOrderBookPriceLevel[]} asks
+ * @property {RestResponseLiquidityPoolReserves|null} pool
  */
 export interface RestResponseOrderBookLevel2 extends RestResponseOrderBook {
   bids: RestResponseOrderBookPriceLevel[];
@@ -437,34 +456,34 @@ export type RestResponsePing = { [key: string]: never };
  *
  * @typedef {Object} RestResponseTicker
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
- * @property {string} percentChange - % change from open to close
- * @property {string} baseVolume - 24h volume in base terms
- * @property {string} quoteVolume - 24h volume in quote terms
- * @property {string | null} low - Lowest traded price in the period in quote terms
- * @property {string | null} high - Highest traded price in the period in quote terms
- * @property {string | null} bid - Best bid price on the order book
- * @property {string | null} ask - Best ask price on the order book
+ * @property {number} time - Time when data was calculated, open and change is assumed to be trailing 24h
  * @property {string | null} open - Price of the first trade for the period in quote terms
+ * @property {string | null} high - Highest traded price in the period in quote terms
+ * @property {string | null} low - Lowest traded price in the period in quote terms
  * @property {string | null} close - Same as last
  * @property {string | null} closeQuantity - Quantity of the last period in base terms
- * @property {number} time - Time when data was calculated, open and change is assumed to be trailing 24h
+ * @property {string} baseVolume - 24h volume in base terms
+ * @property {string} quoteVolume - 24h volume in quote terms
+ * @property {string} percentChange - % change from open to close
  * @property {number} numTrades - Number of fills for the market in the period
+ * @property {string | null} ask - Best ask price on the order book
+ * @property {string | null} bid - Best bid price on the order book
  * @property {number | null} sequence - Last trade sequence number for the market
  */
 export interface RestResponseTicker {
   market: string;
-  percentChange: string;
-  baseVolume: string;
-  quoteVolume: string;
-  low: string | null;
-  high: string | null;
-  bid: string | null;
-  ask: string | null;
+  time: number;
   open: string | null;
+  high: string | null;
+  low: string | null;
   close: string | null;
   closeQuantity: string | null;
-  time: number;
+  baseVolume: string;
+  quoteVolume: string;
+  percentChange: string;
   numTrades: number;
+  ask: string | null;
+  bid: string | null;
   sequence: number | null;
 }
 
@@ -482,23 +501,23 @@ export interface RestResponseTime {
  * Trade
  *
  * @typedef {Object} RestResponseTrade
- * @property {TradeType} type - orderBook, pool, or hybrid
  * @property {string} fillId - Internal ID of fill
  * @property {string} price - Executed price of trade in quote terms
  * @property {string} quantity - Executed quantity of trade in base terms
  * @property {string} quoteQuantity - Executed quantity of trade in quote terms
  * @property {number} time - Fill timestamp
  * @property {OrderSide} makerSide - Which side of the order the liquidity maker was on
+ * @property {TradeType} type - orderBook, pool, or hybrid
  * @property {number} sequence - Last trade sequence number for the market
  */
 export interface RestResponseTrade {
-  type: keyof typeof enums.TradeType;
   fillId: string;
   price: string;
   quantity: string;
   quoteQuantity: string;
   time: number;
   makerSide: keyof typeof enums.OrderSide;
+  type: keyof typeof enums.TradeType;
   sequence: number;
 }
 

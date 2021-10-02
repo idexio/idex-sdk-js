@@ -153,20 +153,6 @@ export class RestPublicClient<
   }
 
   /**
-   * Returns information about liquidity pools supported by the exchange
-   *
-   * @see https://api-docs-v3.idex.io/#get-liquidity-pools
-   *
-   * @param {RestRequestFindLiquidityPools} findLiquidityPools
-   * @returns {Promise<RestResponseLiquidityPool[]>}
-   */
-  public async getLiquidityPools(
-    findLiquidityPools: RestRequestFindLiquidityPools,
-  ): Promise<RestResponseLiquidityPool[]> {
-    return this.get('/liquidityPools', findLiquidityPools);
-  }
-
-  /**
    * Returns information about the currently listed markets
    *
    * @see https://api-docs-v3.idex.io/#get-markets
@@ -175,9 +161,23 @@ export class RestPublicClient<
    * @returns {Promise<RestResponseMarket[]>}
    */
   public async getMarkets(
-    findMarkets: RestRequestFindMarkets,
+    findMarkets?: RestRequestFindMarkets,
   ): Promise<RestResponseMarket[]> {
     return this.get('/markets', findMarkets);
+  }
+
+  /**
+   * Returns information about liquidity pools supported by the exchange
+   *
+   * @see https://api-docs-v3.idex.io/#get-liquidity-pools
+   *
+   * @param {RestRequestFindLiquidityPools} findLiquidityPools
+   * @returns {Promise<RestResponseLiquidityPool[]>}
+   */
+  public async getLiquidityPools(
+    findLiquidityPools?: RestRequestFindLiquidityPools,
+  ): Promise<RestResponseLiquidityPool[]> {
+    return this.get('/liquidityPools', findLiquidityPools);
   }
 
   // Market Data Endpoints
