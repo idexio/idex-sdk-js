@@ -47,7 +47,7 @@ import { isNode, createHmacRestRequestSignatureHeader } from '../../utils';
  * @typedef {Object} RestAuthenticatedClientOptions
  * @property {string} apiKey - Used to authenticate user
  * @property {string} apiSecret - Used to compute HMAC signature
- * @property {MultiverseChain} [multiverseChain=eth] - Which multiverse chain the client will point to
+ * @property {MultiverseChain} [multiverseChain=matic] - Which multiverse chain the client will point to
  * @property {boolean} [sandbox] - If true, client will point to API sandbox
  * @property {string} [walletPrivateKey] - If provided, used to create ECDSA signatures
  */
@@ -88,7 +88,7 @@ export class RestAuthenticatedClient<
   public readonly config: Readonly<{
     multiverseChain: C['multiverseChain'] extends MultiverseChain
       ? C['multiverseChain']
-      : 'eth';
+      : 'matic';
     baseURL: string;
     sandbox: boolean;
   }>;
@@ -98,7 +98,7 @@ export class RestAuthenticatedClient<
   protected autoCreateHmacHeader = true;
 
   public constructor(options: C) {
-    const { multiverseChain = 'eth', sandbox = false } = options;
+    const { multiverseChain = 'matic', sandbox = false } = options;
 
     const baseURL =
       options.baseURL ??
@@ -589,7 +589,7 @@ export class RestAuthenticatedClient<
    *   {
    *     nonce: uuidv1(),
    *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
-   *     asset: 'ETH',
+   *     asset: 'MATIC',
    *     quantity: '0.04000000',
    *   },
    *   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),

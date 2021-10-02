@@ -113,7 +113,7 @@ export class WebSocketClient<
   public readonly config: Readonly<{
     multiverseChain: C['multiverseChain'] extends MultiverseChain
       ? C['multiverseChain']
-      : 'eth';
+      : 'matic';
     baseURL: string;
     sandbox: boolean;
     connectTimeout: number;
@@ -126,7 +126,7 @@ export class WebSocketClient<
   private ws: null | WebSocket = null;
 
   constructor(options: WebSocketClientOptions) {
-    const { multiverseChain = 'eth', sandbox = false } = options;
+    const { multiverseChain = 'matic', sandbox = false } = options;
 
     const baseURL =
       options.baseURL ??

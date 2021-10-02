@@ -87,10 +87,8 @@ export interface RestResponseDeposit {
  * @typedef {Object} RestResponseExchangeInfo
  * @property {string} timeZone - Server time zone, always UTC
  * @property {number} serverTime - Current server time
- * @property {string} ethereumDepositContractAddress - Ethereum address of the exchange custody contract for deposits, only when multiverse chain is "eth"
- * @property {string} bscDepositContractAddress - Ethereum address of the exchange custody contract for deposits, only when multiverse chain is "bsc"
- * @property {string} ethUsdPrice - Current price of ETH in USD, only provided if multiverse chain is "eth"
- * @property {string} bnbUsdPrice - Current price of BNB in USD, only provided if multiverse chain is "bsc"
+ * @property {string} maticDepositContractAddress - Ethereum address of the exchange custody contract for deposits, only when multiverse chain is "matic"
+ * @property {string} maticUsdPrice - Current price of BNB in USD, only provided if multiverse chain is "matic"
  * @property {number} gasPrice - Current gas price used by the exchange for trade settlement and withdrawal transactions in Gwei
  * @property {string} volume24hUsd - Total exchange trading volume for the trailing 24 hours in USD
  * @property {string} makerFeeRate - Maker trade fee rate
@@ -101,11 +99,11 @@ export interface RestResponseDeposit {
  * @property {string} takerLiquidityProviderFeeRate - Minimum order size that is accepted by the matching engine for execution in ETH, applies to both ETH and tokens
  * @property {string} withdrawMinimum - Minimum withdrawal amount in ETH, applies to both ETH and tokens
  */
-export type RestResponseExchangeInfo<
-  C extends enums.MultiverseChain = 'eth'
-> = {
+export type RestResponseExchangeInfo = {
   timeZone: string;
   serverTime: number;
+  maticDepositContractAddress: string;
+  maticUsdPrice: string;
   gasPrice: number;
   volume24hUsd: string;
   makerFeeRate: string;
@@ -115,34 +113,7 @@ export type RestResponseExchangeInfo<
   takerIdexFeeRate: string;
   takerLiquidityProviderFeeRate: string;
   withdrawMinimum: string;
-} & (C extends 'matic'
-  ? {
-      maticUsdPrice: string;
-      maticDepositContractAddress: string;
-      ethereumDepositContractAddress?: void;
-      ethUsdPrice?: void;
-      bnbUsdPrice?: void;
-      bscDepositContractAddress?: void;
-    }
-  : C extends 'eth'
-  ? {
-      ethUsdPrice: string;
-      ethereumDepositContractAddress: string;
-      bnbUsdPrice?: void;
-      bscDepositContractAddress?: void;
-      maticUsdPrice?: string;
-      maticDepositContractAddress?: string;
-    }
-  : C extends 'bsc'
-  ? {
-      bnbUsdPrice: string;
-      bscDepositContractAddress: string;
-      ethereumDepositContractAddress?: void;
-      ethUsdPrice?: void;
-      maticUsdPrice?: string;
-      maticDepositContractAddress?: string;
-    }
-  : never);
+};
 
 /**
  * Fill
@@ -319,12 +290,12 @@ export interface RestResponseOrderFill {
  * Market
  *
  * @typedef {Object} RestResponseMarket
- * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
+ * @property {string} market - Base-quote pair e.g. 'IDEX-USD'
  * @property {MarketStatus} status
  * @property {MarketType} type
  * @property {string} baseAsset - e.g. 'IDEX'
  * @property {number} baseAssetPrecision
- * @property {string} quoteAsset - e.g. 'ETH'
+ * @property {string} quoteAsset - e.g. 'USD'
  * @property {number} quoteAssetPrecision
  * @property {string} makerFeeRate
  * @property {string} takerFeeRate
