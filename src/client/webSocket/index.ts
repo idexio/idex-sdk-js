@@ -43,21 +43,15 @@ const PING_TIMEOUT = 30000;
  * WebSocket API client options
  *
  * @typedef {Object} WebSocketClientOptions
- * @property {boolean} [sandbox] - <br />
- *  Should the WebSocket connect to the {@link https://docs.idex.io/#sandbox|Sandbox Environment}?
- *  **Note**: This must be set to `true` during the Sandbox preview.
- * @property {function} [websocketAuthTokenFetch] - <br />
- *  Authenticated Rest API client fetch token call (`/wsToken`)
- *  SDK Websocket client will then automatically handle Websocket token generation and refresh.
- *  You can omit this when using only public websocket subscription.
- *  Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
- *  See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
- * @property {boolean} [shouldReconnectAutomatically] -
- *  If true, automatically reconnects when connection is closed by the server or network errors
- * @property {string} [pathSubscription] -
- *  Path subscriptions are a quick and easy way to start receiving push updates. Eg. {market}@{subscription}_{option}
- * @property {number} [connectTimeout] -
- *  A timeout (in milliseconds) before failing while trying to connect to the WebSocket. Defaults to 5000.
+ * @property {boolean} [sandbox] -  - If true, client will point to API sandbox
+ * @property {function} [websocketAuthTokenFetch] - Authenticated REST API client fetch token call (`/wsToken`).
+ *  When provided, the SDK WebSocket client automatically handles WebSocket authentication token generation and refresh.
+ *  Omit when using only public WebSocket subscriptions.
+ *  Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`.
+ *  See [API specification](https://api-docs-v3.idex.io/#websocket-authentication-endpoints)
+ * @property {boolean} [shouldReconnectAutomatically] - If true, automatically reconnects when connection is closed by the server or network errors
+ * @property {string} [pathSubscription] - Path subscriptions are a quick and easy way to start receiving push updates. Eg. {market}@{subscription}_{option}
+ * @property {number} [connectTimeout] - Timeout (in milliseconds) before failing when trying to connect to the WebSocket. Defaults to 5000.
  */
 export interface WebSocketClientOptions {
   sandbox?: boolean;
@@ -232,7 +226,7 @@ export class WebSocketClient<
    * Subscribe to a given set of subscriptions, optionally providing a list of top level
    * markets or a cid property.
    *
-   * @see {@link https://docs.idex.io/#websocket-subscriptions|WebSocket Subscriptions}
+   * @see {@link https://api-docs-v3.idex.io/#websocket-subscriptions|WebSocket Subscriptions}
    *
    * @param {AuthTokenWebSocketRequestAuthenticatedSubscription[]} subscriptions
    * @param {string[]} [markets] - Optionally provide top level markets
@@ -258,7 +252,7 @@ export class WebSocketClient<
    * For this methods you need to pass `websocketAuthTokenFetch` to the websocket constructor.
    * Library will automatically refresh user's wallet auth tokens for you.
    *
-   * See {@link https://docs.idex.io/#get-authentication-token|API specification}
+   * See {@link https://api-docs-v3.idex.io/#get-authentication-token|API specification}
    *
    * @param {AuthTokenWebSocketRequestAuthenticatedSubscription[]} subscriptions
    * @param {string[]} [markets] - Optionally provide top level markets

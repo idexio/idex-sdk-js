@@ -36,13 +36,13 @@
     "LICENSE"
   ],
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bignumber.js": "^9.0.1",
     "ethers": "^5.0.32",
     "isomorphic-ws": "^4.0.1",
     "qs": "^6.9.6",
     "tslib": "^2.1.0",
-    "ws": "^7.4.4"
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^5.0.1",
@@ -57,7 +57,7 @@
     "commitizen": "^4.2.3",
     "conventional-changelog-conventionalcommits": "^4.5.0",
     "cz-conventional-changelog": "^3.3.0",
-    "documentation": "13.2.0",
+    "documentation": "13.2.5",
     "eslint": "^7.22.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.1.0",

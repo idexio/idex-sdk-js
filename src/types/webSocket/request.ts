@@ -40,7 +40,7 @@ export type WebSocketRequestCandlesSubscription = {
  *
  * @typedef {Object} WebSocketRequestTokenPriceSubscription
  * @property {string} name - 'trades'
- * @property {string[]}tokens - array of token symbols
+ * @property {string[]}markets - array of market symbols
  */
 export type WebSocketRequestTokenPriceSubscription = {
   name: 'tokenprice';

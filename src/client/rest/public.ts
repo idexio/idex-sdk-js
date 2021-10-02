@@ -111,7 +111,7 @@ export class RestPublicClient<
   /**
    * Test connectivity to the REST API
    *
-   * @see https://docs.idex.io/#get-ping
+   * @see https://api-docs-v3.idex.io/#get-ping
    * @returns {{}}
    */
   public async ping(): Promise<{ [key: string]: never }> {
@@ -121,7 +121,7 @@ export class RestPublicClient<
   /**
    * Returns the current server time
    *
-   * @see https://docs.idex.io/#get-time
+   * @see https://api-docs-v3.idex.io/#get-time
    *
    * @returns {Promise<number>} Current server time as milliseconds since UNIX epoch
    */
@@ -133,7 +133,7 @@ export class RestPublicClient<
   /**
    * Returns basic information about the exchange.
    *
-   * @see https://docs.idex.io/#get-exchange
+   * @see https://api-docs-v3.idex.io/#get-exchange
    *
    * @returns {Promise<RestResponseExchangeInfo>}
    */
@@ -146,7 +146,7 @@ export class RestPublicClient<
   /**
    * Returns information about assets supported by the exchange
    *
-   * @see https://docs.idex.io/#get-assets
+   * @see https://api-docs-v3.idex.io/#get-assets
    *
    * @returns {Promise<RestResponseAsset[]>}
    */
@@ -157,7 +157,7 @@ export class RestPublicClient<
   /**
    * Returns information about liquidity pools supported by the exchange
    *
-   * @see https://docs.idex.io/#get-liquidity-pools
+   * @see https://api-docs-v3.idex.io/#get-liquidity-pools
    *
    * @param {RestRequestFindLiquidityPools} findLiquidityPools
    * @returns {Promise<RestResponseLiquidityPool[]>}
@@ -171,7 +171,7 @@ export class RestPublicClient<
   /**
    * Returns information about the currently listed markets
    *
-   * @see https://docs.idex.io/#get-markets
+   * @see https://api-docs-v3.idex.io/#get-markets
    *
    * @param {RestRequestFindMarkets} findMarkets
    * @returns {Promise<RestResponseMarket[]>}
@@ -187,7 +187,7 @@ export class RestPublicClient<
   /**
    * Returns market statistics for the trailing 24-hour period
    *
-   * @see https://docs.idex.io/#get-tickers
+   * @see https://api-docs-v3.idex.io/#get-tickers
    *
    * @param {string} [market] - Base-quote pair e.g. 'IDEX-ETH', if provided limits ticker data to a single market
    * @returns {Promise<RestResponseTicker[]>}
@@ -199,7 +199,7 @@ export class RestPublicClient<
   /**
    * Returns candle (OHLCV) data for a market
    *
-   * @see https://docs.idex.io/#get-candles
+   * @see https://api-docs-v3.idex.io/#get-candles
    *
    * @param {RestRequestFindCandles} findCandles
    * @returns {Promise<RestResponseCandle[]>}
@@ -213,7 +213,7 @@ export class RestPublicClient<
   /**
    * Returns public trade data for a market
    *
-   * @see https://docs.idex.io/#get-trades
+   * @see https://api-docs-v3.idex.io/#get-trades
    *
    * @param {RestRequestFindTrades} findTrades
    * @returns {Promise<RestResponseTrade[]>}
@@ -227,7 +227,7 @@ export class RestPublicClient<
   /**
    * Get current top bid/ask price levels of order book for a market
    *
-   * @see https://docs.idex.io/#get-order-books
+   * @see https://api-docs-v3.idex.io/#get-order-books
    *
    * @param {string} market - Base-quote pair e.g. 'IDEX-ETH'
    * @returns {Promise<RestResponseOrderBookLevel1>}
@@ -242,7 +242,7 @@ export class RestPublicClient<
   /**
    * Get current order book price levels for a market
    *
-   * @see https://docs.idex.io/#get-order-books
+   * @see https://api-docs-v3.idex.io/#get-order-books
    *
    * @param {string} market - Base-quote pair e.g. 'IDEX-ETH'
    * @param {number} [limit=50] - Number of bids and asks to return. Default is 50, 0 returns the entire book

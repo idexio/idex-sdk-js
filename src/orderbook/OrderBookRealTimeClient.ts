@@ -46,7 +46,7 @@ import type {
  * client.start(markets);
  *
  * function handleOrderBook(l2: L2OrderBook) {
- *   const l2 = client.getOrderBookLevel2('IDEX-USD', 10);
+ *   const l2 = await client.getOrderBookLevel2('IDEX-USD', 10);
  * }
  *
  * client.on('ready', handleOrderBook);
@@ -56,9 +56,9 @@ import type {
  */
 export class OrderBookRealTimeClient extends EventEmitter {
   /**
-   * Set to the global idex fee rate on start (see: RestResponseExchangeInfo.takerIdexFeeRate)
-   * Can be overriden to wallet-specific rates with setCustomFees()
-   * Used to calculate synthetic price levels
+   * Set to the global idex fee rate on start (see: RestResponseExchangeInfo.takerIdexFeeRate).
+   * Can be overriden to wallet-specific rates with setCustomFees().
+   * Used to calculate synthetic price levels.
    *
    * @private
    */
@@ -77,9 +77,9 @@ export class OrderBookRealTimeClient extends EventEmitter {
   private readonly marketIsLoading = new Set<string>();
 
   /**
-   * Set to the global pool fee rate on start (see: RestResponseExchangeInfo.takerLiquidityProviderFeeRate)
-   * Can be overriden to wallet-specific rates with setCustomFees()
-   * Used to calculate synthetic price levels
+   * Set to the global pool fee rate on start (see: RestResponseExchangeInfo.takerLiquidityProviderFeeRate).
+   * Can be overriden to wallet-specific rates with setCustomFees().
+   * Used to calculate synthetic price levels.
    *
    * @private
    */
@@ -88,9 +88,9 @@ export class OrderBookRealTimeClient extends EventEmitter {
   private readonly restPublicClient: RestPublicClient;
 
   /**
-   * Set to the global taker minimum trade size on start (see: RestResponseExchangeInfo.takerTradeMinimum)
-   * Can be overriden to wallet-specific rates with setCustomFees()
-   * Used to calculate synthetic price levels
+   * Set to the global taker minimum trade size on start (see: RestResponseExchangeInfo.takerTradeMinimum).
+   * Can be overriden to wallet-specific rates with setCustomFees().
+   * Used to calculate synthetic price levels.
    *
    * @private
    */
@@ -126,8 +126,8 @@ export class OrderBookRealTimeClient extends EventEmitter {
   }
 
   /**
-   * Set custom fee rates for synthetic price level calculations
-   * Use this if your wallet has custom fee settings set
+   * Set custom fee rates for synthetic price level calculations.
+   * Use this if your wallet has custom fee settings set.
    *
    * @param {Partial<OrderBookFeeRates>} rates
    */
@@ -147,7 +147,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
   }
 
   /**
-   * Loads initial state from REST API and begin listening to orderbook updates
+   * Loads initial state from REST API and begin listening to orderbook updates.
    *
    * @param {string[]} markets
    */
@@ -160,8 +160,8 @@ export class OrderBookRealTimeClient extends EventEmitter {
   }
 
   /**
-   * Stop the order book client, and reset internal state
-   * Call this when you are no longer using the client, to release memory and network resources
+   * Stop the order book client, and reset internal state.
+   * Call this when you are no longer using the client, to release memory and network resources.
    */
   public stop(): void {
     if (this.webSocketClient.isConnected()) {
@@ -172,7 +172,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
   }
 
   /**
-   * Load the current state of the level 1 orderbook for this market
+   * Load the current state of the level 1 orderbook for this market.
    *
    * @param {string} market
    * @return {RestResponseOrderBookLevel1}
@@ -184,7 +184,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
   }
 
   /**
-   * Load the current state of the level 2 orderbook for this market
+   * Load the current state of the level 2 orderbook for this market.
    *
    * @param {string} market
    * @param {string} [limit] - total number of price levels (bids + asks) to return, between 2 and 1000
