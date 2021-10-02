@@ -1,5 +1,5 @@
 <!-- markdownlint-disable MD033 -->
-# <img src="assets/logo.png" alt="IDEX" height="36px" valign="top"> Javascript SDK
+# <img src="assets/logo.png" alt="IDEX" height="36px" valign="top"> JavaScript SDK
 
 ![Discord](https://img.shields.io/discord/455246457465733130?label=Discord&style=flat-square)
 ![GitHub](https://img.shields.io/github/license/idexio/idex-sdk-js?style=flat-square)
@@ -10,30 +10,25 @@
 ![Twitter Follow](https://img.shields.io/twitter/follow/idexio?style=social)
 
 
-The official library for [IDEX 2.0's](https://idex.io) REST and WebSocket APIs
+The official library for [IDEX v3's](https://idex.io) REST and WebSocket APIs.
 
-Complete documentation for the IDEX 2.0 API is available at https://docs.idex.io.
-
-## Features
-
-- Easy functionality to use in programmatic trading
-- A WebSocket-backed real-time order book implementation
-- Clients with convenient methods for every API endpoint
-- Abstracted interfaces – don't worry about HMAC signing, JSON formatting, or ECDSA signatures; the library does it for you
+- Written in TypeScript with full typings for all requests and responses
 - Supports both Node.js and browser environments
-- Written in Typescript with full typings for all requests and responses
+- Implements a real time order book including support for [hybrid liquidity](https://api-docs-v3.idex.io/#hybrid-liquidity)
+
+Complete documentation for the IDEX v3 API is available at https://api-docs-v3.idex.io.
 
 ## Installation
 
 ```bash
-yarn add @idexio/idex-sdk
+yarn add @idexio/idex-sdk@beta
 // or
-npm install --save @idexio/idex-sdk
+npm install --save @idexio/idex-sdk@beta
 ```
 
 ## Getting Started
 
-Get IDEX 2.0 sandbox [API keys](https://idex.io).
+Get IDEX v3 sandbox [API keys](https://api-docs-v3.idex.io/#sandbox).
 
 ```typescript
 import * as idex from '@idexio/idex-sdk';
@@ -44,23 +39,16 @@ const publicClient = new idex.RestPublicClient({
 console.log(await publicClient.getServerTime());
 ```
 
-In-depth usage documentation by endpoint is [available here](https://github.com/idexio/idex-sdk-js/blob/master/API.md).
+In-depth usage documentation by endpoint is [available here](API.md).
 
-## Contracts
+## Contract ABIs
 
-Included in the `contracts/` directory are the Solidity [source](https://github.com/idexio/idex-sdk-js/blob/master/contracts/SandboxToken.sol)
-and corresponding [ABI](https://github.com/idexio/idex-sdk-js/blob/master/contracts/SandboxToken.abi.json) for the
-[testnet sandbox](https://docs.idex.io/#sandbox) ERC-20 tokens, which feature a [faucet](https://docs.idex.io/#faucets)
+Included in the `contracts/` directory contains the ABIs necessary for interacting with IDEX v3's smart contracts.
+
+- The [Exchange ABI](contracts/Exchange.abi.json) can be used to query contract state, [deposit funds](https://api-docs-v3.idex.io/#deposit-funds), [add liquidity](https://api-docs-v3.idex.io/#add-liquidity-via-smart-contract-function-call), [remove liquidity](https://api-docs-v3.idex.io/#remove-liquidity-via-smart-contract-function-call) or [exit wallets](https://api-docs-v3.idex.io/#exit-wallet).
+- The [FaucetToken ABI](contracts/FaucetToken.abi.json) is implemented by the [API sandbox](https://api-docs-v3.idex.io/#sandbox) testnet tokens and features a [faucet](https://api-docs-v3.idex.io/#faucets)
 function for dispensing tokens.
-
-See the [idex-contracts](https://github.com/idexio/idex-contracts) repo for a reference
-[Solidity implementation](https://github.com/idexio/idex-contracts/blob/master/contracts/libraries/Signatures.sol) of
-order and withdrawal signature verification that exactly mirrors the [Javascript implementation](https://github.com/idexio/idex-sdk-js/blob/main/src/signatures.ts)
-found in this repo.
-
-The [Exchange ABI](https://github.com/idexio/idex-sdk-js/blob/master/contracts/Exchange.abi.json) can be used to query
-contract state, [deposit funds](https://docs.idex.io/#deposit-funds), or [exit wallets](https://docs.idex.io/#exit-wallet).
 
 ## License
 
-The IDEX Javascript SDK is released under the [MIT License](https://opensource.org/licenses/MIT).
+The IDEX JavaScript SDK is released under the [MIT License](https://opensource.org/licenses/MIT).

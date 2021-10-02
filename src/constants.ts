@@ -17,9 +17,9 @@ export const ORDER_SIGNATURE_HASH_VERSION_MATIC_SANDBOX = 103;
  * (eth default for all clients).
  *
  * @private
- * @see https://docs.idex.io/#websocket-api-interaction
- * @see https://docs.idex.io/#rest-api-interaction
- * @see https://docs.idex.io/#sandbox
+ * @see https://api-docs-v3.idex.io/#websocket-api-interaction
+ * @see https://api-docs-v3.idex.io/#rest-api-interaction
+ * @see https://api-docs-v3.idex.io/#sandbox
  */
 export const URLS = deepObjectFreeze({
   sandbox: {
