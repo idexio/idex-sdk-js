@@ -21,7 +21,6 @@
     *   [OrderTimeInForce](#ordertimeinforce)
     *   [OrderType](#ordertype)
 *   [REST Requests](#rest-requests)
-    *   [RestRequestCancelOrders](#restrequestcancelorders)
     *   [RestRequestFindBalances](#restrequestfindbalances)
     *   [RestRequestFindCandles](#restrequestfindcandles)
     *   [RestRequestFindDeposit](#restrequestfinddeposit)
@@ -101,61 +100,63 @@
 *   [L1Equal](#l1equal)
     *   [Parameters](#parameters-47)
 *   [RestRequestFindLiquidityPools](#restrequestfindliquiditypools)
-    *   [Properties](#properties-70)
+    *   [Properties](#properties-69)
 *   [BestAvailablePriceLevels](#bestavailablepricelevels)
-    *   [Properties](#properties-71)
+    *   [Properties](#properties-70)
 *   [L2toL1OrderBook](#l2tol1orderbook)
     *   [Parameters](#parameters-48)
 *   [L2LimitOrderBookToHybridOrderBooks](#l2limitorderbooktohybridorderbooks)
     *   [Parameters](#parameters-49)
 *   [L1OrderBook](#l1orderbook)
-    *   [Properties](#properties-72)
+    *   [Properties](#properties-71)
 *   [calculateGrossBaseQuantity](#calculategrossbasequantity)
     *   [Parameters](#parameters-50)
 *   [RestRequestAddLiquidity](#restrequestaddliquidity)
-    *   [Properties](#properties-73)
+    *   [Properties](#properties-72)
 *   [L2OrderBook](#l2orderbook)
-    *   [Properties](#properties-74)
+    *   [Properties](#properties-73)
 *   [WebSocketRequestTokenPriceSubscription](#websocketrequesttokenpricesubscription)
-    *   [Properties](#properties-75)
+    *   [Properties](#properties-74)
 *   [createPrivateKeyMessageSigner](#createprivatekeymessagesigner)
     *   [Parameters](#parameters-51)
     *   [Examples](#examples-10)
 *   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
-    *   [Properties](#properties-76)
+    *   [Properties](#properties-75)
 *   [updateL2Levels](#updatel2levels)
     *   [Parameters](#parameters-52)
 *   [OrderBookFeeRates](#orderbookfeerates)
-    *   [Properties](#properties-77)
+    *   [Properties](#properties-76)
 *   [calculateGrossBaseValueOfBuyQuantities](#calculategrossbasevalueofbuyquantities)
     *   [Parameters](#parameters-53)
 *   [privateKeySigner](#privatekeysigner)
 *   [OrderBookLevelType](#orderbookleveltype)
 *   [OrderBookLevelL1](#orderbooklevell1)
-    *   [Properties](#properties-78)
+    *   [Properties](#properties-77)
 *   [calculateGrossQuoteQuantity](#calculategrossquotequantity)
     *   [Parameters](#parameters-54)
 *   [updateL2Side](#updatel2side)
     *   [Parameters](#parameters-55)
 *   [RestRequestFindLiquidityAddition](#restrequestfindliquidityaddition)
-    *   [Properties](#properties-79)
+    *   [Properties](#properties-78)
 *   [OrderBookLevelL2](#orderbooklevell2)
+    *   [Properties](#properties-79)
+*   [PoolReserveQuantities](#poolreservequantities)
     *   [Properties](#properties-80)
 *   [RestRequestFindLiquidityRemoval](#restrequestfindliquidityremoval)
     *   [Properties](#properties-81)
-*   [PoolReserveQuantities](#poolreservequantities)
-    *   [Properties](#properties-82)
 *   [PriceLevelQuantities](#pricelevelquantities)
-    *   [Properties](#properties-83)
-*   [RestRequestFindLiquidityChanges](#restrequestfindliquiditychanges)
-    *   [Properties](#properties-84)
+    *   [Properties](#properties-82)
 *   [calculateGrossQuoteValueOfSellQuantities](#calculategrossquotevalueofsellquantities)
     *   [Parameters](#parameters-56)
-*   [calculateBaseQuantityOut](#calculatebasequantityout)
-    *   [Parameters](#parameters-57)
+*   [RestRequestFindLiquidityChanges](#restrequestfindliquiditychanges)
+    *   [Properties](#properties-83)
 *   [MarketType](#markettype)
     *   [orderBook](#orderbook)
     *   [hybrid](#hybrid)
+*   [calculateBaseQuantityOut](#calculatebasequantityout)
+    *   [Parameters](#parameters-57)
+*   [RestRequestCancelOrder](#restrequestcancelorder)
+    *   [Properties](#properties-84)
 *   [LiquidityChangeOrigination](#liquiditychangeorigination)
     *   [OnChain](#onchain)
     *   [OffChain](#offchain)
@@ -163,18 +164,18 @@
 *   [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription)
 *   [calculateQuoteQuantityOut](#calculatequotequantityout)
     *   [Parameters](#parameters-58)
-*   [RestResponseLiquidityPool](#restresponseliquiditypool)
-    *   [Properties](#properties-85)
 *   [LiquidityChangeType](#liquiditychangetype)
     *   [Addition](#addition)
     *   [Removal](#removal)
 *   [AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription)
 *   [numerator](#numerator)
 *   [AuthTokenWebSocketRequestSubscription](#authtokenwebsocketrequestsubscription)
+*   [MultiverseChain](#multiversechain)
 *   [WebSocketRequestSubscription](#websocketrequestsubscription)
 *   [WebSocketResponseLiquidityPoolShort](#websocketresponseliquiditypoolshort)
+    *   [Properties](#properties-85)
+*   [RestResponseLiquidityPool](#restresponseliquiditypool)
     *   [Properties](#properties-86)
-*   [MultiverseChain](#multiversechain)
 *   [WebSocketResponseLiquidityPoolLong](#websocketresponseliquiditypoollong)
     *   [Properties](#properties-87)
 *   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
@@ -185,9 +186,9 @@
     *   [Properties](#properties-89)
 *   [RestResponseLiquidityPoolReserves](#restresponseliquiditypoolreserves)
     *   [Properties](#properties-90)
+*   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
 *   [RestResponseLiquidityRemoval](#restresponseliquidityremoval)
     *   [Properties](#properties-91)
-*   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
 *   [recalculateHybridLevelAmounts](#recalculatehybridlevelamounts)
     *   [Parameters](#parameters-60)
 *   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
@@ -283,18 +284,6 @@ Returns information about assets supported by the exchange
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[RestResponseAsset](#restresponseasset)>>** 
 
-##### getLiquidityPools
-
-*   **See**: <https://api-docs-v3.idex.io/#get-liquidity-pools>
-
-Returns information about liquidity pools supported by the exchange
-
-###### Parameters
-
-*   `findLiquidityPools` **[RestRequestFindLiquidityPools](#restrequestfindliquiditypools)** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[RestResponseLiquidityPool](#restresponseliquiditypool)>>** 
-
 ##### getMarkets
 
 *   **See**: <https://api-docs-v3.idex.io/#get-markets>
@@ -306,6 +295,18 @@ Returns information about the currently listed markets
 *   `findMarkets` **[RestRequestFindMarkets](#restrequestfindmarkets)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[RestResponseMarket](#restresponsemarket)>>** 
+
+##### getLiquidityPools
+
+*   **See**: <https://api-docs-v3.idex.io/#get-liquidity-pools>
+
+Returns information about liquidity pools supported by the exchange
+
+###### Parameters
+
+*   `findLiquidityPools` **[RestRequestFindLiquidityPools](#restrequestfindliquiditypools)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[RestResponseLiquidityPool](#restresponseliquiditypool)>>** 
 
 ##### getTickers
 
@@ -605,7 +606,7 @@ Cancel a single order
 
 ###### Parameters
 
-*   `cancelOrder` **RestRequestCancelOrder** 
+*   `cancelOrder` **[RestRequestCancelOrder](#restrequestcancelorder)** 
 *   `signer` **[MessageSigner](#messagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 
 ###### Examples
@@ -1112,12 +1113,6 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### activeHybrid
 
-Trades and cancels accepted
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-#### activeHybrid
-
 Hybrid trades and cancels accepted
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
@@ -1324,17 +1319,6 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 
 
-### RestRequestCancelOrders
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-#### Properties
-
-*   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
-*   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Single orderId or clientOrderId to cancel; prefix client-provided ids with client:
-*   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Base-quote pair e.g. 'IDEX-ETH'
-
 ### RestRequestFindBalances
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -1412,8 +1396,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 #### Properties
 
 *   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Target market, all markets are returned if omitted
-*   `regionOnly` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** true only returns markets available in the geographic region of the request
-*   `depositId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ### RestRequestFindOrder
 
@@ -1488,14 +1470,13 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
 *   `type` **[OrderType](#ordertype)** 
 *   `side` **[OrderSide](#orderside)** 
-*   `timeInForce` **[OrderTimeInForce](#ordertimeinforce)?** Defaults to good until canceled
 *   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Order quantity in base terms, exclusive with quoteOrderQuantity
 *   `quoteOrderQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Order quantity in quote terms, exclusive with quantity
 *   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Price in quote terms, optional for market orders
-*   `clientOrderId` **ustring?** Client-supplied order id
 *   `stopPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Stop loss or take profit price, only if stop or take order
+*   `clientOrderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Client-supplied order id
+*   `timeInForce` **[OrderTimeInForce](#ordertimeinforce)?** Defaults to good until canceled
 *   `selfTradePrevention` **[OrderSelfTradePrevention](#orderselftradeprevention)?** Defaults to decrease and cancel
-*   `cancelAfter` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Timestamp after which a standing limit order will be automatically canceled; gtt tif only
 
 ### RestRequestWithdrawal
 
@@ -1536,7 +1517,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
-*   `id` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Internal id of the asset
 *   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 *   `symbol` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 *   `contractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
@@ -1599,17 +1579,26 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 *   `timeZone` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Server time zone, always UTC
 *   `serverTime` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Current server time
-*   `maticDepositContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum address of the exchange custody contract for deposits, only when multiverse chain is "matic"
-*   `maticUsdPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Current price of BNB in USD, only provided if multiverse chain is "matic"
+*   `maticDepositContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Polygon address of the exchange smart contract for deposits
+*   `maticCustodyContractAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Polygon address of the custody smart contract for certain add and remove liquidity calls
+*   `maticUsdPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Current price of MATIC in USD
 *   `gasPrice` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Current gas price used by the exchange for trade settlement and withdrawal transactions in Gwei
 *   `volume24hUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total exchange trading volume for the trailing 24 hours in USD
+*   `totalVolumeUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total exchange trading volume for IDEX v3 on Polygon in USD
+*   `totalTrades` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total number of trade executions for IDEX v3 on Polygon
+*   `totalValueLockedUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value locked in IDEX v3 on Polygon in USD
+*   `idexTokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Token contract address for the IDEX token on Polygon
+*   `idexUsdPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Current price of the IDEX token in USD
+*   `idexMarketCapUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Market capitalization of the IDEX token in USD
 *   `makerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Maker trade fee rate
-*   `takerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Taker trade fee rate
-*   `makerTradeMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum size of an order that can rest on the order book in ETH, applies to both ETH and tokens
-*   `takerTradeMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum order size that is accepted by the matching engine for execution in ETH, applies to both ETH and tokens
-*   `takerIdexFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum order size that is accepted by the matching engine for execution in ETH, applies to both ETH and tokens
-*   `takerLiquidityProviderFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum order size that is accepted by the matching engine for execution in ETH, applies to both ETH and tokens
-*   `withdrawMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum withdrawal amount in ETH, applies to both ETH and tokens
+*   `takerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total taker trade fee rate
+*   `takerIdexFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Taker trade fee rate collected by IDEX; used in computing synthetic price levels for real-time order books
+*   `takerLiquidityProviderFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Taker trade fee rate collected by liquidity providers; used in computing synthetic price levels for real-time order books
+*   `makerTradeMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum size of an order that can rest on the order book in MATIC, applies to both MATIC and tokens
+*   `takerTradeMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum order size that is accepted by the matching engine for execution in MATIC, applies to both MATIC and tokens
+*   `withdrawMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum withdrawal amount in MATIC, applies to both MATIC and tokens
+*   `liquidityAdditionMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum liquidity addition amount in MATIC, applies to both MATIC and tokens
+*   `liquidityRemovalMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum withdrawal amount in MATIC, applies to both MATIC and tokens
 
 ### RestResponseFill
 
@@ -1620,20 +1609,25 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 #### Properties
 
 *   `fillId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of fill
-*   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of order
-*   `clientOrderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Client-provided ID of order
-*   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
 *   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed price of fill in quote terms
 *   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of fill in base terms
-*   `quoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of trade in quote terms
+*   `quoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of fill in quote terms
+*   `orderBookQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Quantity of the fill in base terms supplied by order book liquidity, omitted for pool fills
+*   `orderBookQuoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Quantity of the fill in quote terms supplied by order book liquidity, omitted for pool fills
+*   `poolQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Quantity of the fill in base terms supplied by pool liquidity, omitted for orderBook fills
+*   `poolQuoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Quantity of the fill in quote terms supplied by pool liquidity, omitted for orderBook fills
+*   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fill timestamp
 *   `makerSide` **[OrderSide](#orderside)** Which side of the order the liquidity maker was on
+*   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Last trade sequence number for the market
+*   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
+*   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of order
+*   `clientOrderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Client-provided ID of order
+*   `side` **[OrderSide](#orderside)** Orders side, buy or sell
 *   `fee` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fee amount on fill
 *   `feeAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Which token the fee was taken in
-*   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `side` **[OrderSide](#orderside)** 
-*   `liquidity` **[Liquidity](#liquidity)** 
-*   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fill timestamp
-*   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Last trade sequence number for the market
+*   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount collected to cover trade settlement gas costs, only present for taker
+*   `liquidity` **[Liquidity](#liquidity)** Whether the fill is the maker or taker in the trade from the perspective of the requesting API account, maker or taker
+*   `type` **[TradeType](#tradetype)** Fill type
 *   `txId` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Ethereum transaction ID, if available
 *   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum transaction status
 
@@ -1646,8 +1640,8 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 #### Properties
 
 *   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-USD'
-*   `status` **[MarketStatus](#marketstatus)** 
 *   `type` **[MarketType](#markettype)** 
+*   `status` **[MarketStatus](#marketstatus)** 
 *   `baseAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** e.g. 'IDEX'
 *   `baseAssetPrecision` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 *   `quoteAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** e.g. 'USD'
@@ -1656,8 +1650,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `takerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 *   `takerIdexFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 *   `takerLiquidityProviderFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `orderTypes` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderType](#ordertype)>** 
-*   `tradeMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum quantity in base terms
 
 ### RestResponseOrder
 
@@ -1703,8 +1695,10 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
+*   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 *   `bids` **(\[[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)] | \[])** 
 *   `asks` **(\[[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)] | \[])** 
+*   `pool` **([RestResponseLiquidityPoolReserves](#restresponseliquiditypoolreserves) | null)** 
 
 ### RestResponseOrderBookLevel2
 
@@ -1714,8 +1708,10 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
+*   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 *   `bids` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)>** 
 *   `asks` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[RestResponseOrderBookPriceLevel](#restresponseorderbookpricelevel)>** 
+*   `pool` **([RestResponseLiquidityPoolReserves](#restresponseliquiditypoolreserves) | null)** 
 
 ### RestResponseOrderBookPriceLevel
 
@@ -1734,7 +1730,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
-*   `type` **[TradeType](#tradetype)** orderBook, pool, or hybrid
 *   `fillId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of fill
 *   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed price of fill in quote terms
 *   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of fill in base terms
@@ -1743,13 +1738,14 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `orderBookQuoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Quantity of the fill in quote terms supplied by order book liquidity, omitted for pool fills
 *   `poolQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Quantity of the fill in base terms supplied by pool liquidity, omitted for orderBook fills
 *   `poolQuoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Quantity of the fill in quote terms supplied by pool liquidity, omitted for orderBook fills
+*   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fill timestamp
 *   `makerSide` **[OrderSide](#orderside)** Which side of the order the liquidity maker was on
+*   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Last trade sequence number for the market
 *   `fee` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fee amount on fill
 *   `feeAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Which token the fee was taken in
 *   `gas` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 *   `liquidity` **[Liquidity](#liquidity)** 
-*   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Fill timestamp
-*   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Last trade sequence number for the market
+*   `type` **[TradeType](#tradetype)** orderBook, pool, or hybrid
 *   `txId` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Ethereum transaction ID, if available
 *   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum transaction status
 
@@ -1768,18 +1764,18 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 #### Properties
 
 *   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-ETH'
-*   `percentChange` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** % change from open to close
-*   `baseVolume` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 24h volume in base terms
-*   `quoteVolume` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 24h volume in quote terms
-*   `low` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Lowest traded price in the period in quote terms
-*   `high` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Highest traded price in the period in quote terms
-*   `bid` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Best bid price on the order book
-*   `ask` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Best ask price on the order book
+*   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Time when data was calculated, open and change is assumed to be trailing 24h
 *   `open` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Price of the first trade for the period in quote terms
+*   `high` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Highest traded price in the period in quote terms
+*   `low` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Lowest traded price in the period in quote terms
 *   `close` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Same as last
 *   `closeQuantity` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Quantity of the last period in base terms
-*   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Time when data was calculated, open and change is assumed to be trailing 24h
+*   `baseVolume` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 24h volume in base terms
+*   `quoteVolume` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 24h volume in quote terms
+*   `percentChange` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** % change from open to close
 *   `numTrades` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Number of fills for the market in the period
+*   `ask` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Best ask price on the order book
+*   `bid` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Best bid price on the order book
 *   `sequence` **([number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number) | null)** Last trade sequence number for the market
 
 ### RestResponseTime
@@ -1800,13 +1796,13 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
-*   `type` **[TradeType](#tradetype)** orderBook, pool, or hybrid
 *   `fillId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of fill
 *   `price` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed price of trade in quote terms
 *   `quantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of trade in base terms
 *   `quoteQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Executed quantity of trade in quote terms
 *   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Fill timestamp
 *   `makerSide` **[OrderSide](#orderside)** Which side of the order the liquidity maker was on
+*   `type` **[TradeType](#tradetype)** orderBook, pool, or hybrid
 *   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Last trade sequence number for the market
 
 ### RestResponseUser
@@ -2509,7 +2505,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by address
 *   `amountADesired` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Maximum amount of tokenA to add to the liquidity pool
 *   `amountBDesired` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Maximum amount of tokenB to add to the liquidity pool
-*   `amountAMin-null` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenA to add to the liquidity pool
+*   `amountAMin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenA to add to the liquidity pool
 *   `amountBMin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenB to add to the liquidity pool
 *   `to` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Wallet to credit LP tokens, or the custodian contract address to leave on exchange
 
@@ -2564,7 +2560,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by address
 *   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset by address
 *   `liquidity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** LP tokens to burn
-*   `amountAMin-null` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenA to add to the liquidity pool
+*   `amountAMin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenA to add to the liquidity pool
 *   `amountBMin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenB to add to the liquidity pool
 *   `to` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Wallet to credit LP tokens, or the custodian contract address to leave on exchange
 
@@ -2659,8 +2655,12 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 *   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
 *   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum wallet address
-*   `initiatingTxId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
-*   `liquidityAdditionId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
+*   `liquidityAdditionId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Single liquidityAdditionId to return; exclusive with initiatingTxId
+*   `initiatingTxId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Transaction id of the Exchange contract addLiquidity or addLiquidityETH call transaction, only applies to chain-initiated liquidity additions; exclusive with liquidityAdditionId
+*   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
+*   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
+*   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
+*   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Liquidity additions created at the same timestamp or after fromId
 
 ## OrderBookLevelL2
 
@@ -2673,17 +2673,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `numOrders` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 *   `type` **[OrderBookLevelType](#orderbookleveltype)** 
 
-## RestRequestFindLiquidityRemoval
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
-*   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
-*   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum wallet address
-*   `initiatingTxId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
-*   `liquidityRemovalId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
-
 ## PoolReserveQuantities
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -2693,6 +2682,21 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `baseReserveQuantity` **bigint** 
 *   `quoteReserveQuantity` **bigint** 
 
+## RestRequestFindLiquidityRemoval
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+*   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+*   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum wallet address
+*   `liquidityRemovalId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Single liquidityRemovalId to return; exclusive with initiatingTxId
+*   `initiatingTxId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Transaction id of the Exchange contract removeLiquidity or removeLiquidityETH call transaction, only applies to chain-initiated liquidity removals; exclusive with liquidityRemovalId
+*   `start` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Starting timestamp (inclusive)
+*   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
+*   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
+*   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Liquidity additions created at the same timestamp or after fromId
+
 ## PriceLevelQuantities
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -2701,6 +2705,19 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 *   `grossBase` **bigint** 
 *   `grossQuote` **bigint** 
+
+## calculateGrossQuoteValueOfSellQuantities
+
+Helper function to convert from base to quote quantities
+see: {quantitiesAvailableFromPoolAtBidPrice}
+
+### Parameters
+
+*   `baseAssetQuantity` **bigint** 
+*   `quoteAssetQuantity` **bigint** 
+*   `grossBaseQuantity` **bigint** 
+
+Returns **bigint** 
 
 ## RestRequestFindLiquidityChanges
 
@@ -2715,18 +2732,21 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
 *   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Deposits created at the same timestamp or after fromId
 
-## calculateGrossQuoteValueOfSellQuantities
+## MarketType
 
-Helper function to convert from base to quote quantities
-see: {quantitiesAvailableFromPoolAtBidPrice}
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
-### Parameters
+### orderBook
 
-*   `baseAssetQuantity` **bigint** 
-*   `quoteAssetQuantity` **bigint** 
-*   `grossBaseQuantity` **bigint** 
+Orderbook trades accepted
 
-Returns **bigint** 
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+### hybrid
+
+Orderbook, pool, and hybrid trades accepted
+
+Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 ## calculateBaseQuantityOut
 
@@ -2744,21 +2764,16 @@ see: {L1orL2BestAvailablePrices}
 
 Returns **bigint** 
 
-## MarketType
+## RestRequestCancelOrder
 
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
-### orderBook
+### Properties
 
-Orderbook trades accepted
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
-
-### hybrid
-
-Orderbook, pool, and hybrid trades accepted
-
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+*   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+*   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+*   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Single orderId or clientOrderId to cancel; prefix client-provided ids with client:
+*   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Base-quote pair e.g. 'IDEX-ETH'
 
 ## LiquidityChangeOrigination
 
@@ -2800,23 +2815,6 @@ see: {L1orL2BestAvailablePrices}
 
 Returns **bigint** 
 
-## RestResponseLiquidityPool
-
-Liquidity Pool
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
-*   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Address of one reserve token
-*   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Address of one reserve token
-*   `reserveA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of token A held as reserve in token precision, not pips
-*   `reserveB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of token B held as reserve in token precision, not pips
-*   `liquidityToken` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Address of the liquidity provider (LP) token
-*   `totalLiquidity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total quantity of liquidity provider (LP) tokens minted in token precision, not pips
-*   `reserveUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of reserves in USD
-*   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Market symbol of pool’s associated hybrid market
-
 ## LiquidityChangeType
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
@@ -2847,6 +2845,12 @@ division) needs to be rounded up.
 
 Type: ([AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription) | [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription))
 
+## MultiverseChain
+
+The available multiverse chains to define when creating a client.
+
+Type: `"matic"`
+
 ## WebSocketRequestSubscription
 
 Type: ([AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription) | [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription))
@@ -2862,11 +2866,22 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (baseReserveQuantity) quantity of base asset held in the liquidity pool
 *   `Q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (quoteReserveQuantity) quantity of quote asset held in the liquidity pool
 
-## MultiverseChain
+## RestResponseLiquidityPool
 
-The available multiverse chains to define when creating a client.
+Liquidity Pool
 
-Type: `"matic"`
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+*   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Address of one reserve token
+*   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Address of one reserve token
+*   `reserveA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of token A held as reserve in token precision, not pips
+*   `reserveB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of token B held as reserve in token precision, not pips
+*   `liquidityToken` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Address of the liquidity provider (LP) token
+*   `totalLiquidity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total quantity of liquidity provider (LP) tokens minted in token precision, not pips
+*   `reserveUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value of reserves in USD
+*   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Market symbol of pool’s associated hybrid market
 
 ## WebSocketResponseLiquidityPoolLong
 
@@ -2919,16 +2934,17 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `liquidityAdditionId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of liquidity addition
 *   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset symbol
 *   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset symbol
-*   `amountA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenA added to the liquidity pool
-*   `amountB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenB added to the liquidity pool
-*   `liquidity` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Amount of liquidity provided (LP) tokens minted
-*   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Liquidity addition timestamp
+*   `amountA` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Amount of tokenA added to the liquidity pool
+*   `amountB` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Amount of tokenB added to the liquidity pool
+*   `liquidity` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Amount of liquidity provided (LP) tokens minted
+*   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Liquidity addition timestamp
 *   `initiatingTxId` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** On chain initiated transaction ID, if available
-*   `validated` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether on-chain tx was validated, or true
-*   `feeTokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenA collected as fees
-*   `feeTokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenB collected as fees
+*   `errorCode` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Error short code present on liquidity addition error
+*   `errorMessage` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Human-readable error message present on liquidity addition error
+*   `feeTokenA` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Amount of tokenA collected as fees
+*   `feeTokenB` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Amount of tokenB collected as fees
 *   `txId` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Ethereum transaction ID, if available
-*   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum transaction status
+*   `txStatus` **([EthTransactionStatus](#ethtransactionstatus) | null)** Ethereum transaction status
 
 ## RestResponseLiquidityPoolReserves
 
@@ -2941,6 +2957,12 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `baseReserveQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** reserve quantity of base asset in pool
 *   `quoteReserveQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** reserve quantity of quote asset in pool
 
+## WebSocketResponseL2OrderBookChange
+
+L2OrderBookChange
+
+Type: \[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)]
+
 ## RestResponseLiquidityRemoval
 
 LiquidityRemoval
@@ -2952,21 +2974,17 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `liquidityRemovalId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Internal ID of liquidity removal
 *   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset symbol
 *   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Asset symbol
-*   `amountA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenA removed from the liquidity pool
-*   `amountB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenB removed from the liquidity pool
-*   `time` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Liquidity addition timestamp
+*   `amountA` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Amount of tokenA added to the liquidity pool
+*   `amountB` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Amount of tokenB added to the liquidity pool
+*   `liquidity` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Amount of liquidity provided (LP) tokens minted
+*   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Liquidity addition timestamp
 *   `initiatingTxId` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** On chain initiated transaction ID, if available
-*   `validated` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether on-chain tx was validated, or true
-*   `feeTokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenA collected as fees
-*   `feeTokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Amount of tokenB collected as fees
+*   `errorCode` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Error short code present on liquidity addition error
+*   `errorMessage` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Human-readable error message present on liquidity addition error
+*   `feeTokenA` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Amount of tokenA collected as fees
+*   `feeTokenB` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Amount of tokenB collected as fees
 *   `txId` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Ethereum transaction ID, if available
-*   `txStatus` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Ethereum transaction status
-
-## WebSocketResponseL2OrderBookChange
-
-L2OrderBookChange
-
-Type: \[[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)]
+*   `txStatus` **([EthTransactionStatus](#ethtransactionstatus) | null)** Ethereum transaction status
 
 ## recalculateHybridLevelAmounts
 

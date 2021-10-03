@@ -137,20 +137,25 @@ export type RestResponseExchangeInfo = {
  *
  * @typedef {Object} RestResponseFill
  * @property {string} fillId - Internal ID of fill
- * @property {string} orderId - Internal ID of order
- * @property {string} [clientOrderId] - Client-provided ID of order
- * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
  * @property {string} price - Executed price of fill in quote terms
  * @property {string} quantity - Executed quantity of fill in base terms
- * @property {string} quoteQuantity - Executed quantity of trade in quote terms
+ * @property {string} quoteQuantity - Executed quantity of fill in quote terms
+ * @property {string} [orderBookQuantity] - Quantity of the fill in base terms supplied by order book liquidity, omitted for pool fills
+ * @property {string} [orderBookQuoteQuantity] - Quantity of the fill in quote terms supplied by order book liquidity, omitted for pool fills
+ * @property {string} [poolQuantity] - Quantity of the fill in base terms supplied by pool liquidity, omitted for orderBook fills
+ * @property {string} [poolQuoteQuantity] - Quantity of the fill in quote terms supplied by pool liquidity, omitted for orderBook fills
+ * @property {string} time - Fill timestamp
  * @property {OrderSide} makerSide - Which side of the order the liquidity maker was on
+ * @property {number} sequence - Last trade sequence number for the market
+ * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
+ * @property {string} orderId - Internal ID of order
+ * @property {string} [clientOrderId] - Client-provided ID of order
+ * @property {OrderSide} side - Orders side, buy or sell
  * @property {string} fee - Fee amount on fill
  * @property {string} feeAsset - Which token the fee was taken in
- * @property {string} gas
- * @property {OrderSide} side
- * @property {Liquidity} liquidity
- * @property {string} time - Fill timestamp
- * @property {number} sequence - Last trade sequence number for the market
+ * @property {string} gas - Amount collected to cover trade settlement gas costs, only present for taker
+ * @property {Liquidity} liquidity - Whether the fill is the maker or taker in the trade from the perspective of the requesting API account, maker or taker
+ * @property {TradeType} type - Fill type
  * @property {string | null} txId - Ethereum transaction ID, if available
  * @property {string} txStatus - Ethereum transaction status
  */
@@ -208,16 +213,17 @@ interface RestResponseLiquidityBase {
  * @property {string} liquidityAdditionId - Internal ID of liquidity addition
  * @property {string} tokenA - Asset symbol
  * @property {string} tokenB - Asset symbol
- * @property {string} amountA - Amount of tokenA added to the liquidity pool
- * @property {string} amountB - Amount of tokenB added to the liquidity pool
- * @property {number} liquidity - Amount of liquidity provided (LP) tokens minted
- * @property {string} time - Liquidity addition timestamp
+ * @property {string | null} amountA - Amount of tokenA added to the liquidity pool
+ * @property {string | null} amountB - Amount of tokenB added to the liquidity pool
+ * @property {string | null} liquidity - Amount of liquidity provided (LP) tokens minted
+ * @property {number} time - Liquidity addition timestamp
  * @property {string | null} initiatingTxId - On chain initiated transaction ID, if available
- * @property {boolean} validated - Whether on-chain tx was validated, or true
- * @property {string} feeTokenA - Amount of tokenA collected as fees
- * @property {string} feeTokenB - Amount of tokenB collected as fees
+ * @property {string} errorCode - Error short code present on liquidity addition error
+ * @property {string} errorMessage - Human-readable error message present on liquidity addition error
+ * @property {string | null} feeTokenA - Amount of tokenA collected as fees
+ * @property {string | null} feeTokenB - Amount of tokenB collected as fees
  * @property {string | null} txId - Ethereum transaction ID, if available
- * @property {string} txStatus - Ethereum transaction status
+ * @property {EthTransactionStatus | null} txStatus - Ethereum transaction status
  */
 
 export interface RestResponseLiquidityAddition
@@ -244,15 +250,17 @@ export interface RestResponseLiquidityPoolReserves {
  * @property {string} liquidityRemovalId - Internal ID of liquidity removal
  * @property {string} tokenA - Asset symbol
  * @property {string} tokenB - Asset symbol
- * @property {string} amountA - Amount of tokenA removed from the liquidity pool
- * @property {string} amountB - Amount of tokenB removed from the liquidity pool
- * @property {string} time - Liquidity addition timestamp
+ * @property {string | null} amountA - Amount of tokenA added to the liquidity pool
+ * @property {string | null} amountB - Amount of tokenB added to the liquidity pool
+ * @property {string | null} liquidity - Amount of liquidity provided (LP) tokens minted
+ * @property {number} time - Liquidity addition timestamp
  * @property {string | null} initiatingTxId - On chain initiated transaction ID, if available
- * @property {boolean} validated - Whether on-chain tx was validated, or true
- * @property {string} feeTokenA - Amount of tokenA collected as fees
- * @property {string} feeTokenB - Amount of tokenB collected as fees
+ * @property {string} errorCode - Error short code present on liquidity addition error
+ * @property {string} errorMessage - Human-readable error message present on liquidity addition error
+ * @property {string | null} feeTokenA - Amount of tokenA collected as fees
+ * @property {string | null} feeTokenB - Amount of tokenB collected as fees
  * @property {string | null} txId - Ethereum transaction ID, if available
- * @property {string} txStatus - Ethereum transaction status
+ * @property {EthTransactionStatus | null} txStatus - Ethereum transaction status
  */
 export interface RestResponseLiquidityRemoval
   extends RestResponseLiquidityBase {
@@ -263,7 +271,6 @@ export interface RestResponseLiquidityRemoval
  * OrderFill
  *
  * @typedef {Object} RestResponseOrderFill
- * @property {TradeType} type - orderBook, pool, or hybrid
  * @property {string} fillId - Internal ID of fill
  * @property {string} price - Executed price of fill in quote terms
  * @property {string} quantity - Executed quantity of fill in base terms
@@ -272,18 +279,18 @@ export interface RestResponseLiquidityRemoval
  * @property {string} [orderBookQuoteQuantity] - Quantity of the fill in quote terms supplied by order book liquidity, omitted for pool fills
  * @property {string} [poolQuantity] - Quantity of the fill in base terms supplied by pool liquidity, omitted for orderBook fills
  * @property {string} [poolQuoteQuantity] - Quantity of the fill in quote terms supplied by pool liquidity, omitted for orderBook fills
+ * @property {string} time - Fill timestamp
  * @property {OrderSide} makerSide - Which side of the order the liquidity maker was on
+ * @property {number} sequence - Last trade sequence number for the market
  * @property {string} fee - Fee amount on fill
  * @property {string} feeAsset - Which token the fee was taken in
  * @property {string} [gas]
  * @property {Liquidity} liquidity
- * @property {string} time - Fill timestamp
- * @property {number} sequence - Last trade sequence number for the market
+ * @property {TradeType} type - orderBook, pool, or hybrid
  * @property {string | null} txId - Ethereum transaction ID, if available
  * @property {string} txStatus - Ethereum transaction status
  */
 export interface RestResponseOrderFill {
-  type: keyof typeof enums.TradeType;
   fillId: string;
   price: string;
   quantity: string;
@@ -299,6 +306,7 @@ export interface RestResponseOrderFill {
   feeAsset: string;
   gas?: string;
   liquidity: keyof typeof enums.Liquidity;
+  type: keyof typeof enums.TradeType;
   txId: string | null;
   txStatus: keyof typeof enums.EthTransactionStatus;
 }

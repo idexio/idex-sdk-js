@@ -1,5 +1,5 @@
 <!-- markdownlint-disable MD033 -->
-# <img src="assets/logo.png" alt="IDEX" height="36px" valign="top"> JavaScript SDK
+# <img src="assets/logo.png" alt="IDEX" height="32px" valign="top"> JavaScript SDK
 
 ![Discord](https://img.shields.io/discord/455246457465733130?label=Discord&style=flat-square)
 ![GitHub](https://img.shields.io/github/license/idexio/idex-sdk-js?style=flat-square)
