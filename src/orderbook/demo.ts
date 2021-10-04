@@ -55,7 +55,7 @@ const demo = async function demo(): Promise<void> {
 
   client.on('error', (e: Error) => {
     console.log(e);
-    client.stop(true, false);
+    client.stop();
     reconnect();
   });
 

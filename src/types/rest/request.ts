@@ -21,7 +21,7 @@ export interface RestRequestFindLiquidityPools {
  * @property {string} tokenB - Asset by address
  * @property {string} amountADesired - Maximum amount of tokenA to add to the liquidity pool
  * @property {string} amountBDesired - Maximum amount of tokenB to add to the liquidity pool
- * @property {string} amountAMin- Minimum amount of tokenA to add to the liquidity pool
+ * @property {string} amountAMin - Minimum amount of tokenA to add to the liquidity pool
  * @property {string} amountBMin - Minimum amount of tokenB to add to the liquidity pool
  * @property {string} to - Wallet to credit LP tokens, or the custodian contract address to leave on exchange
  */
@@ -44,7 +44,7 @@ export interface RestRequestAddLiquidity {
  * @property {string} tokenA - Asset by address
  * @property {string} tokenB - Asset by address
  * @property {string} liquidity - LP tokens to burn
- * @property {string} amountAMin- Minimum amount of tokenA to add to the liquidity pool
+ * @property {string} amountAMin - Minimum amount of tokenA to add to the liquidity pool
  * @property {string} amountBMin - Minimum amount of tokenB to add to the liquidity pool
  * @property {string} to - Wallet to credit LP tokens, or the custodian contract address to leave on exchange
  */
@@ -69,24 +69,36 @@ export interface RestRequestFindLiquidityChange {
  * @typedef {Object}RestRequestFindLiquidityAddition
  * @property {string} nonce - UUIDv1
  * @property {string} wallet - Ethereum wallet address
- * @property {string} [initiatingTxId]
- * @property {string} [liquidityAdditionId]
+ * @property {string} [liquidityAdditionId] - Single liquidityAdditionId to return; exclusive with initiatingTxId
+ * @property {string} [initiatingTxId] - Transaction id of the Exchange contract addLiquidity or addLiquidityETH call transaction, only applies to chain-initiated liquidity additions; exclusive with liquidityAdditionId
+ * @property {number} [start] - Starting timestamp (inclusive)
+ * @property {number} [end] - Ending timestamp (inclusive)
+ * @property {number} [limit=50] - Max results to return from 1-1000
+ * @property {string} [fromId] - Liquidity additions created at the same timestamp or after fromId
  */
 export interface RestRequestFindLiquidityAddition
-  extends RestRequestFindLiquidityChange {
+  extends RestRequestFindLiquidityChange,
+    RestRequestFindWithPagination {
   liquidityAdditionId?: string;
+  fromId?: string;
 }
 
 /**
  * @typedef {Object} RestRequestFindLiquidityRemoval
  * @property {string} nonce - UUIDv1
  * @property {string} wallet - Ethereum wallet address
- * @property {string} [initiatingTxId]
- * @property {string} [liquidityRemovalId]
+ * @property {string} [liquidityRemovalId] - Single liquidityRemovalId to return; exclusive with initiatingTxId
+ * @property {string} [initiatingTxId] - Transaction id of the Exchange contract removeLiquidity or removeLiquidityETH call transaction, only applies to chain-initiated liquidity removals; exclusive with liquidityRemovalId
+ * @property {number} [start] - Starting timestamp (inclusive)
+ * @property {number} [end] - Ending timestamp (inclusive)
+ * @property {number} [limit=50] - Max results to return from 1-1000
+ * @property {string} [fromId] - Liquidity additions created at the same timestamp or after fromId
  */
 export interface RestRequestFindLiquidityRemoval
-  extends RestRequestFindLiquidityChange {
+  extends RestRequestFindLiquidityChange,
+    RestRequestFindWithPagination {
   liquidityRemovalId?: string;
+  fromId?: string;
 }
 
 /**
@@ -115,7 +127,7 @@ export interface RestRequestCancelOrder extends RestRequestCancelOrdersBase {
 }
 
 /**
- * @typedef {Object} RestRequestCancelOrders
+ * @typedef {Object} RestRequestCancelOrder
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} [orderId] - Single orderId or clientOrderId to cancel; prefix client-provided ids with client:
@@ -226,12 +238,9 @@ export interface RestRequestFindFills
 /**
  * @typedef {Object} RestRequestFindMarkets
  * @property {string} market - Target market, all markets are returned if omitted
- * @property {boolean} [regionOnly=false] - true only returns markets available in the geographic region of the request
- * @property {string} depositId
  */
 export interface RestRequestFindMarkets {
   market?: string;
-  regionOnly?: boolean;
 }
 
 /**
@@ -395,14 +404,13 @@ export type RestRequestOrderWithStopPrice =
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
  * @property {OrderType} type
  * @property {OrderSide} side
- * @property {OrderTimeInForce} [timeInForce=gtc] - Defaults to good until canceled
  * @property {string} [quantity] - Order quantity in base terms, exclusive with quoteOrderQuantity
  * @property {string} [quoteOrderQuantity] - Order quantity in quote terms, exclusive with quantity
  * @property {string} [price] - Price in quote terms, optional for market orders
- * @property {ustring} [clientOrderId] - Client-supplied order id
  * @property {string} [stopPrice] - Stop loss or take profit price, only if stop or take order
+ * @property {string} [clientOrderId] - Client-supplied order id
+ * @property {OrderTimeInForce} [timeInForce=gtc] - Defaults to good until canceled
  * @property {OrderSelfTradePrevention} [selfTradePrevention=decreaseAndCancel] - Defaults to decrease and cancel
- * @property {number} [cancelAfter] - Timestamp after which a standing limit order will be automatically canceled; gtt tif only
  */
 export type RestRequestOrder = XOR<
   RestRequestOrderByBaseQuantity,

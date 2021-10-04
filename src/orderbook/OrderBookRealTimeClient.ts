@@ -31,7 +31,37 @@ import type {
   WebSocketResponseTokenPriceLong,
 } from '../types';
 
+/**
+ * Orderbook API client
+ *
+ * @example
+ * import { OrderBookRealTimeClient } from '@idexio/idex-sdk';
+ *
+ * const client = new OrderBookRealTimeClient({
+ *   multiverseChain: 'matic',
+ *   sandbox: false,
+ * });
+ *
+ * const markets = ['IDEX-USD'];
+ * client.start(markets);
+ *
+ * function handleOrderBook(l2: L2OrderBook) {
+ *   const l2 = await client.getOrderBookLevel2('IDEX-USD', 10);
+ * }
+ *
+ * client.on('ready', handleOrderBook);
+ * client.on('l2Changed', handleOrderBook);
+ *
+ * @param {OrderBookRealTimeClientOptions} options
+ */
 export class OrderBookRealTimeClient extends EventEmitter {
+  /**
+   * Set to the global idex fee rate on start (see: RestResponseExchangeInfo.takerIdexFeeRate).
+   * Can be overriden to wallet-specific rates with setCustomFees().
+   * Used to calculate synthetic price levels.
+   *
+   * @private
+   */
   private idexFeeRate = BigInt(0);
 
   private readonly l1OrderBooks: Map<string, L1OrderBook> = new Map();
@@ -46,10 +76,24 @@ export class OrderBookRealTimeClient extends EventEmitter {
 
   private readonly marketIsLoading = new Set<string>();
 
+  /**
+   * Set to the global pool fee rate on start (see: RestResponseExchangeInfo.takerLiquidityProviderFeeRate).
+   * Can be overriden to wallet-specific rates with setCustomFees().
+   * Used to calculate synthetic price levels.
+   *
+   * @private
+   */
   private poolFeeRate = BigInt(0);
 
   private readonly restPublicClient: RestPublicClient;
 
+  /**
+   * Set to the global taker minimum trade size on start (see: RestResponseExchangeInfo.takerTradeMinimum).
+   * Can be overriden to wallet-specific rates with setCustomFees().
+   * Used to calculate synthetic price levels.
+   *
+   * @private
+   */
   private takerMinimumInNativeAsset = BigInt(0);
 
   private readonly tokenPrices: Map<string, bigint | null> = new Map();
@@ -81,20 +125,32 @@ export class OrderBookRealTimeClient extends EventEmitter {
     };
   }
 
-  public setCustomFeeRates(options: Partial<OrderBookFeeRates>): void {
-    if (options.idexFeeRate) {
-      this.idexFeeRate = decimalToPip(options.idexFeeRate);
+  /**
+   * Set custom fee rates for synthetic price level calculations.
+   * Use this if your wallet has custom fee settings set.
+   *
+   * @param {Partial<OrderBookFeeRates>} rates
+   */
+
+  public setCustomFeeRates(rates: Partial<OrderBookFeeRates>): void {
+    if (rates.idexFeeRate) {
+      this.idexFeeRate = decimalToPip(rates.idexFeeRate);
     }
-    if (options.poolFeeRate) {
-      this.poolFeeRate = decimalToPip(options.poolFeeRate);
+    if (rates.poolFeeRate) {
+      this.poolFeeRate = decimalToPip(rates.poolFeeRate);
     }
-    if (options.takerMinimumInNativeAsset) {
+    if (rates.takerMinimumInNativeAsset) {
       this.takerMinimumInNativeAsset = decimalToPip(
-        options.takerMinimumInNativeAsset,
+        rates.takerMinimumInNativeAsset,
       );
     }
   }
 
+  /**
+   * Loads initial state from REST API and begin listening to orderbook updates.
+   *
+   * @param {string[]} markets
+   */
   public async start(markets: string[]): Promise<void> {
     this.markets = markets;
     this.mapTokensToMarkets();
@@ -103,39 +159,40 @@ export class OrderBookRealTimeClient extends EventEmitter {
     await this.webSocketClient.connect(true);
   }
 
-  private resetInternalState(): void {
-    this.idexFeeRate = BigInt(0);
-    this.poolFeeRate = BigInt(0);
-    this.takerMinimumInNativeAsset = BigInt(0);
-    this.tokenPrices.clear();
-    this.l1OrderBooks.clear();
-    this.l2OrderBooks.clear();
-    this.l2OrderBookUpdates.clear();
-    this.marketIsLoading.clear();
-    this.marketsByAssetSymbol.clear();
-  }
-
-  public stop(unsubscribe = true, disconnect = true): void {
+  /**
+   * Stop the order book client, and reset internal state.
+   * Call this when you are no longer using the client, to release memory and network resources.
+   */
+  public stop(): void {
     if (this.webSocketClient.isConnected()) {
-      if (unsubscribe) {
-        this.webSocketClient.unsubscribe(['l2orderbook', 'tokenprice']);
-      }
-      if (disconnect) {
-        this.webSocketClient.disconnect();
-      }
+      this.webSocketClient.unsubscribe(['l2orderbook', 'tokenprice']);
+      this.webSocketClient.disconnect();
     }
     this.resetInternalState();
   }
 
+  /**
+   * Load the current state of the level 1 orderbook for this market.
+   *
+   * @param {string} market
+   * @return {RestResponseOrderBookLevel1}
+   */
   public async getOrderBookL1(
     market: string,
   ): Promise<RestResponseOrderBookLevel1> {
     return L1OrderBookToRestResponse((await this.getHybridBooks(market)).l1);
   }
 
+  /**
+   * Load the current state of the level 2 orderbook for this market.
+   *
+   * @param {string} market
+   * @param {string} [limit] - total number of price levels (bids + asks) to return, between 2 and 1000
+   * @return {RestResponseOrderBookLevel2}
+   */
   public async getOrderBookL2(
     market: string,
-    limit = 50,
+    limit = 100,
   ): Promise<RestResponseOrderBookLevel2> {
     return L2OrderBookToRestResponse(
       (await this.getHybridBooks(market)).l2,
@@ -284,6 +341,18 @@ export class OrderBookRealTimeClient extends EventEmitter {
     }
   }
 
+  private resetInternalState(): void {
+    this.idexFeeRate = BigInt(0);
+    this.poolFeeRate = BigInt(0);
+    this.takerMinimumInNativeAsset = BigInt(0);
+    this.tokenPrices.clear();
+    this.l1OrderBooks.clear();
+    this.l2OrderBooks.clear();
+    this.l2OrderBookUpdates.clear();
+    this.marketIsLoading.clear();
+    this.marketsByAssetSymbol.clear();
+  }
+
   private async webSocketHandleConnect() {
     if (!this.webSocketResponseListenerConfigured) {
       this.webSocketClient.onResponse(this.webSocketHandleResponse.bind(this));
@@ -306,7 +375,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
   }
 
   private webSocketHandleDisconnect() {
-    this.stop(false, false);
+    this.stop();
     this.emit('disconnected');
   }
 

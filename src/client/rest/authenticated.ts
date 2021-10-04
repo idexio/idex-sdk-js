@@ -47,7 +47,7 @@ import { isNode, createHmacRestRequestSignatureHeader } from '../../utils';
  * @typedef {Object} RestAuthenticatedClientOptions
  * @property {string} apiKey - Used to authenticate user
  * @property {string} apiSecret - Used to compute HMAC signature
- * @property {MultiverseChain} [multiverseChain=eth] - Which multiverse chain the client will point to
+ * @property {MultiverseChain} [multiverseChain=matic] - Which multiverse chain the client will point to
  * @property {boolean} [sandbox] - If true, client will point to API sandbox
  * @property {string} [walletPrivateKey] - If provided, used to create ECDSA signatures
  */
@@ -88,7 +88,7 @@ export class RestAuthenticatedClient<
   public readonly config: Readonly<{
     multiverseChain: C['multiverseChain'] extends MultiverseChain
       ? C['multiverseChain']
-      : 'eth';
+      : 'matic';
     baseURL: string;
     sandbox: boolean;
   }>;
@@ -98,7 +98,7 @@ export class RestAuthenticatedClient<
   protected autoCreateHmacHeader = true;
 
   public constructor(options: C) {
-    const { multiverseChain = 'eth', sandbox = false } = options;
+    const { multiverseChain = 'matic', sandbox = false } = options;
 
     const baseURL =
       options.baseURL ??
@@ -215,10 +215,9 @@ export class RestAuthenticatedClient<
   /**
    * Returns information about a single Liquidity Removal from a wallet
    */
-
   public async getLiquidityRemoval(
     findLiquidityRemoval: RestRequestFindLiquidityRemoval,
-  ): Promise<RestResponseLiquidityAddition> {
+  ): Promise<RestResponseLiquidityRemoval> {
     return this.get('/liquidityRemovals', findLiquidityRemoval);
   }
 
@@ -236,7 +235,7 @@ export class RestAuthenticatedClient<
   /**
    * Get account details for the API key’s user
    *
-   * @see https://docs.idex.io/#get-user-account
+   * @see https://api-docs-v3.idex.io/#get-user-account
    *
    * @param {string} nonce - UUIDv1
    * @returns {Promise<RestResponseUser>}
@@ -248,7 +247,7 @@ export class RestAuthenticatedClient<
   /**
    * Get account details for the API key’s user
    *
-   * @see https://docs.idex.io/#get-wallets
+   * @see https://api-docs-v3.idex.io/#get-wallets
    *
    * @param {string} nonce - UUIDv1
    * @returns {Promise<RestResponseWallet[]>}
@@ -260,7 +259,7 @@ export class RestAuthenticatedClient<
   /**
    * Get asset quantity data (positions) held by a wallet on the exchange
    *
-   * @see https://docs.idex.io/#get-balances
+   * @see https://api-docs-v3.idex.io/#get-balances
    *
    * @param {RestRequestFindBalances} findBalances
    * @returns {Promise<RestResponseBalance[]>}
@@ -286,7 +285,7 @@ export class RestAuthenticatedClient<
    *   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
-   * @see {@link https://docs.idex.io/#associate-wallet|Associate Wallet}
+   * @see {@link https://api-docs-v3.idex.io/#associate-wallet|Associate Wallet}
    *
    * @param {RestRequestAssociateWallet} associate
    * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
@@ -328,7 +327,7 @@ export class RestAuthenticatedClient<
    *   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
-   * @see https://docs.idex.io/#create-order
+   * @see https://api-docs-v3.idex.io/#create-order
    *
    * @param {RestRequestOrder} order
    * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
@@ -373,7 +372,7 @@ export class RestAuthenticatedClient<
    *   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
-   * @see https://docs.idex.io/#test-create-order
+   * @see https://api-docs-v3.idex.io/#test-create-order
    *
    * @param {RestRequestOrder} order
    * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
@@ -424,7 +423,7 @@ export class RestAuthenticatedClient<
    *   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
-   * @see https://docs.idex.io/#cancel-order
+   * @see https://api-docs-v3.idex.io/#cancel-order
    *
    * @param {RestRequestCancelOrder} cancelOrder
    * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
@@ -469,7 +468,7 @@ export class RestAuthenticatedClient<
    *   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
-   * @see https://docs.idex.io/#cancel-order
+   * @see https://api-docs-v3.idex.io/#cancel-order
    *
    * @param {RestResponseCanceledOrder} cancelOrders
    * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
@@ -496,7 +495,7 @@ export class RestAuthenticatedClient<
   /**
    * Get an order
    *
-   * @see https://docs.idex.io/#get-orders
+   * @see https://api-docs-v3.idex.io/#get-orders
    *
    * @param {RestRequestFindOrder} findOrder
    * @returns {Promise<RestResponseOrder>}
@@ -510,7 +509,7 @@ export class RestAuthenticatedClient<
   /**
    * Get multiple orders
    *
-   * @see https://docs.idex.io/#get-orders
+   * @see https://api-docs-v3.idex.io/#get-orders
    *
    * @param {RestRequestFindOrders} findOrders
    * @returns {Promise<RestResponseOrder[]>}
@@ -524,7 +523,7 @@ export class RestAuthenticatedClient<
   /**
    * Get a fill
    *
-   * @see https://docs.idex.io/#get-fills
+   * @see https://api-docs-v3.idex.io/#get-fills
    *
    * @param {RestRequestFindFill} findFill
    * @returns {Promise<RestResponseFill>}
@@ -538,7 +537,7 @@ export class RestAuthenticatedClient<
   /**
    * Get multiple fills
    *
-   * @see https://docs.idex.io/#get-fills
+   * @see https://api-docs-v3.idex.io/#get-fills
    *
    * @param {RestRequestFindFills} findFills
    * @returns {Promise<RestResponseFill[]>}
@@ -554,7 +553,7 @@ export class RestAuthenticatedClient<
   /**
    * Get a deposit
    *
-   * @see https://docs.idex.io/#get-deposits
+   * @see https://api-docs-v3.idex.io/#get-deposits
    *
    * @param {RestRequestFindDeposit} findDeposit
    * @returns {Promise<RestResponseDeposit>}
@@ -568,7 +567,7 @@ export class RestAuthenticatedClient<
   /**
    * Get multiple deposits
    *
-   * @see https://docs.idex.io/#get-deposits
+   * @see https://api-docs-v3.idex.io/#get-deposits
    *
    * @param {RestRequestFindDeposits} findDeposits
    * @returns {Promise<RestResponseDeposit[]>}
@@ -590,13 +589,13 @@ export class RestAuthenticatedClient<
    *   {
    *     nonce: uuidv1(),
    *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
-   *     asset: 'ETH',
+   *     asset: 'MATIC',
    *     quantity: '0.04000000',
    *   },
    *   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
    * );
    *
-   * @see https://docs.idex.io/#withdraw-funds
+   * @see https://api-docs-v3.idex.io/#withdraw-funds
    *
    * @param {RestRequestWithdrawal} withdrawal
    * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
@@ -620,7 +619,7 @@ export class RestAuthenticatedClient<
   /**
    * Get a withdrawal
    *
-   * @see https://docs.idex.io/#get-withdrawals
+   * @see https://api-docs-v3.idex.io/#get-withdrawals
    *
    * @param {RestRequestFindWithdrawal} findWithdrawal
    * @returns {Promise<RestResponseWithdrawal>}
@@ -634,7 +633,7 @@ export class RestAuthenticatedClient<
   /**
    * Get multiple withdrawals
    *
-   * @see https://docs.idex.io/#get-withdrawals
+   * @see https://api-docs-v3.idex.io/#get-withdrawals
    *
    * @param {RestRequestFindWithdrawals} findWithdrawals
    * @returns {Promise<RestResponseWithdrawal[]>}
@@ -650,7 +649,7 @@ export class RestAuthenticatedClient<
   /**
    * Obtain a WebSocket API token
    *
-   * @see https://docs.idex.io/#get-authentication-token
+   * @see https://api-docs-v3.idex.io/#get-authentication-token
    *
    * @param {string} nonce - UUIDv1
    * @param {string} wallet - Ethereum wallet address
