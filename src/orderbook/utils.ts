@@ -80,41 +80,44 @@ function updateL2Side(
     return side;
   }
 
-  const isBefore = function isBefore(
+  const isBeforeOrEqual = function isBeforeOrEqual(
     a: OrderBookLevelL2,
     b: OrderBookLevelL2,
   ): boolean {
-    if (isAscending && a.price < b.price) {
+    if (isAscending && a.price <= b.price) {
       return true;
     }
-    if (!isAscending && a.price > b.price) {
+    if (!isAscending && a.price >= b.price) {
       return true;
     }
     return false;
   };
 
+  let lastPriceUpdated = BigInt(0);
   const newLevels: OrderBookLevelL2[] = [];
 
-  side.forEach((level: OrderBookLevelL2) => {
-    // add all new updates before the existing level
-    while (nextUpdate && isBefore(nextUpdate, level)) {
-      newLevels.push(nextUpdate);
-      nextUpdate = updates.shift();
-    }
-
-    // add either the next update (if overwriting), or the next level
-    if (nextUpdate && level.price === nextUpdate.price) {
-      if (nextUpdate.size > BigInt(0)) {
+  for (const level of side) {
+    // push all updated price levels prior to the existing level
+    // skip any with no size, and no orders
+    while (nextUpdate && isBeforeOrEqual(nextUpdate, level)) {
+      if (nextUpdate.size > BigInt(0) && nextUpdate.numOrders > BigInt(0)) {
         newLevels.push(nextUpdate);
       }
+      lastPriceUpdated = nextUpdate.price;
       nextUpdate = updates.shift();
-    } else {
+    }
+    // if the current level was not already updated, add it
+    if (level.price !== lastPriceUpdated) {
       newLevels.push(level);
     }
-  });
+  }
 
-  // add all updates that go beyond the end
-  while (nextUpdate) {
+  // add all updates that go beyond the current end of the book
+  while (
+    nextUpdate &&
+    nextUpdate.size > BigInt(0) &&
+    nextUpdate.numOrders > BigInt(0)
+  ) {
     newLevels.push(nextUpdate);
     nextUpdate = updates.shift();
   }
