@@ -46,12 +46,12 @@ export function L2LimitOrderBookToHybridOrderBooks(
     {
       sequence: orderBook.sequence,
       asks: sortAndMergeLevelsUnadjusted(
-        orderBook.asks,
+        orderBook.asks.slice(),
         synthetic.asks,
         (a, b) => a.price <= b.price,
       ),
       bids: sortAndMergeLevelsUnadjusted(
-        orderBook.bids,
+        orderBook.bids.slice(),
         synthetic.bids,
         (a, b) => a.price >= b.price,
       ),
