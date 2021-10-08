@@ -42,16 +42,24 @@ export function L2LimitOrderBookToHybridOrderBooks(
     poolFeeRate,
   );
 
+  // need to make a deep copy of asks and bids because they will be modified
+  const limitAsksCopy = orderBook.asks.map((order) => {
+    return { ...order };
+  });
+  const limitBidsCopy = orderBook.bids.map((order) => {
+    return { ...order };
+  });
+
   const adjustedL2OrderBook = recalculateHybridLevelAmounts(
     {
       sequence: orderBook.sequence,
       asks: sortAndMergeLevelsUnadjusted(
-        orderBook.asks.slice(),
+        limitAsksCopy,
         synthetic.asks,
         (a, b) => a.price <= b.price,
       ),
       bids: sortAndMergeLevelsUnadjusted(
-        orderBook.bids.slice(),
+        limitBidsCopy,
         synthetic.bids,
         (a, b) => a.price >= b.price,
       ),
