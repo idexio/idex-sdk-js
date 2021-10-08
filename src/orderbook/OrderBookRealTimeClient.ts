@@ -222,7 +222,6 @@ export class OrderBookRealTimeClient extends EventEmitter {
       // an expected next update has arrived
       if (book.sequence + 1 === update.sequence) {
         updateL2Levels(book, update);
-        book.pool = update.pool;
       }
     }
     const afterL1 = L2toL1OrderBook(book);
