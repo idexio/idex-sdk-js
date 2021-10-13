@@ -66,18 +66,31 @@ const demo = async function demo(): Promise<void> {
 
   // trades generate multiple L2 events (one for token price(s), one for l2update)
   // we can throttle updates with a dirty flag here
-  let orderBookIsDirty = false;
+  let orderBookIsDirtyL1 = false;
+  let orderBookIsDirtyL2 = false;
   const orderBookRefreshDelay = 100;
+
+  client.on('l1', (readyMarket: string) => {
+    console.log('L1 EVENT ==========>');
+    if (!orderBookIsDirtyL1) {
+      orderBookIsDirtyL1 = true;
+      setTimeout(() => {
+        console.log('L1 ORDER BOOK UPDATED ==========>');
+        client.getOrderBookL1(readyMarket).then(console.log);
+        orderBookIsDirtyL1 = false;
+      }, orderBookRefreshDelay);
+    }
+  });
 
   client.on('l2', (readyMarket: string) => {
     console.log('L2 EVENT ==========>');
-    if (!orderBookIsDirty) {
-      orderBookIsDirty = true;
+    if (!orderBookIsDirtyL2) {
+      orderBookIsDirtyL2 = true;
       setTimeout(() => {
-        console.log('ORDER BOOK UPDATED ==========>');
+        console.log('L2 ORDER BOOK UPDATED ==========>');
         client.getOrderBookL2(readyMarket, l2LevelsToDisplay).then(console.log);
-        orderBookIsDirty = false;
-      }, orderBookRefreshDelay);
+        orderBookIsDirtyL2 = false;
+      }, orderBookRefreshDelay * 2);
     }
   });
 };
