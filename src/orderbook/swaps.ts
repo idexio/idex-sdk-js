@@ -18,12 +18,15 @@ export type tokenSwapValues = {
   priceImpact: number;
 };
 
-function quoteQuantityAndPriceReceivedFromOrderBook(
+// how much quote do we expect to actually receive from this order book?
+function quoteQuantityReceivedFromOrderBook(
   hybridBook: L2OrderBook,
   quoteAssetQuantity: bigint,
-): { baseQuantityReceived: bigint; price: bigint } {
+): bigint {
+  if (!hybridBook.asks.length) {
+    return BigInt(0);
+  }
   let baseQuantityReceived = BigInt(0);
-  let lastPriceLevel = hybridBook.asks[0].price;
   let isDone = false;
   let quoteRemaining = quoteAssetQuantity;
   for (const askLevel of hybridBook.asks) {
@@ -35,13 +38,12 @@ function quoteQuantityAndPriceReceivedFromOrderBook(
     } else {
       baseQuantityReceived += askLevel.size;
     }
-    quoteRemaining -= quoteAssetQuantity;
-    lastPriceLevel = askLevel.price;
+    quoteRemaining -= quoteAvailable;
     if (isDone) {
       break;
     }
   }
-  return { baseQuantityReceived, price: lastPriceLevel };
+  return baseQuantityReceived;
 }
 
 export function swapQuoteTokenWithOrderBook(
@@ -71,8 +73,9 @@ export function swapQuoteTokenWithOrderBook(
     poolFeeRate,
     poolSlippageLimit,
   );
+
   // there are no limit orders available to improve the pricing
-  if (l2.asks.length || poolOnlyValues.price <= l2.asks[0].price) {
+  if (!l2.asks.length || poolOnlyValues.price <= l2.asks[0].price) {
     return poolOnlyValues;
   }
 
@@ -100,14 +103,24 @@ export function swapQuoteTokenWithOrderBook(
     takerFeeRate,
   );
 
-  // recalculates price, inverted price, and base received
-  const {
-    baseQuantityReceived,
-    price,
-  } = quoteQuantityAndPriceReceivedFromOrderBook(
+  const baseQuantityReceivedFromLimitOrdersOnly = quoteQuantityReceivedFromOrderBook(
+    l2,
+    quoteAssetQuantity,
+  );
+
+  const baseQuantityReceived = quoteQuantityReceivedFromOrderBook(
     hybridBook,
     quoteAssetQuantity,
   );
+
+  const baseQuantityReceivedFromPool =
+    baseQuantityReceived - baseQuantityReceivedFromLimitOrdersOnly;
+
+  const price = dividePips(
+    l2.pool.quoteReserveQuantity + quoteAssetQuantity,
+    l2.pool.baseReserveQuantity - baseQuantityReceivedFromPool,
+  );
+
   const invertedPrice = dividePips(oneInPips, price);
 
   // recalculates slippage
@@ -116,16 +129,19 @@ export function swapQuoteTokenWithOrderBook(
     l2.pool.baseReserveQuantity,
   );
 
-  const expectedBaseAssetQuantity = dividePips(quoteAssetQuantity, poolPrice);
-  const priceImpactInPips = dividePips(
-    expectedBaseAssetQuantity - baseQuantityReceived,
-    expectedBaseAssetQuantity,
+  const priceImpactInPips = dividePips(price - poolPrice, poolPrice);
+  const priceImpactAsNumber = Number(pipToDecimal(priceImpactInPips));
+
+  const estimatedBaseAssetFees = multiplyPips(
+    baseQuantityReceived,
+    idexFeeRate + poolFeeRate,
   );
 
-  const priceImpactAsNumber = Number(pipToDecimal(priceImpactInPips));
+  const estimatedQuoteAssetFees = multiplyPips(estimatedBaseAssetFees, price);
 
   return {
     ...poolOnlyValues,
+    feeQuantity: estimatedQuoteAssetFees,
     outputAssetQuantityExpected: baseQuantityReceived,
     invertedPrice,
     price,
@@ -143,16 +159,6 @@ export function swapBaseTokenWithPool(
   const poolPrice = dividePips(
     pool.quoteReserveQuantity,
     pool.baseReserveQuantity,
-  );
-
-  const expectedQuoteAssetQuantity = multiplyPips(baseAssetQuantity, poolPrice);
-
-  const actualQuoteAssetQuantityWithoutFees = calculateQuoteQuantityOut(
-    pool.baseReserveQuantity,
-    pool.quoteReserveQuantity,
-    baseAssetQuantity,
-    BigInt(0),
-    BigInt(0),
   );
 
   const actualQuoteAssetQuantityWithFees = calculateQuoteQuantityOut(
@@ -175,11 +181,7 @@ export function swapBaseTokenWithPool(
     actualQuoteAssetQuantityWithFees,
   );
 
-  const priceImpactInPips = dividePips(
-    expectedQuoteAssetQuantity - actualQuoteAssetQuantityWithoutFees,
-    expectedQuoteAssetQuantity,
-  );
-
+  const priceImpactInPips = dividePips(price - poolPrice, poolPrice);
   const priceImpactAsNumber = Number(pipToDecimal(priceImpactInPips));
 
   const limitPrice = multiplyPips(price, oneInPips - poolSlippageLimit);
@@ -214,16 +216,6 @@ export function swapQuoteTokenWithPool(
     pool.baseReserveQuantity,
   );
 
-  const expectedBaseAssetQuantity = dividePips(quoteAssetQuantity, poolPrice);
-
-  const actualBaseAssetQuantityWithoutFees = calculateBaseQuantityOut(
-    pool.baseReserveQuantity,
-    pool.quoteReserveQuantity,
-    quoteAssetQuantity,
-    BigInt(0),
-    BigInt(0),
-  );
-
   const actualBaseAssetQuantityWithFees = calculateBaseQuantityOut(
     pool.baseReserveQuantity,
     pool.quoteReserveQuantity,
@@ -244,11 +236,7 @@ export function swapQuoteTokenWithPool(
     quoteAssetQuantity,
   );
 
-  const priceImpactInPips = dividePips(
-    expectedBaseAssetQuantity - actualBaseAssetQuantityWithoutFees,
-    expectedBaseAssetQuantity,
-  );
-
+  const priceImpactInPips = dividePips(price - poolPrice, poolPrice);
   const priceImpactAsNumber = Number(pipToDecimal(priceImpactInPips));
 
   const limitPrice = multiplyPips(price, oneInPips + poolSlippageLimit);
