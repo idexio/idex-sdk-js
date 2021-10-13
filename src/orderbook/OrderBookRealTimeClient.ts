@@ -212,16 +212,29 @@ export class OrderBookRealTimeClient extends EventEmitter {
 
     const beforeL1 = L2toL1OrderBook(book);
     for (const update of updates) {
-      // unexpected gap between book and update
-      if (book.sequence + 1 < update.sequence) {
-        this.stop();
-        this.emit('error', new Error('unexpected missing websocket update'));
-        return;
-      }
+      let wasValidUpdate = false;
 
       // an expected next update has arrived
       if (book.sequence + 1 === update.sequence) {
         updateL2Levels(book, update);
+        wasValidUpdate = true;
+      }
+
+      // the pool was added or removed (sequence does not increment)
+      if (book.sequence === update.sequence) {
+        if (
+          (beforeL1.pool !== null && update.pool === null) ||
+          (beforeL1.pool === null && update.pool !== null)
+        ) {
+          book.pool = update.pool;
+        }
+        wasValidUpdate = true;
+      }
+
+      if (!wasValidUpdate) {
+        this.stop();
+        this.emit('error', new Error('unexpected missing websocket update'));
+        return;
       }
     }
     const afterL1 = L2toL1OrderBook(book);
