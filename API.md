@@ -3041,7 +3041,6 @@ Recalculate price level quantities for a book previously sorted with {sortAndMer
 -   `orderbook` **[L2OrderBook](#l2orderbook)** an unadjusted level 2 order book as returned by {sortAndMergeLevelsUnadjusted}
 -   `idexFeeRate` **bigint** idex fee rate to use in pool quantity calculations
 -   `poolFeeRate` **bigint** pool fee rate to use in pool quantity calculations
--   `takerFeeRate`   (optional, default `BigInt(0)`)
 
 Returns **[L2OrderBook](#l2orderbook)** the recalculated level 2 order book
 

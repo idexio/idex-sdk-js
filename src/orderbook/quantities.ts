@@ -279,7 +279,6 @@ export function recalculateHybridLevelAmounts(
   orderbook: L2OrderBook,
   idexFeeRate: bigint,
   poolFeeRate: bigint,
-  takerFeeRate = BigInt(0),
 ): L2OrderBook {
   if (!orderbook.pool) {
     return orderbook;
@@ -324,8 +323,7 @@ export function recalculateHybridLevelAmounts(
               idexFeeRate,
               poolFeeRate,
             ).grossBase
-          : BigInt(0)) -
-        multiplyPips(level.size, takerFeeRate);
+          : BigInt(0));
     }
 
     // this pool level was previously subdivided
