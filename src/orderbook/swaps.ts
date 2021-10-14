@@ -69,6 +69,9 @@ export function swapQuoteTokenWithOrderBook(
 
   const poolCopy = { ...l2.pool };
 
+  let lastBasePoolLiquidityAvailableAtThisLevel = BigInt(0);
+  let lastQuotePoolLiquidityAvailableAtThisLevel = BigInt(0);
+
   for (const ask of l2.asks) {
     if (!quoteRemaining) {
       break;
@@ -82,9 +85,12 @@ export function swapQuoteTokenWithOrderBook(
       poolCopy.baseReserveQuantity,
       poolCopy.quoteReserveQuantity,
       ask.price,
-      BigInt(0), // idexFeeRate,
-      BigInt(0), // poolFeeRate,
+      idexFeeRate,
+      poolFeeRate,
     );
+
+    basePoolLiquidityAvailableAtThisLevel -= lastBasePoolLiquidityAvailableAtThisLevel;
+    quotePoolLiquidityAvailableAtThisLevel -= lastQuotePoolLiquidityAvailableAtThisLevel;
 
     // if we can't take all of it, calculate how much base we can actually take
     if (quotePoolLiquidityAvailableAtThisLevel > quoteRemaining) {
@@ -93,16 +99,13 @@ export function swapQuoteTokenWithOrderBook(
         poolCopy.baseReserveQuantity,
         poolCopy.quoteReserveQuantity,
         quoteRemaining,
-        BigInt(0), // idexFeeRate,
-        BigInt(0), // poolFeeRate,
+        idexFeeRate,
+        poolFeeRate,
       );
     }
+
     actualBaseReceived += basePoolLiquidityAvailableAtThisLevel;
     quoteRemaining -= quotePoolLiquidityAvailableAtThisLevel;
-
-    // pool receives quote minus the idex fee, and sends base
-    poolCopy.quoteReserveQuantity += quotePoolLiquidityAvailableAtThisLevel;
-    poolCopy.baseReserveQuantity -= basePoolLiquidityAvailableAtThisLevel;
 
     if (quoteRemaining) {
       // if we have quote remaining to spend, take from the limit order(s)
@@ -121,10 +124,10 @@ export function swapQuoteTokenWithOrderBook(
       actualBaseReceived += baseLimitOrderLiquidityAvailableAtThisLevel;
       quoteRemaining -= quoteLimitOrderLiquidityAvailableAtThisLevel;
     }
-  }
 
-  const price = dividePips(quoteAssetQuantity, actualBaseReceived);
-  const invertedPrice = dividePips(actualBaseReceived, quoteAssetQuantity);
+    lastBasePoolLiquidityAvailableAtThisLevel = basePoolLiquidityAvailableAtThisLevel;
+    lastQuotePoolLiquidityAvailableAtThisLevel = quotePoolLiquidityAvailableAtThisLevel;
+  }
 
   // amount of base we would have received with infinite liquidity at the spread / pool price
   const poolPrice = dividePips(
@@ -153,6 +156,12 @@ export function swapQuoteTokenWithOrderBook(
 
   const actualBaseReceivedWithFees =
     actualBaseReceived - estimatedBaseAssetFees;
+
+  const price = dividePips(quoteAssetQuantity, actualBaseReceivedWithFees);
+  const invertedPrice = dividePips(
+    actualBaseReceivedWithFees,
+    quoteAssetQuantity,
+  );
 
   return {
     ...poolOnlyValues,
