@@ -4,6 +4,7 @@ import {
   calculateBaseQuantityOut,
   calculateQuoteQuantityOut,
   quantitiesAvailableFromPoolAtAskPrice,
+  quantitiesAvailableFromPoolAtBidPrice,
 } from './quantities';
 
 export type tokenSwapValues = {
@@ -17,12 +18,165 @@ export type tokenSwapValues = {
   priceImpact: number;
 };
 
+export function swapBaseTokenWithOrderBook(
+  baseAssetQuantity: bigint,
+  l2: L2OrderBook,
+  idexFeeRate: bigint,
+  poolFeeRate: bigint,
+  poolSlippageLimit: bigint,
+): tokenSwapValues {
+  if (!l2.pool) {
+    return {
+      inputAssetQuantity: baseAssetQuantity,
+      feeQuantity: BigInt(0),
+      invertedPrice: BigInt(0),
+      limitPrice: BigInt(0),
+      outputAssetQuantityExpected: BigInt(0),
+      outputAssetQuantityMinimum: BigInt(0),
+      price: BigInt(0),
+      priceImpact: 0,
+    };
+  }
+  const poolOnlyValues = swapBaseTokenWithPool(
+    baseAssetQuantity,
+    l2.pool,
+    idexFeeRate,
+    poolFeeRate,
+    poolSlippageLimit,
+  );
+
+  // there are no limit orders available to improve the pricing
+  if (!l2.bids.length || poolOnlyValues.price >= l2.bids[0].price) {
+    return poolOnlyValues;
+  }
+
+  let actualQuoteReceived = BigInt(0);
+  let baseRemaining = baseAssetQuantity;
+
+  // backstop the limit order asks with a pool only level at the limit
+  l2.bids.push({
+    type: 'pool',
+    size: quantitiesAvailableFromPoolAtBidPrice(
+      l2.pool.baseReserveQuantity,
+      l2.pool.quoteReserveQuantity,
+      poolOnlyValues.limitPrice,
+      BigInt(0), // idexFeeRate,
+      BigInt(0), // poolFeeRate,
+    ).grossBase,
+    numOrders: 0,
+    price: poolOnlyValues.limitPrice,
+  });
+
+  const poolCopy = { ...l2.pool };
+
+  let lastBasePoolLiquidityAvailableAtThisLevel = BigInt(0);
+  let lastQuotePoolLiquidityAvailableAtThisLevel = BigInt(0);
+
+  for (const bid of l2.bids) {
+    if (!baseRemaining) {
+      break;
+    }
+
+    // first, try to buy all of the pool liquidity
+    let {
+      grossBase: basePoolLiquidityAvailableAtThisLevel,
+      grossQuote: quotePoolLiquidityAvailableAtThisLevel,
+    } = quantitiesAvailableFromPoolAtBidPrice(
+      poolCopy.baseReserveQuantity,
+      poolCopy.quoteReserveQuantity,
+      bid.price,
+      idexFeeRate,
+      poolFeeRate,
+    );
+
+    basePoolLiquidityAvailableAtThisLevel -= lastBasePoolLiquidityAvailableAtThisLevel;
+    quotePoolLiquidityAvailableAtThisLevel -= lastQuotePoolLiquidityAvailableAtThisLevel;
+
+    // if we can't take all of it, calculate how much base we can actually take
+    if (basePoolLiquidityAvailableAtThisLevel > baseRemaining) {
+      basePoolLiquidityAvailableAtThisLevel = baseRemaining;
+      quotePoolLiquidityAvailableAtThisLevel = calculateQuoteQuantityOut(
+        poolCopy.baseReserveQuantity,
+        poolCopy.quoteReserveQuantity,
+        baseRemaining,
+        idexFeeRate,
+        poolFeeRate,
+      );
+    }
+
+    actualQuoteReceived += quotePoolLiquidityAvailableAtThisLevel;
+    baseRemaining -= basePoolLiquidityAvailableAtThisLevel;
+
+    if (baseRemaining) {
+      // if we have base remaining to spend, take from the limit order(s)
+      let baseLimitOrderLiquidityAvailableAtThisLevel = bid.size;
+      let quoteLimitOrderLiquidityAvailableAtThisLevel = multiplyPips(
+        baseLimitOrderLiquidityAvailableAtThisLevel,
+        bid.price,
+      );
+      if (baseLimitOrderLiquidityAvailableAtThisLevel > baseRemaining) {
+        baseLimitOrderLiquidityAvailableAtThisLevel = baseRemaining;
+        quoteLimitOrderLiquidityAvailableAtThisLevel = multiplyPips(
+          baseLimitOrderLiquidityAvailableAtThisLevel,
+          bid.price,
+        );
+      }
+      actualQuoteReceived += quoteLimitOrderLiquidityAvailableAtThisLevel;
+      baseRemaining -= baseLimitOrderLiquidityAvailableAtThisLevel;
+    }
+
+    lastBasePoolLiquidityAvailableAtThisLevel += basePoolLiquidityAvailableAtThisLevel;
+    lastQuotePoolLiquidityAvailableAtThisLevel += quotePoolLiquidityAvailableAtThisLevel;
+  }
+
+  // amount of quote we would have received with infinite liquidity at the spread / pool price
+  const poolPrice = dividePips(
+    l2.pool.quoteReserveQuantity,
+    l2.pool.baseReserveQuantity,
+  );
+  const expectedQuoteQuantityAtPoolPrice = multiplyPips(
+    baseAssetQuantity,
+    poolPrice,
+  );
+
+  const priceImpact = Number(
+    pipToDecimal(
+      dividePips(
+        expectedQuoteQuantityAtPoolPrice - actualQuoteReceived,
+        expectedQuoteQuantityAtPoolPrice,
+      ),
+    ),
+  );
+
+  // calculate fees using the simple percentage method
+  const estimatedQuoteAssetFees = multiplyPips(
+    actualQuoteReceived,
+    idexFeeRate + poolFeeRate,
+  );
+
+  const actualQuoteReceivedWithFees =
+    actualQuoteReceived - estimatedQuoteAssetFees;
+
+  const price = dividePips(actualQuoteReceivedWithFees, baseAssetQuantity);
+  const invertedPrice = dividePips(
+    baseAssetQuantity,
+    actualQuoteReceivedWithFees,
+  );
+
+  return {
+    ...poolOnlyValues,
+    outputAssetQuantityExpected: actualQuoteReceivedWithFees,
+    invertedPrice,
+    price,
+    priceImpact,
+  };
+}
+
 export function swapQuoteTokenWithOrderBook(
   quoteAssetQuantity: bigint,
   l2: L2OrderBook,
   idexFeeRate: bigint,
   poolFeeRate: bigint,
-  takerFeeRate: bigint,
   poolSlippageLimit: bigint,
 ): tokenSwapValues {
   if (!l2.pool) {
@@ -125,8 +279,8 @@ export function swapQuoteTokenWithOrderBook(
       quoteRemaining -= quoteLimitOrderLiquidityAvailableAtThisLevel;
     }
 
-    lastBasePoolLiquidityAvailableAtThisLevel = basePoolLiquidityAvailableAtThisLevel;
-    lastQuotePoolLiquidityAvailableAtThisLevel = quotePoolLiquidityAvailableAtThisLevel;
+    lastBasePoolLiquidityAvailableAtThisLevel += basePoolLiquidityAvailableAtThisLevel;
+    lastQuotePoolLiquidityAvailableAtThisLevel += quotePoolLiquidityAvailableAtThisLevel;
   }
 
   // amount of base we would have received with infinite liquidity at the spread / pool price
