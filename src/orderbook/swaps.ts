@@ -6,7 +6,7 @@ import {
 } from '../types';
 import {
   dividePips,
-  maxBigInt,
+  minBigInt,
   multiplyPips,
   oneInPips,
   pipToDecimal,
@@ -128,6 +128,7 @@ function swapBaseTokenWithOrderBook(
     if (!baseRemaining) {
       break;
     }
+
     // first, try to buy all of the pool liquidity
     if (poolCopy) {
       let {
@@ -154,6 +155,7 @@ function swapBaseTokenWithOrderBook(
           poolFeeRate,
         );
       }
+
       actualQuoteReceived += quotePoolLiquidityAvailableAtThisLevel;
       baseRemaining -= basePoolLiquidityAvailableAtThisLevel;
       lastBasePoolLiquidityAvailableAtThisLevel += basePoolLiquidityAvailableAtThisLevel;
@@ -162,7 +164,7 @@ function swapBaseTokenWithOrderBook(
 
     if (baseRemaining) {
       // if we have base remaining to spend, take from the limit order(s)
-      const baseLimitOrderLiquidityAvailableAtThisLevel = maxBigInt(
+      const baseLimitOrderLiquidityAvailableAtThisLevel = minBigInt(
         bid.size,
         baseRemaining,
       );
@@ -170,6 +172,7 @@ function swapBaseTokenWithOrderBook(
         baseLimitOrderLiquidityAvailableAtThisLevel,
         bid.price,
       );
+
       actualQuoteReceived += quoteLimitOrderLiquidityAvailableAtThisLevel;
       baseRemaining -= baseLimitOrderLiquidityAvailableAtThisLevel;
     }
@@ -361,23 +364,19 @@ function swapBaseTokenWithPool(
 
   // move the pool reserves based on quote received by the wallet, and base by the pool
   // then set a limit price with slippage from the new pool price
-  const limitPrice = multiplyPips(
-    dividePips(
-      pool.quoteReserveQuantity -
+  // this block is optimized to remove intermediate helper functions that perform whole number division
+  const limitPrice =
+    (oneInPips *
+      ((oneInPips - poolSlippageLimit) *
         (pool.quoteReserveQuantity -
-          dividePips(
-            multiplyPips(pool.baseReserveQuantity, pool.quoteReserveQuantity),
-            pool.baseReserveQuantity +
-              multiplyPips(
-                baseAssetQuantity,
-                oneInPips - idexFeeRate - poolFeeRate,
-              ),
-          )),
-      pool.baseReserveQuantity +
-        multiplyPips(baseAssetQuantity, oneInPips - idexFeeRate),
-    ),
-    oneInPips - poolSlippageLimit,
-  );
+          (pool.quoteReserveQuantity -
+            (oneInPips *
+              (pool.baseReserveQuantity * pool.quoteReserveQuantity)) /
+              (oneInPips * pool.baseReserveQuantity +
+                baseAssetQuantity *
+                  (oneInPips - idexFeeRate - poolFeeRate)))))) /
+    (oneInPips * pool.baseReserveQuantity +
+      baseAssetQuantity * (oneInPips - idexFeeRate - poolFeeRate));
 
   return {
     inputAssetQuantity: baseAssetQuantity,
@@ -388,10 +387,11 @@ function swapBaseTokenWithPool(
     ),
     limitPrice,
     outputAssetQuantityExpected: actualQuoteAssetQuantityWithFees,
-    outputAssetQuantityMinimum: multiplyPips(
-      multiplyPips(baseAssetQuantity, limitPrice),
-      oneInPips - idexFeeRate - poolFeeRate,
-    ),
+    outputAssetQuantityMinimum:
+      (baseAssetQuantity *
+        limitPrice *
+        (oneInPips - idexFeeRate - poolFeeRate)) /
+      (oneInPips * oneInPips),
     price: dividePips(actualQuoteAssetQuantityWithFees, baseAssetQuantity),
     priceImpact: Number(pipToDecimal(priceImpactInPips)),
   };
@@ -439,7 +439,7 @@ function swapQuoteTokenWithPool(
   const limitPrice = multiplyPips(
     dividePips(
       pool.quoteReserveQuantity +
-        multiplyPips(quoteAssetQuantity, oneInPips - idexFeeRate),
+        multiplyPips(quoteAssetQuantity, oneInPips - idexFeeRate - poolFeeRate),
       pool.baseReserveQuantity -
         (pool.baseReserveQuantity -
           dividePips(

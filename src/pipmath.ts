@@ -39,6 +39,13 @@ export const maxBigInt = function maxBigInt(a: bigint, b: bigint): bigint {
   return b;
 };
 
+export const minBigInt = function minBigInt(a: bigint, b: bigint): bigint {
+  if (a <= b) {
+    return a;
+  }
+  return b;
+};
+
 export const multiplyPips = function multiplyPips(
   pipValue1: bigint,
   pipValue2: bigint,
