@@ -128,7 +128,6 @@ function swapBaseTokenWithOrderBook(
     if (!baseRemaining) {
       break;
     }
-
     // first, try to buy all of the pool liquidity
     if (poolCopy) {
       let {
@@ -151,11 +150,10 @@ function swapBaseTokenWithOrderBook(
           poolCopy.baseReserveQuantity,
           poolCopy.quoteReserveQuantity,
           baseRemaining,
-          idexFeeRate,
-          poolFeeRate,
+          BigInt(0),
+          BigInt(0),
         );
       }
-
       actualQuoteReceived += quotePoolLiquidityAvailableAtThisLevel;
       baseRemaining -= basePoolLiquidityAvailableAtThisLevel;
       lastBasePoolLiquidityAvailableAtThisLevel += basePoolLiquidityAvailableAtThisLevel;
@@ -247,10 +245,11 @@ function swapQuoteTokenWithOrderBook(
           poolCopy.baseReserveQuantity,
           poolCopy.quoteReserveQuantity,
           quoteRemaining,
-          idexFeeRate,
-          poolFeeRate,
+          BigInt(0),
+          BigInt(0),
         );
       }
+
       actualBaseReceived += basePoolLiquidityAvailableAtThisLevel;
       quoteRemaining -= quotePoolLiquidityAvailableAtThisLevel;
       lastBasePoolLiquidityAvailableAtThisLevel += basePoolLiquidityAvailableAtThisLevel;
@@ -271,6 +270,7 @@ function swapQuoteTokenWithOrderBook(
           ask.price,
         );
       }
+
       actualBaseReceived += baseLimitOrderLiquidityAvailableAtThisLevel;
       quoteRemaining -= quoteLimitOrderLiquidityAvailableAtThisLevel;
     }
