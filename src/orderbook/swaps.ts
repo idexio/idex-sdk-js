@@ -185,9 +185,10 @@ function swapBaseTokenWithOrderBook(
     : multiplyPips(bids[0].price, baseAssetQuantity);
 
   // calculate fees using the simple percentage method
-  const actualQuoteReceivedWithFees =
-    actualQuoteReceived -
-    multiplyPips(actualQuoteReceived, idexFeeRate + poolFeeRate);
+  const actualQuoteReceivedWithFees = multiplyPips(
+    actualQuoteReceived,
+    oneInPips - idexFeeRate - poolFeeRate,
+  );
 
   return {
     ...poolOnlyValues,
@@ -235,6 +236,7 @@ function swapQuoteTokenWithOrderBook(
         idexFeeRate,
         poolFeeRate,
       );
+
       basePoolLiquidityAvailableAtThisLevel -= lastBasePoolLiquidityAvailableAtThisLevel;
       quotePoolLiquidityAvailableAtThisLevel -= lastQuotePoolLiquidityAvailableAtThisLevel;
 
@@ -285,9 +287,10 @@ function swapQuoteTokenWithOrderBook(
     : dividePips(quoteAssetQuantity, asks[0].price);
 
   // calculate fees using the simple percentage method
-  const actualBaseReceivedWithFees =
-    actualBaseReceived -
-    multiplyPips(actualBaseReceived, idexFeeRate + poolFeeRate);
+  const actualBaseReceivedWithFees = multiplyPips(
+    actualBaseReceived,
+    oneInPips - idexFeeRate - poolFeeRate,
+  );
 
   return {
     ...poolOnlyValues,
