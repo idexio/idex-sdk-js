@@ -347,12 +347,10 @@ function swapBaseTokenWithPool(
   );
 
   // calculate fees using the simple percentage method
-  const actualQuoteAssetQuantityWithFees =
-    actualQuoteAssetQuantityWithoutFees -
-    multiplyPips(
-      actualQuoteAssetQuantityWithoutFees,
-      idexFeeRate + poolFeeRate,
-    );
+  const actualQuoteAssetQuantityWithFees = multiplyPips(
+    actualQuoteAssetQuantityWithoutFees,
+    oneInPips - idexFeeRate - poolFeeRate,
+  );
 
   // amount of base we would have received with infinite liquidity at the spread / pool price
   const expectedQuoteQuantityAtPoolPrice = multiplyPips(
@@ -367,19 +365,26 @@ function swapBaseTokenWithPool(
 
   // move the pool reserves based on quote received by the wallet, and base by the pool
   // then set a limit price with slippage from the new pool price
-  // this block is optimized to remove intermediate helper functions that perform whole number division
-  const limitPrice =
-    (oneInPips *
-      ((oneInPips - poolSlippageLimit) *
-        (pool.quoteReserveQuantity -
-          (pool.quoteReserveQuantity -
-            (oneInPips *
-              (pool.baseReserveQuantity * pool.quoteReserveQuantity)) /
-              (oneInPips * pool.baseReserveQuantity +
-                baseAssetQuantity *
-                  (oneInPips - idexFeeRate - poolFeeRate)))))) /
-    (oneInPips * pool.baseReserveQuantity +
-      baseAssetQuantity * (oneInPips - idexFeeRate - poolFeeRate));
+
+  const poolBaseCredit = multiplyPips(
+    baseAssetQuantity,
+    oneInPips - idexFeeRate,
+  );
+
+  const poolQuoteDebit =
+    pool.quoteReserveQuantity -
+    (pool.baseReserveQuantity * pool.quoteReserveQuantity) /
+      (pool.baseReserveQuantity +
+        multiplyPips(baseAssetQuantity, oneInPips - idexFeeRate - poolFeeRate));
+
+  const newBaseReserveQuantity = pool.baseReserveQuantity + poolBaseCredit;
+  const newQuoteReserveQuantity = pool.quoteReserveQuantity - poolQuoteDebit;
+
+  const nominalPrice = dividePips(
+    newQuoteReserveQuantity,
+    newBaseReserveQuantity,
+  );
+  const limitPrice = multiplyPips(nominalPrice, oneInPips - poolSlippageLimit);
 
   return {
     inputAssetQuantity: baseAssetQuantity,
@@ -390,11 +395,10 @@ function swapBaseTokenWithPool(
     ),
     limitPrice,
     outputAssetQuantityExpected: actualQuoteAssetQuantityWithFees,
-    outputAssetQuantityMinimum:
-      (baseAssetQuantity *
-        limitPrice *
-        (oneInPips - idexFeeRate - poolFeeRate)) /
-      (oneInPips * oneInPips),
+    outputAssetQuantityMinimum: multiplyPips(
+      multiplyPips(baseAssetQuantity, limitPrice),
+      oneInPips - idexFeeRate - poolFeeRate,
+    ),
     price: dividePips(actualQuoteAssetQuantityWithFees, baseAssetQuantity),
     priceImpact: Number(pipToDecimal(priceImpactInPips)),
   };
@@ -439,23 +443,28 @@ function swapQuoteTokenWithPool(
 
   // move the pool reserves based on base received by the wallet, and quote by the pool
   // then set a limit price with slippage from the new pool price
-  const limitPrice = multiplyPips(
-    dividePips(
-      pool.quoteReserveQuantity +
-        multiplyPips(quoteAssetQuantity, oneInPips - idexFeeRate - poolFeeRate),
-      pool.baseReserveQuantity -
-        (pool.baseReserveQuantity -
-          dividePips(
-            multiplyPips(pool.baseReserveQuantity, pool.quoteReserveQuantity),
-            pool.quoteReserveQuantity +
-              multiplyPips(
-                quoteAssetQuantity,
-                oneInPips - idexFeeRate - poolFeeRate,
-              ),
-          )),
-    ),
-    oneInPips + poolSlippageLimit,
+
+  const poolQuoteCredit = multiplyPips(
+    quoteAssetQuantity,
+    oneInPips - idexFeeRate,
   );
+
+  const poolBaseDebit =
+    pool.baseReserveQuantity -
+    (pool.baseReserveQuantity * pool.quoteReserveQuantity) /
+      (pool.quoteReserveQuantity +
+        multiplyPips(
+          quoteAssetQuantity,
+          oneInPips - idexFeeRate - poolFeeRate,
+        ));
+
+  const newBaseReserveQuantity = pool.baseReserveQuantity - poolBaseDebit;
+  const newQuoteReserveQuantity = pool.quoteReserveQuantity + poolQuoteCredit;
+  const nominalPrice = dividePips(
+    newQuoteReserveQuantity,
+    newBaseReserveQuantity,
+  );
+  const limitPrice = multiplyPips(nominalPrice, oneInPips + poolSlippageLimit);
 
   return {
     inputAssetQuantity: quoteAssetQuantity,
