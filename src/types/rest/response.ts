@@ -92,7 +92,7 @@ export interface RestResponseDeposit {
  * @property {number} gasPrice - Current gas price used by the exchange for trade settlement and withdrawal transactions in Gwei
  * @property {string} volume24hUsd - Total exchange trading volume for the trailing 24 hours in USD
  * @property {string} totalVolumeUsd - Total exchange trading volume for IDEX v3 on Polygon in USD
- * @property {string} totalTrades - Total number of trade executions for IDEX v3 on Polygon
+ * @property {number} totalTrades - Total number of trade executions for IDEX v3 on Polygon
  * @property {string} totalValueLockedUsd - Total value locked in IDEX v3 on Polygon in USD
  * @property {string} idexTokenAddress - Token contract address for the IDEX token on Polygon
  * @property {string} idexUsdPrice - Current price of the IDEX token in USD
@@ -106,6 +106,7 @@ export interface RestResponseDeposit {
  * @property {string} withdrawMinimum - Minimum withdrawal amount in MATIC, applies to both MATIC and tokens
  * @property {string} liquidityAdditionMinimum - Minimum liquidity addition amount in MATIC, applies to both MATIC and tokens
  * @property {string} liquidityRemovalMinimum - Minimum withdrawal amount in MATIC, applies to both MATIC and tokens
+ * @property {number} blockConfirmationDelay - Minimum number of block confirmations before on-chain transactions are processed
  */
 export type RestResponseExchangeInfo = {
   timeZone: string;
@@ -116,7 +117,7 @@ export type RestResponseExchangeInfo = {
   gasPrice: number;
   volume24hUsd: string;
   totalVolumeUsd: string;
-  totalTrades: string;
+  totalTrades: number;
   totalValueLockedUsd: string;
   idexTokenAddress: string;
   idexUsdPrice: string;
@@ -130,6 +131,7 @@ export type RestResponseExchangeInfo = {
   withdrawMinimum: string;
   liquidityAdditionMinimum: string;
   liquidityRemovalMinimum: string;
+  blockConfirmationDelay: number;
 };
 
 /**

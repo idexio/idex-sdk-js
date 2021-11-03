@@ -21,6 +21,7 @@
     *   [OrderTimeInForce](#ordertimeinforce)
     *   [OrderType](#ordertype)
 *   [REST Requests](#rest-requests)
+    *   [RestRequestCancelOrders](#restrequestcancelorders)
     *   [RestRequestFindBalances](#restrequestfindbalances)
     *   [RestRequestFindCandles](#restrequestfindcandles)
     *   [RestRequestFindDeposit](#restrequestfinddeposit)
@@ -100,63 +101,61 @@
 *   [L1Equal](#l1equal)
     *   [Parameters](#parameters-47)
 *   [RestRequestFindLiquidityPools](#restrequestfindliquiditypools)
-    *   [Properties](#properties-69)
-*   [BestAvailablePriceLevels](#bestavailablepricelevels)
     *   [Properties](#properties-70)
+*   [BestAvailablePriceLevels](#bestavailablepricelevels)
+    *   [Properties](#properties-71)
 *   [L2toL1OrderBook](#l2tol1orderbook)
     *   [Parameters](#parameters-48)
 *   [L2LimitOrderBookToHybridOrderBooks](#l2limitorderbooktohybridorderbooks)
     *   [Parameters](#parameters-49)
 *   [L1OrderBook](#l1orderbook)
-    *   [Properties](#properties-71)
+    *   [Properties](#properties-72)
 *   [calculateGrossBaseQuantity](#calculategrossbasequantity)
     *   [Parameters](#parameters-50)
 *   [RestRequestAddLiquidity](#restrequestaddliquidity)
-    *   [Properties](#properties-72)
-*   [L2OrderBook](#l2orderbook)
     *   [Properties](#properties-73)
-*   [WebSocketRequestTokenPriceSubscription](#websocketrequesttokenpricesubscription)
+*   [L2OrderBook](#l2orderbook)
     *   [Properties](#properties-74)
+*   [WebSocketRequestTokenPriceSubscription](#websocketrequesttokenpricesubscription)
+    *   [Properties](#properties-75)
 *   [createPrivateKeyMessageSigner](#createprivatekeymessagesigner)
     *   [Parameters](#parameters-51)
     *   [Examples](#examples-10)
 *   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
-    *   [Properties](#properties-75)
+    *   [Properties](#properties-76)
 *   [updateL2Levels](#updatel2levels)
     *   [Parameters](#parameters-52)
 *   [OrderBookFeeRates](#orderbookfeerates)
-    *   [Properties](#properties-76)
+    *   [Properties](#properties-77)
 *   [calculateGrossBaseValueOfBuyQuantities](#calculategrossbasevalueofbuyquantities)
     *   [Parameters](#parameters-53)
 *   [privateKeySigner](#privatekeysigner)
 *   [OrderBookLevelType](#orderbookleveltype)
 *   [OrderBookLevelL1](#orderbooklevell1)
-    *   [Properties](#properties-77)
+    *   [Properties](#properties-78)
 *   [calculateGrossQuoteQuantity](#calculategrossquotequantity)
     *   [Parameters](#parameters-54)
 *   [updateL2Side](#updatel2side)
     *   [Parameters](#parameters-55)
 *   [RestRequestFindLiquidityAddition](#restrequestfindliquidityaddition)
-    *   [Properties](#properties-78)
-*   [OrderBookLevelL2](#orderbooklevell2)
     *   [Properties](#properties-79)
-*   [PoolReserveQuantities](#poolreservequantities)
+*   [OrderBookLevelL2](#orderbooklevell2)
     *   [Properties](#properties-80)
-*   [RestRequestFindLiquidityRemoval](#restrequestfindliquidityremoval)
+*   [PoolReserveQuantities](#poolreservequantities)
     *   [Properties](#properties-81)
-*   [PriceLevelQuantities](#pricelevelquantities)
+*   [RestRequestFindLiquidityRemoval](#restrequestfindliquidityremoval)
     *   [Properties](#properties-82)
+*   [PriceLevelQuantities](#pricelevelquantities)
+    *   [Properties](#properties-83)
 *   [calculateGrossQuoteValueOfSellQuantities](#calculategrossquotevalueofsellquantities)
     *   [Parameters](#parameters-56)
 *   [RestRequestFindLiquidityChanges](#restrequestfindliquiditychanges)
-    *   [Properties](#properties-83)
+    *   [Properties](#properties-84)
 *   [MarketType](#markettype)
     *   [orderBook](#orderbook)
     *   [hybrid](#hybrid)
 *   [calculateBaseQuantityOut](#calculatebasequantityout)
     *   [Parameters](#parameters-57)
-*   [RestRequestCancelOrder](#restrequestcancelorder)
-    *   [Properties](#properties-84)
 *   [LiquidityChangeOrigination](#liquiditychangeorigination)
     *   [OnChain](#onchain)
     *   [OffChain](#offchain)
@@ -606,7 +605,7 @@ Cancel a single order
 
 ###### Parameters
 
-*   `cancelOrder` **[RestRequestCancelOrder](#restrequestcancelorder)** 
+*   `cancelOrder` **RestRequestCancelOrder** 
 *   `signer` **[MessageSigner](#messagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 
 ###### Examples
@@ -1319,6 +1318,17 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 
 
+### RestRequestCancelOrders
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+*   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+*   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+*   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Single orderId or clientOrderId to cancel; prefix client-provided ids with client:
+*   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Base-quote pair e.g. 'IDEX-ETH'
+
 ### RestRequestFindBalances
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -1585,7 +1595,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `gasPrice` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Current gas price used by the exchange for trade settlement and withdrawal transactions in Gwei
 *   `volume24hUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total exchange trading volume for the trailing 24 hours in USD
 *   `totalVolumeUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total exchange trading volume for IDEX v3 on Polygon in USD
-*   `totalTrades` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total number of trade executions for IDEX v3 on Polygon
+*   `totalTrades` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Total number of trade executions for IDEX v3 on Polygon
 *   `totalValueLockedUsd` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total value locked in IDEX v3 on Polygon in USD
 *   `idexTokenAddress` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Token contract address for the IDEX token on Polygon
 *   `idexUsdPrice` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Current price of the IDEX token in USD
@@ -1599,6 +1609,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `withdrawMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum withdrawal amount in MATIC, applies to both MATIC and tokens
 *   `liquidityAdditionMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum liquidity addition amount in MATIC, applies to both MATIC and tokens
 *   `liquidityRemovalMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum withdrawal amount in MATIC, applies to both MATIC and tokens
+*   `blockConfirmationDelay` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Minimum number of block confirmations before on-chain transactions are processed
 
 ### RestResponseFill
 
@@ -2763,17 +2774,6 @@ see: {L1orL2BestAvailablePrices}
 *   `poolFeeRate` **bigint** 
 
 Returns **bigint** 
-
-## RestRequestCancelOrder
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
-*   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
-*   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Single orderId or clientOrderId to cancel; prefix client-provided ids with client:
-*   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Base-quote pair e.g. 'IDEX-ETH'
 
 ## LiquidityChangeOrigination
 
