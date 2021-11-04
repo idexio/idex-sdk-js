@@ -112,7 +112,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
     });
     this.webSocketClient = new WebSocketClient({
       ...options,
-      shouldReconnectAutomatically: false,
+      shouldReconnectAutomatically: true,
       baseURL: options.webSocketApiUrl,
     });
   }
