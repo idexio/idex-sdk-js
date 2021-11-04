@@ -507,7 +507,7 @@ export function quantitiesAvailableFromPoolAtAskPrice(
       quoteAssetQuantity,
       grossQuoteIn,
     ),
-    grossQuote: grossQuoteIn,
+    grossQuote,
   };
 }
 

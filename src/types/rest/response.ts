@@ -28,14 +28,14 @@ export interface RestResponseAsset {
  * @property {string} quantity - Total quantity of the asset held by the wallet on the exchange
  * @property {string} availableForTrade - Quantity of the asset available for trading; quantity - locked
  * @property {string} locked - Quantity of the asset held in trades on the order book
- * @property {string} usdValue - Total value of the asset held by the wallet on the exchange in USD
+ * @property {string | null} usdValue - Total value of the asset held by the wallet on the exchange in USD
  */
 export interface RestResponseBalance {
   asset: string;
   quantity: string;
   availableForTrade: string;
   locked: string;
-  usdValue: string;
+  usdValue: string | null;
 }
 
 /**
