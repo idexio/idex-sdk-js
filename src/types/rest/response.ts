@@ -106,6 +106,7 @@ export interface RestResponseDeposit {
  * @property {string} withdrawMinimum - Minimum withdrawal amount in MATIC, applies to both MATIC and tokens
  * @property {string} liquidityAdditionMinimum - Minimum liquidity addition amount in MATIC, applies to both MATIC and tokens
  * @property {string} liquidityRemovalMinimum - Minimum withdrawal amount in MATIC, applies to both MATIC and tokens
+ * @property {number} blockConfirmationDelay - Minimum number of block confirmations before on-chain transactions are processed
  */
 export type RestResponseExchangeInfo = {
   timeZone: string;
@@ -130,6 +131,7 @@ export type RestResponseExchangeInfo = {
   withdrawMinimum: string;
   liquidityAdditionMinimum: string;
   liquidityRemovalMinimum: string;
+  blockConfirmationDelay: number;
 };
 
 /**

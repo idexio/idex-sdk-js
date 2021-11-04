@@ -127,7 +127,7 @@ export interface RestRequestCancelOrder extends RestRequestCancelOrdersBase {
 }
 
 /**
- * @typedef {Object} RestRequestCancelOrder
+ * @typedef {Object} RestRequestCancelOrders
  * @property {string} nonce - UUIDv1
  * @property {string} wallet
  * @property {string} [orderId] - Single orderId or clientOrderId to cancel; prefix client-provided ids with client:

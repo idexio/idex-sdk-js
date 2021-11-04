@@ -21,6 +21,7 @@
     -   [OrderTimeInForce](#ordertimeinforce)
     -   [OrderType](#ordertype)
 -   [REST Requests](#rest-requests)
+    -   [RestRequestCancelOrders](#restrequestcancelorders)
     -   [RestRequestFindBalances](#restrequestfindbalances)
     -   [RestRequestFindCandles](#restrequestfindcandles)
     -   [RestRequestFindDeposit](#restrequestfinddeposit)
@@ -155,8 +156,6 @@
     -   [hybrid](#hybrid)
 -   [calculateBaseQuantityOut](#calculatebasequantityout)
     -   [Parameters](#parameters-10)
--   [RestRequestCancelOrder](#restrequestcancelorder)
-    -   [Properties](#properties-15)
 -   [LiquidityChangeOrigination](#liquiditychangeorigination)
     -   [OnChain](#onchain)
     -   [OffChain](#offchain)
@@ -173,28 +172,28 @@
 -   [MultiverseChain](#multiversechain)
 -   [WebSocketRequestSubscription](#websocketrequestsubscription)
 -   [WebSocketResponseLiquidityPoolShort](#websocketresponseliquiditypoolshort)
-    -   [Properties](#properties-16)
+    -   [Properties](#properties-15)
 -   [RestResponseLiquidityPool](#restresponseliquiditypool)
-    -   [Properties](#properties-17)
+    -   [Properties](#properties-16)
 -   [WebSocketResponseLiquidityPoolLong](#websocketresponseliquiditypoollong)
-    -   [Properties](#properties-18)
+    -   [Properties](#properties-17)
 -   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
-    -   [Properties](#properties-19)
+    -   [Properties](#properties-18)
 -   [calculateSyntheticPriceLevels](#calculatesyntheticpricelevels)
     -   [Parameters](#parameters-12)
 -   [RestResponseLiquidityAddition](#restresponseliquidityaddition)
-    -   [Properties](#properties-20)
+    -   [Properties](#properties-19)
 -   [RestResponseLiquidityPoolReserves](#restresponseliquiditypoolreserves)
-    -   [Properties](#properties-21)
+    -   [Properties](#properties-20)
 -   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
 -   [RestResponseLiquidityRemoval](#restresponseliquidityremoval)
-    -   [Properties](#properties-22)
+    -   [Properties](#properties-21)
 -   [recalculateHybridLevelAmounts](#recalculatehybridlevelamounts)
     -   [Parameters](#parameters-13)
 -   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
-    -   [Properties](#properties-23)
+    -   [Properties](#properties-22)
 -   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
-    -   [Properties](#properties-24)
+    -   [Properties](#properties-23)
 -   [WebSocketRequest](#websocketrequest)
 -   [WebSocketRequest](#websocketrequest-1)
 -   [TradeType](#tradetype)
@@ -206,9 +205,9 @@
 -   [quantitiesAvailableFromPoolAtAskPrice](#quantitiesavailablefrompoolataskprice)
     -   [Parameters](#parameters-15)
 -   [WebSocketResponseTokenPriceShort](#websocketresponsetokenpriceshort)
-    -   [Properties](#properties-25)
+    -   [Properties](#properties-24)
 -   [WebSocketResponseTokenPriceLong](#websocketresponsetokenpricelong)
-    -   [Properties](#properties-26)
+    -   [Properties](#properties-25)
 -   [WebSocketResponseSubscriptionMessageShort](#websocketresponsesubscriptionmessageshort)
 -   [WebSocketResponseSubscriptionMessageLong](#websocketresponsesubscriptionmessagelong)
 -   [quantitiesAvailableFromPoolAtBidPrice](#quantitiesavailablefrompoolatbidprice)
@@ -627,7 +626,7 @@ Cancel a single order
 
 ###### Parameters
 
--   `cancelOrder` **[RestRequestCancelOrder](#restrequestcancelorder)** 
+-   `cancelOrder` **RestRequestCancelOrder** 
 -   `signer` **[MessageSigner](#messagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 
 ###### Examples
@@ -1356,6 +1355,17 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 
 
+### RestRequestCancelOrders
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+#### Properties
+
+-   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Single orderId or clientOrderId to cancel; prefix client-provided ids with client:
+-   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Base-quote pair e.g. 'IDEX-ETH'
+
 ### RestRequestFindBalances
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -1637,6 +1647,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `withdrawMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum withdrawal amount in MATIC, applies to both MATIC and tokens
 -   `liquidityAdditionMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum liquidity addition amount in MATIC, applies to both MATIC and tokens
 -   `liquidityRemovalMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum withdrawal amount in MATIC, applies to both MATIC and tokens
+-   `blockConfirmationDelay` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Minimum number of block confirmations before on-chain transactions are processed
 
 ### RestResponseFill
 
@@ -2809,17 +2820,6 @@ see: {L1orL2BestAvailablePrices}
 -   `poolFeeRate` **bigint** 
 
 Returns **bigint** 
-
-## RestRequestCancelOrder
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
--   `nonce` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** UUIDv1
--   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `orderId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Single orderId or clientOrderId to cancel; prefix client-provided ids with client:
--   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Base-quote pair e.g. 'IDEX-ETH'
 
 ## LiquidityChangeOrigination
 
