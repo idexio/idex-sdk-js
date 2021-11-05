@@ -148,6 +148,7 @@ export class RestAuthenticatedClient<
   public async addLiquidity(
     addLiquidityRequest: RestRequestAddLiquidity,
     signer: undefined | signatures.MessageSigner = this.signer,
+    dependentTransactions?: string[],
   ): Promise<RestResponseLiquidityAddition> {
     if (!signer) {
       throw new Error(
@@ -163,6 +164,7 @@ export class RestAuthenticatedClient<
           this.config.sandbox,
         ),
       ),
+      dependentTransactions,
     });
   }
 
@@ -176,6 +178,7 @@ export class RestAuthenticatedClient<
   public async removeLiquidity(
     removeLiquidityRequest: RestRequestRemoveLiquidity,
     signer: undefined | signatures.MessageSigner = this.signer,
+    dependentTransaction?: string,
   ): Promise<RestResponseLiquidityRemoval> {
     if (!signer) {
       throw new Error(
@@ -191,6 +194,7 @@ export class RestAuthenticatedClient<
           this.config.sandbox,
         ),
       ),
+      dependentTransaction,
     });
   }
 
