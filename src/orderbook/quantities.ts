@@ -556,6 +556,55 @@ export function quantitiesAvailableFromPoolAtBidPrice(
   };
 }
 
+function L1BestAvailableBuyPrice(
+  pool: PoolReserveQuantities,
+  idexFeeRate: bigint,
+  poolFeeRate: bigint,
+  takerMinimumInQuote: bigint,
+): bigint {
+  const takerMinimumInQuoteAfterIdexFee = multiplyPips(
+    takerMinimumInQuote,
+    oneInPips - idexFeeRate,
+  );
+
+  const baseReceived = calculateBaseQuantityOut(
+    pool.baseReserveQuantity,
+    pool.quoteReserveQuantity,
+    takerMinimumInQuote,
+    idexFeeRate,
+    poolFeeRate,
+  );
+
+  return dividePips(
+    pool.quoteReserveQuantity + takerMinimumInQuoteAfterIdexFee,
+    pool.baseReserveQuantity - baseReceived,
+  );
+}
+
+function L1BestAvailableSellPrice(
+  pool: PoolReserveQuantities,
+  idexFeeRate: bigint,
+  poolFeeRate: bigint,
+  takerMinimumInBase: bigint,
+): bigint {
+  const takerMinimumInBaseAfterIdexFee = multiplyPips(
+    takerMinimumInBase,
+    oneInPips - idexFeeRate,
+  );
+
+  const quoteReceived = calculateQuoteQuantityOut(
+    pool.baseReserveQuantity,
+    pool.quoteReserveQuantity,
+    takerMinimumInBase,
+    idexFeeRate,
+    poolFeeRate,
+  );
+
+  return dividePips(
+    pool.quoteReserveQuantity - quoteReceived,
+    pool.baseReserveQuantity + takerMinimumInBaseAfterIdexFee,
+  );
+}
 /**
  * Given a minimum taker order size, calculate the best achievable price level using pool liquidity only
  *
@@ -574,49 +623,23 @@ export function L1orL2BestAvailablePrices(
   takerMinimumInBase: bigint,
   takerMinimumInQuote: bigint,
 ): BestAvailablePriceLevels {
-  const takerMinimumInBaseAfterIdexFee = multiplyPips(
-    takerMinimumInBase,
-    oneInPips - idexFeeRate,
-  );
-
-  const takerMinimumInQuoteAfterIdexFee = multiplyPips(
-    takerMinimumInQuote,
-    oneInPips - idexFeeRate,
-  );
-
-  const baseReceived = calculateBaseQuantityOut(
-    pool.baseReserveQuantity,
-    pool.quoteReserveQuantity,
-    takerMinimumInQuote,
+  const buyPrice = L1BestAvailableBuyPrice(
+    pool,
     idexFeeRate,
     poolFeeRate,
+    takerMinimumInQuote,
   );
 
-  const quoteReceived = calculateQuoteQuantityOut(
-    pool.baseReserveQuantity,
-    pool.quoteReserveQuantity,
-    takerMinimumInBase,
+  const sellPrice = L1BestAvailableSellPrice(
+    pool,
     idexFeeRate,
     poolFeeRate,
-  );
-
-  // resulting price after a minimum buy
-  const bestAvailableBuyPrice = dividePips(
-    pool.quoteReserveQuantity + takerMinimumInQuoteAfterIdexFee,
-    pool.baseReserveQuantity - baseReceived,
-  );
-
-  // resulting price after a minimum sell
-  const bestAvailableSellPrice = dividePips(
-    pool.quoteReserveQuantity - quoteReceived,
-    pool.baseReserveQuantity + takerMinimumInBaseAfterIdexFee,
+    takerMinimumInBase,
   );
 
   return {
-    baseReceived,
-    bestAvailableBuyPrice,
-    bestAvailableSellPrice,
-    quoteReceived,
+    buyPrice,
+    sellPrice,
   };
 }
 
@@ -646,11 +669,7 @@ export function L1L2OrderBooksWithMinimumTaker(
     (takerMinimumInQuote * l2.pool.baseReserveQuantity) /
     l2.pool.quoteReserveQuantity;
 
-  const {
-    baseReceived,
-    bestAvailableBuyPrice,
-    bestAvailableSellPrice,
-  } = L1orL2BestAvailablePrices(
+  const { buyPrice, sellPrice } = L1orL2BestAvailablePrices(
     l2.pool,
     idexFeeRate,
     poolFeeRate,
@@ -658,27 +677,41 @@ export function L1L2OrderBooksWithMinimumTaker(
     takerMinimumInQuote,
   );
 
-  if (!l2.asks[0] || bestAvailableBuyPrice < l2.asks[0].price) {
+  if (!l2.asks[0] || buyPrice < l2.asks[0].price) {
+    const { grossBase } = quantitiesAvailableFromPoolAtAskPrice(
+      l2.pool.baseReserveQuantity,
+      l2.pool.quoteReserveQuantity,
+      buyPrice,
+      idexFeeRate,
+      poolFeeRate,
+    );
     l2Values.asks.unshift({
-      price: bestAvailableBuyPrice,
-      size: baseReceived,
+      price: buyPrice,
+      size: grossBase,
       numOrders: 0,
       type: 'pool',
     });
     if (l2Values.asks.length > 1) {
-      l2Values.asks[1].size -= baseReceived;
+      l2Values.asks[1].size -= grossBase;
     }
   }
 
-  if (!l2.bids[0] || bestAvailableSellPrice > l2.bids[0].price) {
+  if (!l2.bids[0] || sellPrice > l2.bids[0].price) {
+    const { grossBase } = quantitiesAvailableFromPoolAtBidPrice(
+      l2.pool.baseReserveQuantity,
+      l2.pool.quoteReserveQuantity,
+      sellPrice,
+      idexFeeRate,
+      poolFeeRate,
+    );
     l2Values.bids.unshift({
-      price: bestAvailableSellPrice,
-      size: baseReceived,
+      price: sellPrice,
+      size: grossBase,
       numOrders: 0,
       type: 'pool',
     });
     if (l2Values.bids.length > 1) {
-      l2Values.bids[1].size -= baseReceived;
+      l2Values.bids[1].size -= grossBase;
     }
   }
 
