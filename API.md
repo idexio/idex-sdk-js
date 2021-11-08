@@ -121,16 +121,16 @@
 *   [createPrivateKeyMessageSigner](#createprivatekeymessagesigner)
     *   [Parameters](#parameters-51)
     *   [Examples](#examples-10)
-*   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
+*   [OrderBookFeeRates](#orderbookfeerates)
     *   [Properties](#properties-76)
+*   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
+    *   [Properties](#properties-77)
 *   [updateL2Levels](#updatel2levels)
     *   [Parameters](#parameters-52)
-*   [OrderBookFeeRates](#orderbookfeerates)
-    *   [Properties](#properties-77)
 *   [calculateGrossBaseValueOfBuyQuantities](#calculategrossbasevalueofbuyquantities)
     *   [Parameters](#parameters-53)
-*   [privateKeySigner](#privatekeysigner)
 *   [OrderBookLevelType](#orderbookleveltype)
+*   [privateKeySigner](#privatekeysigner)
 *   [OrderBookLevelL1](#orderbooklevell1)
     *   [Properties](#properties-78)
 *   [calculateGrossQuoteQuantity](#calculategrossquotequantity)
@@ -2562,6 +2562,16 @@ const signed = await signMessage(myMessageToSign)
 
 Returns **[MessageSigner](#messagesigner)** 
 
+## OrderBookFeeRates
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+*   `idexFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+*   `poolFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+*   `takerMinimumInNativeAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
 ## RestRequestRemoveLiquidity
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -2588,16 +2598,6 @@ Updates a level 2 orderbook using a partial "diff" received over websockets
 
 Returns **void** orderbook is updated in-place
 
-## OrderBookFeeRates
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
-*   `idexFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `poolFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `takerMinimumInNativeAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
 ## calculateGrossBaseValueOfBuyQuantities
 
 Helper function to convert from quote to base quantities
@@ -2611,6 +2611,10 @@ see: {quantitiesAvailableFromPoolAtAskPrice}
 
 Returns **bigint** 
 
+## OrderBookLevelType
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
 ## privateKeySigner
 
 *   **See**: {createPrivateKeyMessageSigner}
@@ -2618,10 +2622,6 @@ Returns **bigint**
 **Meta**
 
 *   **deprecated**: use createPrivateKeyMessageSigner directly
-
-## OrderBookLevelType
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
 ## OrderBookLevelL1
 

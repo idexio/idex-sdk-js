@@ -9,10 +9,8 @@ import type { WebSocketClientOptions } from '../client/webSocket';
  * @property {bigint} quoteReceived - actual quantity received, in quote units at the best available sell price
  */
 export type BestAvailablePriceLevels = {
-  baseReceived: bigint;
-  bestAvailableBuyPrice: bigint;
-  bestAvailableSellPrice: bigint;
-  quoteReceived: bigint;
+  buyPrice: bigint;
+  sellPrice: bigint;
 };
 
 /**
