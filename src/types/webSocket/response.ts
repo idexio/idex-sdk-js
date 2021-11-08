@@ -10,34 +10,34 @@ import { WebSocketRequestSubscription } from './request';
  * @typedef {Object} WebSocketResponseTickerShort
  * @property {string} m - (market) Market symbol
  * @property {number} t - (time) Timestamp when the statistics were computed, the opening time of the period is 24 hours prior
- * @property {string} o - (open) Price of the first trade in the period in quote terms
- * @property {string} h - (high) Highest traded price in the period in quote terms
- * @property {string} l - (low) Lowest traded price in the period in quote terms
- * @property {string} c - (close) Price of the last trade in the period in quote terms
- * @property {string} Q - (closeQuantity) Quantity of the last trade in th period in base terms
+ * @property {string | null} o - (open) Price of the first trade in the period in quote terms
+ * @property {string | null} h - (high) Highest traded price in the period in quote terms
+ * @property {string | null} l - (low) Lowest traded price in the period in quote terms
+ * @property {string | null} c - (close) Price of the last trade in the period in quote terms
+ * @property {string | null} Q - (closeQuantity) Quantity of the last trade in th period in base terms
  * @property {string} v - (baseVolume) Trailing 24-hour trading volume in base terms
  * @property {string} q - (quoteVolume) Trailing 24-hour trading volume in quote terms
  * @property {string} P - (percentChange) Percentage change from open price to close price
  * @property {number} n - (numTrades) Number of trades in the period
- * @property {string} a - (ask) Best ask price on the order book in quote terms
- * @property {string} b - (bid) Best bid price on the order book in quote terms
- * @property {number} u - (sequence) Fill sequence number of the last trade in the period
+ * @property {string | null} a - (ask) Best ask price on the order book in quote terms
+ * @property {string | null} b - (bid) Best bid price on the order book in quote terms
+ * @property {number | null} u - (sequence) Fill sequence number of the last trade in the period
  */
 export interface WebSocketResponseTickerShort {
   m: string;
   t: number;
-  o: string;
-  h: string;
-  l: string;
-  c: string;
-  Q: string;
+  o: string | null;
+  h: string | null;
+  l: string | null;
+  c: string | null;
+  Q: string | null;
   v: string;
   q: string;
   P: string;
   n: number;
-  a: string;
-  b: string;
-  u: number;
+  a: string | null;
+  b: string | null;
+  u: number | null;
 }
 
 /**
@@ -46,18 +46,18 @@ export interface WebSocketResponseTickerShort {
  * @typedef {Object} WebSocketResponseTickerLong
  * @property {string} market - Market symbol
  * @property {number} time - Timestamp when the statistics were computed, the opening time of the period is 24 hours prior
- * @property {string} open - Price of the first trade in the period in quote terms
- * @property {string} high - Highest traded price in the period in quote terms
- * @property {string} low - Lowest traded price in the period in quote terms
- * @property {string} close - Price of the last trade in the period in quote terms
- * @property {string} closeQuantity - Quantity of the last trade in th period in base terms
+ * @property {string | null} open - Price of the first trade in the period in quote terms
+ * @property {string | null} high - Highest traded price in the period in quote terms
+ * @property {string | null} low - Lowest traded price in the period in quote terms
+ * @property {string | null} close - Price of the last trade in the period in quote terms
+ * @property {string | null} closeQuantity - Quantity of the last trade in th period in base terms
  * @property {string} baseVolume - Trailing 24-hour trading volume in base terms
  * @property {string} quoteVolume - Trailing 24-hour trading volume in quote terms
  * @property {string} percentChange - Percentage change from open price to close price
  * @property {number} numTrades - Number of trades in the period
- * @property {string} ask - Best ask price on the order book in quote terms
- * @property {string} bid - Best bid price on the order book in quote terms
- * @property {number} sequence - Fill sequence number of the last trade in the period
+ * @property {string | null} ask - Best ask price on the order book in quote terms
+ * @property {string | null} bid - Best bid price on the order book in quote terms
+ * @property {number | null} sequence - Fill sequence number of the last trade in the period
  */
 export type WebSocketResponseTickerLong = restResponse.RestResponseTicker;
 

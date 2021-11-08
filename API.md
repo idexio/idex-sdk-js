@@ -2024,18 +2024,18 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 *   `m` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (market) Market symbol
 *   `t` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (time) Timestamp when the statistics were computed, the opening time of the period is 24 hours prior
-*   `o` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (open) Price of the first trade in the period in quote terms
-*   `h` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (high) Highest traded price in the period in quote terms
-*   `l` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (low) Lowest traded price in the period in quote terms
-*   `c` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (close) Price of the last trade in the period in quote terms
-*   `Q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (closeQuantity) Quantity of the last trade in th period in base terms
+*   `o` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** (open) Price of the first trade in the period in quote terms
+*   `h` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** (high) Highest traded price in the period in quote terms
+*   `l` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** (low) Lowest traded price in the period in quote terms
+*   `c` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** (close) Price of the last trade in the period in quote terms
+*   `Q` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** (closeQuantity) Quantity of the last trade in th period in base terms
 *   `v` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (baseVolume) Trailing 24-hour trading volume in base terms
 *   `q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (quoteVolume) Trailing 24-hour trading volume in quote terms
 *   `P` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (percentChange) Percentage change from open price to close price
 *   `n` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (numTrades) Number of trades in the period
-*   `a` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (ask) Best ask price on the order book in quote terms
-*   `b` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (bid) Best bid price on the order book in quote terms
-*   `u` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** (sequence) Fill sequence number of the last trade in the period
+*   `a` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** (ask) Best ask price on the order book in quote terms
+*   `b` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** (bid) Best bid price on the order book in quote terms
+*   `u` **([number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number) | null)** (sequence) Fill sequence number of the last trade in the period
 
 ### WebSocketResponseTickerLong
 
@@ -2047,18 +2047,18 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 *   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Market symbol
 *   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Timestamp when the statistics were computed, the opening time of the period is 24 hours prior
-*   `open` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Price of the first trade in the period in quote terms
-*   `high` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Highest traded price in the period in quote terms
-*   `low` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Lowest traded price in the period in quote terms
-*   `close` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Price of the last trade in the period in quote terms
-*   `closeQuantity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quantity of the last trade in th period in base terms
+*   `open` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Price of the first trade in the period in quote terms
+*   `high` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Highest traded price in the period in quote terms
+*   `low` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Lowest traded price in the period in quote terms
+*   `close` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Price of the last trade in the period in quote terms
+*   `closeQuantity` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Quantity of the last trade in th period in base terms
 *   `baseVolume` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Trailing 24-hour trading volume in base terms
 *   `quoteVolume` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Trailing 24-hour trading volume in quote terms
 *   `percentChange` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Percentage change from open price to close price
 *   `numTrades` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Number of trades in the period
-*   `ask` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Best ask price on the order book in quote terms
-*   `bid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Best bid price on the order book in quote terms
-*   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Fill sequence number of the last trade in the period
+*   `ask` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Best ask price on the order book in quote terms
+*   `bid` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Best bid price on the order book in quote terms
+*   `sequence` **([number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number) | null)** Fill sequence number of the last trade in the period
 
 ### WebSocketResponseCandleShort
 

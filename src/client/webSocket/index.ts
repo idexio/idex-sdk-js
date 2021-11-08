@@ -88,6 +88,7 @@ export class WebSocketClient<
      * @private
      */
     doNotReconnect: false,
+    isReconnecting: false,
     /**
      * Used to track the number of reconnect attempts for exponential backoff
      * @private
@@ -560,10 +561,16 @@ export class WebSocketClient<
     this.disconnect();
     this.state.doNotReconnect = false;
     // Reconnect with exponential backoff
-    const backoffSeconds = 2 ** this.state.reconnectAttempt;
-    this.state.reconnectAttempt += 1;
-    console.log(`Reconnecting after ${backoffSeconds} seconds...`);
-    setTimeout(this.connect.bind(this), backoffSeconds * 1000);
+    if (!this.state.isReconnecting) {
+      this.state.isReconnecting = true;
+      const backoffSeconds = 2 ** this.state.reconnectAttempt;
+      this.state.reconnectAttempt += 1;
+      console.log(`Reconnecting after ${backoffSeconds} seconds...`);
+      setTimeout(() => {
+        this.connect();
+        this.state.isReconnecting = false;
+      }, backoffSeconds * 1000);
+    }
   }
 
   private resetReconnectionState(): void {
