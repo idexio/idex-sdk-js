@@ -11,12 +11,18 @@ import {
 } from './apiConversions';
 
 import {
+  ORDER_BOOK_FIRST_LEVEL_MULTIPLIER_IN_PIPS,
   ORDER_BOOK_MAX_L2_LEVELS,
   ORDER_BOOK_HYBRID_SLIPPAGE,
 } from '../constants';
 
 import { L2LimitOrderBookToHybridOrderBooks } from './hybrid';
-import { decimalToPip, oneInPips, pipToDecimal } from '../pipmath';
+import {
+  decimalToPip,
+  oneInPips,
+  multiplyPips,
+  pipToDecimal,
+} from '../pipmath';
 import { L1Equal, L2toL1OrderBook, updateL2Levels } from './utils';
 
 import type {
@@ -258,7 +264,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
       this.idexFeeRate,
       this.poolFeeRate,
       true,
-      this.marketMinimum(market, this.takerMinimumInNativeAsset),
+      this.marketMinimum(market),
     );
   }
 
@@ -294,8 +300,10 @@ export class OrderBookRealTimeClient extends EventEmitter {
     const exchange = await this.restPublicClient.getExchangeInfo();
     this.poolFeeRate = decimalToPip(exchange.takerLiquidityProviderFeeRate);
     this.idexFeeRate = decimalToPip(exchange.takerIdexFeeRate);
-    this.takerMinimumInNativeAsset =
-      BigInt(2) * decimalToPip(exchange.takerTradeMinimum);
+    this.takerMinimumInNativeAsset = multiplyPips(
+      ORDER_BOOK_FIRST_LEVEL_MULTIPLIER_IN_PIPS,
+      decimalToPip(exchange.takerTradeMinimum),
+    );
   }
 
   private async loadLevel2(market: string): Promise<L2OrderBook> {
@@ -333,13 +341,10 @@ export class OrderBookRealTimeClient extends EventEmitter {
     }
   }
 
-  private marketMinimum(
-    market: string,
-    takerMinimumInNativeAsset: bigint,
-  ): bigint | null {
+  private marketMinimum(market: string): bigint | null {
     const quoteSymbol = market.split('-')[1];
     const price = this.tokenPrices.get(quoteSymbol) || null;
-    return price ? (takerMinimumInNativeAsset * oneInPips) / price : null;
+    return price ? (this.takerMinimumInNativeAsset * oneInPips) / price : null;
   }
 
   private setupInternalWebSocket(): void {
