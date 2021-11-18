@@ -97,21 +97,4 @@ export type PoolReserveQuantities = {
  */
 export type PriceLevelQuantities = { grossBase: bigint; grossQuote: bigint };
 
-/**
- * Orderbook Client Options
- *
- * @typedef {Object} OrderBookRealTimeClientOptions
- * @property {string} [apiKey] - Increases rate limits if provided
- * @property {number} [connectTimeout] - Connection timeout for websocket (default 5000)
- * @property {boolean} [sandbox] - If true, client will point to API sandbox
- * @property {MultiverseChain} [multiverseChain=matic] - Which multiverse chain the client will point to
- */
-export interface OrderBookRealTimeClientOptions {
-  apiKey?: string;
-  connectTimeout?: number;
-  sandbox?: boolean;
-  multiverseChain?: MultiverseChain;
-  baseURL?: string;
-}
-
 export type SyntheticL2OrderBook = Omit<L2OrderBook, 'sequence'>;

@@ -100,18 +100,20 @@
     *   [ErrorShortCodes](#errorshortcodes)
 *   [L1Equal](#l1equal)
     *   [Parameters](#parameters-47)
+*   [L2toL1OrderBook](#l2tol1orderbook)
+    *   [Parameters](#parameters-48)
 *   [BestAvailablePriceLevels](#bestavailablepricelevels)
     *   [Properties](#properties-70)
 *   [RestRequestFindLiquidityPools](#restrequestfindliquiditypools)
     *   [Properties](#properties-71)
-*   [L2toL1OrderBook](#l2tol1orderbook)
-    *   [Parameters](#parameters-48)
 *   [L1OrderBook](#l1orderbook)
     *   [Properties](#properties-72)
 *   [L2LimitOrderBookToHybridOrderBooks](#l2limitorderbooktohybridorderbooks)
     *   [Parameters](#parameters-49)
 *   [calculateGrossBaseQuantity](#calculategrossbasequantity)
     *   [Parameters](#parameters-50)
+*   [updateL2Levels](#updatel2levels)
+    *   [Parameters](#parameters-51)
 *   [RestRequestAddLiquidity](#restrequestaddliquidity)
     *   [Properties](#properties-73)
 *   [L2OrderBook](#l2orderbook)
@@ -119,23 +121,21 @@
 *   [WebSocketRequestTokenPriceSubscription](#websocketrequesttokenpricesubscription)
     *   [Properties](#properties-75)
 *   [createPrivateKeyMessageSigner](#createprivatekeymessagesigner)
-    *   [Parameters](#parameters-51)
+    *   [Parameters](#parameters-52)
     *   [Examples](#examples-10)
+*   [updateL2Side](#updatel2side)
+    *   [Parameters](#parameters-53)
 *   [OrderBookFeeRates](#orderbookfeerates)
     *   [Properties](#properties-76)
 *   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
     *   [Properties](#properties-77)
-*   [updateL2Levels](#updatel2levels)
-    *   [Parameters](#parameters-52)
 *   [calculateGrossBaseValueOfBuyQuantities](#calculategrossbasevalueofbuyquantities)
-    *   [Parameters](#parameters-53)
+    *   [Parameters](#parameters-54)
 *   [OrderBookLevelType](#orderbookleveltype)
 *   [privateKeySigner](#privatekeysigner)
 *   [OrderBookLevelL1](#orderbooklevell1)
     *   [Properties](#properties-78)
 *   [calculateGrossQuoteQuantity](#calculategrossquotequantity)
-    *   [Parameters](#parameters-54)
-*   [updateL2Side](#updatel2side)
     *   [Parameters](#parameters-55)
 *   [OrderBookLevelL2](#orderbooklevell2)
     *   [Properties](#properties-79)
@@ -2438,6 +2438,16 @@ Determine whether two level 1 order books are equal, including pool reserves
 
 Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
 
+## L2toL1OrderBook
+
+Derive the level 1 orderbook from a level 2 orderbook
+
+### Parameters
+
+*   `l2` **[L2OrderBook](#l2orderbook)** 
+
+Returns **[L1OrderBook](#l1orderbook)** 
+
 ## BestAvailablePriceLevels
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -2458,16 +2468,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Target market
 *   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Address of one reserve token
 *   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Address of one reserve token
-
-## L2toL1OrderBook
-
-Derive the level 1 orderbook from a level 2 orderbook
-
-### Parameters
-
-*   `l2` **[L2OrderBook](#l2orderbook)** 
-
-Returns **[L1OrderBook](#l1orderbook)** 
 
 ## L1OrderBook
 
@@ -2510,6 +2510,17 @@ see: {quantitiesAvailableFromPoolAtBidPrice}
 *   `poolFeeRate` **bigint** 
 
 Returns **bigint** 
+
+## updateL2Levels
+
+Updates a level 2 orderbook using a partial "diff" received over websockets
+
+### Parameters
+
+*   `book` **[L2OrderBook](#l2orderbook)** 
+*   `updatedLevels` **[L2OrderBook](#l2orderbook)** level 2 orderbook containing only limit order price levels that have changed
+
+Returns **void** orderbook is updated in-place
 
 ## RestRequestAddLiquidity
 
@@ -2567,6 +2578,18 @@ const signed = await signMessage(myMessageToSign)
 
 Returns **[MessageSigner](#messagesigner)** 
 
+## updateL2Side
+
+Applies a changeset to a single side of the orderbook
+
+### Parameters
+
+*   `isAscending` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true for asks, false for bids (ordering of price levels)
+*   `side` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
+*   `updates` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
+
 ## OrderBookFeeRates
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -2591,17 +2614,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `amountAMin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenA to add to the liquidity pool
 *   `amountBMin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenB to add to the liquidity pool
 *   `to` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Wallet to credit LP tokens, or the custodian contract address to leave on exchange
-
-## updateL2Levels
-
-Updates a level 2 orderbook using a partial "diff" received over websockets
-
-### Parameters
-
-*   `book` **[L2OrderBook](#l2orderbook)** 
-*   `updatedLevels` **[L2OrderBook](#l2orderbook)** level 2 orderbook containing only limit order price levels that have changed
-
-Returns **void** orderbook is updated in-place
 
 ## calculateGrossBaseValueOfBuyQuantities
 
@@ -2652,18 +2664,6 @@ see: {quantitiesAvailableFromPoolAtAskPrice}
 *   `poolFeeRate` **bigint** 
 
 Returns **bigint** 
-
-## updateL2Side
-
-Applies a changeset to a single side of the orderbook
-
-### Parameters
-
-*   `isAscending` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true for asks, false for bids (ordering of price levels)
-*   `side` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
-*   `updates` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
-
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
 
 ## OrderBookLevelL2
 

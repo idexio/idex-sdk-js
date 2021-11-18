@@ -1,42 +1,57 @@
 import { EventEmitter } from 'events';
 
-import { RestPublicClient } from '../client/rest';
-import { WebSocketClient } from '../client/webSocket';
-
-import {
-  L1OrderBookToRestResponse,
-  L2OrderBookToRestResponse,
-  restResponseToL2OrderBook,
-  webSocketResponseToL2OrderBook,
-} from './apiConversions';
-
-import {
-  ORDER_BOOK_FIRST_LEVEL_MULTIPLIER_IN_PIPS,
-  ORDER_BOOK_MAX_L2_LEVELS,
-  ORDER_BOOK_HYBRID_SLIPPAGE,
-} from '../constants';
-
-import { L2LimitOrderBookToHybridOrderBooks } from './hybrid';
+import { deriveBaseURL } from '../utils';
+import { RestPublicClient } from '../rest';
+import { WebSocketClient } from '../webSocket';
+import { L2LimitOrderBookToHybridOrderBooks } from '../../orderbook/hybrid';
+import { L2toL1OrderBook } from '../../orderbook/utils';
 import {
   decimalToPip,
   oneInPips,
   multiplyPips,
   pipToDecimal,
-} from '../pipmath';
-import { L1Equal, L2toL1OrderBook, updateL2Levels } from './utils';
-
+} from '../../pipmath';
+import { L1Equal, updateL2Levels } from './utils';
 import type {
   L1OrderBook,
   L2OrderBook,
+  MultiverseChain,
   OrderBookFeeRates,
-  OrderBookRealTimeClientOptions,
   RestResponseOrderBookLevel1,
   RestResponseOrderBookLevel2,
   WebSocketResponse,
   WebSocketResponseL2OrderBookLong,
   WebSocketResponseTokenPriceLong,
-} from '../types';
-import { deriveBaseURL } from '../client/utils';
+} from '../../types';
+import {
+  L1OrderBookToRestResponse,
+  L2OrderBookToRestResponse,
+  restResponseToL2OrderBook,
+  webSocketResponseToL2OrderBook,
+} from '../../orderbook/apiConversions';
+import {
+  ORDER_BOOK_FIRST_LEVEL_MULTIPLIER_IN_PIPS,
+  ORDER_BOOK_MAX_L2_LEVELS,
+  ORDER_BOOK_HYBRID_SLIPPAGE,
+} from '../../constants';
+
+/**
+ * Orderbook Client Options
+ *
+ * @typedef {Object} OrderBookRealTimeClientOptions
+ * @property {string} [apiKey] - Increases rate limits if provided
+ * @property {number} [connectTimeout] - Connection timeout for websocket (default 5000)
+ * @property {boolean} [sandbox] - If true, client will point to API sandbox
+ * @property {MultiverseChain} [multiverseChain=matic] - Which multiverse chain the client will point to
+ */
+export interface OrderBookRealTimeClientOptions {
+  apiKey?: string;
+  connectTimeout?: number;
+  sandbox?: boolean;
+  multiverseChain?: MultiverseChain;
+  restBaseURL?: string;
+  websocketBaseURL?: string;
+}
 
 /**
  * Orderbook API client
@@ -75,13 +90,9 @@ export class OrderBookRealTimeClient extends EventEmitter {
 
   private readonly l2OrderBooks: Map<string, L2OrderBook> = new Map();
 
-  private readonly l2OrderBookUpdates = new Map<string, L2OrderBook[]>();
-
   private markets: string[] = [];
 
   private readonly marketsByAssetSymbol = new Map<string, Set<string>>();
-
-  private readonly marketIsLoading = new Set<string>();
 
   /**
    * Set to the global pool fee rate on start (see: RestResponseExchangeInfo.takerLiquidityProviderFeeRate).
@@ -119,14 +130,14 @@ export class OrderBookRealTimeClient extends EventEmitter {
     const restApiUrl = deriveBaseURL({
       sandbox,
       multiverseChain,
-      overrideBaseURL: options.baseURL,
+      overrideBaseURL: options.restBaseURL,
       api: 'rest',
     });
     const webSocketApiUrl = deriveBaseURL({
       sandbox,
       multiverseChain,
-      overrideBaseURL: options.baseURL,
-      api: 'rest',
+      overrideBaseURL: options.websocketBaseURL,
+      api: 'websocket',
     });
 
     this.restPublicClient = new RestPublicClient({
@@ -178,7 +189,6 @@ export class OrderBookRealTimeClient extends EventEmitter {
     this.markets = markets;
     this.mapTokensToMarkets();
     this.setupInternalWebSocket();
-    await Promise.all([this.loadExchangeFeeRates(), this.loadTokenPrices()]);
     await this.webSocketClient.connect(true);
   }
 
@@ -188,7 +198,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
    */
   public stop(): void {
     if (this.webSocketClient.isConnected()) {
-      this.webSocketClient.unsubscribe(['l2orderbook', 'tokenprice']);
+      this.unsubscribe();
       this.webSocketClient.disconnect();
     }
     this.resetInternalState();
@@ -223,54 +233,6 @@ export class OrderBookRealTimeClient extends EventEmitter {
     );
   }
 
-  private applyOrderBookUpdates(market: string): void {
-    const updates = this.l2OrderBookUpdates.get(market);
-    if (!updates) {
-      return;
-    }
-    const book = this.l2OrderBooks.get(market);
-    if (!book) {
-      return;
-    }
-
-    const beforeL1 = L2toL1OrderBook(book);
-    for (const update of updates) {
-      let wasValidUpdate = false;
-
-      // an expected next update has arrived
-      if (book.sequence + 1 === update.sequence) {
-        updateL2Levels(book, update);
-        wasValidUpdate = true;
-      }
-
-      // the pool was added or removed (sequence does not increment)
-      if (book.sequence === update.sequence) {
-        if (
-          (beforeL1.pool !== null && update.pool === null) ||
-          (beforeL1.pool === null && update.pool !== null)
-        ) {
-          book.pool = update.pool;
-        }
-        wasValidUpdate = true;
-      }
-
-      if (!wasValidUpdate) {
-        this.stop();
-        this.emit('error', new Error('unexpected missing websocket update'));
-        return;
-      }
-    }
-    const afterL1 = L2toL1OrderBook(book);
-
-    this.l1OrderBooks.set(market, L2toL1OrderBook(book));
-    if (!L1Equal(beforeL1, afterL1)) {
-      this.emit('l1', market);
-    }
-    this.emit('l2', market);
-
-    this.l2OrderBookUpdates.delete(market);
-  }
-
   private async getHybridBooks(
     market: string,
   ): Promise<{ l1: L1OrderBook; l2: L2OrderBook }> {
@@ -281,20 +243,52 @@ export class OrderBookRealTimeClient extends EventEmitter {
       this.idexFeeRate,
       this.poolFeeRate,
       true,
-      this.marketMinimum(market),
+      this.getMarketMinimum(market),
     );
   }
 
-  private handleL2OrderBookMessage(
+  private async handleL2OrderBookMessage(
     message: WebSocketResponseL2OrderBookLong,
-  ): void {
-    // accumulate L2 updates to be applied
-    const updatesToApply = this.l2OrderBookUpdates.get(message.market) || [];
-    updatesToApply.push(webSocketResponseToL2OrderBook(message));
-    this.l2OrderBookUpdates.set(message.market, updatesToApply);
+  ): Promise<boolean> {
+    const { market } = message;
+    const update = webSocketResponseToL2OrderBook(message);
 
-    // apply updates to the in-memory orderbook, or load it for the first time
-    this.applyOrderBookUpdates(message.market);
+    const book = this.l2OrderBooks.get(market);
+    if (!book) {
+      return false;
+    }
+
+    const beforeL1 = L2toL1OrderBook(book);
+    // an expected next update has arrived
+    if (book.sequence + 1 === update.sequence) {
+      updateL2Levels(book, update);
+    }
+    // the pool was added or removed (sequence does not increment)
+    else if (book.sequence === update.sequence) {
+      if (
+        (beforeL1.pool !== null && update.pool === null) ||
+        (beforeL1.pool === null && update.pool !== null)
+      ) {
+        book.pool = update.pool;
+      }
+    } else {
+      this.emit(
+        'error',
+        new Error(
+          `Unexpected l2 update sequence, current book is ${book.sequence} message was ${update.sequence}`,
+        ),
+      );
+      return false;
+    }
+    const afterL1 = L2toL1OrderBook(book);
+
+    this.l1OrderBooks.set(market, L2toL1OrderBook(book));
+    if (!L1Equal(beforeL1, afterL1)) {
+      this.emit('l1', market);
+    }
+    this.emit('l2', market);
+
+    return true;
   }
 
   private handleTokenPriceMessage(
@@ -321,6 +315,40 @@ export class OrderBookRealTimeClient extends EventEmitter {
       ORDER_BOOK_FIRST_LEVEL_MULTIPLIER_IN_PIPS,
       decimalToPip(exchange.takerTradeMinimum),
     );
+  }
+
+  private async synchronizeFromRestApi(): Promise<void> {
+    const sleep = (ms: number) => {
+      return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+      });
+    };
+    let reconnectAttempt = 0;
+
+    // Updates cannot be applied until successfully synchronized with the REST API, so keep trying
+    // with exponential backoff until success
+    while (true) {
+      const backoffSeconds = 2 ** reconnectAttempt;
+      reconnectAttempt += 1;
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        await Promise.all([
+          ...this.markets.map(async (market) => {
+            const l2 = await this.loadLevel2(market);
+            this.l2OrderBooks.set(market, l2);
+            this.emit('ready', market);
+          }),
+          this.loadExchangeFeeRates(),
+          this.loadTokenPrices(),
+        ]);
+
+        return;
+      } catch (error) {
+        this.emit('error', error);
+        // eslint-disable-next-line no-await-in-loop
+        await sleep(backoffSeconds * 1000);
+      }
+    }
   }
 
   private async loadLevel2(market: string): Promise<L2OrderBook> {
@@ -358,11 +386,22 @@ export class OrderBookRealTimeClient extends EventEmitter {
     }
   }
 
-  private marketMinimum(market: string): bigint | null {
+  private getMarketMinimum(market: string): bigint | null {
     const quoteSymbol = market.split('-')[1];
     const price = this.tokenPrices.get(quoteSymbol) || null;
     return price ? (this.takerMinimumInNativeAsset * oneInPips) / price : null;
   }
+
+  private resetInternalState(): void {
+    this.idexFeeRate = BigInt(0);
+    this.poolFeeRate = BigInt(0);
+    this.takerMinimumInNativeAsset = BigInt(0);
+    this.tokenPrices.clear();
+    this.l1OrderBooks.clear();
+    this.l2OrderBooks.clear();
+  }
+
+  /* Connection management */
 
   private setupInternalWebSocket(): void {
     if (!this.webSocketConnectionListenersConfigured) {
@@ -375,41 +414,40 @@ export class OrderBookRealTimeClient extends EventEmitter {
     }
   }
 
-  private resetInternalState(): void {
-    this.idexFeeRate = BigInt(0);
-    this.poolFeeRate = BigInt(0);
-    this.takerMinimumInNativeAsset = BigInt(0);
-    this.tokenPrices.clear();
-    this.l1OrderBooks.clear();
-    this.l2OrderBooks.clear();
-    this.l2OrderBookUpdates.clear();
-    this.marketIsLoading.clear();
-    this.marketsByAssetSymbol.clear();
-  }
-
-  private async webSocketHandleConnect() {
-    if (!this.webSocketResponseListenerConfigured) {
-      this.webSocketClient.onResponse(this.webSocketHandleResponse.bind(this));
-      this.webSocketResponseListenerConfigured = true;
-    }
+  private subscribe(): void {
     this.webSocketClient.subscribe([
       { name: 'l2orderbook', markets: this.markets },
     ]);
     this.webSocketClient.subscribe([
       { name: 'tokenprice', markets: this.markets },
     ]);
-    await Promise.all(
-      this.markets.map(async (market) => {
-        const l2 = await this.loadLevel2(market);
-        this.l2OrderBooks.set(market, l2);
-        this.emit('ready', market);
-      }),
-    );
+  }
+
+  private unsubscribe(): void {
+    this.webSocketClient.unsubscribe(['l2orderbook', 'tokenprice']);
+  }
+
+  /* Event handlers */
+
+  private async webSocketHandleConnect() {
+    if (!this.webSocketResponseListenerConfigured) {
+      this.webSocketClient.onResponse(this.webSocketHandleResponse.bind(this));
+      this.webSocketResponseListenerConfigured = true;
+    }
+
+    // Load from REST API to synchronize state
+    await this.synchronizeFromRestApi();
+
+    // Then subscribe to updates to loaded state
+    this.subscribe();
+
     this.emit('connected');
   }
 
   private webSocketHandleDisconnect() {
-    this.stop();
+    // Assume messages will be lost during disconnection and clear state. State will be re-synchronized again on reconnect
+    this.resetInternalState();
+
     this.emit('disconnected');
   }
 
@@ -417,10 +455,21 @@ export class OrderBookRealTimeClient extends EventEmitter {
     this.emit('error', error);
   }
 
-  private webSocketHandleResponse(response: WebSocketResponse): void {
+  private async webSocketHandleResponse(
+    response: WebSocketResponse,
+  ): Promise<void> {
     if (response.type === 'l2orderbook') {
-      return this.handleL2OrderBookMessage(response.data);
+      const isValidUpdate = this.handleL2OrderBookMessage(response.data);
+
+      // If an invalid update arrives, reset all data and synchronize anew
+      if (!isValidUpdate) {
+        this.unsubscribe();
+        this.resetInternalState();
+        await this.synchronizeFromRestApi();
+        this.subscribe();
+      }
     }
+
     if (response.type === 'tokenprice') {
       return this.handleTokenPriceMessage(response.data);
     }

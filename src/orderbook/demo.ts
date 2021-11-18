@@ -1,5 +1,4 @@
-import { OrderBookRealTimeClient } from './OrderBookRealTimeClient';
-import { isAxiosError } from '../utils';
+import { OrderBookRealTimeClient } from '../client/orderBook/realTime';
 
 const chain = 'matic';
 const isSandbox = true;
@@ -11,31 +10,14 @@ const client = new OrderBookRealTimeClient({
   sandbox: isSandbox,
 });
 
-let RECONNECT_TIMEOUT = 1000;
-
-async function reconnect() {
-  if (RECONNECT_TIMEOUT > 60000) {
-    throw new Error('Gave up trying to connect to orderbook');
-  }
-  setTimeout(() => {
-    console.log(`ORDER BOOK RECONNECTING IN ${RECONNECT_TIMEOUT}... ======>`);
-    start();
-  }, RECONNECT_TIMEOUT);
-  RECONNECT_TIMEOUT *= 2;
-}
-
 async function start() {
   try {
     await client.start([market]);
   } catch (e) {
-    if (isAxiosError(e)) {
-      console.log(`client.start axios error (REST API) ${e.name}`, e.message);
-      reconnect();
-      return;
-    }
     if (e instanceof Error) {
       console.log(`client.start ${e.name}`, e.message);
-      reconnect();
+    } else {
+      throw e;
     }
   }
 }
@@ -45,18 +27,14 @@ const demo = async function demo(): Promise<void> {
 
   client.on('connected', () => {
     console.log('ORDER BOOK CONNECTED ==========>');
-    RECONNECT_TIMEOUT = 1000;
   });
 
   client.on('disconnected', () => {
     console.log('ORDER BOOK DISCONNECTED ==========>');
-    reconnect();
   });
 
   client.on('error', (e: Error) => {
     console.log(e);
-    client.stop();
-    reconnect();
   });
 
   client.on('ready', (readyMarket: string) => {
