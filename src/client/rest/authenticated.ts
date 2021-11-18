@@ -45,8 +45,8 @@ import { isNode, createHmacRestRequestSignatureHeader } from '../../utils';
  * Authenticated API client configuration options.
  *
  * @typedef {Object} RestAuthenticatedClientOptions
- * @property {string} apiKey - Used to authenticate user
- * @property {string} apiSecret - Used to compute HMAC signature
+ * @property {string} [apiKey] - Used to authenticate user when automatically refreshing WS token
+ * @property {string} [apiSecret] - Used to compute HMAC signature when automatically refreshing WS token
  * @property {MultiverseChain} [multiverseChain=matic] - Which multiverse chain the client will point to
  * @property {boolean} [sandbox] - If true, client will point to API sandbox
  * @property {string} [walletPrivateKey] - If provided, used to create ECDSA signatures

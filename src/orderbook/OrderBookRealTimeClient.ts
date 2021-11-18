@@ -193,8 +193,8 @@ export class OrderBookRealTimeClient extends EventEmitter {
    * Load the current state of the level 2 orderbook for this market.
    *
    * @param {string} market
-   * @param {string} [limit] - total number of price levels (bids + asks) to return, between 2 and 1000
-   * @return {RestResponseOrderBookLevel2}
+   * @param {number} [limit=100] - Total number of price levels (bids + asks) to return, between 2 and 1000
+   * @returns {Promise<RestResponseOrderBookLevel2>}
    */
   public async getOrderBookL2(
     market: string,

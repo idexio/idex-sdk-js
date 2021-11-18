@@ -123,8 +123,10 @@
     *   [Examples](#examples-10)
 *   [OrderBookFeeRates](#orderbookfeerates)
     *   [Properties](#properties-76)
-*   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
+*   [WebSocketClientAuthOptions](#websocketclientauthoptions)
     *   [Properties](#properties-77)
+*   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
+    *   [Properties](#properties-78)
 *   [updateL2Levels](#updatel2levels)
     *   [Parameters](#parameters-52)
 *   [calculateGrossBaseValueOfBuyQuantities](#calculategrossbasevalueofbuyquantities)
@@ -132,25 +134,25 @@
 *   [OrderBookLevelType](#orderbookleveltype)
 *   [privateKeySigner](#privatekeysigner)
 *   [OrderBookLevelL1](#orderbooklevell1)
-    *   [Properties](#properties-78)
+    *   [Properties](#properties-79)
 *   [calculateGrossQuoteQuantity](#calculategrossquotequantity)
     *   [Parameters](#parameters-54)
 *   [updateL2Side](#updatel2side)
     *   [Parameters](#parameters-55)
 *   [RestRequestFindLiquidityAddition](#restrequestfindliquidityaddition)
-    *   [Properties](#properties-79)
-*   [OrderBookLevelL2](#orderbooklevell2)
     *   [Properties](#properties-80)
-*   [PoolReserveQuantities](#poolreservequantities)
+*   [OrderBookLevelL2](#orderbooklevell2)
     *   [Properties](#properties-81)
-*   [RestRequestFindLiquidityRemoval](#restrequestfindliquidityremoval)
+*   [PoolReserveQuantities](#poolreservequantities)
     *   [Properties](#properties-82)
-*   [PriceLevelQuantities](#pricelevelquantities)
+*   [RestRequestFindLiquidityRemoval](#restrequestfindliquidityremoval)
     *   [Properties](#properties-83)
+*   [PriceLevelQuantities](#pricelevelquantities)
+    *   [Properties](#properties-84)
 *   [calculateGrossQuoteValueOfSellQuantities](#calculategrossquotevalueofsellquantities)
     *   [Parameters](#parameters-56)
 *   [RestRequestFindLiquidityChanges](#restrequestfindliquiditychanges)
-    *   [Properties](#properties-84)
+    *   [Properties](#properties-85)
 *   [MarketType](#markettype)
     *   [orderBook](#orderbook)
     *   [hybrid](#hybrid)
@@ -172,28 +174,28 @@
 *   [MultiverseChain](#multiversechain)
 *   [WebSocketRequestSubscription](#websocketrequestsubscription)
 *   [WebSocketResponseLiquidityPoolShort](#websocketresponseliquiditypoolshort)
-    *   [Properties](#properties-85)
-*   [RestResponseLiquidityPool](#restresponseliquiditypool)
     *   [Properties](#properties-86)
-*   [WebSocketResponseLiquidityPoolLong](#websocketresponseliquiditypoollong)
+*   [RestResponseLiquidityPool](#restresponseliquiditypool)
     *   [Properties](#properties-87)
-*   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
+*   [WebSocketResponseLiquidityPoolLong](#websocketresponseliquiditypoollong)
     *   [Properties](#properties-88)
+*   [WebSocketRequestSubscriptionsByName](#websocketrequestsubscriptionsbyname)
+    *   [Properties](#properties-89)
 *   [calculateSyntheticPriceLevels](#calculatesyntheticpricelevels)
     *   [Parameters](#parameters-59)
 *   [RestResponseLiquidityAddition](#restresponseliquidityaddition)
-    *   [Properties](#properties-89)
-*   [RestResponseLiquidityPoolReserves](#restresponseliquiditypoolreserves)
     *   [Properties](#properties-90)
+*   [RestResponseLiquidityPoolReserves](#restresponseliquiditypoolreserves)
+    *   [Properties](#properties-91)
 *   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
 *   [RestResponseLiquidityRemoval](#restresponseliquidityremoval)
-    *   [Properties](#properties-91)
+    *   [Properties](#properties-92)
 *   [recalculateHybridLevelAmounts](#recalculatehybridlevelamounts)
     *   [Parameters](#parameters-60)
 *   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
-    *   [Properties](#properties-92)
-*   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
     *   [Properties](#properties-93)
+*   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
+    *   [Properties](#properties-94)
 *   [WebSocketRequest](#websocketrequest)
 *   [WebSocketRequest](#websocketrequest-1)
 *   [TradeType](#tradetype)
@@ -205,9 +207,9 @@
 *   [quantitiesAvailableFromPoolAtAskPrice](#quantitiesavailablefrompoolataskprice)
     *   [Parameters](#parameters-62)
 *   [WebSocketResponseTokenPriceShort](#websocketresponsetokenpriceshort)
-    *   [Properties](#properties-94)
-*   [WebSocketResponseTokenPriceLong](#websocketresponsetokenpricelong)
     *   [Properties](#properties-95)
+*   [WebSocketResponseTokenPriceLong](#websocketresponsetokenpricelong)
+    *   [Properties](#properties-96)
 *   [WebSocketResponseSubscriptionMessageShort](#websocketresponsesubscriptionmessageshort)
 *   [WebSocketResponseSubscriptionMessageLong](#websocketresponsesubscriptionmessagelong)
 *   [quantitiesAvailableFromPoolAtBidPrice](#quantitiesavailablefrompoolatbidprice)
@@ -813,8 +815,8 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ##### Properties
 
-*   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to authenticate user
-*   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to compute HMAC signature
+*   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Used to authenticate user when automatically refreshing WS token
+*   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Used to compute HMAC signature when automatically refreshing WS token
 *   `multiverseChain` **[MultiverseChain](#multiversechain)?** Which multiverse chain the client will point to
 *   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** If true, client will point to API sandbox
 *   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, used to create ECDSA signatures
@@ -899,14 +901,11 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ##### Properties
 
-*   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** *   If true, client will point to API sandbox
-*   `websocketAuthTokenFetch` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** Authenticated REST API client fetch token call (`/wsToken`).
-    When provided, the SDK WebSocket client automatically handles WebSocket authentication token generation and refresh.
-    Omit when using only public WebSocket subscriptions.
-    Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`.
-    See [API specification](https://api-docs-v3.idex.io/#websocket-authentication-endpoints)
-*   `shouldReconnectAutomatically` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** If true, automatically reconnects when connection is closed by the server or network errors
+*   `authOptions` **[WebSocketClientAuthOptions](#websocketclientauthoptions)?** If provided, used to automatically refresh WS token for authenticated subscriptions
+*   `multiverseChain` **[MultiverseChain](#multiversechain)?** Which multiverse chain the client will point to
+*   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** If true, client will point to API sandbox
 *   `pathSubscription` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Path subscriptions are a quick and easy way to start receiving push updates. Eg. {market}@{subscription}\_{option}
+*   `shouldReconnectAutomatically` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** If true, automatically reconnects when connection is closed by the server or network errors
 *   `connectTimeout` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Timeout (in milliseconds) before failing when trying to connect to the WebSocket. Defaults to 5000.
 
 ### OrderBookRealTimeClient
@@ -991,9 +990,9 @@ Load the current state of the level 2 orderbook for this market.
 ###### Parameters
 
 *   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `limit` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** total number of price levels (bids + asks) to return, between 2 and 1000 (optional, default `100`)
+*   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Total number of price levels (bids + asks) to return, between 2 and 1000 (optional, default `100`)
 
-Returns **[RestResponseOrderBookLevel2](#restresponseorderbooklevel2)** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[RestResponseOrderBookLevel2](#restresponseorderbooklevel2)>** 
 
 #### OrderBookRealTimeClientOptions
 
@@ -2571,6 +2570,17 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `idexFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 *   `poolFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 *   `takerMinimumInNativeAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+## WebSocketClientAuthOptions
+
+WebSocket API client options
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+*   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to authenticate user when automatically refreshing WS token
+*   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to compute HMAC signature when automatically refreshing WS token
 
 ## RestRequestRemoveLiquidity
 

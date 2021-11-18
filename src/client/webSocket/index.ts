@@ -1,5 +1,10 @@
+import { v1 as uuidv1 } from 'uuid';
 import WebSocket, { CONNECTING, OPEN } from 'isomorphic-ws';
 
+import * as constants from '../../constants';
+import { RestAuthenticatedClient } from '../rest/authenticated';
+import { isNode } from '../../utils';
+import { isWebSocketAuthenticatedSubscription } from '../../types';
 import type {
   AuthTokenWebSocketRequestAuthenticatedSubscription,
   AuthTokenWebSocketRequestSubscription,
@@ -11,9 +16,6 @@ import type {
   WebSocketRequestUnsubscribeSubscription,
   WebSocketResponse,
 } from '../../types';
-import { isWebSocketAuthenticatedSubscription } from '../../types';
-import * as constants from '../../constants';
-import { isNode } from '../../utils';
 
 import { transformWebsocketShortResponseMessage } from './transform';
 import { removeWalletFromSdkSubscription } from './utils';
@@ -42,25 +44,35 @@ const PING_TIMEOUT = 30000;
 /**
  * WebSocket API client options
  *
+ * @typedef {Object} WebSocketClientAuthOptions
+ * @property {string} apiKey - Used to authenticate user when automatically refreshing WS token
+ * @property {string} apiSecret - Used to compute HMAC signature when automatically refreshing WS token
+ */
+export interface WebSocketClientAuthOptions {
+  apiKey: string;
+  apiSecret: string;
+}
+
+/**
+ * WebSocket API client options
+ *
  * @typedef {Object} WebSocketClientOptions
- * @property {boolean} [sandbox] -  - If true, client will point to API sandbox
- * @property {function} [websocketAuthTokenFetch] - Authenticated REST API client fetch token call (`/wsToken`).
- *  When provided, the SDK WebSocket client automatically handles WebSocket authentication token generation and refresh.
- *  Omit when using only public WebSocket subscriptions.
- *  Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`.
- *  See [API specification](https://api-docs-v3.idex.io/#websocket-authentication-endpoints)
- * @property {boolean} [shouldReconnectAutomatically] - If true, automatically reconnects when connection is closed by the server or network errors
+ * @property {WebSocketClientAuthOptions} [authOptions]- If provided, used to automatically refresh WS token for authenticated subscriptions
+ * @property {MultiverseChain} [multiverseChain=matic] - Which multiverse chain the client will point to
+ * @property {boolean} [sandbox] - If true, client will point to API sandbox
  * @property {string} [pathSubscription] - Path subscriptions are a quick and easy way to start receiving push updates. Eg. {market}@{subscription}_{option}
+ * @property {boolean} [shouldReconnectAutomatically] - If true, automatically reconnects when connection is closed by the server or network errors
  * @property {number} [connectTimeout] - Timeout (in milliseconds) before failing when trying to connect to the WebSocket. Defaults to 5000.
  */
 export interface WebSocketClientOptions {
+  authOptions?: WebSocketClientAuthOptions;
+  multiverseChain?: MultiverseChain;
   sandbox?: boolean;
-  baseURL?: string;
   pathSubscription?: string;
-  websocketAuthTokenFetch?: (wallet: string) => Promise<string>;
   shouldReconnectAutomatically?: boolean;
   connectTimeout?: number;
-  multiverseChain?: MultiverseChain;
+  baseURL?: string;
+  websocketAuthTokenFetch?: (wallet: string) => Promise<string>;
 }
 
 /**
@@ -112,17 +124,12 @@ export class WebSocketClient<
   };
 
   public readonly config: Readonly<{
-    multiverseChain: C['multiverseChain'] extends MultiverseChain
-      ? C['multiverseChain']
-      : 'matic';
     baseURL: string;
-    sandbox: boolean;
+    pathSubscription: string | null;
+    shouldReconnectAutomatically: boolean;
     connectTimeout: number;
-    pathSubscription?: string | null;
-    websocketAuthTokenFetch?: WebSocketClientOptions['websocketAuthTokenFetch'];
+    websocketAuthTokenFetch: ((wallet: string) => Promise<string>) | null;
   }>;
-
-  public shouldReconnectAutomatically = false;
 
   private ws: null | WebSocket = null;
 
@@ -143,21 +150,35 @@ export class WebSocketClient<
       );
     }
 
+    if (options.authOptions && options.websocketAuthTokenFetch) {
+      throw new Error(
+        'Invalid configuration, cannot specify both authOptions and websocketAuthTokenFetch',
+      );
+    }
+
+    let { websocketAuthTokenFetch } = options;
+    if (!websocketAuthTokenFetch && options.authOptions) {
+      const { apiKey, apiSecret } = options.authOptions;
+      websocketAuthTokenFetch = async (walletAddress: string) =>
+        new RestAuthenticatedClient({
+          apiKey,
+          apiSecret,
+          baseURL,
+          multiverseChain,
+          sandbox,
+        }).getWsToken(uuidv1(), walletAddress);
+    }
+
     this.config = Object.freeze({
-      sandbox,
       baseURL,
-      multiverseChain: multiverseChain as this['config']['multiverseChain'],
       connectTimeout:
         typeof options.connectTimeout === 'number'
           ? options.connectTimeout
           : 5000,
       pathSubscription: options.pathSubscription ?? null,
-      websocketAuthTokenFetch: options.websocketAuthTokenFetch,
+      shouldReconnectAutomatically: !!options.pathSubscription,
+      websocketAuthTokenFetch: options.websocketAuthTokenFetch ?? null,
     } as const);
-
-    if (options.shouldReconnectAutomatically) {
-      this.shouldReconnectAutomatically = true;
-    }
   }
 
   /* Connection management */
@@ -429,7 +450,7 @@ export class WebSocketClient<
 
       return this.ws;
     } catch (err) {
-      if (this.shouldReconnectAutomatically) {
+      if (this.config.shouldReconnectAutomatically) {
         this.reconnect();
         throw new Error(
           `Failed to connect: "${err.message}" - a reconnect attempt will be scheduled automatically`,
@@ -537,7 +558,10 @@ export class WebSocketClient<
       listener(event.code, event.reason),
     );
 
-    if (this.shouldReconnectAutomatically && !this.state.doNotReconnect) {
+    if (
+      this.config.shouldReconnectAutomatically &&
+      !this.state.doNotReconnect
+    ) {
       this.reconnect();
     }
   }
