@@ -36,6 +36,7 @@ import type {
   WebSocketResponseL2OrderBookLong,
   WebSocketResponseTokenPriceLong,
 } from '../types';
+import { deriveBaseURL } from '../client/utils';
 
 /**
  * Orderbook API client
@@ -112,14 +113,30 @@ export class OrderBookRealTimeClient extends EventEmitter {
 
   constructor(options: OrderBookRealTimeClientOptions) {
     super();
+
+    const { multiverseChain = 'matic', sandbox = false } = options;
+
+    const restApiUrl = deriveBaseURL({
+      sandbox,
+      multiverseChain,
+      overrideBaseURL: options.baseURL,
+      api: 'rest',
+    });
+    const webSocketApiUrl = deriveBaseURL({
+      sandbox,
+      multiverseChain,
+      overrideBaseURL: options.baseURL,
+      api: 'rest',
+    });
+
     this.restPublicClient = new RestPublicClient({
-      ...options,
-      baseURL: options.restApiUrl,
+      apiKey: options.apiKey,
+      baseURL: restApiUrl,
     });
     this.webSocketClient = new WebSocketClient({
-      ...options,
+      baseURL: webSocketApiUrl,
       shouldReconnectAutomatically: true,
-      baseURL: options.webSocketApiUrl,
+      connectTimeout: options.connectTimeout,
     });
   }
 

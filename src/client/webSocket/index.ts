@@ -1,10 +1,12 @@
 import { v1 as uuidv1 } from 'uuid';
 import WebSocket, { CONNECTING, OPEN } from 'isomorphic-ws';
 
-import * as constants from '../../constants';
-import { RestAuthenticatedClient } from '../rest/authenticated';
+import { deriveBaseURL } from '../utils';
 import { isNode } from '../../utils';
 import { isWebSocketAuthenticatedSubscription } from '../../types';
+import { removeWalletFromSdkSubscription } from './utils';
+import { RestAuthenticatedClient } from '../rest/authenticated';
+import { transformWebsocketShortResponseMessage } from './transform';
 import type {
   AuthTokenWebSocketRequestAuthenticatedSubscription,
   AuthTokenWebSocketRequestSubscription,
@@ -16,9 +18,6 @@ import type {
   WebSocketRequestUnsubscribeSubscription,
   WebSocketResponse,
 } from '../../types';
-
-import { transformWebsocketShortResponseMessage } from './transform';
-import { removeWalletFromSdkSubscription } from './utils';
 
 export { transformWebsocketShortResponseMessage };
 
@@ -44,33 +43,27 @@ const PING_TIMEOUT = 30000;
 /**
  * WebSocket API client options
  *
- * @typedef {Object} WebSocketClientAuthOptions
- * @property {string} apiKey - Used to authenticate user when automatically refreshing WS token
- * @property {string} apiSecret - Used to compute HMAC signature when automatically refreshing WS token
- */
-export interface WebSocketClientAuthOptions {
-  apiKey: string;
-  apiSecret: string;
-}
-
-/**
- * WebSocket API client options
- *
  * @typedef {Object} WebSocketClientOptions
- * @property {WebSocketClientAuthOptions} [authOptions]- If provided, used to automatically refresh WS token for authenticated subscriptions
- * @property {MultiverseChain} [multiverseChain=matic] - Which multiverse chain the client will point to
+ * @property {string} [apiKey] - Used to authenticate user when automatically refreshing WS token
+ * @property {string} [apiSecret] - Used to compute HMAC signature when automatically refreshing WS
+ * token
+ * @property {string} [pathSubscription] - Path subscriptions are a quick and easy way to start
+ * receiving push updates. Eg. {market}@{subscription}_{option}
+ * @property {boolean} [shouldReconnectAutomatically] - If true, automatically reconnects when
+ * connection is closed by the server or network errors
+ * @property {number} [connectTimeout] - Timeout (in milliseconds) before failing when trying to
+ * connect to the WebSocket. Defaults to 5000.
  * @property {boolean} [sandbox] - If true, client will point to API sandbox
- * @property {string} [pathSubscription] - Path subscriptions are a quick and easy way to start receiving push updates. Eg. {market}@{subscription}_{option}
- * @property {boolean} [shouldReconnectAutomatically] - If true, automatically reconnects when connection is closed by the server or network errors
- * @property {number} [connectTimeout] - Timeout (in milliseconds) before failing when trying to connect to the WebSocket. Defaults to 5000.
+ * @property {MultiverseChain} [multiverseChain=matic] - Which multiverse chain the client will point to
  */
 export interface WebSocketClientOptions {
-  authOptions?: WebSocketClientAuthOptions;
-  multiverseChain?: MultiverseChain;
-  sandbox?: boolean;
+  apiKey?: string;
+  apiSecret?: string;
   pathSubscription?: string;
   shouldReconnectAutomatically?: boolean;
   connectTimeout?: number;
+  sandbox?: boolean;
+  multiverseChain?: MultiverseChain;
   baseURL?: string;
   websocketAuthTokenFetch?: (wallet: string) => Promise<string>;
 }
@@ -78,13 +71,18 @@ export interface WebSocketClientOptions {
 /**
  * WebSocket API client
  *
+ * When apiKey and apiSecret are provided, the client will automatically handle WebSocket
+ * authentication token generation and refresh. Omit when using only public WebSocket subscriptions.
+ *
  * @example
  * import * as idex from '@idexio/idex-sdk';
  *
  * const webSocketClient = new idex.WebSocketClient({
- *  sandbox: true,
- *  shouldReconnectAutomatically: true,
- *  websocketAuthTokenFetch: authenticatedClient.getWsToken(uuidv1(), wallet),
+ *   // Edit the values before for your environment
+ *   apiKey: '1f7c4f52-4af7-4e1b-aa94-94fac8d931aa',
+ *   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
+ *   shouldReconnectAutomatically: true,
+ *   sandbox: true,
  * });
  *
  * await webSocketClient.connect();
@@ -136,29 +134,34 @@ export class WebSocketClient<
   constructor(options: WebSocketClientOptions) {
     const { multiverseChain = 'matic', sandbox = false } = options;
 
-    const baseURL =
-      options.baseURL ??
-      constants.URLS[options.sandbox ? 'sandbox' : 'production']?.[
-        multiverseChain
-      ]?.websocket;
+    const baseURL = deriveBaseURL({
+      sandbox,
+      multiverseChain,
+      overrideBaseURL: options.baseURL,
+      api: 'websocket',
+    });
 
-    if (!baseURL) {
+    if (
+      (options.apiKey || options.apiSecret) &&
+      options.websocketAuthTokenFetch
+    ) {
       throw new Error(
-        `Invalid configuration, baseURL could not be derived (sandbox? ${String(
-          sandbox,
-        )}) (chain: ${multiverseChain})`,
+        'Invalid configuration, cannot specify both API credentials and websocketAuthTokenFetch',
       );
     }
 
-    if (options.authOptions && options.websocketAuthTokenFetch) {
+    if (
+      (options.apiKey && !options.apiSecret) ||
+      (!options.apiKey && options.apiSecret)
+    ) {
       throw new Error(
-        'Invalid configuration, cannot specify both authOptions and websocketAuthTokenFetch',
+        'Invalid configuration, must specify both apiKey and apiSecret or neither',
       );
     }
 
     let { websocketAuthTokenFetch } = options;
-    if (!websocketAuthTokenFetch && options.authOptions) {
-      const { apiKey, apiSecret } = options.authOptions;
+    if (!websocketAuthTokenFetch && options.apiKey && options.apiSecret) {
+      const { apiKey, apiSecret } = options;
       websocketAuthTokenFetch = async (walletAddress: string) =>
         new RestAuthenticatedClient({
           apiKey,

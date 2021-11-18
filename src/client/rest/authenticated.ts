@@ -39,25 +39,26 @@ import type {
 
 import * as constants from '../../constants';
 import * as signatures from '../../signatures';
+import { deriveBaseURL } from '../utils';
 import { isNode, createHmacRestRequestSignatureHeader } from '../../utils';
 
 /**
  * Authenticated API client configuration options.
  *
  * @typedef {Object} RestAuthenticatedClientOptions
- * @property {string} [apiKey] - Used to authenticate user when automatically refreshing WS token
- * @property {string} [apiSecret] - Used to compute HMAC signature when automatically refreshing WS token
- * @property {MultiverseChain} [multiverseChain=matic] - Which multiverse chain the client will point to
- * @property {boolean} [sandbox] - If true, client will point to API sandbox
+ * @property {string} apiKey - Used to authenticate user
+ * @property {string} apiSecret - Used to compute HMAC signature
  * @property {string} [walletPrivateKey] - If provided, used to create ECDSA signatures
+ * @property {boolean} [sandbox] - If true, client will point to API sandbox
+ * @property {MultiverseChain} [multiverseChain=matic] - Which multiverse chain the client will point to
  */
 export interface RestAuthenticatedClientOptions {
   apiKey: string;
   apiSecret: string;
-  baseURL?: string;
-  multiverseChain?: MultiverseChain;
-  sandbox?: boolean;
   walletPrivateKey?: string;
+  sandbox?: boolean;
+  multiverseChain?: MultiverseChain;
+  baseURL?: string;
 }
 
 /**
@@ -68,12 +69,12 @@ export interface RestAuthenticatedClientOptions {
  * import { RestAuthenticatedClient } from '@idexio/idex-sdk';
  *
  * const authenticatedClient = new RestAuthenticatedClient({
- *   sandbox: true,
  *   // Edit the values before for your environment
  *   apiKey: '1f7c4f52-4af7-4e1b-aa94-94fac8d931aa',
  *   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
  *   // Optionally prove a wallet private key to automatically sign requests that need an ECDSA signature
  *   walletPrivateKey: '0x3141592653589793238462643383279502884197169399375105820974944592'
+ *   sandbox: true,
  * });
  *
  * @param {RestAuthenticatedClientOptions} options
@@ -100,11 +101,12 @@ export class RestAuthenticatedClient<
   public constructor(options: C) {
     const { multiverseChain = 'matic', sandbox = false } = options;
 
-    const baseURL =
-      options.baseURL ??
-      constants.URLS[options.sandbox ? 'sandbox' : 'production']?.[
-        multiverseChain
-      ]?.rest;
+    const baseURL = deriveBaseURL({
+      sandbox,
+      multiverseChain,
+      overrideBaseURL: options.baseURL,
+      api: 'rest',
+    });
 
     if (!baseURL) {
       throw new Error(
