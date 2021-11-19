@@ -263,14 +263,9 @@ export class OrderBookRealTimeClient extends EventEmitter {
     if (book.sequence + 1 === update.sequence) {
       updateL2Levels(book, update);
     }
-    // the pool was added or removed (sequence does not increment)
+    // the pool was updated (sequence does not increment)
     else if (book.sequence === update.sequence) {
-      if (
-        (beforeL1.pool !== null && update.pool === null) ||
-        (beforeL1.pool === null && update.pool !== null)
-      ) {
-        book.pool = update.pool;
-      }
+      book.pool = update.pool;
     } else {
       this.emit(
         'error',
