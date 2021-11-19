@@ -20,7 +20,6 @@ import type {
   RestResponseOrderBookLevel1,
   RestResponseOrderBookLevel2,
   WebSocketResponse,
-  WebSocketResponseL2OrderBookLong,
   WebSocketResponseTokenPriceLong,
 } from '../../types';
 import {
@@ -89,6 +88,8 @@ export class OrderBookRealTimeClient extends EventEmitter {
   private readonly l1OrderBooks: Map<string, L1OrderBook> = new Map();
 
   private readonly l2OrderBooks: Map<string, L2OrderBook> = new Map();
+
+  private readonly l2OrderBookUpdates = new Map<string, L2OrderBook[]>();
 
   private markets: string[] = [];
 
@@ -247,33 +248,49 @@ export class OrderBookRealTimeClient extends EventEmitter {
     );
   }
 
-  private async handleL2OrderBookMessage(
-    message: WebSocketResponseL2OrderBookLong,
-  ): Promise<boolean> {
-    const { market } = message;
-    const update = webSocketResponseToL2OrderBook(message);
-
+  private async applyOrderBookUpdates(market: string): Promise<void> {
+    const updates = this.l2OrderBookUpdates.get(market);
+    if (!updates) {
+      return;
+    }
     const book = this.l2OrderBooks.get(market);
+    // If this market has not yet been synchronized from the REST API then halt processing -
+    // messages for the market will queue and proccess after it runs
     if (!book) {
-      return false;
+      return;
     }
 
     const beforeL1 = L2toL1OrderBook(book);
-    // an expected next update has arrived
-    if (book.sequence + 1 === update.sequence) {
-      updateL2Levels(book, update);
-    }
-    // the pool was updated (sequence does not increment)
-    else if (book.sequence === update.sequence) {
-      book.pool = update.pool;
-    } else {
-      this.emit(
-        'error',
-        new Error(
-          `Unexpected l2 update sequence, current book is ${book.sequence} message was ${update.sequence}`,
-        ),
-      );
-      return false;
+    for (const update of updates) {
+      // outdated sequence, ignore
+      if (book.sequence > update.sequence) {
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+      // an expected next update has arrived
+      else if (book.sequence + 1 === update.sequence) {
+        updateL2Levels(book, update);
+      }
+      // the pool was updated (sequence does not increment)
+      else if (book.sequence === update.sequence) {
+        book.pool = update.pool;
+      } else {
+        // If an invalid update arrives, reset all data and synchronize anew
+        this.emit(
+          'error',
+          new Error(
+            `Missing l2 update sequence, current book is ${book.sequence} message was ${update.sequence}`,
+          ),
+        );
+        this.unsubscribe();
+        this.resetInternalState();
+        this.subscribe();
+
+        // eslint-disable-next-line no-await-in-loop
+        await this.synchronizeFromRestApi();
+
+        return;
+      }
     }
     const afterL1 = L2toL1OrderBook(book);
 
@@ -283,7 +300,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
     }
     this.emit('l2', market);
 
-    return true;
+    this.l2OrderBookUpdates.delete(market);
   }
 
   private handleTokenPriceMessage(
@@ -394,6 +411,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
     this.tokenPrices.clear();
     this.l1OrderBooks.clear();
     this.l2OrderBooks.clear();
+    this.l2OrderBookUpdates.clear();
   }
 
   /* Connection management */
@@ -430,11 +448,9 @@ export class OrderBookRealTimeClient extends EventEmitter {
       this.webSocketResponseListenerConfigured = true;
     }
 
-    // Load from REST API to synchronize state
-    await this.synchronizeFromRestApi();
-
-    // Then subscribe to updates to loaded state
     this.subscribe();
+
+    await this.synchronizeFromRestApi();
 
     this.emit('connected');
   }
@@ -454,15 +470,13 @@ export class OrderBookRealTimeClient extends EventEmitter {
     response: WebSocketResponse,
   ): Promise<void> {
     if (response.type === 'l2orderbook') {
-      const isValidUpdate = this.handleL2OrderBookMessage(response.data);
+      // accumulate L2 updates to be applied
+      const updatesToApply =
+        this.l2OrderBookUpdates.get(response.data.market) || [];
+      updatesToApply.push(webSocketResponseToL2OrderBook(response.data));
+      this.l2OrderBookUpdates.set(response.data.market, updatesToApply);
 
-      // If an invalid update arrives, reset all data and synchronize anew
-      if (!isValidUpdate) {
-        this.unsubscribe();
-        this.resetInternalState();
-        await this.synchronizeFromRestApi();
-        this.subscribe();
-      }
+      await this.applyOrderBookUpdates(response.data.market);
     }
 
     if (response.type === 'tokenprice') {

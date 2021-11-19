@@ -179,7 +179,7 @@ export class WebSocketClient<
           ? options.connectTimeout
           : 5000,
       pathSubscription: options.pathSubscription ?? null,
-      shouldReconnectAutomatically: !!options.pathSubscription,
+      shouldReconnectAutomatically: !!options.shouldReconnectAutomatically,
       websocketAuthTokenFetch: options.websocketAuthTokenFetch ?? null,
     } as const);
   }
