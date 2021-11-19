@@ -1,5 +1,4 @@
-import type { RestPublicClientOptions } from '../client/rest';
-import type { WebSocketClientOptions } from '../client/webSocket';
+import type { MultiverseChain } from './enums';
 
 /**
  * @typedef {Object} BestAvailablePriceLevels
@@ -97,28 +96,5 @@ export type PoolReserveQuantities = {
  * @property {bigint} grossQuote
  */
 export type PriceLevelQuantities = { grossBase: bigint; grossQuote: bigint };
-
-/**
- * Orderbook Client Options
- *
- * @typedef {Object} OrderBookRealTimeClientOptions
- * @property {boolean} [sandbox]
- * @property {string} [restApiUrl] - Override the API url for REST requests
- * @property {string} [webSocketApiUrl] - Override the API url for REST requests
- * @property {string} [apiKey] - Increases rate limits if provided
- * @property {MultiverseChain} [multiverseChain]
- * @property {number} [connectTimeout] - Connection timeout for websocket (default 5000)
- */
-export type OrderBookRealTimeClientOptions = Omit<
-  Omit<
-    RestPublicClientOptions &
-      WebSocketClientOptions & {
-        restApiUrl?: string;
-        webSocketApiUrl?: string;
-      },
-    'baseURL'
-  >,
-  'shouldReconnectAutomatically'
->;
 
 export type SyntheticL2OrderBook = Omit<L2OrderBook, 'sequence'>;
