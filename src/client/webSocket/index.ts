@@ -47,7 +47,6 @@ const PING_TIMEOUT = 30000;
  * @property {string} [apiKey] - Used to authenticate user when automatically refreshing WS token
  * @property {string} [apiSecret] - Used to compute HMAC signature when automatically refreshing WS
  * token
- * @property {string} [pathSubscription] - Path subscriptions are a quick and easy way to start
  * receiving push updates. Eg. {market}@{subscription}_{option}
  * @property {boolean} [shouldReconnectAutomatically] - If true, automatically reconnects when
  * connection is closed by the server or network errors
@@ -59,7 +58,6 @@ const PING_TIMEOUT = 30000;
 export interface WebSocketClientOptions {
   apiKey?: string;
   apiSecret?: string;
-  pathSubscription?: string;
   shouldReconnectAutomatically?: boolean;
   connectTimeout?: number;
   sandbox?: boolean;
@@ -123,7 +121,6 @@ export class WebSocketClient<
 
   public readonly config: Readonly<{
     baseURL: string;
-    pathSubscription: string | null;
     shouldReconnectAutomatically: boolean;
     connectTimeout: number;
     websocketAuthTokenFetch: ((wallet: string) => Promise<string>) | null;
@@ -178,7 +175,6 @@ export class WebSocketClient<
         typeof options.connectTimeout === 'number'
           ? options.connectTimeout
           : 5000,
-      pathSubscription: options.pathSubscription ?? null,
       shouldReconnectAutomatically: !!options.shouldReconnectAutomatically,
       websocketAuthTokenFetch: options.websocketAuthTokenFetch ?? null,
     } as const);
@@ -429,9 +425,7 @@ export class WebSocketClient<
       }
 
       this.ws = new WebSocket(
-        this.config.pathSubscription
-          ? `${this.config.baseURL}/${this.config.pathSubscription}`
-          : this.config.baseURL,
+        this.config.baseURL,
         isNode
           ? {
               headers: { 'User-Agent': NODE_USER_AGENT },

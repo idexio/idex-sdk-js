@@ -125,7 +125,7 @@
     *   [Examples](#examples-10)
 *   [updateL2Side](#updatel2side)
     *   [Parameters](#parameters-53)
-*   [OrderBookFeeRates](#orderbookfeerates)
+*   [OrderBookFeesAndMinimums](#orderbookfeesandminimums)
     *   [Properties](#properties-76)
 *   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
     *   [Properties](#properties-77)
@@ -907,7 +907,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Used to authenticate user when automatically refreshing WS token
 *   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Used to compute HMAC signature when automatically refreshing WS
     token
-*   `pathSubscription` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Path subscriptions are a quick and easy way to start
     receiving push updates. Eg. {market}@{subscription}\_{option}
 *   `shouldReconnectAutomatically` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** If true, automatically reconnects when
     connection is closed by the server or network errors
@@ -931,6 +930,7 @@ Orderbook API client
 ##### Parameters
 
 *   `options` **[OrderBookRealTimeClientOptions](#orderbookrealtimeclientoptions)** 
+*   `feesAndMinimumsOverride` **[OrderBookFeesAndMinimums](#orderbookfeesandminimums)?** 
 
 ##### Examples
 
@@ -953,17 +953,6 @@ client.on('ready', handleOrderBook);
 client.on('l2Changed', handleOrderBook);
 ```
 
-##### setCustomFeeRates
-
-Set custom fee rates for synthetic price level calculations.
-Use this if your wallet has custom fee settings set.
-
-###### Parameters
-
-*   `rates` **Partial<[OrderBookFeeRates](#orderbookfeerates)>** 
-
-Returns **void** 
-
 ##### start
 
 Loads initial state from REST API and begin listening to orderbook updates.
@@ -978,6 +967,18 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 Stop the order book client, and reset internal state.
 Call this when you are no longer using the client, to release memory and network resources.
+
+Returns **void** 
+
+##### setFeesAndMinimumsOverride
+
+Set custom fee rates for synthetic price level calculations. Use this if your wallet has
+custom fees set.
+
+###### Parameters
+
+*   `feesAndMinimumsOverride` **Partial<[OrderBookFeesAndMinimums](#orderbookfeesandminimums)>** 
+*   `rates` **Partial\<OrderBookFeeRates>** 
 
 Returns **void** 
 
@@ -2590,7 +2591,7 @@ Applies a changeset to a single side of the orderbook
 
 Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
 
-## OrderBookFeeRates
+## OrderBookFeesAndMinimums
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 

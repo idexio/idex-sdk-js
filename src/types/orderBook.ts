@@ -41,12 +41,12 @@ export type L2OrderBook = {
 };
 
 /**
- * @typedef {Object} OrderBookFeeRates
+ * @typedef {Object} OrderBookFeesAndMinimums
  * @property {string} idexFeeRate
  * @property {string} poolFeeRate
  * @property {string} takerMinimumInNativeAsset
  */
-export type OrderBookFeeRates = {
+export type OrderBookFeesAndMinimums = {
   idexFeeRate: string;
   poolFeeRate: string;
   takerMinimumInNativeAsset: string;

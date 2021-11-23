@@ -16,7 +16,7 @@ import type {
   L1OrderBook,
   L2OrderBook,
   MultiverseChain,
-  OrderBookFeeRates,
+  OrderBookFeesAndMinimums,
   RestResponseOrderBookLevel1,
   RestResponseOrderBookLevel2,
   WebSocketResponse,
@@ -85,6 +85,8 @@ export class OrderBookRealTimeClient extends EventEmitter {
    */
   private idexFeeRate = BigInt(0);
 
+  private isFeesAndMinimumsLoaded = false;
+
   private readonly l1OrderBooks: Map<string, L1OrderBook> = new Map();
 
   private readonly l2OrderBooks: Map<string, L2OrderBook> = new Map();
@@ -123,7 +125,10 @@ export class OrderBookRealTimeClient extends EventEmitter {
 
   private webSocketResponseListenerConfigured = false;
 
-  constructor(options: OrderBookRealTimeClientOptions) {
+  constructor(
+    options: OrderBookRealTimeClientOptions,
+    feesAndMinimumsOverride?: OrderBookFeesAndMinimums,
+  ) {
     super();
 
     const { multiverseChain = 'matic', sandbox = false } = options;
@@ -150,34 +155,10 @@ export class OrderBookRealTimeClient extends EventEmitter {
       shouldReconnectAutomatically: true,
       connectTimeout: options.connectTimeout,
     });
-  }
 
-  public getCurrentFeeRates(): OrderBookFeeRates {
-    return {
-      idexFeeRate: pipToDecimal(this.idexFeeRate),
-      poolFeeRate: pipToDecimal(this.poolFeeRate),
-      takerMinimumInNativeAsset: pipToDecimal(this.takerMinimumInNativeAsset),
-    };
-  }
-
-  /**
-   * Set custom fee rates for synthetic price level calculations.
-   * Use this if your wallet has custom fee settings set.
-   *
-   * @param {Partial<OrderBookFeeRates>} rates
-   */
-
-  public setCustomFeeRates(rates: Partial<OrderBookFeeRates>): void {
-    if (rates.idexFeeRate) {
-      this.idexFeeRate = decimalToPip(rates.idexFeeRate);
-    }
-    if (rates.poolFeeRate) {
-      this.poolFeeRate = decimalToPip(rates.poolFeeRate);
-    }
-    if (rates.takerMinimumInNativeAsset) {
-      this.takerMinimumInNativeAsset = decimalToPip(
-        rates.takerMinimumInNativeAsset,
-      );
+    if (feesAndMinimumsOverride) {
+      this.setFeesAndMinimumsOverride(feesAndMinimumsOverride);
+      this.isFeesAndMinimumsLoaded = true;
     }
   }
 
@@ -203,6 +184,36 @@ export class OrderBookRealTimeClient extends EventEmitter {
       this.webSocketClient.disconnect();
     }
     this.resetInternalState();
+  }
+
+  /**
+   * Set custom fee rates for synthetic price level calculations. Use this if your wallet has
+   * custom fees set.
+   *
+   * @param {Partial<OrderBookFeeRates>} rates
+   */
+  public setFeesAndMinimumsOverride(
+    feesAndMinimumsOverride: Partial<OrderBookFeesAndMinimums>,
+  ): void {
+    if (feesAndMinimumsOverride.idexFeeRate) {
+      this.idexFeeRate = decimalToPip(feesAndMinimumsOverride.idexFeeRate);
+    }
+    if (feesAndMinimumsOverride.poolFeeRate) {
+      this.poolFeeRate = decimalToPip(feesAndMinimumsOverride.poolFeeRate);
+    }
+    if (feesAndMinimumsOverride.takerMinimumInNativeAsset) {
+      this.takerMinimumInNativeAsset = decimalToPip(
+        feesAndMinimumsOverride.takerMinimumInNativeAsset,
+      );
+    }
+  }
+
+  public getCurrentFeesAndMinimums(): OrderBookFeesAndMinimums {
+    return {
+      idexFeeRate: pipToDecimal(this.idexFeeRate),
+      poolFeeRate: pipToDecimal(this.poolFeeRate),
+      takerMinimumInNativeAsset: pipToDecimal(this.takerMinimumInNativeAsset),
+    };
   }
 
   /**
@@ -276,6 +287,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
         book.pool = update.pool;
       } else {
         // If an invalid update arrives, reset all data and synchronize anew
+        this.emit('disconnected');
         this.emit(
           'error',
           new Error(
@@ -288,6 +300,8 @@ export class OrderBookRealTimeClient extends EventEmitter {
 
         // eslint-disable-next-line no-await-in-loop
         await this.synchronizeFromRestApi();
+
+        this.emit('connected');
 
         return;
       }
@@ -303,7 +317,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
     this.l2OrderBookUpdates.delete(market);
   }
 
-  private handleTokenPriceMessage(
+  private applyTokenPriceUpdate(
     message: WebSocketResponseTokenPriceLong,
   ): void {
     this.tokenPrices.set(
@@ -319,14 +333,25 @@ export class OrderBookRealTimeClient extends EventEmitter {
     }
   }
 
-  private async loadExchangeFeeRates(): Promise<void> {
-    const exchange = await this.restPublicClient.getExchangeInfo();
-    this.poolFeeRate = decimalToPip(exchange.takerLiquidityProviderFeeRate);
-    this.idexFeeRate = decimalToPip(exchange.takerIdexFeeRate);
+  private async loadFeesAndMinimums(): Promise<void> {
+    // Global fee rates only need to be loaded once as they are static and to allow for overriding
+    if (this.isFeesAndMinimumsLoaded) {
+      return;
+    }
+
+    const {
+      takerLiquidityProviderFeeRate,
+      takerIdexFeeRate,
+      takerTradeMinimum,
+    } = await this.restPublicClient.getExchangeInfo();
+    this.poolFeeRate = decimalToPip(takerLiquidityProviderFeeRate);
+    this.idexFeeRate = decimalToPip(takerIdexFeeRate);
     this.takerMinimumInNativeAsset = multiplyPips(
       ORDER_BOOK_FIRST_LEVEL_MULTIPLIER_IN_PIPS,
-      decimalToPip(exchange.takerTradeMinimum),
+      decimalToPip(takerTradeMinimum),
     );
+
+    this.isFeesAndMinimumsLoaded = true;
   }
 
   private async synchronizeFromRestApi(): Promise<void> {
@@ -343,6 +368,10 @@ export class OrderBookRealTimeClient extends EventEmitter {
       const backoffSeconds = 2 ** reconnectAttempt;
       reconnectAttempt += 1;
       try {
+        // Load fees and minimums first so synthetic orderbook calculations are accurate
+        // eslint-disable-next-line no-await-in-loop
+        await this.loadFeesAndMinimums();
+
         // eslint-disable-next-line no-await-in-loop
         await Promise.all([
           ...this.markets.map(async (market) => {
@@ -350,7 +379,6 @@ export class OrderBookRealTimeClient extends EventEmitter {
             this.l2OrderBooks.set(market, l2);
             this.emit('ready', market);
           }),
-          this.loadExchangeFeeRates(),
           this.loadTokenPrices(),
         ]);
 
@@ -480,7 +508,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
     }
 
     if (response.type === 'tokenprice') {
-      return this.handleTokenPriceMessage(response.data);
+      return this.applyTokenPriceUpdate(response.data);
     }
   }
 }
