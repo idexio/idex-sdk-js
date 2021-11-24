@@ -1,5 +1,4 @@
-import type { RestPublicClientOptions } from '../client/rest';
-import type { WebSocketClientOptions } from '../client/webSocket';
+import type { MultiverseChain } from './enums';
 
 /**
  * @typedef {Object} BestAvailablePriceLevels
@@ -42,15 +41,17 @@ export type L2OrderBook = {
 };
 
 /**
- * @typedef {Object} OrderBookFeeRates
- * @property {string} idexFeeRate
- * @property {string} poolFeeRate
- * @property {string} takerMinimumInNativeAsset
+ * @typedef {Object} OrderBookFeesAndMinimums
+ * @property {string} takerIdexFeeRate - Taker trade fee rate collected by IDEX; used in computing synthetic price levels for real-time order books
+ * @property {string} takerLiquidityProviderFeeRate - Taker trade fee rate collected by liquidity providers; used in computing synthetic price levels for real-time order books
+ * @property {string} takerTradeMinimum - Minimum order size that is accepted by the matching engine for execution in MATIC, applies to both MATIC and tokens
+ *
+ * See {@link RestResponseExchangeInfo}
  */
-export type OrderBookFeeRates = {
-  idexFeeRate: string;
-  poolFeeRate: string;
-  takerMinimumInNativeAsset: string;
+export type OrderBookFeesAndMinimums = {
+  takerIdexFeeRate: string;
+  takerLiquidityProviderFeeRate: string;
+  takerTradeMinimum: string;
 };
 
 /**
@@ -97,28 +98,5 @@ export type PoolReserveQuantities = {
  * @property {bigint} grossQuote
  */
 export type PriceLevelQuantities = { grossBase: bigint; grossQuote: bigint };
-
-/**
- * Orderbook Client Options
- *
- * @typedef {Object} OrderBookRealTimeClientOptions
- * @property {boolean} [sandbox]
- * @property {string} [restApiUrl] - Override the API url for REST requests
- * @property {string} [webSocketApiUrl] - Override the API url for REST requests
- * @property {string} [apiKey] - Increases rate limits if provided
- * @property {MultiverseChain} [multiverseChain]
- * @property {number} [connectTimeout] - Connection timeout for websocket (default 5000)
- */
-export type OrderBookRealTimeClientOptions = Omit<
-  Omit<
-    RestPublicClientOptions &
-      WebSocketClientOptions & {
-        restApiUrl?: string;
-        webSocketApiUrl?: string;
-      },
-    'baseURL'
-  >,
-  'shouldReconnectAutomatically'
->;
 
 export type SyntheticL2OrderBook = Omit<L2OrderBook, 'sequence'>;

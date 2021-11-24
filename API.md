@@ -100,18 +100,20 @@
     *   [ErrorShortCodes](#errorshortcodes)
 *   [L1Equal](#l1equal)
     *   [Parameters](#parameters-47)
-*   [RestRequestFindLiquidityPools](#restrequestfindliquiditypools)
-    *   [Properties](#properties-70)
-*   [BestAvailablePriceLevels](#bestavailablepricelevels)
-    *   [Properties](#properties-71)
 *   [L2toL1OrderBook](#l2tol1orderbook)
     *   [Parameters](#parameters-48)
-*   [L2LimitOrderBookToHybridOrderBooks](#l2limitorderbooktohybridorderbooks)
-    *   [Parameters](#parameters-49)
+*   [BestAvailablePriceLevels](#bestavailablepricelevels)
+    *   [Properties](#properties-70)
+*   [RestRequestFindLiquidityPools](#restrequestfindliquiditypools)
+    *   [Properties](#properties-71)
 *   [L1OrderBook](#l1orderbook)
     *   [Properties](#properties-72)
+*   [L2LimitOrderBookToHybridOrderBooks](#l2limitorderbooktohybridorderbooks)
+    *   [Parameters](#parameters-49)
 *   [calculateGrossBaseQuantity](#calculategrossbasequantity)
     *   [Parameters](#parameters-50)
+*   [updateL2Levels](#updatel2levels)
+    *   [Parameters](#parameters-51)
 *   [RestRequestAddLiquidity](#restrequestaddliquidity)
     *   [Properties](#properties-73)
 *   [L2OrderBook](#l2orderbook)
@@ -119,23 +121,21 @@
 *   [WebSocketRequestTokenPriceSubscription](#websocketrequesttokenpricesubscription)
     *   [Properties](#properties-75)
 *   [createPrivateKeyMessageSigner](#createprivatekeymessagesigner)
-    *   [Parameters](#parameters-51)
+    *   [Parameters](#parameters-52)
     *   [Examples](#examples-10)
-*   [OrderBookFeeRates](#orderbookfeerates)
+*   [updateL2Side](#updatel2side)
+    *   [Parameters](#parameters-53)
+*   [OrderBookFeesAndMinimums](#orderbookfeesandminimums)
     *   [Properties](#properties-76)
 *   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
     *   [Properties](#properties-77)
-*   [updateL2Levels](#updatel2levels)
-    *   [Parameters](#parameters-52)
 *   [calculateGrossBaseValueOfBuyQuantities](#calculategrossbasevalueofbuyquantities)
-    *   [Parameters](#parameters-53)
-*   [OrderBookLevelType](#orderbookleveltype)
+    *   [Parameters](#parameters-54)
 *   [privateKeySigner](#privatekeysigner)
+*   [OrderBookLevelType](#orderbookleveltype)
 *   [OrderBookLevelL1](#orderbooklevell1)
     *   [Properties](#properties-78)
 *   [calculateGrossQuoteQuantity](#calculategrossquotequantity)
-    *   [Parameters](#parameters-54)
-*   [updateL2Side](#updatel2side)
     *   [Parameters](#parameters-55)
 *   [RestRequestFindLiquidityAddition](#restrequestfindliquidityaddition)
     *   [Properties](#properties-79)
@@ -404,12 +404,12 @@ import { v1 as uuidv1 } from 'uuid';
 import { RestAuthenticatedClient } from '@idexio/idex-sdk';
 
 const authenticatedClient = new RestAuthenticatedClient({
-  sandbox: true,
   // Edit the values before for your environment
   apiKey: '1f7c4f52-4af7-4e1b-aa94-94fac8d931aa',
   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
   // Optionally prove a wallet private key to automatically sign requests that need an ECDSA signature
   walletPrivateKey: '0x3141592653589793238462643383279502884197169399375105820974944592'
+  sandbox: true,
 });
 ```
 
@@ -815,9 +815,9 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 *   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to authenticate user
 *   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Used to compute HMAC signature
-*   `multiverseChain` **[MultiverseChain](#multiversechain)?** Which multiverse chain the client will point to
-*   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** If true, client will point to API sandbox
 *   `walletPrivateKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, used to create ECDSA signatures
+*   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** If true, client will point to API sandbox
+*   `multiverseChain` **[MultiverseChain](#multiversechain)?** Which multiverse chain the client will point to
 
 ### WebSocketClient
 
@@ -829,6 +829,9 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 WebSocket API client
 
+When apiKey and apiSecret are provided, the client will automatically handle WebSocket
+authentication token generation and refresh. Omit when using only public WebSocket subscriptions.
+
 ##### Parameters
 
 *   `options` **[WebSocketClientOptions](#websocketclientoptions)** 
@@ -839,9 +842,11 @@ WebSocket API client
 import * as idex from '@idexio/idex-sdk';
 
 const webSocketClient = new idex.WebSocketClient({
- sandbox: true,
- shouldReconnectAutomatically: true,
- websocketAuthTokenFetch: authenticatedClient.getWsToken(uuidv1(), wallet),
+  // Edit the values before for your environment
+  apiKey: '1f7c4f52-4af7-4e1b-aa94-94fac8d931aa',
+  apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
+  shouldReconnectAutomatically: true,
+  sandbox: true,
 });
 
 await webSocketClient.connect();
@@ -899,15 +904,16 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ##### Properties
 
-*   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** *   If true, client will point to API sandbox
-*   `websocketAuthTokenFetch` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** Authenticated REST API client fetch token call (`/wsToken`).
-    When provided, the SDK WebSocket client automatically handles WebSocket authentication token generation and refresh.
-    Omit when using only public WebSocket subscriptions.
-    Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`.
-    See [API specification](https://api-docs-v3.idex.io/#websocket-authentication-endpoints)
-*   `shouldReconnectAutomatically` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** If true, automatically reconnects when connection is closed by the server or network errors
-*   `pathSubscription` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Path subscriptions are a quick and easy way to start receiving push updates. Eg. {market}@{subscription}\_{option}
-*   `connectTimeout` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Timeout (in milliseconds) before failing when trying to connect to the WebSocket. Defaults to 5000.
+*   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Used to authenticate user when automatically refreshing WS token
+*   `apiSecret` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Used to compute HMAC signature when automatically refreshing WS
+    token
+    receiving push updates. Eg. {market}@{subscription}\_{option}
+*   `shouldReconnectAutomatically` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** If true, automatically reconnects when
+    connection is closed by the server or network errors
+*   `connectTimeout` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Timeout (in milliseconds) before failing when trying to
+    connect to the WebSocket. Defaults to 5000.
+*   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** If true, client will point to API sandbox
+*   `multiverseChain` **[MultiverseChain](#multiversechain)?** Which multiverse chain the client will point to
 
 ### OrderBookRealTimeClient
 
@@ -924,6 +930,7 @@ Orderbook API client
 ##### Parameters
 
 *   `options` **[OrderBookRealTimeClientOptions](#orderbookrealtimeclientoptions)** 
+*   `feesAndMinimumsOverride` **[OrderBookFeesAndMinimums](#orderbookfeesandminimums)?** 
 
 ##### Examples
 
@@ -946,17 +953,6 @@ client.on('ready', handleOrderBook);
 client.on('l2Changed', handleOrderBook);
 ```
 
-##### setCustomFeeRates
-
-Set custom fee rates for synthetic price level calculations.
-Use this if your wallet has custom fee settings set.
-
-###### Parameters
-
-*   `rates` **Partial<[OrderBookFeeRates](#orderbookfeerates)>** 
-
-Returns **void** 
-
 ##### start
 
 Loads initial state from REST API and begin listening to orderbook updates.
@@ -971,6 +967,18 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 Stop the order book client, and reset internal state.
 Call this when you are no longer using the client, to release memory and network resources.
+
+Returns **void** 
+
+##### setFeesAndMinimumsOverride
+
+Set custom fee rates for synthetic price level calculations. Use this if your wallet has
+custom fees set.
+
+###### Parameters
+
+*   `feesAndMinimumsOverride` **Partial<[OrderBookFeesAndMinimums](#orderbookfeesandminimums)>** 
+*   `rates` **Partial\<OrderBookFeeRates>** 
 
 Returns **void** 
 
@@ -991,9 +999,9 @@ Load the current state of the level 2 orderbook for this market.
 ###### Parameters
 
 *   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `limit` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** total number of price levels (bids + asks) to return, between 2 and 1000 (optional, default `100`)
+*   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Total number of price levels (bids + asks) to return, between 2 and 1000 (optional, default `100`)
 
-Returns **[RestResponseOrderBookLevel2](#restresponseorderbooklevel2)** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[RestResponseOrderBookLevel2](#restresponseorderbooklevel2)>** 
 
 #### OrderBookRealTimeClientOptions
 
@@ -1003,12 +1011,10 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ##### Properties
 
-*   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** 
-*   `restApiUrl` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Override the API url for REST requests
-*   `webSocketApiUrl` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Override the API url for REST requests
 *   `apiKey` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Increases rate limits if provided
-*   `multiverseChain` **[MultiverseChain](#multiversechain)?** 
 *   `connectTimeout` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Connection timeout for websocket (default 5000)
+*   `sandbox` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** If true, client will point to API sandbox
+*   `multiverseChain` **[MultiverseChain](#multiversechain)?** Which multiverse chain the client will point to
 
 ## Enums
 
@@ -2433,15 +2439,15 @@ Determine whether two level 1 order books are equal, including pool reserves
 
 Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
 
-## RestRequestFindLiquidityPools
+## L2toL1OrderBook
 
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+Derive the level 1 orderbook from a level 2 orderbook
 
-### Properties
+### Parameters
 
-*   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Target market
-*   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Address of one reserve token
-*   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Address of one reserve token
+*   `l2` **[L2OrderBook](#l2orderbook)** 
+
+Returns **[L1OrderBook](#l1orderbook)** 
 
 ## BestAvailablePriceLevels
 
@@ -2454,15 +2460,26 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `bestAvailableSellPrice` **bigint** best available price for sell orders of the minimum size
 *   `quoteReceived` **bigint** actual quantity received, in quote units at the best available sell price
 
-## L2toL1OrderBook
+## RestRequestFindLiquidityPools
 
-Derive the level 1 orderbook from a level 2 orderbook
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
-### Parameters
+### Properties
 
-*   `l2` **[L2OrderBook](#l2orderbook)** 
+*   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Target market
+*   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Address of one reserve token
+*   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Address of one reserve token
 
-Returns **[L1OrderBook](#l1orderbook)** 
+## L1OrderBook
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+*   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+*   `asks` **[OrderBookLevelL1](#orderbooklevell1)** 
+*   `bids` **[OrderBookLevelL1](#orderbooklevell1)** 
+*   `pool` **([PoolReserveQuantities](#poolreservequantities) | null)** 
 
 ## L2LimitOrderBookToHybridOrderBooks
 
@@ -2480,17 +2497,6 @@ Convert a limit-order orderbook and a liquidity pool to a hybrid order book repr
 
 Returns **{l1: [L1OrderBook](#l1orderbook), l2: [L2OrderBook](#l2orderbook)}** 
 
-## L1OrderBook
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
-*   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
-*   `asks` **[OrderBookLevelL1](#orderbooklevell1)** 
-*   `bids` **[OrderBookLevelL1](#orderbooklevell1)** 
-*   `pool` **([PoolReserveQuantities](#poolreservequantities) | null)** 
-
 ## calculateGrossBaseQuantity
 
 Helper function to calculate gross base available at a bid price
@@ -2505,6 +2511,17 @@ see: {quantitiesAvailableFromPoolAtBidPrice}
 *   `poolFeeRate` **bigint** 
 
 Returns **bigint** 
+
+## updateL2Levels
+
+Updates a level 2 orderbook using a partial "diff" received over websockets
+
+### Parameters
+
+*   `book` **[L2OrderBook](#l2orderbook)** 
+*   `updatedLevels` **[L2OrderBook](#l2orderbook)** level 2 orderbook containing only limit order price levels that have changed
+
+Returns **void** orderbook is updated in-place
 
 ## RestRequestAddLiquidity
 
@@ -2562,15 +2579,27 @@ const signed = await signMessage(myMessageToSign)
 
 Returns **[MessageSigner](#messagesigner)** 
 
-## OrderBookFeeRates
+## updateL2Side
+
+Applies a changeset to a single side of the orderbook
+
+### Parameters
+
+*   `isAscending` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true for asks, false for bids (ordering of price levels)
+*   `side` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
+*   `updates` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
+
+## OrderBookFeesAndMinimums
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
 ### Properties
 
-*   `idexFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `poolFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `takerMinimumInNativeAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+*   `takerIdexFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Taker trade fee rate collected by IDEX; used in computing synthetic price levels for real-time order books
+*   `takerLiquidityProviderFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Taker trade fee rate collected by liquidity providers; used in computing synthetic price levels for real-time order books
+*   `takerTradeMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum order size that is accepted by the matching engine for execution in MATIC, applies to both MATIC and tokensSee [RestResponseExchangeInfo](#restresponseexchangeinfo)
 
 ## RestRequestRemoveLiquidity
 
@@ -2587,17 +2616,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `amountBMin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenB to add to the liquidity pool
 *   `to` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Wallet to credit LP tokens, or the custodian contract address to leave on exchange
 
-## updateL2Levels
-
-Updates a level 2 orderbook using a partial "diff" received over websockets
-
-### Parameters
-
-*   `book` **[L2OrderBook](#l2orderbook)** 
-*   `updatedLevels` **[L2OrderBook](#l2orderbook)** level 2 orderbook containing only limit order price levels that have changed
-
-Returns **void** orderbook is updated in-place
-
 ## calculateGrossBaseValueOfBuyQuantities
 
 Helper function to convert from quote to base quantities
@@ -2611,10 +2629,6 @@ see: {quantitiesAvailableFromPoolAtAskPrice}
 
 Returns **bigint** 
 
-## OrderBookLevelType
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
 ## privateKeySigner
 
 *   **See**: {createPrivateKeyMessageSigner}
@@ -2622,6 +2636,10 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 **Meta**
 
 *   **deprecated**: use createPrivateKeyMessageSigner directly
+
+## OrderBookLevelType
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
 ## OrderBookLevelL1
 
@@ -2647,18 +2665,6 @@ see: {quantitiesAvailableFromPoolAtAskPrice}
 *   `poolFeeRate` **bigint** 
 
 Returns **bigint** 
-
-## updateL2Side
-
-Applies a changeset to a single side of the orderbook
-
-### Parameters
-
-*   `isAscending` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true for asks, false for bids (ordering of price levels)
-*   `side` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
-*   `updates` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
-
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
 
 ## RestRequestFindLiquidityAddition
 

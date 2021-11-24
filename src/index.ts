@@ -4,9 +4,3 @@ export * from './constants';
 export * from './orderbook';
 export * from './pipmath';
 export * from './signatures';
-
-// legacy exports - remove once migrated
-export * as signatures from './signatures';
-export * as types from './types/legacy';
-export * as client from './client/legacy';
-export * as constants from './constants';
