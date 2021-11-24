@@ -202,8 +202,9 @@ export class OrderBookRealTimeClient extends EventEmitter {
       this.poolFeeRate = decimalToPip(feesAndMinimumsOverride.poolFeeRate);
     }
     if (feesAndMinimumsOverride.takerMinimumInNativeAsset) {
-      this.takerMinimumInNativeAsset = decimalToPip(
-        feesAndMinimumsOverride.takerMinimumInNativeAsset,
+      this.takerMinimumInNativeAsset = multiplyPips(
+        ORDER_BOOK_FIRST_LEVEL_MULTIPLIER_IN_PIPS,
+        decimalToPip(feesAndMinimumsOverride.takerMinimumInNativeAsset),
       );
     }
   }
