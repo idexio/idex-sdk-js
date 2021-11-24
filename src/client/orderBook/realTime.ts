@@ -288,10 +288,6 @@ export class OrderBookRealTimeClient extends EventEmitter {
       // an expected next update has arrived
       else if (book.sequence + 1 === update.sequence) {
         updateL2Levels(book, update);
-      }
-      // the pool was updated (sequence does not increment)
-      else if (book.sequence === update.sequence) {
-        book.pool = update.pool;
       } else {
         // If an invalid update arrives, reset all data and synchronize anew
         this.emit('disconnected');
