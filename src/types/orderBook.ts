@@ -42,14 +42,16 @@ export type L2OrderBook = {
 
 /**
  * @typedef {Object} OrderBookFeesAndMinimums
- * @property {string} idexFeeRate
- * @property {string} poolFeeRate
- * @property {string} takerMinimumInNativeAsset
+ * @property {string} takerIdexFeeRate - Taker trade fee rate collected by IDEX; used in computing synthetic price levels for real-time order books
+ * @property {string} takerLiquidityProviderFeeRate - Taker trade fee rate collected by liquidity providers; used in computing synthetic price levels for real-time order books
+ * @property {string} takerTradeMinimum - Minimum order size that is accepted by the matching engine for execution in MATIC, applies to both MATIC and tokens
+ *
+ * See {@link RestResponseExchangeInfo}
  */
 export type OrderBookFeesAndMinimums = {
-  idexFeeRate: string;
-  poolFeeRate: string;
-  takerMinimumInNativeAsset: string;
+  takerIdexFeeRate: string;
+  takerLiquidityProviderFeeRate: string;
+  takerTradeMinimum: string;
 };
 
 /**
