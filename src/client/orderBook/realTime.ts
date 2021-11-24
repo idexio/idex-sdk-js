@@ -83,7 +83,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
    *
    * @private
    */
-  private idexFeeRate = BigInt(0);
+  private takerIdexFeeRate = BigInt(0);
 
   private isFeesAndMinimumsLoaded = false;
 
@@ -104,7 +104,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
    *
    * @private
    */
-  private poolFeeRate = BigInt(0);
+  private takerLiquidityProviderFeeRate = BigInt(0);
 
   private readonly restPublicClient: RestPublicClient;
 
@@ -115,7 +115,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
    *
    * @private
    */
-  private takerMinimumInNativeAsset = BigInt(0);
+  private takerTradeMinimum = BigInt(0);
 
   private readonly tokenPrices: Map<string, bigint | null> = new Map();
 
@@ -195,25 +195,31 @@ export class OrderBookRealTimeClient extends EventEmitter {
   public setFeesAndMinimumsOverride(
     feesAndMinimumsOverride: Partial<OrderBookFeesAndMinimums>,
   ): void {
-    if (feesAndMinimumsOverride.idexFeeRate) {
-      this.idexFeeRate = decimalToPip(feesAndMinimumsOverride.idexFeeRate);
+    if (feesAndMinimumsOverride.takerIdexFeeRate) {
+      this.takerIdexFeeRate = decimalToPip(
+        feesAndMinimumsOverride.takerIdexFeeRate,
+      );
     }
-    if (feesAndMinimumsOverride.poolFeeRate) {
-      this.poolFeeRate = decimalToPip(feesAndMinimumsOverride.poolFeeRate);
+    if (feesAndMinimumsOverride.takerLiquidityProviderFeeRate) {
+      this.takerLiquidityProviderFeeRate = decimalToPip(
+        feesAndMinimumsOverride.takerLiquidityProviderFeeRate,
+      );
     }
-    if (feesAndMinimumsOverride.takerMinimumInNativeAsset) {
-      this.takerMinimumInNativeAsset = multiplyPips(
+    if (feesAndMinimumsOverride.takerTradeMinimum) {
+      this.takerTradeMinimum = multiplyPips(
         ORDER_BOOK_FIRST_LEVEL_MULTIPLIER_IN_PIPS,
-        decimalToPip(feesAndMinimumsOverride.takerMinimumInNativeAsset),
+        decimalToPip(feesAndMinimumsOverride.takerTradeMinimum),
       );
     }
   }
 
   public getCurrentFeesAndMinimums(): OrderBookFeesAndMinimums {
     return {
-      idexFeeRate: pipToDecimal(this.idexFeeRate),
-      poolFeeRate: pipToDecimal(this.poolFeeRate),
-      takerMinimumInNativeAsset: pipToDecimal(this.takerMinimumInNativeAsset),
+      takerIdexFeeRate: pipToDecimal(this.takerIdexFeeRate),
+      takerLiquidityProviderFeeRate: pipToDecimal(
+        this.takerLiquidityProviderFeeRate,
+      ),
+      takerTradeMinimum: pipToDecimal(this.takerTradeMinimum),
     };
   }
 
@@ -253,8 +259,8 @@ export class OrderBookRealTimeClient extends EventEmitter {
       await this.loadLevel2(market),
       ORDER_BOOK_MAX_L2_LEVELS,
       ORDER_BOOK_HYBRID_SLIPPAGE,
-      this.idexFeeRate,
-      this.poolFeeRate,
+      this.takerIdexFeeRate,
+      this.takerLiquidityProviderFeeRate,
       true,
       this.getMarketMinimum(market),
     );
@@ -345,9 +351,11 @@ export class OrderBookRealTimeClient extends EventEmitter {
       takerIdexFeeRate,
       takerTradeMinimum,
     } = await this.restPublicClient.getExchangeInfo();
-    this.poolFeeRate = decimalToPip(takerLiquidityProviderFeeRate);
-    this.idexFeeRate = decimalToPip(takerIdexFeeRate);
-    this.takerMinimumInNativeAsset = multiplyPips(
+    this.takerLiquidityProviderFeeRate = decimalToPip(
+      takerLiquidityProviderFeeRate,
+    );
+    this.takerIdexFeeRate = decimalToPip(takerIdexFeeRate);
+    this.takerTradeMinimum = multiplyPips(
       ORDER_BOOK_FIRST_LEVEL_MULTIPLIER_IN_PIPS,
       decimalToPip(takerTradeMinimum),
     );
@@ -429,13 +437,13 @@ export class OrderBookRealTimeClient extends EventEmitter {
   private getMarketMinimum(market: string): bigint | null {
     const quoteSymbol = market.split('-')[1];
     const price = this.tokenPrices.get(quoteSymbol) || null;
-    return price ? (this.takerMinimumInNativeAsset * oneInPips) / price : null;
+    return price ? (this.takerTradeMinimum * oneInPips) / price : null;
   }
 
   private resetInternalState(): void {
-    this.idexFeeRate = BigInt(0);
-    this.poolFeeRate = BigInt(0);
-    this.takerMinimumInNativeAsset = BigInt(0);
+    this.takerIdexFeeRate = BigInt(0);
+    this.takerLiquidityProviderFeeRate = BigInt(0);
+    this.takerTradeMinimum = BigInt(0);
     this.tokenPrices.clear();
     this.l1OrderBooks.clear();
     this.l2OrderBooks.clear();

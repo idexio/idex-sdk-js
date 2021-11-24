@@ -131,15 +131,15 @@
     *   [Properties](#properties-77)
 *   [calculateGrossBaseValueOfBuyQuantities](#calculategrossbasevalueofbuyquantities)
     *   [Parameters](#parameters-54)
-*   [OrderBookLevelType](#orderbookleveltype)
 *   [privateKeySigner](#privatekeysigner)
+*   [OrderBookLevelType](#orderbookleveltype)
 *   [OrderBookLevelL1](#orderbooklevell1)
     *   [Properties](#properties-78)
 *   [calculateGrossQuoteQuantity](#calculategrossquotequantity)
     *   [Parameters](#parameters-55)
-*   [OrderBookLevelL2](#orderbooklevell2)
-    *   [Properties](#properties-79)
 *   [RestRequestFindLiquidityAddition](#restrequestfindliquidityaddition)
+    *   [Properties](#properties-79)
+*   [OrderBookLevelL2](#orderbooklevell2)
     *   [Properties](#properties-80)
 *   [PoolReserveQuantities](#poolreservequantities)
     *   [Properties](#properties-81)
@@ -2597,9 +2597,9 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### Properties
 
-*   `idexFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `poolFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `takerMinimumInNativeAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+*   `takerIdexFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Taker trade fee rate collected by IDEX; used in computing synthetic price levels for real-time order books
+*   `takerLiquidityProviderFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Taker trade fee rate collected by liquidity providers; used in computing synthetic price levels for real-time order books
+*   `takerTradeMinimum` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum order size that is accepted by the matching engine for execution in MATIC, applies to both MATIC and tokensSee [RestResponseExchangeInfo](#restresponseexchangeinfo)
 
 ## RestRequestRemoveLiquidity
 
@@ -2629,10 +2629,6 @@ see: {quantitiesAvailableFromPoolAtAskPrice}
 
 Returns **bigint** 
 
-## OrderBookLevelType
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
 ## privateKeySigner
 
 *   **See**: {createPrivateKeyMessageSigner}
@@ -2640,6 +2636,10 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 **Meta**
 
 *   **deprecated**: use createPrivateKeyMessageSigner directly
+
+## OrderBookLevelType
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
 ## OrderBookLevelL1
 
@@ -2666,17 +2666,6 @@ see: {quantitiesAvailableFromPoolAtAskPrice}
 
 Returns **bigint** 
 
-## OrderBookLevelL2
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
-*   `price` **bigint** 
-*   `size` **bigint** 
-*   `numOrders` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
-*   `type` **[OrderBookLevelType](#orderbookleveltype)** 
-
 ## RestRequestFindLiquidityAddition
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -2691,6 +2680,17 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
 *   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
 *   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Liquidity additions created at the same timestamp or after fromId
+
+## OrderBookLevelL2
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+*   `price` **bigint** 
+*   `size` **bigint** 
+*   `numOrders` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+*   `type` **[OrderBookLevelType](#orderbookleveltype)** 
 
 ## PoolReserveQuantities
 
