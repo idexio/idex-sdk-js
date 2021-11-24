@@ -368,9 +368,9 @@ export class OrderBookRealTimeClient extends EventEmitter {
       const backoffSeconds = 2 ** reconnectAttempt;
       reconnectAttempt += 1;
       try {
-        // Load fees and minimums first so synthetic orderbook calculations are accurate
+        // Load minimums and token pries first so synthetic orderbook calculations are accurate
         // eslint-disable-next-line no-await-in-loop
-        await this.loadFeesAndMinimums();
+        await Promise.all([this.loadFeesAndMinimums(), this.loadTokenPrices()]);
 
         // eslint-disable-next-line no-await-in-loop
         await Promise.all([
@@ -379,7 +379,6 @@ export class OrderBookRealTimeClient extends EventEmitter {
             this.l2OrderBooks.set(market, l2);
             this.emit('ready', market);
           }),
-          this.loadTokenPrices(),
         ]);
 
         return;
