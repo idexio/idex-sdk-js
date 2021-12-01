@@ -1,5 +1,12 @@
+import { v1 as uuidv1 } from 'uuid';
 import WebSocket, { CONNECTING, OPEN } from 'isomorphic-ws';
 
+import { deriveBaseURL } from '../utils';
+import { isNode } from '../../utils';
+import { isWebSocketAuthenticatedSubscription } from '../../types';
+import { removeWalletFromSdkSubscription } from './utils';
+import { RestAuthenticatedClient } from '../rest/authenticated';
+import { transformWebsocketShortResponseMessage } from './transform';
 import type {
   AuthTokenWebSocketRequestAuthenticatedSubscription,
   AuthTokenWebSocketRequestSubscription,
@@ -11,12 +18,6 @@ import type {
   WebSocketRequestUnsubscribeSubscription,
   WebSocketResponse,
 } from '../../types';
-import { isWebSocketAuthenticatedSubscription } from '../../types';
-import * as constants from '../../constants';
-import { isNode } from '../../utils';
-
-import { transformWebsocketShortResponseMessage } from './transform';
-import { removeWalletFromSdkSubscription } from './utils';
 
 export { transformWebsocketShortResponseMessage };
 
@@ -43,42 +44,43 @@ const PING_TIMEOUT = 30000;
  * WebSocket API client options
  *
  * @typedef {Object} WebSocketClientOptions
- * @property {boolean} [sandbox] - <br />
- *  Should the WebSocket connect to the {@link https://docs.idex.io/#sandbox|Sandbox Environment}?
- *  **Note**: This must be set to `true` during the Sandbox preview.
- * @property {function} [websocketAuthTokenFetch] - <br />
- *  Authenticated Rest API client fetch token call (`/wsToken`)
- *  SDK Websocket client will then automatically handle Websocket token generation and refresh.
- *  You can omit this when using only public websocket subscription.
- *  Example `wallet => authenticatedClient.getWsToken(uuidv1(), wallet)`
- *  See [API specification](https://docs.idex.io/#websocket-authentication-endpoints)
- * @property {boolean} [shouldReconnectAutomatically] -
- *  If true, automatically reconnects when connection is closed by the server or network errors
- * @property {string} [pathSubscription] -
- *  Path subscriptions are a quick and easy way to start receiving push updates. Eg. {market}@{subscription}_{option}
- * @property {number} [connectTimeout] -
- *  A timeout (in milliseconds) before failing while trying to connect to the WebSocket. Defaults to 5000.
+ * @property {string} [apiKey] - Used to authenticate user when automatically refreshing WS token
+ * @property {string} [apiSecret] - Used to compute HMAC signature when automatically refreshing WS
+ * token
+ * receiving push updates. Eg. {market}@{subscription}_{option}
+ * @property {boolean} [shouldReconnectAutomatically] - If true, automatically reconnects when
+ * connection is closed by the server or network errors
+ * @property {number} [connectTimeout] - Timeout (in milliseconds) before failing when trying to
+ * connect to the WebSocket. Defaults to 5000.
+ * @property {boolean} [sandbox] - If true, client will point to API sandbox
+ * @property {MultiverseChain} [multiverseChain=matic] - Which multiverse chain the client will point to
  */
 export interface WebSocketClientOptions {
-  sandbox?: boolean;
-  baseURL?: string;
-  pathSubscription?: string;
-  websocketAuthTokenFetch?: (wallet: string) => Promise<string>;
+  apiKey?: string;
+  apiSecret?: string;
   shouldReconnectAutomatically?: boolean;
   connectTimeout?: number;
+  sandbox?: boolean;
   multiverseChain?: MultiverseChain;
+  baseURL?: string;
+  websocketAuthTokenFetch?: (wallet: string) => Promise<string>;
 }
 
 /**
  * WebSocket API client
  *
+ * When apiKey and apiSecret are provided, the client will automatically handle WebSocket
+ * authentication token generation and refresh. Omit when using only public WebSocket subscriptions.
+ *
  * @example
  * import * as idex from '@idexio/idex-sdk';
  *
  * const webSocketClient = new idex.WebSocketClient({
- *  sandbox: true,
- *  shouldReconnectAutomatically: true,
- *  websocketAuthTokenFetch: authenticatedClient.getWsToken(uuidv1(), wallet),
+ *   // Edit the values before for your environment
+ *   apiKey: '1f7c4f52-4af7-4e1b-aa94-94fac8d931aa',
+ *   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
+ *   shouldReconnectAutomatically: true,
+ *   sandbox: true,
  * });
  *
  * await webSocketClient.connect();
@@ -94,6 +96,7 @@ export class WebSocketClient<
      * @private
      */
     doNotReconnect: false,
+    isReconnecting: false,
     /**
      * Used to track the number of reconnect attempts for exponential backoff
      * @private
@@ -117,52 +120,64 @@ export class WebSocketClient<
   };
 
   public readonly config: Readonly<{
-    multiverseChain: C['multiverseChain'] extends MultiverseChain
-      ? C['multiverseChain']
-      : 'eth';
     baseURL: string;
-    sandbox: boolean;
+    shouldReconnectAutomatically: boolean;
     connectTimeout: number;
-    pathSubscription?: string | null;
-    websocketAuthTokenFetch?: WebSocketClientOptions['websocketAuthTokenFetch'];
+    websocketAuthTokenFetch: ((wallet: string) => Promise<string>) | null;
   }>;
-
-  public shouldReconnectAutomatically = false;
 
   private ws: null | WebSocket = null;
 
   constructor(options: WebSocketClientOptions) {
-    const { multiverseChain = 'eth', sandbox = false } = options;
+    const { multiverseChain = 'matic', sandbox = false } = options;
 
-    const baseURL =
-      options.baseURL ??
-      constants.URLS[options.sandbox ? 'sandbox' : 'production']?.[
-        multiverseChain
-      ]?.websocket;
+    const baseURL = deriveBaseURL({
+      sandbox,
+      multiverseChain,
+      overrideBaseURL: options.baseURL,
+      api: 'websocket',
+    });
 
-    if (!baseURL) {
+    if (
+      (options.apiKey || options.apiSecret) &&
+      options.websocketAuthTokenFetch
+    ) {
       throw new Error(
-        `Invalid configuration, baseURL could not be derived (sandbox? ${String(
-          sandbox,
-        )}) (chain: ${multiverseChain})`,
+        'Invalid configuration, cannot specify both API credentials and websocketAuthTokenFetch',
       );
     }
 
+    if (
+      (options.apiKey && !options.apiSecret) ||
+      (!options.apiKey && options.apiSecret)
+    ) {
+      throw new Error(
+        'Invalid configuration, must specify both apiKey and apiSecret or neither',
+      );
+    }
+
+    let { websocketAuthTokenFetch } = options;
+    if (!websocketAuthTokenFetch && options.apiKey && options.apiSecret) {
+      const { apiKey, apiSecret } = options;
+      websocketAuthTokenFetch = async (walletAddress: string) =>
+        new RestAuthenticatedClient({
+          apiKey,
+          apiSecret,
+          baseURL,
+          multiverseChain,
+          sandbox,
+        }).getWsToken(uuidv1(), walletAddress);
+    }
+
     this.config = Object.freeze({
-      sandbox,
       baseURL,
-      multiverseChain: multiverseChain as this['config']['multiverseChain'],
       connectTimeout:
         typeof options.connectTimeout === 'number'
           ? options.connectTimeout
           : 5000,
-      pathSubscription: options.pathSubscription ?? null,
-      websocketAuthTokenFetch: options.websocketAuthTokenFetch,
+      shouldReconnectAutomatically: !!options.shouldReconnectAutomatically,
+      websocketAuthTokenFetch: options.websocketAuthTokenFetch ?? null,
     } as const);
-
-    if (options.shouldReconnectAutomatically) {
-      this.shouldReconnectAutomatically = true;
-    }
   }
 
   /* Connection management */
@@ -232,7 +247,7 @@ export class WebSocketClient<
    * Subscribe to a given set of subscriptions, optionally providing a list of top level
    * markets or a cid property.
    *
-   * @see {@link https://docs.idex.io/#websocket-subscriptions|WebSocket Subscriptions}
+   * @see {@link https://api-docs-v3.idex.io/#websocket-subscriptions|WebSocket Subscriptions}
    *
    * @param {AuthTokenWebSocketRequestAuthenticatedSubscription[]} subscriptions
    * @param {string[]} [markets] - Optionally provide top level markets
@@ -258,7 +273,7 @@ export class WebSocketClient<
    * For this methods you need to pass `websocketAuthTokenFetch` to the websocket constructor.
    * Library will automatically refresh user's wallet auth tokens for you.
    *
-   * See {@link https://docs.idex.io/#get-authentication-token|API specification}
+   * See {@link https://api-docs-v3.idex.io/#get-authentication-token|API specification}
    *
    * @param {AuthTokenWebSocketRequestAuthenticatedSubscription[]} subscriptions
    * @param {string[]} [markets] - Optionally provide top level markets
@@ -410,9 +425,7 @@ export class WebSocketClient<
       }
 
       this.ws = new WebSocket(
-        this.config.pathSubscription
-          ? `${this.config.baseURL}/${this.config.pathSubscription}`
-          : this.config.baseURL,
+        this.config.baseURL,
         isNode
           ? {
               headers: { 'User-Agent': NODE_USER_AGENT },
@@ -434,7 +447,7 @@ export class WebSocketClient<
 
       return this.ws;
     } catch (err) {
-      if (this.shouldReconnectAutomatically) {
+      if (this.config.shouldReconnectAutomatically) {
         this.reconnect();
         throw new Error(
           `Failed to connect: "${err.message}" - a reconnect attempt will be scheduled automatically`,
@@ -542,7 +555,10 @@ export class WebSocketClient<
       listener(event.code, event.reason),
     );
 
-    if (this.shouldReconnectAutomatically && !this.state.doNotReconnect) {
+    if (
+      this.config.shouldReconnectAutomatically &&
+      !this.state.doNotReconnect
+    ) {
       this.reconnect();
     }
   }
@@ -566,10 +582,16 @@ export class WebSocketClient<
     this.disconnect();
     this.state.doNotReconnect = false;
     // Reconnect with exponential backoff
-    const backoffSeconds = 2 ** this.state.reconnectAttempt;
-    this.state.reconnectAttempt += 1;
-    console.log(`Reconnecting after ${backoffSeconds} seconds...`);
-    setTimeout(this.connect.bind(this), backoffSeconds * 1000);
+    if (!this.state.isReconnecting) {
+      this.state.isReconnecting = true;
+      const backoffSeconds = 2 ** this.state.reconnectAttempt;
+      this.state.reconnectAttempt += 1;
+      console.log(`Reconnecting after ${backoffSeconds} seconds...`);
+      setTimeout(() => {
+        this.connect();
+        this.state.isReconnecting = false;
+      }, backoffSeconds * 1000);
+    }
   }
 
   private resetReconnectionState(): void {

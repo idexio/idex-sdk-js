@@ -113,13 +113,69 @@ export enum MarketStatus {
    * @type {string}
    */
   active,
+  /**
+   * Hybrid trades and cancels accepted
+   * @type {string}
+   */
+  activeHybrid,
+}
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+export enum MarketType {
+  /**
+   * Orderbook trades accepted
+   * @type {string}
+   */
+  orderBook,
+  /**
+   * Orderbook, pool, and hybrid trades accepted
+   * @type {string}
+   */
+  hybrid,
+}
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+export enum LiquidityChangeOrigination {
+  /**
+   * Initiation on-chain via contract call
+   * @type {string}
+   */
+  OnChain,
+  /**
+   * Initiated off-chain via API
+   * @type {string}
+   */
+  OffChain,
+}
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+export enum LiquidityChangeType {
+  /**
+   * Adding reserve assets to pool and minting LP tokens
+   * @type {string}
+   */
+  Addition,
+  /**
+   * Removing reserve assets from pool and burning LP tokens
+   * @type {string}
+   */
+  Removal,
 }
 
 /**
  * The available multiverse chains to define when creating a client.
  *
  * @readonly
- * @enum {'eth' | 'bsc'}
+ * @enum {'matic'}
  */
 export type MultiverseChain = keyof typeof URLS[keyof typeof URLS];
 
@@ -297,4 +353,23 @@ export enum OrderType {
   takeProfit,
   /** @type {string} */
   takeProfitLimit,
+}
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+export enum TradeType {
+  /**
+   * @type {string}
+   */
+  orderBook,
+  /**
+   * @type {string}
+   */
+  pool,
+  /**
+   * @type {string}
+   */
+  hybrid,
 }

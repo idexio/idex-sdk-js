@@ -25,6 +25,14 @@ toc:
         children:
           - WebSocketClient
           - WebSocketClientOptions
+      - name: OrderBookRealTimeClient
+        description: |
+          ```typescript
+            import { OrderBookRealTimeClient } from '@idexio/idex-sdk';
+          ```
+        children:
+          - OrderBookRealTimeClient
+          - OrderBookRealTimeClientOptions
   - name: Enums
     description: |
       Sets of named constants used as field types for several requests and responses

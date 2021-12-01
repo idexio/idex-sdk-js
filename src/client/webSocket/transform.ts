@@ -22,6 +22,7 @@ const transformTickersMessage = (
 const transformTradesMessage = (
   trade: types.WebSocketResponseTradeShort,
 ): types.WebSocketResponseTradeLong => ({
+  type: trade.y,
   market: trade.m,
   fillId: trade.i,
   price: trade.p,
@@ -58,6 +59,10 @@ const transformL1orderbooksMessage = (
   bidQuantity: l1orderbook.B,
   askPrice: l1orderbook.a,
   askQuantity: l1orderbook.A,
+  pool: l1orderbook.p && {
+    baseReserveQuantity: l1orderbook.p.q,
+    quoteReserveQuantity: l1orderbook.p.Q,
+  },
 });
 
 const transformL2orderbooksMessage = (
@@ -68,6 +73,10 @@ const transformL2orderbooksMessage = (
   sequence: l2orderbook.u,
   ...(l2orderbook.b && { bids: l2orderbook.b }),
   ...(l2orderbook.a && { asks: l2orderbook.a }),
+  pool: l2orderbook.p && {
+    baseReserveQuantity: l2orderbook.p.q,
+    quoteReserveQuantity: l2orderbook.p.Q,
+  },
 });
 
 const transformBalancesMessage = (
@@ -84,10 +93,15 @@ const transformBalancesMessage = (
 const transformOrderFill = (
   fill: types.WebSocketResponseOrderFillShort,
 ): types.RestResponseOrderFill => ({
+  type: fill.y,
   fillId: fill.i,
   price: fill.p,
   quantity: fill.q,
   quoteQuantity: fill.Q,
+  orderBookQuantity: fill.oq,
+  orderBookQuoteQuantity: fill.oQ,
+  poolQuantity: fill.pq,
+  poolQuoteQuantity: fill.pQ,
   time: fill.t,
   makerSide: fill.s,
   sequence: fill.u,
@@ -125,6 +139,13 @@ const transformOrdersMessage = (
   ...(order.F && { fills: order.F.map(transformOrderFill) }),
 });
 
+const transformTokenPriceMessage = (
+  message: types.WebSocketResponseTokenPriceShort,
+): types.WebSocketResponseTokenPriceLong => ({
+  token: message.t,
+  price: message.p,
+});
+
 export const transformWebsocketShortResponseMessage = (
   message:
     | types.WebSocketResponseError
@@ -149,6 +170,8 @@ export const transformWebsocketShortResponseMessage = (
       return { ...message, data: transformBalancesMessage(message.data) };
     case 'orders':
       return { ...message, data: transformOrdersMessage(message.data) };
+    case 'tokenprice':
+      return { ...message, data: transformTokenPriceMessage(message.data) };
 
     default:
       return message;

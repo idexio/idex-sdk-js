@@ -4,14 +4,12 @@ import * as enums from '../enums';
  * Asset
  *
  * @typedef {Object} RestResponseAsset
- * @property {number} id - Internal id of the asset
  * @property {string} name
  * @property {string} symbol
  * @property {string} contractAddress
- * @property {string} decimals
- * @property {string} depositMinimum
- * @property {string} tradeMinimum
- * @property {string} withdrawalMinimum
+ * @property {number} assetDecimals
+ * @property {number} exchangeDecimals
+ * @property {string} maticPrice
  */
 export interface RestResponseAsset {
   name: string;
@@ -19,6 +17,7 @@ export interface RestResponseAsset {
   contractAddress: string;
   assetDecimals: number;
   exchangeDecimals: 8; // this is hardcoded everywhere and should not be changed
+  maticPrice: string | null;
 }
 
 /**
@@ -29,14 +28,14 @@ export interface RestResponseAsset {
  * @property {string} quantity - Total quantity of the asset held by the wallet on the exchange
  * @property {string} availableForTrade - Quantity of the asset available for trading; quantity - locked
  * @property {string} locked - Quantity of the asset held in trades on the order book
- * @property {string} usdValue - Total value of the asset held by the wallet on the exchange in USD
+ * @property {string | null} usdValue - Total value of the asset held by the wallet on the exchange in USD
  */
 export interface RestResponseBalance {
   asset: string;
   quantity: string;
   availableForTrade: string;
   locked: string;
-  usdValue: string;
+  usdValue: string | null;
 }
 
 /**
@@ -87,65 +86,78 @@ export interface RestResponseDeposit {
  * @typedef {Object} RestResponseExchangeInfo
  * @property {string} timeZone - Server time zone, always UTC
  * @property {number} serverTime - Current server time
- * @property {string} ethereumDepositContractAddress - Ethereum address of the exchange custody contract for deposits, only when multiverse chain is "eth"
- * @property {string} bscDepositContractAddress - Ethereum address of the exchange custody contract for deposits, only when multiverse chain is "bsc"
- * @property {string} ethUsdPrice - Current price of ETH in USD, only provided if multiverse chain is "eth"
- * @property {string} bnbUsdPrice - Current price of BNB in USD, only provided if multiverse chain is "bsc"
+ * @property {string} maticDepositContractAddress - Polygon address of the exchange smart contract for deposits
+ * @property {string} maticCustodyContractAddress - Polygon address of the custody smart contract for certain add and remove liquidity calls
+ * @property {string} maticUsdPrice - Current price of MATIC in USD
  * @property {number} gasPrice - Current gas price used by the exchange for trade settlement and withdrawal transactions in Gwei
  * @property {string} volume24hUsd - Total exchange trading volume for the trailing 24 hours in USD
+ * @property {string} totalVolumeUsd - Total exchange trading volume for IDEX v3 on Polygon in USD
+ * @property {number} totalTrades - Total number of trade executions for IDEX v3 on Polygon
+ * @property {string} totalValueLockedUsd - Total value locked in IDEX v3 on Polygon in USD
+ * @property {string} idexTokenAddress - Token contract address for the IDEX token on Polygon
+ * @property {string} idexUsdPrice - Current price of the IDEX token in USD
+ * @property {string} idexMarketCapUsd - Market capitalization of the IDEX token in USD
  * @property {string} makerFeeRate - Maker trade fee rate
- * @property {string} takerFeeRate - Taker trade fee rate
- * @property {string} makerTradeMinimum - Minimum size of an order that can rest on the order book in ETH, applies to both ETH and tokens
- * @property {string} takerTradeMinimum - Minimum order size that is accepted by the matching engine for execution in ETH, applies to both ETH and tokens
- * @property {string} withdrawMinimum - Minimum withdrawal amount in ETH, applies to both ETH and tokens
+ * @property {string} takerFeeRate - Total taker trade fee rate
+ * @property {string} takerIdexFeeRate - Taker trade fee rate collected by IDEX; used in computing synthetic price levels for real-time order books
+ * @property {string} takerLiquidityProviderFeeRate - Taker trade fee rate collected by liquidity providers; used in computing synthetic price levels for real-time order books
+ * @property {string} makerTradeMinimum - Minimum size of an order that can rest on the order book in MATIC, applies to both MATIC and tokens
+ * @property {string} takerTradeMinimum - Minimum order size that is accepted by the matching engine for execution in MATIC, applies to both MATIC and tokens
+ * @property {string} withdrawMinimum - Minimum withdrawal amount in MATIC, applies to both MATIC and tokens
+ * @property {string} liquidityAdditionMinimum - Minimum liquidity addition amount in MATIC, applies to both MATIC and tokens
+ * @property {string} liquidityRemovalMinimum - Minimum withdrawal amount in MATIC, applies to both MATIC and tokens
+ * @property {number} blockConfirmationDelay - Minimum number of block confirmations before on-chain transactions are processed
  */
-export type RestResponseExchangeInfo<
-  C extends enums.MultiverseChain = 'eth'
-> = {
+export type RestResponseExchangeInfo = {
   timeZone: string;
   serverTime: number;
+  maticDepositContractAddress: string;
+  maticCustodyContractAddress: string;
+  maticUsdPrice: string;
   gasPrice: number;
   volume24hUsd: string;
+  totalVolumeUsd: string;
+  totalTrades: number;
+  totalValueLockedUsd: string;
+  idexTokenAddress: string;
+  idexUsdPrice: string;
+  idexMarketCapUsd: string;
   makerFeeRate: string;
   takerFeeRate: string;
+  takerIdexFeeRate: string;
+  takerLiquidityProviderFeeRate: string;
   makerTradeMinimum: string;
   takerTradeMinimum: string;
   withdrawMinimum: string;
-} & (C extends 'eth'
-  ? {
-      ethUsdPrice: string;
-      ethereumDepositContractAddress: string;
-      bnbUsdPrice?: void;
-      bscDepositContractAddress?: void;
-    }
-  : C extends 'bsc'
-  ? {
-      bnbUsdPrice: string;
-      bscDepositContractAddress: string;
-      ethereumDepositContractAddress?: void;
-      ethUsdPrice?: void;
-    }
-  : never);
+  liquidityAdditionMinimum: string;
+  liquidityRemovalMinimum: string;
+  blockConfirmationDelay: number;
+};
 
 /**
  * Fill
  *
  * @typedef {Object} RestResponseFill
  * @property {string} fillId - Internal ID of fill
- * @property {string} orderId - Internal ID of order
- * @property {string} [clientOrderId] - Client-provided ID of order
- * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
  * @property {string} price - Executed price of fill in quote terms
  * @property {string} quantity - Executed quantity of fill in base terms
- * @property {string} quoteQuantity - Executed quantity of trade in quote terms
+ * @property {string} quoteQuantity - Executed quantity of fill in quote terms
+ * @property {string} [orderBookQuantity] - Quantity of the fill in base terms supplied by order book liquidity, omitted for pool fills
+ * @property {string} [orderBookQuoteQuantity] - Quantity of the fill in quote terms supplied by order book liquidity, omitted for pool fills
+ * @property {string} [poolQuantity] - Quantity of the fill in base terms supplied by pool liquidity, omitted for orderBook fills
+ * @property {string} [poolQuoteQuantity] - Quantity of the fill in quote terms supplied by pool liquidity, omitted for orderBook fills
+ * @property {string} time - Fill timestamp
  * @property {OrderSide} makerSide - Which side of the order the liquidity maker was on
+ * @property {number} sequence - Last trade sequence number for the market
+ * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
+ * @property {string} orderId - Internal ID of order
+ * @property {string} [clientOrderId] - Client-provided ID of order
+ * @property {OrderSide} side - Orders side, buy or sell
  * @property {string} fee - Fee amount on fill
  * @property {string} feeAsset - Which token the fee was taken in
- * @property {string} gas
- * @property {OrderSide} side
- * @property {Liquidity} liquidity
- * @property {string} time - Fill timestamp
- * @property {number} sequence - Last trade sequence number for the market
+ * @property {string} gas - Amount collected to cover trade settlement gas costs, only present for taker
+ * @property {Liquidity} liquidity - Whether the fill is the maker or taker in the trade from the perspective of the requesting API account, maker or taker
+ * @property {TradeType} type - Fill type
  * @property {string | null} txId - Ethereum transaction ID, if available
  * @property {string} txStatus - Ethereum transaction status
  */
@@ -157,6 +169,107 @@ export interface RestResponseFill extends RestResponseOrderFill {
 }
 
 /**
+ * Liquidity Pool
+ *
+ * @typedef {Object} RestResponseLiquidityPool
+ * @property {string} tokenA - Address of one reserve token
+ * @property {string} tokenB - Address of one reserve token
+ * @property {string} reserveA - Quantity of token A held as reserve in token precision, not pips
+ * @property {string} reserveB - Quantity of token B held as reserve in token precision, not pips
+ * @property {string} liquidityToken - Address of the liquidity provider (LP) token
+ * @property {string} totalLiquidity - Total quantity of liquidity provider (LP) tokens minted in token precision, not pips
+ * @property {string} reserveUsd - Total value of reserves in USD
+ * @property {string} market - Market symbol of pool’s associated hybrid market
+ */
+export interface RestResponseLiquidityPool {
+  tokenA: string;
+  tokenB: string;
+  reserveA: string;
+  reserveB: string;
+  liquidityToken: string;
+  totalLiquidity: string;
+  reserveUsd: string;
+  market: string;
+}
+
+interface RestResponseLiquidityBase {
+  tokenA: string;
+  tokenB: string;
+  amountA: string | null;
+  amountB: string | null;
+  liquidity: string | null;
+  time: number;
+  initiatingTxId: string | null;
+  errorCode?: string;
+  errorMessage?: string;
+  feeTokenA: string | null;
+  feeTokenB: string | null;
+  txId: string | null;
+  txStatus: keyof typeof enums.EthTransactionStatus | null;
+}
+
+/**
+ * LiquidityAddition
+ *
+ * @typedef {Object} RestResponseLiquidityAddition
+ * @property {string} liquidityAdditionId - Internal ID of liquidity addition
+ * @property {string} tokenA - Asset symbol
+ * @property {string} tokenB - Asset symbol
+ * @property {string | null} amountA - Amount of tokenA added to the liquidity pool
+ * @property {string | null} amountB - Amount of tokenB added to the liquidity pool
+ * @property {string | null} liquidity - Amount of liquidity provided (LP) tokens minted
+ * @property {number} time - Liquidity addition timestamp
+ * @property {string | null} initiatingTxId - On chain initiated transaction ID, if available
+ * @property {string} errorCode - Error short code present on liquidity addition error
+ * @property {string} errorMessage - Human-readable error message present on liquidity addition error
+ * @property {string | null} feeTokenA - Amount of tokenA collected as fees
+ * @property {string | null} feeTokenB - Amount of tokenB collected as fees
+ * @property {string | null} txId - Ethereum transaction ID, if available
+ * @property {EthTransactionStatus | null} txStatus - Ethereum transaction status
+ */
+
+export interface RestResponseLiquidityAddition
+  extends RestResponseLiquidityBase {
+  liquidityAdditionId: string | null;
+}
+
+/**
+ * LiquidityPoolReserves
+ *
+ * @typedef {Object} RestResponseLiquidityPoolReserves
+ * @property {string} baseReserveQuantity - reserve quantity of base asset in pool
+ * @property {string} quoteReserveQuantity - reserve quantity of quote asset in pool
+ */
+export interface RestResponseLiquidityPoolReserves {
+  baseReserveQuantity: string;
+  quoteReserveQuantity: string;
+}
+
+/**
+ * LiquidityRemoval
+ *
+ * @typedef {Object} RestResponseLiquidityRemoval
+ * @property {string} liquidityRemovalId - Internal ID of liquidity removal
+ * @property {string} tokenA - Asset symbol
+ * @property {string} tokenB - Asset symbol
+ * @property {string | null} amountA - Amount of tokenA added to the liquidity pool
+ * @property {string | null} amountB - Amount of tokenB added to the liquidity pool
+ * @property {string | null} liquidity - Amount of liquidity provided (LP) tokens minted
+ * @property {number} time - Liquidity addition timestamp
+ * @property {string | null} initiatingTxId - On chain initiated transaction ID, if available
+ * @property {string} errorCode - Error short code present on liquidity addition error
+ * @property {string} errorMessage - Human-readable error message present on liquidity addition error
+ * @property {string | null} feeTokenA - Amount of tokenA collected as fees
+ * @property {string | null} feeTokenB - Amount of tokenB collected as fees
+ * @property {string | null} txId - Ethereum transaction ID, if available
+ * @property {EthTransactionStatus | null} txStatus - Ethereum transaction status
+ */
+export interface RestResponseLiquidityRemoval
+  extends RestResponseLiquidityBase {
+  liquidityRemovalId: string | null;
+}
+
+/**
  * OrderFill
  *
  * @typedef {Object} RestResponseOrderFill
@@ -164,13 +277,18 @@ export interface RestResponseFill extends RestResponseOrderFill {
  * @property {string} price - Executed price of fill in quote terms
  * @property {string} quantity - Executed quantity of fill in base terms
  * @property {string} quoteQuantity - Executed quantity of trade in quote terms
+ * @property {string} [orderBookQuantity] - Quantity of the fill in base terms supplied by order book liquidity, omitted for pool fills
+ * @property {string} [orderBookQuoteQuantity] - Quantity of the fill in quote terms supplied by order book liquidity, omitted for pool fills
+ * @property {string} [poolQuantity] - Quantity of the fill in base terms supplied by pool liquidity, omitted for orderBook fills
+ * @property {string} [poolQuoteQuantity] - Quantity of the fill in quote terms supplied by pool liquidity, omitted for orderBook fills
+ * @property {string} time - Fill timestamp
  * @property {OrderSide} makerSide - Which side of the order the liquidity maker was on
+ * @property {number} sequence - Last trade sequence number for the market
  * @property {string} fee - Fee amount on fill
  * @property {string} feeAsset - Which token the fee was taken in
  * @property {string} [gas]
  * @property {Liquidity} liquidity
- * @property {string} time - Fill timestamp
- * @property {number} sequence - Last trade sequence number for the market
+ * @property {TradeType} type - orderBook, pool, or hybrid
  * @property {string | null} txId - Ethereum transaction ID, if available
  * @property {string} txStatus - Ethereum transaction status
  */
@@ -179,6 +297,10 @@ export interface RestResponseOrderFill {
   price: string;
   quantity: string;
   quoteQuantity: string;
+  orderBookQuantity?: string;
+  orderBookQuoteQuantity?: string;
+  poolQuantity?: string;
+  poolQuoteQuantity?: string;
   time: number;
   makerSide: keyof typeof enums.OrderSide;
   sequence: number;
@@ -186,6 +308,7 @@ export interface RestResponseOrderFill {
   feeAsset: string;
   gas?: string;
   liquidity: keyof typeof enums.Liquidity;
+  type: keyof typeof enums.TradeType;
   txId: string | null;
   txStatus: keyof typeof enums.EthTransactionStatus;
 }
@@ -194,24 +317,30 @@ export interface RestResponseOrderFill {
  * Market
  *
  * @typedef {Object} RestResponseMarket
- * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
+ * @property {string} market - Base-quote pair e.g. 'IDEX-USD'
+ * @property {MarketType} type
  * @property {MarketStatus} status
  * @property {string} baseAsset - e.g. 'IDEX'
  * @property {number} baseAssetPrecision
- * @property {string} quoteAsset - e.g. 'ETH'
+ * @property {string} quoteAsset - e.g. 'USD'
  * @property {number} quoteAssetPrecision
  * @property {string} makerFeeRate
  * @property {string} takerFeeRate
- * @property {OrderType[]} orderTypes
- * @property {string} tradeMinimum - Minimum quantity in base terms
+ * @property {string} takerIdexFeeRate
+ * @property {string} takerLiquidityProviderFeeRate
  */
 export interface RestResponseMarket {
   market: string;
+  type: keyof typeof enums.MarketType;
   status: keyof typeof enums.MarketStatus;
   baseAsset: string;
   baseAssetPrecision: number;
   quoteAsset: string;
   quoteAssetPrecision: number;
+  makerFeeRate: string;
+  takerFeeRate: string;
+  takerIdexFeeRate: string;
+  takerLiquidityProviderFeeRate: string;
 }
 
 /**
@@ -281,34 +410,44 @@ type NumOrders = number;
 /**
  * OrderBookPriceLevel
  *
- * @typedef {[string, string, number]} RestResponseOrderBookPriceLevel
+ * price and size as decimal strings
+ * numorders = # of limit orders at this price level (0 for synthetic levels)
+ *
+ * @typedef {[Price, Size, NumOrders]} RestResponseOrderBookPriceLevel
  */
 export type RestResponseOrderBookPriceLevel = [Price, Size, NumOrders];
 
 interface RestResponseOrderBook {
   sequence: number;
-  bids: unknown[];
-  asks: unknown[];
+  bids: RestResponseOrderBookPriceLevel[];
+  asks: RestResponseOrderBookPriceLevel[];
+  pool: RestResponseLiquidityPoolReserves | null;
 }
 
 /**
  * OrderBookLevel1
  *
  * @typedef {Object} RestResponseOrderBookLevel1
+ * @property {number} sequence
  * @property {[RestResponseOrderBookPriceLevel]|[]} bids
  * @property {[RestResponseOrderBookPriceLevel]|[]} asks
+ * @property {RestResponseLiquidityPoolReserves|null} pool
  */
-export interface RestResponseOrderBookLevel1 extends RestResponseOrderBook {
+export interface RestResponseOrderBookLevel1 {
+  sequence: number;
   bids: [RestResponseOrderBookPriceLevel] | [];
   asks: [RestResponseOrderBookPriceLevel] | [];
+  pool: RestResponseLiquidityPoolReserves | null;
 }
 
 /**
  * OrderBookLevel2
  *
  * @typedef {Object} RestResponseOrderBookLevel2
+ * @property {number} sequence
  * @property {RestResponseOrderBookPriceLevel[]} bids
  * @property {RestResponseOrderBookPriceLevel[]} asks
+ * @property {RestResponseLiquidityPoolReserves|null} pool
  */
 export interface RestResponseOrderBookLevel2 extends RestResponseOrderBook {
   bids: RestResponseOrderBookPriceLevel[];
@@ -327,34 +466,34 @@ export type RestResponsePing = { [key: string]: never };
  *
  * @typedef {Object} RestResponseTicker
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
- * @property {string} percentChange - % change from open to close
- * @property {string} baseVolume - 24h volume in base terms
- * @property {string} quoteVolume - 24h volume in quote terms
- * @property {string | null} low - Lowest traded price in the period in quote terms
- * @property {string | null} high - Highest traded price in the period in quote terms
- * @property {string | null} bid - Best bid price on the order book
- * @property {string | null} ask - Best ask price on the order book
+ * @property {number} time - Time when data was calculated, open and change is assumed to be trailing 24h
  * @property {string | null} open - Price of the first trade for the period in quote terms
+ * @property {string | null} high - Highest traded price in the period in quote terms
+ * @property {string | null} low - Lowest traded price in the period in quote terms
  * @property {string | null} close - Same as last
  * @property {string | null} closeQuantity - Quantity of the last period in base terms
- * @property {number} time - Time when data was calculated, open and change is assumed to be trailing 24h
+ * @property {string} baseVolume - 24h volume in base terms
+ * @property {string} quoteVolume - 24h volume in quote terms
+ * @property {string} percentChange - % change from open to close
  * @property {number} numTrades - Number of fills for the market in the period
+ * @property {string | null} ask - Best ask price on the order book
+ * @property {string | null} bid - Best bid price on the order book
  * @property {number | null} sequence - Last trade sequence number for the market
  */
 export interface RestResponseTicker {
   market: string;
-  percentChange: string;
-  baseVolume: string;
-  quoteVolume: string;
-  low: string | null;
-  high: string | null;
-  bid: string | null;
-  ask: string | null;
+  time: number;
   open: string | null;
+  high: string | null;
+  low: string | null;
   close: string | null;
   closeQuantity: string | null;
-  time: number;
+  baseVolume: string;
+  quoteVolume: string;
+  percentChange: string;
   numTrades: number;
+  ask: string | null;
+  bid: string | null;
   sequence: number | null;
 }
 
@@ -378,6 +517,7 @@ export interface RestResponseTime {
  * @property {string} quoteQuantity - Executed quantity of trade in quote terms
  * @property {number} time - Fill timestamp
  * @property {OrderSide} makerSide - Which side of the order the liquidity maker was on
+ * @property {TradeType} type - orderBook, pool, or hybrid
  * @property {number} sequence - Last trade sequence number for the market
  */
 export interface RestResponseTrade {
@@ -387,6 +527,7 @@ export interface RestResponseTrade {
   quoteQuantity: string;
   time: number;
   makerSide: keyof typeof enums.OrderSide;
+  type: keyof typeof enums.TradeType;
   sequence: number;
 }
 
@@ -398,24 +539,22 @@ export interface RestResponseTrade {
  * @property {boolean} orderEnabled - Placing orders is enabled for the user account
  * @property {boolean} cancelEnabled - Cancelling orders is enabled for the user account
  * @property {boolean} withdrawEnabled - Withdrawals are enabled for the user account
- * @property {number} kycTier - Approved KYC tier; 0, 1, 2
  * @property {string} totalPortfolioValueUsd - Total value of all holdings deposited on the exchange, for all wallets associated with the user account, in USD
- * @property {string} withdrawalLimit - 24-hour withdrawal limit in USD, or unlimited, determined by KYC tier
- * @property {string} withdrawalRemaining - Currently withdrawable amount in USD, or unlimited, based on trailing 24 hour withdrawals and KYC tier
  * @property {string} makerFeeRate - User-specific maker trade fee rate
  * @property {string} takerFeeRate - User-specific taker trade fee rate
+ * @property {string} takerIdexFeeRate - User-specific liquidity pool taker IDEX fee rate
+ * @property {string} takerLiquidityProviderFeeRate - User-specific liquidity pool taker LP provider fee rate
  */
 export interface RestResponseUser {
   depositEnabled: boolean;
   orderEnabled: boolean;
   cancelEnabled: boolean;
   withdrawEnabled: boolean;
-  kycTier: 0 | 1 | 2;
   totalPortfolioValueUsd: string;
-  withdrawalLimit: string;
-  withdrawalRemaining: string;
   makerFeeRate: string;
   takerFeeRate: string;
+  takerIdexFeeRate: string;
+  takerLiquidityProviderFeeRate: string;
 }
 
 /**

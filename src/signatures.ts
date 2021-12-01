@@ -2,12 +2,15 @@ import { ethers } from 'ethers';
 
 import * as constants from './constants';
 
+import { LiquidityChangeType, LiquidityChangeOrigination } from './types/enums';
 import {
+  RestRequestAddLiquidity,
   RestRequestOrder,
   RestRequestOrderByBaseQuantity,
   RestRequestOrderByQuoteQuantity,
   RestRequestOrderWithPrice,
   RestRequestOrderWithStopPrice,
+  RestRequestRemoveLiquidity,
   RestRequestWithdrawal,
   OrderType,
   OrderSide,
@@ -56,9 +59,25 @@ export function createPrivateKeyMessageSigner(
  */
 export const privateKeySigner = createPrivateKeyMessageSigner;
 
+function signatureHashVersion(
+  multiverseChain: MultiverseChain,
+  sandbox: boolean,
+):
+  | typeof constants.ORDER_SIGNATURE_HASH_VERSION_MATIC
+  | typeof constants.ORDER_SIGNATURE_HASH_VERSION_MATIC_SANDBOX {
+  if (multiverseChain === 'matic') {
+    return sandbox
+      ? constants.ORDER_SIGNATURE_HASH_VERSION_MATIC_SANDBOX
+      : constants.ORDER_SIGNATURE_HASH_VERSION_MATIC;
+  }
+
+  throw new Error(`Invalid multiverse chain: ${multiverseChain}`);
+}
+
 export function createOrderSignature(
   order: RestRequestOrder,
   multiverseChain: MultiverseChain,
+  sandbox: boolean,
 ): string {
   const quantity =
     (order as RestRequestOrderByBaseQuantity).quantity ||
@@ -66,19 +85,8 @@ export function createOrderSignature(
   const isQuantityInQuote = !!(order as RestRequestOrderByQuoteQuantity)
     .quoteOrderQuantity;
 
-  let orderSignatureHashVersion:
-    | typeof constants.ORDER_SIGNATURE_HASH_VERSION_ETH
-    | typeof constants.ORDER_SIGNATURE_HASH_VERSION_BSC;
-  if (multiverseChain === 'eth') {
-    orderSignatureHashVersion = constants.ORDER_SIGNATURE_HASH_VERSION_ETH;
-  } else if (multiverseChain === 'bsc') {
-    orderSignatureHashVersion = constants.ORDER_SIGNATURE_HASH_VERSION_BSC;
-  } else {
-    throw new Error(`Invalid multiverse chain: ${multiverseChain}`);
-  }
-
   return solidityHashOfParams([
-    ['uint8', orderSignatureHashVersion],
+    ['uint8', signatureHashVersion(multiverseChain, sandbox)],
     ['uint128', uuidToUint8Array(order.nonce)],
     ['address', order.wallet],
     ['string', order.market],
@@ -106,6 +114,7 @@ type TypeValuePairings = {
   uint128: Uint8Array;
   uint8: number;
   uint64: number;
+  uint256: string;
   bool: boolean;
 };
 
@@ -153,6 +162,49 @@ export function createWithdrawalSignature(
       : ['address', withdrawal.assetContractAddress],
     ['string', withdrawal.quantity],
     ['bool', true], // Auto-dispatch
+  ]);
+}
+
+export function createAddLiquiditySignature(
+  addLiquidity: RestRequestAddLiquidity,
+  multiverseChain: MultiverseChain,
+  sandbox: boolean,
+): string {
+  return solidityHashOfParams([
+    ['uint8', signatureHashVersion(multiverseChain, sandbox)],
+    ['uint8', LiquidityChangeType.Addition],
+    ['uint8', LiquidityChangeOrigination.OffChain],
+    ['uint128', uuidToUint8Array(addLiquidity.nonce)],
+    ['address', addLiquidity.wallet],
+    ['address', addLiquidity.tokenA],
+    ['address', addLiquidity.tokenB],
+    ['uint256', addLiquidity.amountADesired],
+    ['uint256', addLiquidity.amountBDesired],
+    ['uint256', addLiquidity.amountAMin],
+    ['uint256', addLiquidity.amountBMin],
+    ['address', addLiquidity.to],
+    ['uint256', 0], // off chain deadline
+  ]);
+}
+
+export function createRemoveLiquiditySignature(
+  removeLiquidity: RestRequestRemoveLiquidity,
+  multiverseChain: MultiverseChain,
+  sandbox: boolean,
+): string {
+  return solidityHashOfParams([
+    ['uint8', signatureHashVersion(multiverseChain, sandbox)],
+    ['uint8', LiquidityChangeType.Removal],
+    ['uint8', LiquidityChangeOrigination.OffChain],
+    ['uint128', uuidToUint8Array(removeLiquidity.nonce)],
+    ['address', removeLiquidity.wallet],
+    ['address', removeLiquidity.tokenA],
+    ['address', removeLiquidity.tokenB],
+    ['uint256', removeLiquidity.liquidity],
+    ['uint256', removeLiquidity.amountAMin],
+    ['uint256', removeLiquidity.amountBMin],
+    ['address', removeLiquidity.to],
+    ['uint256', 0], // off chain deadline
   ]);
 }
 

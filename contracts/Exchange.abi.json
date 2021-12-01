@@ -1,6 +1,22 @@
 [
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "contract IExchange",
+        "name": "balanceMigrationSource",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "feeWallet",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "nativeAssetSymbol",
+        "type": "string"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -33,22 +49,16 @@
         "type": "uint64"
       },
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "address",
         "name": "wallet",
         "type": "address"
       },
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "address",
         "name": "assetAddress",
         "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "string",
-        "name": "assetSymbolIndex",
-        "type": "string"
       },
       {
         "indexed": false,
@@ -84,17 +94,71 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "previousValue",
+        "name": "buyWallet",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "address",
-        "name": "newValue",
+        "name": "sellWallet",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "baseAssetSymbol",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "quoteAssetSymbol",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "orderBookBaseQuantityInPips",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "orderBookQuoteQuantityInPips",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "poolBaseQuantityInPips",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "poolQuoteQuantityInPips",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "totalBaseQuantityInPips",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "totalQuoteQuantityInPips",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum OrderSide",
+        "name": "takerSide",
+        "type": "uint8"
       }
     ],
-    "name": "DispatcherChanged",
+    "name": "HybridTradeExecuted",
     "type": "event"
   },
   {
@@ -103,24 +167,300 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "previousValue",
+        "name": "wallet",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "address",
-        "name": "newValue",
+        "name": "baseAssetAddress",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "quoteAssetAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "baseQuantityInPips",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "quoteQuantityInPips",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "liquidityInPips",
+        "type": "uint64"
       }
     ],
-    "name": "FeeWalletChanged",
+    "name": "LiquidityAdditionExecuted",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
+        "indexed": false,
+        "internalType": "address",
+        "name": "wallet",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "assetA",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "assetB",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountADesired",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountBDesired",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountAMin",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountBMin",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "deadline",
+        "type": "uint256"
+      }
+    ],
+    "name": "LiquidityAdditionInitiated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "originalBaseAssetAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "originalQuoteAssetAddress",
+        "type": "address"
+      }
+    ],
+    "name": "LiquidityPoolAssetsReversed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "baseAssetAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "quoteAssetAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "liquidityProviderToken",
+        "type": "address"
+      }
+    ],
+    "name": "LiquidityPoolCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "wallet",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "baseAssetAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "quoteAssetAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "baseQuantityInPips",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "quoteQuantityInPips",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "liquidityInPips",
+        "type": "uint64"
+      }
+    ],
+    "name": "LiquidityRemovalExecuted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "wallet",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "assetA",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "assetB",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "liquidity",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountAMin",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountBMin",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "deadline",
+        "type": "uint256"
+      }
+    ],
+    "name": "LiquidityRemovalInitiated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "buyWallet",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "sellWallet",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "baseAssetSymbol",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "quoteAssetSymbol",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "baseQuantityInPips",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "quoteQuantityInPips",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum OrderSide",
+        "name": "takerSide",
+        "type": "uint8"
+      }
+    ],
+    "name": "OrderBookTradeExecuted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "address",
         "name": "wallet",
         "type": "address"
@@ -151,78 +491,10 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "contract IERC20",
-        "name": "assetAddress",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "assetSymbol",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint8",
-        "name": "decimals",
-        "type": "uint8"
-      }
-    ],
-    "name": "TokenRegistered",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "contract IERC20",
-        "name": "assetAddress",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "assetSymbol",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint8",
-        "name": "decimals",
-        "type": "uint8"
-      }
-    ],
-    "name": "TokenRegistrationConfirmed",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": false,
         "internalType": "address",
-        "name": "buyWallet",
+        "name": "wallet",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "sellWallet",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "string",
-        "name": "baseAssetSymbolIndex",
-        "type": "string"
-      },
-      {
-        "indexed": true,
-        "internalType": "string",
-        "name": "quoteAssetSymbolIndex",
-        "type": "string"
       },
       {
         "indexed": false,
@@ -250,38 +522,20 @@
       },
       {
         "indexed": false,
-        "internalType": "uint64",
-        "name": "tradePriceInPips",
-        "type": "uint64"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "buyOrderHash",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "sellOrderHash",
-        "type": "bytes32"
+        "internalType": "enum OrderSide",
+        "name": "takerSide",
+        "type": "uint8"
       }
     ],
-    "name": "TradeExecuted",
+    "name": "PoolTradeExecuted",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "wallet",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
+        "indexed": false,
+        "internalType": "contract IERC20",
         "name": "assetAddress",
         "type": "address"
       },
@@ -290,24 +544,81 @@
         "internalType": "string",
         "name": "assetSymbol",
         "type": "string"
+      }
+    ],
+    "name": "TokenSymbolAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "wallet",
+        "type": "address"
+      }
+    ],
+    "name": "WalletExitCleared",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "wallet",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "baseAssetAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "quoteAssetAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "baseAssetQuantityInPips",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "quoteAssetQuantityInPips",
+        "type": "uint64"
+      }
+    ],
+    "name": "WalletExitLiquidityRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "wallet",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "assetAddress",
+        "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint64",
         "name": "quantityInPips",
         "type": "uint64"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint64",
-        "name": "newExchangeBalanceInPips",
-        "type": "uint64"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "newExchangeBalanceInAssetUnits",
-        "type": "uint256"
       }
     ],
     "name": "WalletExitWithdrawn",
@@ -317,7 +628,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "address",
         "name": "wallet",
         "type": "address"
@@ -336,13 +647,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "address",
         "name": "wallet",
         "type": "address"
       },
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "address",
         "name": "assetAddress",
         "type": "address"
@@ -377,6 +688,43 @@
   },
   {
     "inputs": [],
+    "name": "_depositIndex",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "_walletExits",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "exists",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "effectiveBlockNumber",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "removeAdmin",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -396,14 +744,31 @@
     "type": "function"
   },
   {
+    "stateMutability": "payable",
+    "type": "receive"
+  },
+  {
     "inputs": [
       {
-        "internalType": "address payable",
+        "internalType": "contract ICustodian",
         "name": "newCustodian",
         "type": "address"
       }
     ],
     "name": "setCustodian",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "newDepositIndex",
+        "type": "uint64"
+      }
+    ],
+    "name": "setDepositIndex",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -430,6 +795,19 @@
       }
     ],
     "name": "setFeeWallet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newMigrator",
+        "type": "address"
+      }
+    ],
+    "name": "setMigrator",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -532,7 +910,89 @@
   },
   {
     "inputs": [],
+    "name": "loadCustodian",
+    "outputs": [
+      {
+        "internalType": "contract ICustodian",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "loadFeeWallet",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "baseAssetAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "quoteAssetAddress",
+        "type": "address"
+      }
+    ],
+    "name": "loadLiquidityPoolByAssetAddresses",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "exists",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint64",
+            "name": "baseAssetReserveInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint8",
+            "name": "baseAssetDecimals",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint64",
+            "name": "quoteAssetReserveInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint8",
+            "name": "quoteAssetDecimals",
+            "type": "uint8"
+          },
+          {
+            "internalType": "contract ILiquidityProviderToken",
+            "name": "liquidityProviderToken",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct LiquidityPool",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "loadLiquidityMigrator",
     "outputs": [
       {
         "internalType": "address",
@@ -572,7 +1032,7 @@
   {
     "inputs": [
       {
-        "internalType": "contract IERC20",
+        "internalType": "address",
         "name": "tokenAddress",
         "type": "address"
       },
@@ -608,99 +1068,6 @@
   {
     "inputs": [
       {
-        "internalType": "uint128",
-        "name": "nonce",
-        "type": "uint128"
-      }
-    ],
-    "name": "invalidateOrderNonce",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "enum Enums.WithdrawalType",
-            "name": "withdrawalType",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint128",
-            "name": "nonce",
-            "type": "uint128"
-          },
-          {
-            "internalType": "address payable",
-            "name": "walletAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "string",
-            "name": "assetSymbol",
-            "type": "string"
-          },
-          {
-            "internalType": "address",
-            "name": "assetAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "uint64",
-            "name": "quantityInPips",
-            "type": "uint64"
-          },
-          {
-            "internalType": "uint64",
-            "name": "gasFeeInPips",
-            "type": "uint64"
-          },
-          {
-            "internalType": "bool",
-            "name": "autoDispatchEnabled",
-            "type": "bool"
-          },
-          {
-            "internalType": "bytes",
-            "name": "walletSignature",
-            "type": "bytes"
-          }
-        ],
-        "internalType": "struct Structs.Withdrawal",
-        "name": "withdrawal",
-        "type": "tuple"
-      }
-    ],
-    "name": "withdraw",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "exitWallet",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "assetAddress",
-        "type": "address"
-      }
-    ],
-    "name": "withdrawExit",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "components": [
           {
             "internalType": "uint8",
@@ -718,12 +1085,12 @@
             "type": "address"
           },
           {
-            "internalType": "enum Enums.OrderType",
+            "internalType": "enum OrderType",
             "name": "orderType",
             "type": "uint8"
           },
           {
-            "internalType": "enum Enums.OrderSide",
+            "internalType": "enum OrderSide",
             "name": "side",
             "type": "uint8"
           },
@@ -733,9 +1100,9 @@
             "type": "uint64"
           },
           {
-            "internalType": "uint64",
-            "name": "quoteOrderQuantityInPips",
-            "type": "uint64"
+            "internalType": "bool",
+            "name": "isQuantityInQuote",
+            "type": "bool"
           },
           {
             "internalType": "uint64",
@@ -753,12 +1120,12 @@
             "type": "string"
           },
           {
-            "internalType": "enum Enums.OrderTimeInForce",
+            "internalType": "enum OrderTimeInForce",
             "name": "timeInForce",
             "type": "uint8"
           },
           {
-            "internalType": "enum Enums.OrderSelfTradePrevention",
+            "internalType": "enum OrderSelfTradePrevention",
             "name": "selfTradePrevention",
             "type": "uint8"
           },
@@ -773,7 +1140,7 @@
             "type": "bytes"
           }
         ],
-        "internalType": "struct Structs.Order",
+        "internalType": "struct Order",
         "name": "buy",
         "type": "tuple"
       },
@@ -795,12 +1162,12 @@
             "type": "address"
           },
           {
-            "internalType": "enum Enums.OrderType",
+            "internalType": "enum OrderType",
             "name": "orderType",
             "type": "uint8"
           },
           {
-            "internalType": "enum Enums.OrderSide",
+            "internalType": "enum OrderSide",
             "name": "side",
             "type": "uint8"
           },
@@ -810,9 +1177,9 @@
             "type": "uint64"
           },
           {
-            "internalType": "uint64",
-            "name": "quoteOrderQuantityInPips",
-            "type": "uint64"
+            "internalType": "bool",
+            "name": "isQuantityInQuote",
+            "type": "bool"
           },
           {
             "internalType": "uint64",
@@ -830,12 +1197,12 @@
             "type": "string"
           },
           {
-            "internalType": "enum Enums.OrderTimeInForce",
+            "internalType": "enum OrderTimeInForce",
             "name": "timeInForce",
             "type": "uint8"
           },
           {
-            "internalType": "enum Enums.OrderSelfTradePrevention",
+            "internalType": "enum OrderSelfTradePrevention",
             "name": "selfTradePrevention",
             "type": "uint8"
           },
@@ -850,7 +1217,7 @@
             "type": "bytes"
           }
         ],
-        "internalType": "struct Structs.Order",
+        "internalType": "struct Order",
         "name": "sell",
         "type": "tuple"
       },
@@ -922,17 +1289,1091 @@
             "type": "uint64"
           },
           {
-            "internalType": "enum Enums.OrderSide",
+            "internalType": "enum OrderSide",
             "name": "makerSide",
             "type": "uint8"
           }
         ],
-        "internalType": "struct Structs.Trade",
-        "name": "trade",
+        "internalType": "struct OrderBookTrade",
+        "name": "orderBookTrade",
         "type": "tuple"
       }
     ],
-    "name": "executeTrade",
+    "name": "executeOrderBookTrade",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "signatureHashVersion",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint128",
+            "name": "nonce",
+            "type": "uint128"
+          },
+          {
+            "internalType": "address",
+            "name": "walletAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "enum OrderType",
+            "name": "orderType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum OrderSide",
+            "name": "side",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint64",
+            "name": "quantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bool",
+            "name": "isQuantityInQuote",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint64",
+            "name": "limitPriceInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "stopPriceInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "string",
+            "name": "clientOrderId",
+            "type": "string"
+          },
+          {
+            "internalType": "enum OrderTimeInForce",
+            "name": "timeInForce",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum OrderSelfTradePrevention",
+            "name": "selfTradePrevention",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint64",
+            "name": "cancelAfter",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bytes",
+            "name": "walletSignature",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct Order",
+        "name": "order",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "baseAssetSymbol",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "quoteAssetSymbol",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "baseAssetAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "quoteAssetAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint64",
+            "name": "grossBaseQuantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "grossQuoteQuantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "netBaseQuantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "netQuoteQuantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "takerPoolFeeQuantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "takerProtocolFeeQuantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "takerGasFeeQuantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "takerPriceCorrectionFeeQuantityInPips",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct PoolTrade",
+        "name": "poolTrade",
+        "type": "tuple"
+      }
+    ],
+    "name": "executePoolTrade",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "signatureHashVersion",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint128",
+            "name": "nonce",
+            "type": "uint128"
+          },
+          {
+            "internalType": "address",
+            "name": "walletAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "enum OrderType",
+            "name": "orderType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum OrderSide",
+            "name": "side",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint64",
+            "name": "quantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bool",
+            "name": "isQuantityInQuote",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint64",
+            "name": "limitPriceInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "stopPriceInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "string",
+            "name": "clientOrderId",
+            "type": "string"
+          },
+          {
+            "internalType": "enum OrderTimeInForce",
+            "name": "timeInForce",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum OrderSelfTradePrevention",
+            "name": "selfTradePrevention",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint64",
+            "name": "cancelAfter",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bytes",
+            "name": "walletSignature",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct Order",
+        "name": "buy",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "signatureHashVersion",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint128",
+            "name": "nonce",
+            "type": "uint128"
+          },
+          {
+            "internalType": "address",
+            "name": "walletAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "enum OrderType",
+            "name": "orderType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum OrderSide",
+            "name": "side",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint64",
+            "name": "quantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bool",
+            "name": "isQuantityInQuote",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint64",
+            "name": "limitPriceInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "stopPriceInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "string",
+            "name": "clientOrderId",
+            "type": "string"
+          },
+          {
+            "internalType": "enum OrderTimeInForce",
+            "name": "timeInForce",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum OrderSelfTradePrevention",
+            "name": "selfTradePrevention",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint64",
+            "name": "cancelAfter",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bytes",
+            "name": "walletSignature",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct Order",
+        "name": "sell",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "baseAssetSymbol",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "quoteAssetSymbol",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "baseAssetAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "quoteAssetAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "uint64",
+                "name": "grossBaseQuantityInPips",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "grossQuoteQuantityInPips",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "netBaseQuantityInPips",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "netQuoteQuantityInPips",
+                "type": "uint64"
+              },
+              {
+                "internalType": "address",
+                "name": "makerFeeAssetAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "takerFeeAssetAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "uint64",
+                "name": "makerFeeQuantityInPips",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "takerFeeQuantityInPips",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "priceInPips",
+                "type": "uint64"
+              },
+              {
+                "internalType": "enum OrderSide",
+                "name": "makerSide",
+                "type": "uint8"
+              }
+            ],
+            "internalType": "struct OrderBookTrade",
+            "name": "orderBookTrade",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "baseAssetSymbol",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "quoteAssetSymbol",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "baseAssetAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "quoteAssetAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "uint64",
+                "name": "grossBaseQuantityInPips",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "grossQuoteQuantityInPips",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "netBaseQuantityInPips",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "netQuoteQuantityInPips",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "takerPoolFeeQuantityInPips",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "takerProtocolFeeQuantityInPips",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "takerGasFeeQuantityInPips",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "takerPriceCorrectionFeeQuantityInPips",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct PoolTrade",
+            "name": "poolTrade",
+            "type": "tuple"
+          },
+          {
+            "internalType": "uint64",
+            "name": "takerGasFeeQuantityInPips",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct HybridTrade",
+        "name": "hybridTrade",
+        "type": "tuple"
+      }
+    ],
+    "name": "executeHybridTrade",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum WithdrawalType",
+            "name": "withdrawalType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint128",
+            "name": "nonce",
+            "type": "uint128"
+          },
+          {
+            "internalType": "address payable",
+            "name": "walletAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "assetSymbol",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "assetAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint64",
+            "name": "grossQuantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "gasFeeInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bool",
+            "name": "autoDispatchEnabled",
+            "type": "bool"
+          },
+          {
+            "internalType": "bytes",
+            "name": "walletSignature",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct Withdrawal",
+        "name": "withdrawal",
+        "type": "tuple"
+      }
+    ],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "baseAssetAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "quoteAssetAddress",
+        "type": "address"
+      }
+    ],
+    "name": "createLiquidityPool",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token0",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "token1",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "isToken1Quote",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "desiredLiquidity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "address payable",
+        "name": "WETH",
+        "type": "address"
+      }
+    ],
+    "name": "migrateLiquidityPool",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "liquidityProviderToken",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "baseAssetAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "quoteAssetAddress",
+        "type": "address"
+      }
+    ],
+    "name": "reverseLiquidityPoolAssets",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "tokenA",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "tokenB",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountADesired",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountBDesired",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountAMin",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountBMin",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "deadline",
+        "type": "uint256"
+      }
+    ],
+    "name": "addLiquidity",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountTokenDesired",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountTokenMin",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountETHMin",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "deadline",
+        "type": "uint256"
+      }
+    ],
+    "name": "addLiquidityETH",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "signatureHashVersion",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum LiquidityChangeOrigination",
+            "name": "origination",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint128",
+            "name": "nonce",
+            "type": "uint128"
+          },
+          {
+            "internalType": "address",
+            "name": "wallet",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "assetA",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "assetB",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountADesired",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountBDesired",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountAMin",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountBMin",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "deadline",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "signature",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct LiquidityAddition",
+        "name": "addition",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "baseAssetAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "quoteAssetAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint64",
+            "name": "liquidityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "grossBaseQuantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "grossQuoteQuantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "netBaseQuantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "netQuoteQuantityInPips",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct LiquidityChangeExecution",
+        "name": "execution",
+        "type": "tuple"
+      }
+    ],
+    "name": "executeAddLiquidity",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "tokenA",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "tokenB",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "liquidity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountAMin",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountBMin",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "deadline",
+        "type": "uint256"
+      }
+    ],
+    "name": "removeLiquidity",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "liquidity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountTokenMin",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountETHMin",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "deadline",
+        "type": "uint256"
+      }
+    ],
+    "name": "removeLiquidityETH",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "signatureHashVersion",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum LiquidityChangeOrigination",
+            "name": "origination",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint128",
+            "name": "nonce",
+            "type": "uint128"
+          },
+          {
+            "internalType": "address",
+            "name": "wallet",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "assetA",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "assetB",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "liquidity",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountAMin",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountBMin",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address payable",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "deadline",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "signature",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct LiquidityRemoval",
+        "name": "removal",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "baseAssetAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "quoteAssetAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint64",
+            "name": "liquidityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "grossBaseQuantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "grossQuoteQuantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "netBaseQuantityInPips",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "netQuoteQuantityInPips",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct LiquidityChangeExecution",
+        "name": "execution",
+        "type": "tuple"
+      }
+    ],
+    "name": "executeRemoveLiquidity",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "baseAssetAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "quoteAssetAddress",
+        "type": "address"
+      }
+    ],
+    "name": "removeLiquidityExit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "exitWallet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "assetAddress",
+        "type": "address"
+      }
+    ],
+    "name": "withdrawExit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "clearWalletExit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "nonce",
+        "type": "uint128"
+      }
+    ],
+    "name": "invalidateOrderNonce",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -986,6 +2427,24 @@
   {
     "inputs": [
       {
+        "internalType": "contract IERC20",
+        "name": "tokenAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      }
+    ],
+    "name": "addTokenSymbol",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "string",
         "name": "assetSymbol",
         "type": "string"
@@ -1031,7 +2490,7 @@
             "type": "uint64"
           }
         ],
-        "internalType": "struct Structs.Asset",
+        "internalType": "struct Asset",
         "name": "",
         "type": "tuple"
       }
@@ -1055,6 +2514,37 @@
   {
     "inputs": [],
     "name": "removeDispatcher",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "tokenAddress",
+        "type": "address"
+      }
+    ],
+    "name": "skim",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "wallet",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "assetAddress",
+        "type": "address"
+      }
+    ],
+    "name": "cleanupWalletBalance",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

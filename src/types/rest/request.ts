@@ -1,6 +1,122 @@
 import * as enums from '../enums';
 import { XOR } from '../utils';
 
+/**
+ * @typedef {Object} RestRequestFindLiquidityPools
+ * @property {string} [market] - Target market
+ * @property {string} [tokenA] - Address of one reserve token
+ * @property {string} [tokenB] - Address of one reserve token
+ */
+export interface RestRequestFindLiquidityPools {
+  market?: string;
+  tokenA?: string;
+  tokenB?: string;
+}
+
+/**
+ * @typedef {Object} RestRequestAddLiquidity
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet - Ethereum wallet address
+ * @property {string} tokenA - Asset by address
+ * @property {string} tokenB - Asset by address
+ * @property {string} amountADesired - Maximum amount of tokenA to add to the liquidity pool
+ * @property {string} amountBDesired - Maximum amount of tokenB to add to the liquidity pool
+ * @property {string} amountAMin - Minimum amount of tokenA to add to the liquidity pool
+ * @property {string} amountBMin - Minimum amount of tokenB to add to the liquidity pool
+ * @property {string} to - Wallet to credit LP tokens, or the custodian contract address to leave on exchange
+ */
+export interface RestRequestAddLiquidity {
+  nonce: string;
+  wallet: string;
+  tokenA: string;
+  tokenB: string;
+  amountADesired: string;
+  amountBDesired: string;
+  amountAMin: string;
+  amountBMin: string;
+  to: string;
+}
+
+/**
+ * @typedef {Object} RestRequestRemoveLiquidity
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet - Ethereum wallet address
+ * @property {string} tokenA - Asset by address
+ * @property {string} tokenB - Asset by address
+ * @property {string} liquidity - LP tokens to burn
+ * @property {string} amountAMin - Minimum amount of tokenA to add to the liquidity pool
+ * @property {string} amountBMin - Minimum amount of tokenB to add to the liquidity pool
+ * @property {string} to - Wallet to credit LP tokens, or the custodian contract address to leave on exchange
+ */
+export interface RestRequestRemoveLiquidity {
+  nonce: string;
+  wallet: string;
+  tokenA: string;
+  tokenB: string;
+  liquidity: string;
+  amountAMin: string;
+  amountBMin: string;
+  to: string;
+}
+
+export interface RestRequestFindLiquidityChange {
+  nonce: string;
+  wallet: string;
+  initiatingTxId?: string;
+}
+
+/**
+ * @typedef {Object}RestRequestFindLiquidityAddition
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet - Ethereum wallet address
+ * @property {string} [liquidityAdditionId] - Single liquidityAdditionId to return; exclusive with initiatingTxId
+ * @property {string} [initiatingTxId] - Transaction id of the Exchange contract addLiquidity or addLiquidityETH call transaction, only applies to chain-initiated liquidity additions; exclusive with liquidityAdditionId
+ * @property {number} [start] - Starting timestamp (inclusive)
+ * @property {number} [end] - Ending timestamp (inclusive)
+ * @property {number} [limit=50] - Max results to return from 1-1000
+ * @property {string} [fromId] - Liquidity additions created at the same timestamp or after fromId
+ */
+export interface RestRequestFindLiquidityAddition
+  extends RestRequestFindLiquidityChange,
+    RestRequestFindWithPagination {
+  liquidityAdditionId?: string;
+  fromId?: string;
+}
+
+/**
+ * @typedef {Object} RestRequestFindLiquidityRemoval
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet - Ethereum wallet address
+ * @property {string} [liquidityRemovalId] - Single liquidityRemovalId to return; exclusive with initiatingTxId
+ * @property {string} [initiatingTxId] - Transaction id of the Exchange contract removeLiquidity or removeLiquidityETH call transaction, only applies to chain-initiated liquidity removals; exclusive with liquidityRemovalId
+ * @property {number} [start] - Starting timestamp (inclusive)
+ * @property {number} [end] - Ending timestamp (inclusive)
+ * @property {number} [limit=50] - Max results to return from 1-1000
+ * @property {string} [fromId] - Liquidity additions created at the same timestamp or after fromId
+ */
+export interface RestRequestFindLiquidityRemoval
+  extends RestRequestFindLiquidityChange,
+    RestRequestFindWithPagination {
+  liquidityRemovalId?: string;
+  fromId?: string;
+}
+
+/**
+ * @typedef {Object} RestRequestFindLiquidityChanges
+ * @property {string} nonce - UUIDv1
+ * @property {string} wallet - Ethereum wallet address
+ * @property {number} [start] - Starting timestamp (inclusive)
+ * @property {number} [end] - Ending timestamp (inclusive)
+ * @property {number} [limit=50] - Max results to return from 1-1000
+ * @property {string} [fromId] - Deposits created at the same timestamp or after fromId
+ */
+export interface RestRequestFindLiquidityChanges
+  extends RestRequestFindWithPagination {
+  nonce: string;
+  wallet: string;
+  fromId?: string;
+}
+
 interface RestRequestCancelOrdersBase {
   nonce: string;
   wallet: string;
@@ -83,7 +199,7 @@ export interface RestRequestFindDeposit extends RestRequestFindByWallet {
  * @property {number} [start] - Starting timestamp (inclusive)
  * @property {number} [end] - Ending timestamp (inclusive)
  * @property {number} [limit=50] - Max results to return from 1-1000
- * @property {string} [fromId] - Fills created at the same timestamp or after fillId
+ * @property {string} [fromId] - Deposits created at the same timestamp or after fromId
  */
 export interface RestRequestFindDeposits
   extends RestRequestFindByWallet,
@@ -122,12 +238,9 @@ export interface RestRequestFindFills
 /**
  * @typedef {Object} RestRequestFindMarkets
  * @property {string} market - Target market, all markets are returned if omitted
- * @property {boolean} [regionOnly=false] - true only returns markets available in the geographic region of the request
- * @property {string} depositId
  */
 export interface RestRequestFindMarkets {
   market?: string;
-  regionOnly?: boolean;
 }
 
 /**
@@ -291,14 +404,13 @@ export type RestRequestOrderWithStopPrice =
  * @property {string} market - Base-quote pair e.g. 'IDEX-ETH'
  * @property {OrderType} type
  * @property {OrderSide} side
- * @property {OrderTimeInForce} [timeInForce=gtc] - Defaults to good until canceled
  * @property {string} [quantity] - Order quantity in base terms, exclusive with quoteOrderQuantity
  * @property {string} [quoteOrderQuantity] - Order quantity in quote terms, exclusive with quantity
  * @property {string} [price] - Price in quote terms, optional for market orders
- * @property {ustring} [clientOrderId] - Client-supplied order id
  * @property {string} [stopPrice] - Stop loss or take profit price, only if stop or take order
+ * @property {string} [clientOrderId] - Client-supplied order id
+ * @property {OrderTimeInForce} [timeInForce=gtc] - Defaults to good until canceled
  * @property {OrderSelfTradePrevention} [selfTradePrevention=decreaseAndCancel] - Defaults to decrease and cancel
- * @property {number} [cancelAfter] - Timestamp after which a standing limit order will be automatically canceled; gtt tif only
  */
 export type RestRequestOrder = XOR<
   RestRequestOrderByBaseQuantity,

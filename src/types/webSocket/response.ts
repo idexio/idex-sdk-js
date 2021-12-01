@@ -10,34 +10,34 @@ import { WebSocketRequestSubscription } from './request';
  * @typedef {Object} WebSocketResponseTickerShort
  * @property {string} m - (market) Market symbol
  * @property {number} t - (time) Timestamp when the statistics were computed, the opening time of the period is 24 hours prior
- * @property {string} o - (open) Price of the first trade in the period in quote terms
- * @property {string} h - (high) Highest traded price in the period in quote terms
- * @property {string} l - (low) Lowest traded price in the period in quote terms
- * @property {string} c - (close) Price of the last trade in the period in quote terms
- * @property {string} Q - (closeQuantity) Quantity of the last trade in th period in base terms
+ * @property {string | null} o - (open) Price of the first trade in the period in quote terms
+ * @property {string | null} h - (high) Highest traded price in the period in quote terms
+ * @property {string | null} l - (low) Lowest traded price in the period in quote terms
+ * @property {string | null} c - (close) Price of the last trade in the period in quote terms
+ * @property {string | null} Q - (closeQuantity) Quantity of the last trade in th period in base terms
  * @property {string} v - (baseVolume) Trailing 24-hour trading volume in base terms
  * @property {string} q - (quoteVolume) Trailing 24-hour trading volume in quote terms
  * @property {string} P - (percentChange) Percentage change from open price to close price
  * @property {number} n - (numTrades) Number of trades in the period
- * @property {string} a - (ask) Best ask price on the order book in quote terms
- * @property {string} b - (bid) Best bid price on the order book in quote terms
- * @property {number} u - (sequence) Fill sequence number of the last trade in the period
+ * @property {string | null} a - (ask) Best ask price on the order book in quote terms
+ * @property {string | null} b - (bid) Best bid price on the order book in quote terms
+ * @property {number | null} u - (sequence) Fill sequence number of the last trade in the period
  */
 export interface WebSocketResponseTickerShort {
   m: string;
   t: number;
-  o: string;
-  h: string;
-  l: string;
-  c: string;
-  Q: string;
+  o: string | null;
+  h: string | null;
+  l: string | null;
+  c: string | null;
+  Q: string | null;
   v: string;
   q: string;
   P: string;
   n: number;
-  a: string;
-  b: string;
-  u: number;
+  a: string | null;
+  b: string | null;
+  u: number | null;
 }
 
 /**
@@ -46,18 +46,18 @@ export interface WebSocketResponseTickerShort {
  * @typedef {Object} WebSocketResponseTickerLong
  * @property {string} market - Market symbol
  * @property {number} time - Timestamp when the statistics were computed, the opening time of the period is 24 hours prior
- * @property {string} open - Price of the first trade in the period in quote terms
- * @property {string} high - Highest traded price in the period in quote terms
- * @property {string} low - Lowest traded price in the period in quote terms
- * @property {string} close - Price of the last trade in the period in quote terms
- * @property {string} closeQuantity - Quantity of the last trade in th period in base terms
+ * @property {string | null} open - Price of the first trade in the period in quote terms
+ * @property {string | null} high - Highest traded price in the period in quote terms
+ * @property {string | null} low - Lowest traded price in the period in quote terms
+ * @property {string | null} close - Price of the last trade in the period in quote terms
+ * @property {string | null} closeQuantity - Quantity of the last trade in th period in base terms
  * @property {string} baseVolume - Trailing 24-hour trading volume in base terms
  * @property {string} quoteVolume - Trailing 24-hour trading volume in quote terms
  * @property {string} percentChange - Percentage change from open price to close price
  * @property {number} numTrades - Number of trades in the period
- * @property {string} ask - Best ask price on the order book in quote terms
- * @property {string} bid - Best bid price on the order book in quote terms
- * @property {number} sequence - Fill sequence number of the last trade in the period
+ * @property {string | null} ask - Best ask price on the order book in quote terms
+ * @property {string | null} bid - Best bid price on the order book in quote terms
+ * @property {number | null} sequence - Fill sequence number of the last trade in the period
  */
 export type WebSocketResponseTickerLong = restResponse.RestResponseTicker;
 
@@ -127,6 +127,7 @@ export interface WebSocketResponseCandleLong
  * TradeShort
  *
  * @typedef {Object} WebSocketResponseTradeShort
+ * @property {string} y - (type) orderBook, pool, or hybrid
  * @property {string} m - (market) Market symbol
  * @property {string} i - (fillId) Trade identifier
  * @property {string} p - (price) Price of the trade in quote terms
@@ -137,6 +138,7 @@ export interface WebSocketResponseCandleLong
  * @property {number} u - (sequence) Fill sequence number of the trade
  */
 export interface WebSocketResponseTradeShort {
+  y: keyof typeof enums.TradeType;
   m: string;
   i: string;
   p: string;
@@ -168,6 +170,32 @@ export interface WebSocketResponseTradeLong
 // l1orderbook
 
 /**
+ * LiquidityPoolShort
+ *
+ * @typedef {Object} WebSocketResponseLiquidityPoolShort
+ * @property {string} q - (baseReserveQuantity) quantity of base asset held in the liquidity pool
+ * @property {string} Q - (quoteReserveQuantity) quantity of quote asset held in the liquidity pool
+ */
+
+export interface WebSocketResponseLiquidityPoolShort {
+  q: string;
+  Q: string;
+}
+
+/**
+ * LiquidityPoolLong
+ *
+ * @typedef {Object} WebSocketResponseLiquidityPoolLong
+ * @property {string} baseReserveQuantity - quantity of base asset held in the liquidity pool
+ * @property {string} quoteReserveQuantity - quantity of quote asset held in the liquidity pool
+ */
+
+export interface WebSocketResponseLiquidityPoolLong {
+  baseReserveQuantity: string;
+  quoteReserveQuantity: string;
+}
+
+/**
  * L1OrderBookShort
  *
  * @typedef {Object} WebSocketResponseL1OrderBookShort
@@ -177,6 +205,7 @@ export interface WebSocketResponseTradeLong
  * @property {string} B - (bidQuantity) Quantity available at the best bid price
  * @property {string} a - (askPrice) Best ask price
  * @property {string} A - (askQuantity) Quantity available at the best ask price
+ * @property {WebSocketResponseLiquidityPoolShort | null} p - Liquidity pool reserves for this market
  */
 export interface WebSocketResponseL1OrderBookShort {
   m: string;
@@ -185,6 +214,7 @@ export interface WebSocketResponseL1OrderBookShort {
   B: string;
   a: string;
   A: string;
+  p: WebSocketResponseLiquidityPoolShort | null;
 }
 
 /**
@@ -197,6 +227,7 @@ export interface WebSocketResponseL1OrderBookShort {
  * @property {string} bidQuantity - Quantity available at the best bid price
  * @property {string} askPrice - Best ask price
  * @property {string} askQuantity - Quantity available at the best ask price
+ * @property {WebSocketResponseLiquidityPoolLong | null} pool - Liquidity pool reserves for this market
  */
 export interface WebSocketResponseL1OrderBookLong {
   market: string; // m
@@ -205,6 +236,7 @@ export interface WebSocketResponseL1OrderBookLong {
   bidQuantity: string; // B
   askPrice: string; // a
   askQuantity: string; // A
+  pool: WebSocketResponseLiquidityPoolLong | null;
 }
 
 /**
@@ -223,6 +255,7 @@ type WebSocketResponseL2OrderBookChange = restResponse.RestResponseOrderBookPric
  * @property {number} u - (sequence) Order book update sequence number of the update
  * @property {WebSocketResponseL2OrderBookChange[]} b - (bids) Array of bid price level updates
  * @property {WebSocketResponseL2OrderBookChange[]} a - (asks) Array of ask price level updates
+ * @property {WebSocketResponseLiquidityPoolShort | null} p - Liquidity pool reserves for this market
  */
 export interface WebSocketResponseL2OrderBookShort {
   m: string;
@@ -230,6 +263,7 @@ export interface WebSocketResponseL2OrderBookShort {
   u: number;
   b: WebSocketResponseL2OrderBookChange[];
   a: WebSocketResponseL2OrderBookChange[];
+  p: WebSocketResponseLiquidityPoolShort | null;
 }
 
 /**
@@ -241,6 +275,8 @@ export interface WebSocketResponseL2OrderBookShort {
  * @property {number} sequence - Order book update sequence number of the update
  * @property {WebSocketResponseL2OrderBookChange[]} bids - Array of bid price level updates
  * @property {WebSocketResponseL2OrderBookChange[]} asks - Array of ask price level updates
+ * @property {baseReserveQuantity: string; quoteReserveQuantity: string} pool - liquidity pool reserves
+ * @property {WebSocketResponseLiquidityPoolLong | null} p - Liquidity pool reserves for this market
  */
 export interface WebSocketResponseL2OrderBookLong {
   market: string; // m
@@ -248,6 +284,7 @@ export interface WebSocketResponseL2OrderBookLong {
   sequence: number; // u
   bids: WebSocketResponseL2OrderBookChange[]; // b
   asks: WebSocketResponseL2OrderBookChange[]; // a
+  pool: WebSocketResponseLiquidityPoolLong | null;
 }
 
 // balances
@@ -399,10 +436,15 @@ export interface WebSocketResponseOrderLong {
  *
  *  @typedef {Object} WebSocketResponseOrderFillShort
  *
+ * @property {TradeType} type - orderBook, pool, or hybrid
  * @property {string} i - (fillId) Fill identifier
  * @property {string} p - (price) Price of the fill in quote terms
  * @property {string} q - (quantity) Quantity of the fill in base terms
  * @property {string} Q - (quoteQuantity) Quantity of the fill in quote terms
+ * @property {string} [oq] - Quantity of the fill in base terms supplied by order book liquidity, omitted for pool fills
+ * @property {string} [oQ] - Quantity of the fill in quote terms supplied by order book liquidity, omitted for pool fills
+ * @property {string} [pq] - Quantity of the fill in base terms supplied by pool liquidity, omitted for orderBook fills
+ * @property {string} [pQ] - Quantity of the fill in quote terms supplied by pool liquidity, omitted for orderBook fills
  * @property {number} t - (time) Timestamp of the fill
  * @property {string} s - (makerSide) Maker side of the fill, buy or sell
  * @property {string} u - (sequence) Fill sequence number
@@ -414,10 +456,15 @@ export interface WebSocketResponseOrderLong {
  * @property {string} S - (txStatus) Status of the trade settlement transaction, see values
  */
 export interface WebSocketResponseOrderFillShort {
+  y: keyof typeof enums.TradeType;
   i: string;
   p: string;
   q: string;
   Q: string;
+  oq?: string;
+  oQ?: string;
+  pq?: string;
+  pQ?: string;
   t: number;
   s: keyof typeof enums.OrderSide;
   u: number;
@@ -430,6 +477,30 @@ export interface WebSocketResponseOrderFillShort {
 }
 
 /**
+ * TokenPriceShort
+ *
+ * @typedef {Object} WebSocketResponseTokenPriceShort
+ * @property {string} t - (token) Token symbol
+ * @property {string} p - (price) Current price of token relative to the native asset
+ */
+export interface WebSocketResponseTokenPriceShort {
+  t: string;
+  p: string | null;
+}
+
+/**
+ * TokenPriceLong
+ *
+ * @typedef {Object} WebSocketResponseTokenPriceLong
+ * @property {string} token - Token symbol
+ * @property {string} price - Current price of token relative to the native asset
+ */
+export interface WebSocketResponseTokenPriceLong {
+  token: string;
+  price: string | null;
+}
+
+/**
  * Short-hand response payloads
  */
 export type WebSocketResponseSubscriptionMessageShort =
@@ -439,7 +510,8 @@ export type WebSocketResponseSubscriptionMessageShort =
   | { type: 'l1orderbook'; data: WebSocketResponseL1OrderBookShort }
   | { type: 'l2orderbook'; data: WebSocketResponseL2OrderBookShort }
   | { type: 'balances'; data: WebSocketResponseBalanceShort }
-  | { type: 'orders'; data: WebSocketResponseOrderShort };
+  | { type: 'orders'; data: WebSocketResponseOrderShort }
+  | { type: 'tokenprice'; data: WebSocketResponseTokenPriceShort };
 
 /**
  * Transformer (long-form) response payloads
@@ -451,7 +523,8 @@ export type WebSocketResponseSubscriptionMessageLong =
   | { type: 'l1orderbook'; data: WebSocketResponseL1OrderBookLong }
   | { type: 'l2orderbook'; data: WebSocketResponseL2OrderBookLong }
   | { type: 'balances'; data: WebSocketResponseBalanceLong }
-  | { type: 'orders'; data: WebSocketResponseOrderLong };
+  | { type: 'orders'; data: WebSocketResponseOrderLong }
+  | { type: 'tokenprice'; data: WebSocketResponseTokenPriceLong };
 
 /**
  * Error Response

@@ -36,6 +36,18 @@ export type WebSocketRequestCandlesSubscription = {
 };
 
 /**
+ * TokenPriceSubscription
+ *
+ * @typedef {Object} WebSocketRequestTokenPriceSubscription
+ * @property {string} name - 'trades'
+ * @property {string[]}markets - array of market symbols
+ */
+export type WebSocketRequestTokenPriceSubscription = {
+  name: 'tokenprice';
+  markets: string[];
+};
+
+/**
  * TradesSubscription
  *
  * @typedef {Object} WebSocketRequestTradesSubscription
@@ -145,6 +157,7 @@ export type WebSocketRequestUnauthenticatedSubscription =
   | WebSocketRequestL1OrderBookSubscription
   | WebSocketRequestL2OrderBookSubscription
   | WebSocketRequestTickersSubscription
+  | WebSocketRequestTokenPriceSubscription
   | WebSocketRequestTradesSubscription;
 
 /**
@@ -185,6 +198,7 @@ export type WebSocketRequestSubscriptionsByName = {
   l1orderbook: WebSocketRequestL1OrderBookSubscription;
   l2orderbook: WebSocketRequestL2OrderBookSubscription;
   tickers: WebSocketRequestTickersSubscription;
+  tokenprice: WebSocketRequestTokenPriceSubscription;
   trades: WebSocketRequestTradesSubscription;
 };
 
