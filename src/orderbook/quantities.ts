@@ -669,7 +669,7 @@ export function L1L2OrderBooksWithMinimumTaker(
     (takerMinimumInQuote * l2.pool.baseReserveQuantity) /
     l2.pool.quoteReserveQuantity;
 
-  const { buyPrice, sellPrice } = L1orL2BestAvailablePrices(
+  let { buyPrice, sellPrice } = L1orL2BestAvailablePrices(
     l2.pool,
     idexFeeRate,
     poolFeeRate,
@@ -677,41 +677,65 @@ export function L1L2OrderBooksWithMinimumTaker(
     takerMinimumInQuote,
   );
 
-  if (!l2.asks[0] || buyPrice < l2.asks[0].price) {
-    const { grossBase } = quantitiesAvailableFromPoolAtAskPrice(
+  let { grossBase: grossBuyBase } = quantitiesAvailableFromPoolAtAskPrice(
+    l2.pool.baseReserveQuantity,
+    l2.pool.quoteReserveQuantity,
+    buyPrice,
+    idexFeeRate,
+    poolFeeRate,
+  );
+
+  if (grossBuyBase < takerMinimumInBase) {
+    buyPrice += BigInt(1);
+    grossBuyBase = quantitiesAvailableFromPoolAtAskPrice(
       l2.pool.baseReserveQuantity,
       l2.pool.quoteReserveQuantity,
       buyPrice,
       idexFeeRate,
       poolFeeRate,
-    );
+    ).grossBase;
+  }
+
+  if (!l2.asks[0] || buyPrice < l2.asks[0].price) {
     l2Values.asks.unshift({
       price: buyPrice,
-      size: grossBase,
+      size: grossBuyBase,
       numOrders: 0,
       type: 'pool',
     });
     if (l2Values.asks.length > 1) {
-      l2Values.asks[1].size -= grossBase;
+      l2Values.asks[1].size -= grossBuyBase;
     }
   }
 
-  if (!l2.bids[0] || sellPrice > l2.bids[0].price) {
-    const { grossBase } = quantitiesAvailableFromPoolAtBidPrice(
+  let { grossBase: grossSellBase } = quantitiesAvailableFromPoolAtBidPrice(
+    l2.pool.baseReserveQuantity,
+    l2.pool.quoteReserveQuantity,
+    sellPrice,
+    idexFeeRate,
+    poolFeeRate,
+  );
+
+  if (grossSellBase < takerMinimumInBase) {
+    sellPrice -= BigInt(1);
+    grossSellBase = quantitiesAvailableFromPoolAtBidPrice(
       l2.pool.baseReserveQuantity,
       l2.pool.quoteReserveQuantity,
       sellPrice,
       idexFeeRate,
       poolFeeRate,
-    );
+    ).grossBase;
+  }
+
+  if (!l2.bids[0] || sellPrice > l2.bids[0].price) {
     l2Values.bids.unshift({
       price: sellPrice,
-      size: grossBase,
+      size: grossSellBase,
       numOrders: 0,
       type: 'pool',
     });
     if (l2Values.bids.length > 1) {
-      l2Values.bids[1].size -= grossBase;
+      l2Values.bids[1].size -= grossSellBase;
     }
   }
 

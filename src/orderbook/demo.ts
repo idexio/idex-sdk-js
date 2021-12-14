@@ -1,8 +1,8 @@
 import { OrderBookRealTimeClient } from '../client/orderBook/realTime';
 
 const chain = 'matic';
-const isSandbox = true;
-const market = 'MATIC-USD';
+const isSandbox = false;
+const market = 'MATIC-ETH';
 const l2LevelsToDisplay = 5;
 
 const client = new OrderBookRealTimeClient({
