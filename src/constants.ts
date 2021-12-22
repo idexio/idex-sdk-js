@@ -9,9 +9,9 @@ export const ORDER_BOOK_FIRST_LEVEL_MULTIPLIER_IN_PIPS = BigInt(110000000); // 1
 
 export const ORDER_BOOK_HYBRID_SLIPPAGE = 100; // 0.1%
 
-export const ORDER_SIGNATURE_HASH_VERSION_MATIC = 4;
+export const ORDER_SIGNATURE_HASH_VERSION_MATIC = 3;
 
-export const ORDER_SIGNATURE_HASH_VERSION_MATIC_SANDBOX = 104;
+export const ORDER_SIGNATURE_HASH_VERSION_MATIC_SANDBOX = 103;
 
 /**
  * The URI that will be used based on the configuration given.  This includes
