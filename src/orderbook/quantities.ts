@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js';
+
 import {
   dividePips,
   oneInPips,
@@ -191,6 +193,7 @@ export function calculateQuoteQuantityOut(
  * @param {number} visibleSlippage - how much slippage per price level, in 1/1000th of a percent (100 = 0.1%)
  * @param {bigint} [idexFeeRate] - the idex fee rate to use for calculations (query /v1/exchange for current global setting)
  * @param {bigint} [poolFeeRate] - the liquidity pool fee rate to use for calculations (query /v1/exchange for current global setting)
+ * @param {number} [tickSize=1] - minimum price movement expressed in pips (10^-8)
  *
  * @returns {SyntheticL2OrderBook} - a level 2 order book with synthetic price levels only
  */
@@ -201,10 +204,17 @@ export function calculateSyntheticPriceLevels(
   visibleSlippage: number,
   idexFeeRate = BigInt(0),
   poolFeeRate = BigInt(0),
+  tickSize = BigInt(1),
 ): SyntheticL2OrderBook {
-  const poolPrice = dividePips(quoteAssetQuantity, baseAssetQuantity);
-  const priceSlippagePerLevel =
-    (poolPrice * BigInt(visibleSlippage)) / BigInt(100000);
+  const poolPrice = adjustPriceToTickSize(
+    dividePips(quoteAssetQuantity, baseAssetQuantity),
+    tickSize,
+  );
+  const priceSlippagePerLevel = adjustPriceToTickSize(
+    (poolPrice * BigInt(visibleSlippage)) / BigInt(100000),
+    tickSize,
+  );
+
   const asks: OrderBookLevelL2[] = [];
   const bids: OrderBookLevelL2[] = [];
 
@@ -788,4 +798,21 @@ export function validateSyntheticPriceLevelInputs(
       )}) must be below current price (${pipToDecimal(currentPrice)})`,
     );
   }
+}
+
+/**
+ * Adjusts prices in pips to account for tick size by discarding insignificant digits using
+ * specified rounding mode. Ex price 123456789 at tick size 1 is 123456789, at tick size 10
+ * 123456780, at 100 123456700, etc
+ */
+export function adjustPriceToTickSize(
+  price: bigint,
+  tickSize: bigint,
+  roundingMode: BigNumber.RoundingMode = BigNumber.ROUND_HALF_UP,
+): bigint {
+  const significantDigits = new BigNumber(price.toString())
+    .dividedBy(new BigNumber(tickSize.toString()))
+    .toFixed(0, roundingMode);
+
+  return BigInt(significantDigits) * tickSize;
 }
