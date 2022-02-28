@@ -561,7 +561,7 @@ const order = await authenticatedClient.createOrder(
     type: 'limit',
     side: 'sell',
     price: '0.10000000',
-    quantity: '1.50000000",
+    quantity: '1.50000000',
   },
   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
 );
@@ -591,7 +591,7 @@ const order = await authenticatedClient.createTestOrder(
     type: 'limit',
     side: 'sell',
     price: '0.10000000',
-    quantity: '1.50000000",
+    quantity: '1.50000000',
   },
   idex.signatures.createPrivateKeyMessageSigner(config.walletPrivateKey),
 );
