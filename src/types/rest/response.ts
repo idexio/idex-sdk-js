@@ -119,6 +119,7 @@ export type RestResponseExchangeInfo = {
   totalVolumeUsd: string;
   totalTrades: number;
   totalValueLockedUsd: string;
+  idexStakingValueLockedUsd: string;
   idexTokenAddress: string;
   idexUsdPrice: string;
   idexMarketCapUsd: string;
