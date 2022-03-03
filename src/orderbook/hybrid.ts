@@ -45,6 +45,11 @@ export function L2LimitOrderBookToHybridOrderBooks(
     tickSize,
   );
 
+  // Synthetic price level constraints could not be satisfied, return unadjusted orderbook
+  if (!synthetic) {
+    return { l1: L2toL1OrderBook(orderBook), l2: orderBook };
+  }
+
   // need to make a deep copy of asks and bids because they will be modified
   const limitAsksCopy = orderBook.asks.map((order) => {
     return { ...order };

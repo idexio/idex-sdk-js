@@ -205,28 +205,19 @@ export function calculateSyntheticPriceLevels(
   idexFeeRate = BigInt(0),
   poolFeeRate = BigInt(0),
   tickSize = BigInt(1),
-): SyntheticL2OrderBook {
-  // Edge case - if the tick size is actually greater than the current pool price, do not return
-  // any synthetic price levels
-  if (dividePips(quoteAssetQuantity, baseAssetQuantity) < tickSize) {
-    return {
-      asks: [],
-      bids: [],
-      pool: {
-        baseReserveQuantity: baseAssetQuantity,
-        quoteReserveQuantity: quoteAssetQuantity,
-      },
-    };
-  }
-
-  const poolPrice = adjustPriceToTickSize(
-    dividePips(quoteAssetQuantity, baseAssetQuantity),
-    tickSize,
-  );
+): SyntheticL2OrderBook | null {
+  const unadjustedPoolPrice = dividePips(quoteAssetQuantity, baseAssetQuantity);
+  const poolPrice = adjustPriceToTickSize(unadjustedPoolPrice, tickSize);
   const priceSlippagePerLevel = adjustPriceToTickSize(
     (poolPrice * BigInt(visibleSlippage)) / BigInt(100000),
     tickSize,
   );
+
+  // Edge case - if the tick size is too large compared to the price to allow for the specified
+  // number of levels and slippage, do not return any synthetic price levels
+  if (priceSlippagePerLevel < tickSize) {
+    return null;
+  }
 
   const asks: OrderBookLevelL2[] = [];
   const bids: OrderBookLevelL2[] = [];
