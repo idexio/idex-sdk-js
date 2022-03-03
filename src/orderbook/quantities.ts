@@ -206,6 +206,19 @@ export function calculateSyntheticPriceLevels(
   poolFeeRate = BigInt(0),
   tickSize = BigInt(1),
 ): SyntheticL2OrderBook {
+  // Edge case - if the tick size is actually greater than the current pool price, do not return
+  // any synthetic price levels
+  if (dividePips(quoteAssetQuantity, baseAssetQuantity) < tickSize) {
+    return {
+      asks: [],
+      bids: [],
+      pool: {
+        baseReserveQuantity: baseAssetQuantity,
+        quoteReserveQuantity: quoteAssetQuantity,
+      },
+    };
+  }
+
   const poolPrice = adjustPriceToTickSize(
     dividePips(quoteAssetQuantity, baseAssetQuantity),
     tickSize,
