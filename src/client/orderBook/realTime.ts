@@ -227,12 +227,16 @@ export class OrderBookRealTimeClient extends EventEmitter {
    * Load the current state of the level 1 orderbook for this market.
    *
    * @param {string} market
+   * @param {number} [tickSize=1] - minimum price movement expressed in pips (10^-8)
    * @return {RestResponseOrderBookLevel1}
    */
   public async getOrderBookL1(
     market: string,
+    tickSize = BigInt(1),
   ): Promise<RestResponseOrderBookLevel1> {
-    return L1OrderBookToRestResponse((await this.getHybridBooks(market)).l1);
+    return L1OrderBookToRestResponse(
+      (await this.getHybridBooks(market, tickSize)).l1,
+    );
   }
 
   /**
@@ -240,20 +244,23 @@ export class OrderBookRealTimeClient extends EventEmitter {
    *
    * @param {string} market
    * @param {number} [limit=100] - Total number of price levels (bids + asks) to return, between 2 and 1000
+   * @param {number} [tickSize=1] - minimum price movement expressed in pips (10^-8)
    * @returns {Promise<RestResponseOrderBookLevel2>}
    */
   public async getOrderBookL2(
     market: string,
     limit = 100,
+    tickSize = BigInt(1),
   ): Promise<RestResponseOrderBookLevel2> {
     return L2OrderBookToRestResponse(
-      (await this.getHybridBooks(market)).l2,
+      (await this.getHybridBooks(market, tickSize)).l2,
       limit,
     );
   }
 
   private async getHybridBooks(
     market: string,
+    tickSize: bigint,
   ): Promise<{ l1: L1OrderBook; l2: L2OrderBook }> {
     return L2LimitOrderBookToHybridOrderBooks(
       await this.loadLevel2(market),
@@ -263,6 +270,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
       this.takerLiquidityProviderFeeRate,
       true,
       this.getMarketMinimum(market),
+      tickSize,
     );
   }
 
