@@ -1,5 +1,7 @@
+import BigNumber from 'bignumber.js';
 import { EventEmitter } from 'events';
 
+import { adjustPriceToTickSize } from '../../orderbook/quantities';
 import { deriveBaseURL } from '../utils';
 import { RestPublicClient } from '../rest';
 import { WebSocketClient } from '../webSocket';
@@ -269,7 +271,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
       this.takerIdexFeeRate,
       this.takerLiquidityProviderFeeRate,
       true,
-      this.getMarketMinimum(market),
+      this.getMarketMinimum(market, tickSize),
       tickSize,
     );
   }
@@ -385,7 +387,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
       const backoffSeconds = 2 ** reconnectAttempt;
       reconnectAttempt += 1;
       try {
-        // Load minimums and token pries first so synthetic orderbook calculations are accurate
+        // Load minimums and token prices first so synthetic orderbook calculations are accurate
         // eslint-disable-next-line no-await-in-loop
         await Promise.all([this.loadFeesAndMinimums(), this.loadTokenPrices()]);
 
@@ -442,10 +444,16 @@ export class OrderBookRealTimeClient extends EventEmitter {
     }
   }
 
-  private getMarketMinimum(market: string): bigint | null {
+  private getMarketMinimum(market: string, tickSize: bigint): bigint | null {
     const quoteSymbol = market.split('-')[1];
     const price = this.tokenPrices.get(quoteSymbol) || null;
-    return price ? (this.takerTradeMinimum * oneInPips) / price : null;
+    return price
+      ? (this.takerTradeMinimum * oneInPips) /
+          // Avoid displaying price levels that cannot be taken by rounding price down - this
+          // results in a calculated minimum equal or higher than its actual value for tick sizes
+          // above one pip
+          adjustPriceToTickSize(price, tickSize, BigNumber.ROUND_DOWN)
+      : null;
   }
 
   private resetInternalState(): void {
