@@ -271,7 +271,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
       this.takerIdexFeeRate,
       this.takerLiquidityProviderFeeRate,
       true,
-      this.getMarketMinimum(market, tickSize),
+      this.getMarketMinimum(market),
       tickSize,
     );
   }
@@ -444,16 +444,10 @@ export class OrderBookRealTimeClient extends EventEmitter {
     }
   }
 
-  private getMarketMinimum(market: string, tickSize: bigint): bigint | null {
+  private getMarketMinimum(market: string): bigint | null {
     const quoteSymbol = market.split('-')[1];
     const price = this.tokenPrices.get(quoteSymbol) || null;
-    return price
-      ? (this.takerTradeMinimum * oneInPips) /
-          // Avoid displaying price levels that cannot be taken by rounding price down - this
-          // results in a calculated minimum equal or higher than its actual value for tick sizes
-          // above one pip
-          adjustPriceToTickSize(price, tickSize, BigNumber.ROUND_DOWN)
-      : null;
+    return price ? (this.takerTradeMinimum * oneInPips) / price : null;
   }
 
   private resetInternalState(): void {
