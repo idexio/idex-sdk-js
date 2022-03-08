@@ -88,6 +88,7 @@ export function L2LimitOrderBookToHybridOrderBooks(
         idexFeeRate,
         poolFeeRate,
         minimumTakerInQuote,
+        tickSize,
       )
     : { l1: L2toL1OrderBook(adjustedL2OrderBook), l2: adjustedL2OrderBook };
 }

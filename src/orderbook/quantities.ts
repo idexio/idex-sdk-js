@@ -21,6 +21,10 @@ import {
 
 import { L2toL1OrderBook } from './utils';
 
+export const asksTickRoundingMode = BigNumber.ROUND_UP;
+
+export const bidsTickRoundingMode = BigNumber.ROUND_DOWN;
+
 /**
  * Helper function to calculate gross base available at a bid price
  * see: {quantitiesAvailableFromPoolAtBidPrice}
@@ -575,6 +579,7 @@ function L1BestAvailableBuyPrice(
   idexFeeRate: bigint,
   poolFeeRate: bigint,
   takerMinimumInQuote: bigint,
+  tickSize: bigint,
 ): bigint {
   const takerMinimumInQuoteAfterIdexFee = multiplyPips(
     takerMinimumInQuote,
@@ -589,9 +594,13 @@ function L1BestAvailableBuyPrice(
     poolFeeRate,
   );
 
-  return dividePips(
-    pool.quoteReserveQuantity + takerMinimumInQuoteAfterIdexFee,
-    pool.baseReserveQuantity - baseReceived,
+  return adjustPriceToTickSize(
+    dividePips(
+      pool.quoteReserveQuantity + takerMinimumInQuoteAfterIdexFee,
+      pool.baseReserveQuantity - baseReceived,
+    ),
+    tickSize,
+    bidsTickRoundingMode,
   );
 }
 
@@ -600,6 +609,7 @@ function L1BestAvailableSellPrice(
   idexFeeRate: bigint,
   poolFeeRate: bigint,
   takerMinimumInBase: bigint,
+  tickSize: bigint,
 ): bigint {
   const takerMinimumInBaseAfterIdexFee = multiplyPips(
     takerMinimumInBase,
@@ -614,9 +624,13 @@ function L1BestAvailableSellPrice(
     poolFeeRate,
   );
 
-  return dividePips(
-    pool.quoteReserveQuantity - quoteReceived,
-    pool.baseReserveQuantity + takerMinimumInBaseAfterIdexFee,
+  return adjustPriceToTickSize(
+    dividePips(
+      pool.quoteReserveQuantity - quoteReceived,
+      pool.baseReserveQuantity + takerMinimumInBaseAfterIdexFee,
+    ),
+    tickSize,
+    asksTickRoundingMode,
   );
 }
 /**
@@ -636,12 +650,14 @@ export function L1orL2BestAvailablePrices(
   poolFeeRate: bigint,
   takerMinimumInBase: bigint,
   takerMinimumInQuote: bigint,
+  tickSize: bigint,
 ): BestAvailablePriceLevels {
   const buyPrice = L1BestAvailableBuyPrice(
     pool,
     idexFeeRate,
     poolFeeRate,
     takerMinimumInQuote,
+    tickSize,
   );
 
   const sellPrice = L1BestAvailableSellPrice(
@@ -649,6 +665,7 @@ export function L1orL2BestAvailablePrices(
     idexFeeRate,
     poolFeeRate,
     takerMinimumInBase,
+    tickSize,
   );
 
   return {
@@ -673,6 +690,7 @@ export function L1L2OrderBooksWithMinimumTaker(
   idexFeeRate: bigint,
   poolFeeRate: bigint,
   takerMinimumInQuote: bigint,
+  tickSize: bigint,
 ): { l1: L1OrderBook; l2: L2OrderBook } {
   if (!l2.pool) {
     return { l1: L2toL1OrderBook(l2), l2 };
@@ -689,6 +707,7 @@ export function L1L2OrderBooksWithMinimumTaker(
     poolFeeRate,
     takerMinimumInBase,
     takerMinimumInQuote,
+    tickSize,
   );
 
   let { grossBase: grossBuyBase } = quantitiesAvailableFromPoolAtAskPrice(
