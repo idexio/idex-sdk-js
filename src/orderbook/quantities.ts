@@ -719,7 +719,7 @@ export function L1L2OrderBooksWithMinimumTaker(
   );
 
   if (grossBuyBase < takerMinimumInBase) {
-    buyPrice += BigInt(1);
+    buyPrice += tickSize;
     grossBuyBase = quantitiesAvailableFromPoolAtAskPrice(
       l2.pool.baseReserveQuantity,
       l2.pool.quoteReserveQuantity,
@@ -750,7 +750,7 @@ export function L1L2OrderBooksWithMinimumTaker(
   );
 
   if (grossSellBase < takerMinimumInBase) {
-    sellPrice -= BigInt(1);
+    sellPrice -= tickSize;
     grossSellBase = quantitiesAvailableFromPoolAtBidPrice(
       l2.pool.baseReserveQuantity,
       l2.pool.quoteReserveQuantity,
