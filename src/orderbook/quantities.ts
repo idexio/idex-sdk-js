@@ -600,7 +600,7 @@ function L1BestAvailableBuyPrice(
       pool.baseReserveQuantity - baseReceived,
     ),
     tickSize,
-    bidsTickRoundingMode,
+    asksTickRoundingMode,
   );
 }
 
@@ -630,7 +630,7 @@ function L1BestAvailableSellPrice(
       pool.baseReserveQuantity + takerMinimumInBaseAfterIdexFee,
     ),
     tickSize,
-    asksTickRoundingMode,
+    bidsTickRoundingMode,
   );
 }
 /**
