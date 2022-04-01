@@ -114,10 +114,10 @@
     *   [Parameters](#parameters-50)
 *   [RestRequestAddLiquidity](#restrequestaddliquidity)
     *   [Properties](#properties-73)
-*   [calculateGrossBaseQuantity](#calculategrossbasequantity)
-    *   [Parameters](#parameters-51)
 *   [L2OrderBook](#l2orderbook)
     *   [Properties](#properties-74)
+*   [calculateGrossBaseQuantity](#calculategrossbasequantity)
+    *   [Parameters](#parameters-51)
 *   [WebSocketRequestTokenPriceSubscription](#websocketrequesttokenpricesubscription)
     *   [Properties](#properties-75)
 *   [createPrivateKeyMessageSigner](#createprivatekeymessagesigner)
@@ -131,16 +131,16 @@
     *   [Properties](#properties-77)
 *   [privateKeySigner](#privatekeysigner)
 *   [OrderBookLevelType](#orderbookleveltype)
-*   [calculateGrossBaseValueOfBuyQuantities](#calculategrossbasevalueofbuyquantities)
-    *   [Parameters](#parameters-54)
 *   [OrderBookLevelL1](#orderbooklevell1)
     *   [Properties](#properties-78)
-*   [calculateGrossQuoteQuantity](#calculategrossquotequantity)
-    *   [Parameters](#parameters-55)
+*   [calculateGrossBaseValueOfBuyQuantities](#calculategrossbasevalueofbuyquantities)
+    *   [Parameters](#parameters-54)
 *   [RestRequestFindLiquidityAddition](#restrequestfindliquidityaddition)
     *   [Properties](#properties-79)
 *   [OrderBookLevelL2](#orderbooklevell2)
     *   [Properties](#properties-80)
+*   [calculateGrossQuoteQuantity](#calculategrossquotequantity)
+    *   [Parameters](#parameters-55)
 *   [PoolReserveQuantities](#poolreservequantities)
     *   [Properties](#properties-81)
 *   [RestRequestFindLiquidityRemoval](#restrequestfindliquidityremoval)
@@ -164,15 +164,15 @@
 *   [LiquidityChangeType](#liquiditychangetype)
     *   [Addition](#addition)
     *   [Removal](#removal)
+*   [AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription)
 *   [calculateQuoteQuantityOut](#calculatequotequantityout)
     *   [Parameters](#parameters-58)
-*   [AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription)
 *   [AuthTokenWebSocketRequestSubscription](#authtokenwebsocketrequestsubscription)
-*   [numerator](#numerator)
 *   [MultiverseChain](#multiversechain)
 *   [WebSocketRequestSubscription](#websocketrequestsubscription)
 *   [WebSocketResponseLiquidityPoolShort](#websocketresponseliquiditypoolshort)
     *   [Properties](#properties-85)
+*   [numerator](#numerator)
 *   [RestResponseLiquidityPool](#restresponseliquiditypool)
     *   [Properties](#properties-86)
 *   [WebSocketResponseLiquidityPoolLong](#websocketresponseliquiditypoollong)
@@ -2530,6 +2530,17 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `amountBMin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenB to add to the liquidity pool
 *   `to` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Wallet to credit LP tokens, or the custodian contract address to leave on exchange
 
+## L2OrderBook
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+*   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+*   `asks` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
+*   `bids` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
+*   `pool` **([PoolReserveQuantities](#poolreservequantities) | null)** 
+
 ## calculateGrossBaseQuantity
 
 Helper function to calculate gross base available at a bid price
@@ -2544,17 +2555,6 @@ see: {quantitiesAvailableFromPoolAtBidPrice}
 *   `poolFeeRate` **bigint** 
 
 Returns **bigint** 
-
-## L2OrderBook
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-### Properties
-
-*   `sequence` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
-*   `asks` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
-*   `bids` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
-*   `pool` **([PoolReserveQuantities](#poolreservequantities) | null)** 
 
 ## WebSocketRequestTokenPriceSubscription
 
@@ -2634,19 +2634,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
 
-## calculateGrossBaseValueOfBuyQuantities
-
-Helper function to convert from quote to base quantities
-see: {quantitiesAvailableFromPoolAtAskPrice}
-
-### Parameters
-
-*   `baseAssetQuantity` **bigint** 
-*   `quoteAssetQuantity` **bigint** 
-*   `grossQuoteQuantity` **bigint** 
-
-Returns **bigint** 
-
 ## OrderBookLevelL1
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -2657,18 +2644,16 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `size` **bigint** 
 *   `numOrders` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 
-## calculateGrossQuoteQuantity
+## calculateGrossBaseValueOfBuyQuantities
 
-Helper function to calculate gross quote available at an ask price
+Helper function to convert from quote to base quantities
 see: {quantitiesAvailableFromPoolAtAskPrice}
 
 ### Parameters
 
 *   `baseAssetQuantity` **bigint** 
 *   `quoteAssetQuantity` **bigint** 
-*   `targetPrice` **bigint** 
-*   `idexFeeRate` **bigint** 
-*   `poolFeeRate` **bigint** 
+*   `grossQuoteQuantity` **bigint** 
 
 Returns **bigint** 
 
@@ -2697,6 +2682,21 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `size` **bigint** 
 *   `numOrders` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 *   `type` **[OrderBookLevelType](#orderbookleveltype)** 
+
+## calculateGrossQuoteQuantity
+
+Helper function to calculate gross quote available at an ask price
+see: {quantitiesAvailableFromPoolAtAskPrice}
+
+### Parameters
+
+*   `baseAssetQuantity` **bigint** 
+*   `quoteAssetQuantity` **bigint** 
+*   `targetPrice` **bigint** 
+*   `idexFeeRate` **bigint** 
+*   `poolFeeRate` **bigint** 
+
+Returns **bigint** 
 
 ## PoolReserveQuantities
 
@@ -2829,6 +2829,10 @@ Removing reserve assets from pool and burning LP tokens
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
+## AuthTokenWebSocketRequestAuthenticatedSubscription
+
+Type: ([AuthTokenWebSocketRequestBalancesSubscription](#authtokenwebsocketrequestbalancessubscription) | [AuthTokenWebSocketRequestOrdersSubscription](#authtokenwebsocketrequestorderssubscription))
+
 ## calculateQuoteQuantityOut
 
 Given a taker order size expressed in base, how much quote is received from the pool
@@ -2845,19 +2849,9 @@ see: {L1orL2BestAvailablePrices}
 
 Returns **bigint** 
 
-## AuthTokenWebSocketRequestAuthenticatedSubscription
-
-Type: ([AuthTokenWebSocketRequestBalancesSubscription](#authtokenwebsocketrequestbalancessubscription) | [AuthTokenWebSocketRequestOrdersSubscription](#authtokenwebsocketrequestorderssubscription))
-
 ## AuthTokenWebSocketRequestSubscription
 
 Type: ([AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription) | [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription))
-
-## numerator
-
-The result needs to be rounded down to prevent the pool's constant
-product from decreasing, ie. the second part of the subtraction (the
-division) needs to be rounded up.
 
 ## MultiverseChain
 
@@ -2879,6 +2873,12 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 *   `q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (baseReserveQuantity) quantity of base asset held in the liquidity pool
 *   `Q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (quoteReserveQuantity) quantity of quote asset held in the liquidity pool
+
+## numerator
+
+The result needs to be rounded down to prevent the pool's constant
+product from decreasing, ie. the second part of the subtraction (the
+division) needs to be rounded up.
 
 ## RestResponseLiquidityPool
 
