@@ -1,7 +1,6 @@
-import BigNumber from 'bignumber.js';
 import { EventEmitter } from 'events';
 
-import { adjustPriceToTickSize } from '../../orderbook/quantities';
+import { aggregateL2OrderBookAtTickSize } from '../../orderbook/quantities';
 import { deriveBaseURL } from '../utils';
 import { RestPublicClient } from '../rest';
 import { WebSocketClient } from '../webSocket';
@@ -265,7 +264,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
     tickSize: bigint,
   ): Promise<{ l1: L1OrderBook; l2: L2OrderBook }> {
     return L2LimitOrderBookToHybridOrderBooks(
-      await this.loadLevel2(market),
+      aggregateL2OrderBookAtTickSize(await this.loadLevel2(market), tickSize),
       ORDER_BOOK_MAX_L2_LEVELS,
       ORDER_BOOK_HYBRID_SLIPPAGE,
       this.takerIdexFeeRate,
@@ -410,11 +409,11 @@ export class OrderBookRealTimeClient extends EventEmitter {
   }
 
   private async loadLevel2(market: string): Promise<L2OrderBook> {
-    return (
+    return aggregateL2OrderBookAtTickSize(
       this.l2OrderBooks.get(market) ||
-      restResponseToL2OrderBook(
-        await this.restPublicClient.getOrderBookLevel2(market, 1000, true),
-      )
+        restResponseToL2OrderBook(
+          await this.restPublicClient.getOrderBookLevel2(market, 1000, true),
+        ),
     );
   }
 
