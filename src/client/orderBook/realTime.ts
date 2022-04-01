@@ -409,11 +409,11 @@ export class OrderBookRealTimeClient extends EventEmitter {
   }
 
   private async loadLevel2(market: string): Promise<L2OrderBook> {
-    return aggregateL2OrderBookAtTickSize(
+    return (
       this.l2OrderBooks.get(market) ||
-        restResponseToL2OrderBook(
-          await this.restPublicClient.getOrderBookLevel2(market, 1000, true),
-        ),
+      restResponseToL2OrderBook(
+        await this.restPublicClient.getOrderBookLevel2(market, 1000, true),
+      )
     );
   }
 
