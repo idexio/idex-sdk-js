@@ -25,6 +25,13 @@ export const asksTickRoundingMode = BigNumber.ROUND_UP;
 
 export const bidsTickRoundingMode = BigNumber.ROUND_DOWN;
 
+export const nullLevel: OrderBookLevelL2 = {
+  price: BigInt(0),
+  size: BigInt(0),
+  numOrders: 0,
+  type: 'limit',
+};
+
 /**
  * Helper function to calculate gross base available at a bid price
  * see: {quantitiesAvailableFromPoolAtBidPrice}
@@ -571,6 +578,64 @@ export function quantitiesAvailableFromPoolAtBidPrice(
       quoteAssetQuantity,
       grossBase,
     ),
+  };
+}
+
+export function aggregateL2OrderBookAtTickSize(
+  inputBook: L2OrderBook,
+  tickSize: bigint,
+): L2OrderBook {
+  const askLevelsByPrice = new Map<BigInt, OrderBookLevelL2>();
+  for (const askLevel of inputBook.asks) {
+    const price = adjustPriceToTickSize(
+      askLevel.price,
+      tickSize,
+      asksTickRoundingMode,
+    );
+    const level = askLevelsByPrice.get(price) || {
+      price,
+      size: BigInt(0),
+      numOrders: 0,
+      type: 'limit',
+    };
+
+    level.numOrders += askLevel.numOrders;
+    level.size += askLevel.size;
+
+    askLevelsByPrice.set(price, level);
+  }
+
+  const bidLevelsByPrice = new Map<BigInt, OrderBookLevelL2>();
+  for (const bidLevel of inputBook.bids) {
+    const price = adjustPriceToTickSize(
+      bidLevel.price,
+      tickSize,
+      asksTickRoundingMode,
+    );
+    const level = bidLevelsByPrice.get(price) || {
+      price,
+      size: BigInt(0),
+      numOrders: 0,
+      type: 'limit',
+    };
+
+    level.numOrders += bidLevel.numOrders;
+    level.size += bidLevel.size;
+
+    bidLevelsByPrice.set(price, level);
+  }
+
+  return {
+    asks:
+      askLevelsByPrice.size === 0
+        ? [nullLevel]
+        : Array.from(askLevelsByPrice.values()),
+    bids:
+      bidLevelsByPrice.size === 0
+        ? [nullLevel]
+        : Array.from(bidLevelsByPrice.values()),
+    sequence: inputBook.sequence,
+    pool: inputBook.pool,
   };
 }
 
