@@ -212,14 +212,16 @@
 *   [WebSocketResponseSubscriptionMessageLong](#websocketresponsesubscriptionmessagelong)
 *   [quantitiesAvailableFromPoolAtBidPrice](#quantitiesavailablefrompoolatbidprice)
     *   [Parameters](#parameters-63)
-*   [L1orL2BestAvailablePrices](#l1orl2bestavailableprices)
+*   [aggregateL2OrderBookAtTickSize](#aggregatel2orderbookatticksize)
     *   [Parameters](#parameters-64)
-*   [L1L2OrderBooksWithMinimumTaker](#l1l2orderbookswithminimumtaker)
+*   [L1orL2BestAvailablePrices](#l1orl2bestavailableprices)
     *   [Parameters](#parameters-65)
-*   [validateSyntheticPriceLevelInputs](#validatesyntheticpricelevelinputs)
+*   [L1L2OrderBooksWithMinimumTaker](#l1l2orderbookswithminimumtaker)
     *   [Parameters](#parameters-66)
-*   [adjustPriceToTickSize](#adjustpricetoticksize)
+*   [validateSyntheticPriceLevelInputs](#validatesyntheticpricelevelinputs)
     *   [Parameters](#parameters-67)
+*   [adjustPriceToTickSize](#adjustpricetoticksize)
+    *   [Parameters](#parameters-68)
 
 ## Clients
 
@@ -3135,6 +3137,17 @@ Helper function to calculate the asset quantities available at a given price lev
 *   `poolFeeRate` **bigint?** the liquidity pool fee rate to use for calculations (query /v1/exchange for current global setting)
 
 Returns **[PriceLevelQuantities](#pricelevelquantities)** a level 2 order book with synthetic price levels only
+
+## aggregateL2OrderBookAtTickSize
+
+Helper function to re-aggregate L2 orderbook price levels at a larger (more zeroes) tick size
+
+### Parameters
+
+*   `inputBook` **[L2OrderBook](#l2orderbook)** 
+*   `tickSize` **bigint** 
+
+Returns **[L2OrderBook](#l2orderbook)** 
 
 ## L1orL2BestAvailablePrices
 
