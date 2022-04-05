@@ -581,6 +581,9 @@ export function quantitiesAvailableFromPoolAtBidPrice(
   };
 }
 
+/**
+ * Helper function to re-aggregate L2 orderbook price levels at a larger (more zeroes) tick size
+ */
 export function aggregateL2OrderBookAtTickSize(
   inputBook: L2OrderBook,
   tickSize: bigint,
@@ -610,7 +613,7 @@ export function aggregateL2OrderBookAtTickSize(
     const price = adjustPriceToTickSize(
       bidLevel.price,
       tickSize,
-      asksTickRoundingMode,
+      bidsTickRoundingMode,
     );
     const level = bidLevelsByPrice.get(price) || {
       price,
