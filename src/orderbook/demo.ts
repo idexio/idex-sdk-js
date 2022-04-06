@@ -2,14 +2,12 @@ import { OrderBookRealTimeClient } from '../client/orderBook/realTime';
 
 const chain = 'matic';
 const isSandbox = false;
-const market = 'DIL-USD';
-const l2LevelsToDisplay = 10;
+const market = 'MATIC-ETH';
+const l2LevelsToDisplay = 5;
 
 const client = new OrderBookRealTimeClient({
   multiverseChain: chain,
   sandbox: isSandbox,
-  restBaseURL: 'https://api-staging-sub-matic.idex-dev.com/v1',
-  websocketBaseURL: 'wss://websocket-staging-sub-matic.idex-dev.com/v1',
 });
 
 async function start() {
@@ -41,9 +39,7 @@ const demo = async function demo(): Promise<void> {
 
   client.on('ready', (readyMarket: string) => {
     console.log('ORDER BOOK READY ==========>');
-    client
-      .getOrderBookL2(readyMarket, l2LevelsToDisplay, BigInt(1000000))
-      .then(console.log);
+    client.getOrderBookL2(readyMarket, l2LevelsToDisplay).then(console.log);
   });
 
   // trades generate multiple L2 events (one for token price(s), one for l2update)
