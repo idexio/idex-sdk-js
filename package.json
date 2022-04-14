@@ -38,7 +38,7 @@
   "dependencies": {
     "axios": "^0.21.2",
     "bignumber.js": "^9.0.1",
-    "ethers": "^5.0.32",
+    "ethers": "5.6.3",
     "isomorphic-ws": "^4.0.1",
     "qs": "^6.9.6",
     "tslib": "^2.1.0",
