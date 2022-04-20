@@ -219,15 +219,16 @@ export function calculateSyntheticPriceLevels(
 ): SyntheticL2OrderBook | null {
   const unadjustedPoolPrice = dividePips(quoteAssetQuantity, baseAssetQuantity);
   const poolPrice = adjustPriceToTickSize(unadjustedPoolPrice, tickSize);
-  const priceSlippagePerLevel = adjustPriceToTickSize(
+
+  // Calculate price slippage per level respecting tick size
+  let priceSlippagePerLevel = adjustPriceToTickSize(
     (poolPrice * BigInt(visibleSlippage)) / BigInt(100000),
     tickSize,
   );
-
-  // Edge case - if the tick size is too large compared to the price to allow for the specified
-  // number of levels and slippage, do not return any synthetic price levels
+  // If the tick size is too large compared to the price to allow for the specified slippage,
+  // use the tick size itself as the slippage
   if (priceSlippagePerLevel < tickSize) {
-    return null;
+    priceSlippagePerLevel = tickSize;
   }
 
   const asks: OrderBookLevelL2[] = [];
