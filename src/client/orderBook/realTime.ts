@@ -281,7 +281,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
       return;
     }
     const book = this.l2OrderBooks.get(market);
-    // If this market has not yet been synchronized from the REST API then halt processing -
+    // If this market has not yet been synchronized from the REST API, then halt processing -
     // messages for the market will queue and proccess after it runs
     if (!book) {
       return;
