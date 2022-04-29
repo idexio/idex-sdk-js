@@ -2,10 +2,19 @@ import { useEffect, useState } from 'react';
 import { OrderBookRealTimeClient } from '../../../dist/index';
 
 const config = {
-  market: 'IDEX-ETH',
-  limit: 10,
+  restBaseURL: 'https://api-staging-sub-matic.idex-dev.com/v1',
+  websocketBaseURL: 'wss://websocket-staging-sub-matic.idex-dev.com/v1',
   chain: 'matic',
-  sandbox: false
+  sandbox: true,
+
+  market: 'IDEX-USD',
+  limit: 100,
+  tickSize: 1,
+  overrideRates: {
+      takerIdexFeeRate: "0.0005",
+      takerLiquidityProviderFeeRate: "0.0020",
+      takerTradeMinimum: "0.10000000"
+  }
 }
 
 let incrementer = 0;
@@ -13,7 +22,13 @@ let incrementer = 0;
 const client = new OrderBookRealTimeClient({
   multiverseChain: config.chain,
   sandbox: config.sandbox,
-});
+  restBaseURL: config.restBaseURL,
+  websocketBaseURL: config.websocketBaseURL,
+}, config.overrideRates);
+
+// Uncomment to debug issue with shifted data
+// client.removeAllListeners();
+// client.stop();
 
 client.start([config.market]);
 
@@ -34,7 +49,11 @@ function App() {
 
   useEffect(() => {
     async function refreshOrderBook() {
-      const l2 = await client.getOrderBookL2(config.market, config.limit);
+      const l2 = await client.getOrderBookL2(
+        config.market,
+        config.limit,
+        window.BigInt(config.tickSize)
+      );
       setBooks((books) => [
         {
           localId: incrementer++,
