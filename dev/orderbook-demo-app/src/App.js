@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { OrderBookRealTimeClient } from '../../../dist/index';
 
 const config = {
-  restBaseURL: 'https://api-staging-sub-matic.idex-dev.com/v1',
-  websocketBaseURL: 'wss://websocket-staging-sub-matic.idex-dev.com/v1',
+  // restBaseURL: 'https:// custom domain /v1',
+  // websocketBaseURL: 'wss:// custom domain /v1',
+  // sandbox: false,
   chain: 'matic',
-  sandbox: true,
 
-  market: 'IDEX-USD',
+  market: 'IDEX-USDC',
   limit: 100,
   tickSize: 1,
   overrideRates: {
