@@ -596,12 +596,7 @@ export function aggregateL2OrderBookAtTickSize(
       tickSize,
       asksTickRoundingMode,
     );
-    const level = askLevelsByPrice.get(price) || {
-      price,
-      size: BigInt(0),
-      numOrders: 0,
-      type: 'limit',
-    };
+    const level = askLevelsByPrice.get(price) || nullLevel;
 
     level.numOrders += askLevel.numOrders;
     level.size += askLevel.size;
@@ -616,12 +611,7 @@ export function aggregateL2OrderBookAtTickSize(
       tickSize,
       bidsTickRoundingMode,
     );
-    const level = bidLevelsByPrice.get(price) || {
-      price,
-      size: BigInt(0),
-      numOrders: 0,
-      type: 'limit',
-    };
+    const level = bidLevelsByPrice.get(price) || nullLevel;
 
     level.numOrders += bidLevel.numOrders;
     level.size += bidLevel.size;
@@ -630,14 +620,8 @@ export function aggregateL2OrderBookAtTickSize(
   }
 
   return {
-    asks:
-      askLevelsByPrice.size === 0
-        ? [nullLevel]
-        : Array.from(askLevelsByPrice.values()),
-    bids:
-      bidLevelsByPrice.size === 0
-        ? [nullLevel]
-        : Array.from(bidLevelsByPrice.values()),
+    asks: Array.from(askLevelsByPrice.values()),
+    bids: Array.from(bidLevelsByPrice.values()),
     sequence: inputBook.sequence,
     pool: inputBook.pool,
   };
