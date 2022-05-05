@@ -596,7 +596,7 @@ export function aggregateL2OrderBookAtTickSize(
       tickSize,
       asksTickRoundingMode,
     );
-    const level = askLevelsByPrice.get(price) || nullLevel;
+    const level = askLevelsByPrice.get(price) || { ...nullLevel, price };
 
     level.numOrders += askLevel.numOrders;
     level.size += askLevel.size;
@@ -611,7 +611,7 @@ export function aggregateL2OrderBookAtTickSize(
       tickSize,
       bidsTickRoundingMode,
     );
-    const level = bidLevelsByPrice.get(price) || nullLevel;
+    const level = bidLevelsByPrice.get(price) || { ...nullLevel, price };
 
     level.numOrders += bidLevel.numOrders;
     level.size += bidLevel.size;
