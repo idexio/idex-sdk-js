@@ -216,7 +216,7 @@ export function calculateSyntheticPriceLevels(
   idexFeeRate = BigInt(0),
   poolFeeRate = BigInt(0),
   tickSize = BigInt(1),
-): SyntheticL2OrderBook | null {
+): SyntheticL2OrderBook {
   const unadjustedPoolPrice = dividePips(quoteAssetQuantity, baseAssetQuantity);
   const poolPrice = adjustPriceToTickSize(unadjustedPoolPrice, tickSize);
 
