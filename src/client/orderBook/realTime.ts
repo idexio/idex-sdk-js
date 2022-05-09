@@ -11,6 +11,7 @@ import {
   oneInPips,
   multiplyPips,
   pipToDecimal,
+  exchangeDecimals,
 } from '../../pipmath';
 import { L1Equal, updateL2Levels } from './utils';
 import type {
@@ -222,6 +223,13 @@ export class OrderBookRealTimeClient extends EventEmitter {
       ),
       takerTradeMinimum: pipToDecimal(this.takerTradeMinimum),
     };
+  }
+
+  public async getMaximumTickSizeUnderSpread(market: string): Promise<bigint> {
+    const maxBidPriceInPips = (await this.loadLevel2(market)).bids[0].price;
+    const numDigits = maxBidPriceInPips.toString().length;
+
+    return BigInt(10 ** (Math.min(numDigits, exchangeDecimals) - 1));
   }
 
   /**
