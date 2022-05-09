@@ -794,34 +794,37 @@ export function L1L2OrderBooksWithMinimumTaker(
     }
   }
 
-  let { grossBase: grossSellBase } = quantitiesAvailableFromPoolAtBidPrice(
-    l2.pool.baseReserveQuantity,
-    l2.pool.quoteReserveQuantity,
-    sellPrice,
-    idexFeeRate,
-    poolFeeRate,
-  );
-
-  if (grossSellBase < takerMinimumInBase) {
-    sellPrice -= tickSize;
-    grossSellBase = quantitiesAvailableFromPoolAtBidPrice(
+  // Best sell price will be 0 in case there are no bids
+  if (sellPrice > 0) {
+    let { grossBase: grossSellBase } = quantitiesAvailableFromPoolAtBidPrice(
       l2.pool.baseReserveQuantity,
       l2.pool.quoteReserveQuantity,
       sellPrice,
       idexFeeRate,
       poolFeeRate,
-    ).grossBase;
-  }
+    );
 
-  if (!l2.bids[0] || sellPrice > l2.bids[0].price) {
-    l2Values.bids.unshift({
-      price: sellPrice,
-      size: grossSellBase,
-      numOrders: 0,
-      type: 'pool',
-    });
-    if (l2Values.bids.length > 1) {
-      l2Values.bids[1].size -= grossSellBase;
+    if (grossSellBase < takerMinimumInBase) {
+      sellPrice -= tickSize;
+      grossSellBase = quantitiesAvailableFromPoolAtBidPrice(
+        l2.pool.baseReserveQuantity,
+        l2.pool.quoteReserveQuantity,
+        sellPrice,
+        idexFeeRate,
+        poolFeeRate,
+      ).grossBase;
+    }
+
+    if (!l2.bids[0] || sellPrice > l2.bids[0].price) {
+      l2Values.bids.unshift({
+        price: sellPrice,
+        size: grossSellBase,
+        numOrders: 0,
+        type: 'pool',
+      });
+      if (l2Values.bids.length > 1) {
+        l2Values.bids[1].size -= grossSellBase;
+      }
     }
   }
 

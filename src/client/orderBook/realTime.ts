@@ -224,6 +224,13 @@ export class OrderBookRealTimeClient extends EventEmitter {
     };
   }
 
+  public async getMaximumTickSizeUnderSpread(market: string): Promise<bigint> {
+    const maxBidPriceInPips = (await this.loadLevel2(market)).bids[0].price;
+    const numDigits = maxBidPriceInPips.toString().length;
+
+    return BigInt(10 ** (numDigits - 1));
+  }
+
   /**
    * Load the current state of the level 1 orderbook for this market.
    *
