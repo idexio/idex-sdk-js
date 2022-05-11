@@ -226,8 +226,11 @@ export class OrderBookRealTimeClient extends EventEmitter {
   }
 
   public async getMaximumTickSizeUnderSpread(market: string): Promise<bigint> {
-    const maxBidPriceInPips = (await this.loadLevel2(market)).bids[0].price;
-    const numDigits = maxBidPriceInPips.toString().length;
+    const { bids } = await this.getOrderBookL2(market, 1000);
+    const minBidPrice = bids.length > 0 && bids[bids.length - 1][0];
+    const numDigits = minBidPrice
+      ? decimalToPip(minBidPrice).toString().length
+      : exchangeDecimals;
 
     return BigInt(10 ** (Math.min(numDigits, exchangeDecimals) - 1));
   }
