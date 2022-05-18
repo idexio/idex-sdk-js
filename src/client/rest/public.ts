@@ -254,7 +254,7 @@ export class RestPublicClient<
     return this.get('/orderbook', { level: 2, market, limit, limitOrderOnly });
   }
 
-  // Internal methods exposed for advanced usage
+  // Internal methods exposed for advanced usage.
 
   protected async get(
     endpoint: string,
