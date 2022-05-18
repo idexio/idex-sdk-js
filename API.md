@@ -110,14 +110,14 @@
     *   [Properties](#properties-72)
 *   [L2LimitOrderBookToHybridOrderBooks](#l2limitorderbooktohybridorderbooks)
     *   [Parameters](#parameters-49)
-*   [calculateGrossBaseQuantity](#calculategrossbasequantity)
-    *   [Parameters](#parameters-50)
 *   [updateL2Levels](#updatel2levels)
-    *   [Parameters](#parameters-51)
+    *   [Parameters](#parameters-50)
 *   [RestRequestAddLiquidity](#restrequestaddliquidity)
     *   [Properties](#properties-73)
 *   [L2OrderBook](#l2orderbook)
     *   [Properties](#properties-74)
+*   [calculateGrossBaseQuantity](#calculategrossbasequantity)
+    *   [Parameters](#parameters-51)
 *   [WebSocketRequestTokenPriceSubscription](#websocketrequesttokenpricesubscription)
     *   [Properties](#properties-75)
 *   [createPrivateKeyMessageSigner](#createprivatekeymessagesigner)
@@ -129,28 +129,28 @@
     *   [Properties](#properties-76)
 *   [RestRequestRemoveLiquidity](#restrequestremoveliquidity)
     *   [Properties](#properties-77)
-*   [calculateGrossBaseValueOfBuyQuantities](#calculategrossbasevalueofbuyquantities)
-    *   [Parameters](#parameters-54)
 *   [privateKeySigner](#privatekeysigner)
 *   [OrderBookLevelType](#orderbookleveltype)
 *   [OrderBookLevelL1](#orderbooklevell1)
     *   [Properties](#properties-78)
-*   [calculateGrossQuoteQuantity](#calculategrossquotequantity)
-    *   [Parameters](#parameters-55)
+*   [calculateGrossBaseValueOfBuyQuantities](#calculategrossbasevalueofbuyquantities)
+    *   [Parameters](#parameters-54)
 *   [RestRequestFindLiquidityAddition](#restrequestfindliquidityaddition)
     *   [Properties](#properties-79)
 *   [OrderBookLevelL2](#orderbooklevell2)
     *   [Properties](#properties-80)
+*   [calculateGrossQuoteQuantity](#calculategrossquotequantity)
+    *   [Parameters](#parameters-55)
 *   [PoolReserveQuantities](#poolreservequantities)
     *   [Properties](#properties-81)
 *   [RestRequestFindLiquidityRemoval](#restrequestfindliquidityremoval)
     *   [Properties](#properties-82)
 *   [PriceLevelQuantities](#pricelevelquantities)
     *   [Properties](#properties-83)
-*   [calculateGrossQuoteValueOfSellQuantities](#calculategrossquotevalueofsellquantities)
-    *   [Parameters](#parameters-56)
 *   [RestRequestFindLiquidityChanges](#restrequestfindliquiditychanges)
     *   [Properties](#properties-84)
+*   [calculateGrossQuoteValueOfSellQuantities](#calculategrossquotevalueofsellquantities)
+    *   [Parameters](#parameters-56)
 *   [MarketType](#markettype)
     *   [orderBook](#orderbook)
     *   [hybrid](#hybrid)
@@ -161,18 +161,18 @@
     *   [OffChain](#offchain)
 *   [WebSocketRequestAuthenticatedSubscription](#websocketrequestauthenticatedsubscription)
 *   [WebSocketRequestUnauthenticatedSubscription](#websocketrequestunauthenticatedsubscription)
-*   [calculateQuoteQuantityOut](#calculatequotequantityout)
-    *   [Parameters](#parameters-58)
 *   [LiquidityChangeType](#liquiditychangetype)
     *   [Addition](#addition)
     *   [Removal](#removal)
 *   [AuthTokenWebSocketRequestAuthenticatedSubscription](#authtokenwebsocketrequestauthenticatedsubscription)
-*   [numerator](#numerator)
+*   [calculateQuoteQuantityOut](#calculatequotequantityout)
+    *   [Parameters](#parameters-58)
 *   [AuthTokenWebSocketRequestSubscription](#authtokenwebsocketrequestsubscription)
 *   [MultiverseChain](#multiversechain)
 *   [WebSocketRequestSubscription](#websocketrequestsubscription)
 *   [WebSocketResponseLiquidityPoolShort](#websocketresponseliquiditypoolshort)
     *   [Properties](#properties-85)
+*   [numerator](#numerator)
 *   [RestResponseLiquidityPool](#restresponseliquiditypool)
     *   [Properties](#properties-86)
 *   [WebSocketResponseLiquidityPoolLong](#websocketresponseliquiditypoollong)
@@ -188,10 +188,10 @@
 *   [WebSocketResponseL2OrderBookChange](#websocketresponsel2orderbookchange)
 *   [RestResponseLiquidityRemoval](#restresponseliquidityremoval)
     *   [Properties](#properties-91)
-*   [recalculateHybridLevelAmounts](#recalculatehybridlevelamounts)
-    *   [Parameters](#parameters-60)
 *   [WebSocketRequestUnsubscribe](#websocketrequestunsubscribe)
     *   [Properties](#properties-92)
+*   [recalculateHybridLevelAmounts](#recalculatehybridlevelamounts)
+    *   [Parameters](#parameters-60)
 *   [WebSocketRequestSubscriptions](#websocketrequestsubscriptions)
     *   [Properties](#properties-93)
 *   [WebSocketRequest](#websocketrequest)
@@ -212,12 +212,16 @@
 *   [WebSocketResponseSubscriptionMessageLong](#websocketresponsesubscriptionmessagelong)
 *   [quantitiesAvailableFromPoolAtBidPrice](#quantitiesavailablefrompoolatbidprice)
     *   [Parameters](#parameters-63)
-*   [L1orL2BestAvailablePrices](#l1orl2bestavailableprices)
+*   [aggregateL2OrderBookAtTickSize](#aggregatel2orderbookatticksize)
     *   [Parameters](#parameters-64)
-*   [L1L2OrderBooksWithMinimumTaker](#l1l2orderbookswithminimumtaker)
+*   [L1orL2BestAvailablePrices](#l1orl2bestavailableprices)
     *   [Parameters](#parameters-65)
-*   [validateSyntheticPriceLevelInputs](#validatesyntheticpricelevelinputs)
+*   [L1L2OrderBooksWithMinimumTaker](#l1l2orderbookswithminimumtaker)
     *   [Parameters](#parameters-66)
+*   [validateSyntheticPriceLevelInputs](#validatesyntheticpricelevelinputs)
+    *   [Parameters](#parameters-67)
+*   [adjustPriceToTickSize](#adjustpricetoticksize)
+    *   [Parameters](#parameters-68)
 
 ## Clients
 
@@ -989,6 +993,7 @@ Load the current state of the level 1 orderbook for this market.
 ###### Parameters
 
 *   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+*   `tickSize` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** minimum price movement expressed in pips (10^-8) (optional, default `1`)
 
 Returns **[RestResponseOrderBookLevel1](#restresponseorderbooklevel1)** 
 
@@ -1000,6 +1005,7 @@ Load the current state of the level 2 orderbook for this market.
 
 *   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 *   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Total number of price levels (bids + asks) to return, between 2 and 1000 (optional, default `100`)
+*   `tickSize` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** minimum price movement expressed in pips (10^-8) (optional, default `1`)
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[RestResponseOrderBookLevel2](#restresponseorderbooklevel2)>** 
 
@@ -1658,17 +1664,18 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 #### Properties
 
-*   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base-quote pair e.g. 'IDEX-USD'
-*   `type` **[MarketType](#markettype)** 
-*   `status` **[MarketStatus](#marketstatus)** 
-*   `baseAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** e.g. 'IDEX'
-*   `baseAssetPrecision` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
-*   `quoteAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** e.g. 'USD'
-*   `quoteAssetPrecision` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
-*   `makerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `takerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `takerIdexFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `takerLiquidityProviderFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+*   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Market symbol
+*   `type` **[MarketType](#markettype)** Market type
+*   `status` **[MarketStatus](#marketstatus)** Market trading status
+*   `baseAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Base asset symbol
+*   `baseAssetPrecision` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Exchange decimal precision of the base asset, always 8 due to precision normalization
+*   `quoteAsset` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Quote asset symbol
+*   `quoteAssetPrecision` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Exchange decimal precision of the base asset, always 8 due to precision normalization
+*   `makerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Maker trade fee rate
+*   `takerFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Total taker trade fee rate
+*   `takerIdexFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Taker trade fee rate collected by IDEX; used in computing synthetic price levels for real-time order books
+*   `takerLiquidityProviderFeeRate` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Taker trade fee rate collected by liquidity providers; used in computing synthetic price levels for real-time order books
+*   `tickSize` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Market tick size (minimum change in order price)
 
 ### RestResponseOrder
 
@@ -2494,23 +2501,9 @@ Convert a limit-order orderbook and a liquidity pool to a hybrid order book repr
 *   `poolFeeRate` **bigint** pool fee rate chared by liquidity pool, expressed in pips
 *   `includeMinimumTakerLevels` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** if true, calculate a synthetic price level at twice the minimum trade size
 *   `minimumTakerInQuote` **(bigint | null)** minimum trade size expressed in pips, or null if none available
+*   `tickSize` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** minimum price movement expressed in pips (10^-8)
 
 Returns **{l1: [L1OrderBook](#l1orderbook), l2: [L2OrderBook](#l2orderbook)}** 
-
-## calculateGrossBaseQuantity
-
-Helper function to calculate gross base available at a bid price
-see: {quantitiesAvailableFromPoolAtBidPrice}
-
-### Parameters
-
-*   `baseAssetQuantity` **bigint** 
-*   `quoteAssetQuantity` **bigint** 
-*   `targetPrice` **bigint** 
-*   `idexFeeRate` **bigint** 
-*   `poolFeeRate` **bigint** 
-
-Returns **bigint** 
 
 ## updateL2Levels
 
@@ -2549,6 +2542,21 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `asks` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
 *   `bids` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[OrderBookLevelL2](#orderbooklevell2)>** 
 *   `pool` **([PoolReserveQuantities](#poolreservequantities) | null)** 
+
+## calculateGrossBaseQuantity
+
+Helper function to calculate gross base available at a bid price
+see: {quantitiesAvailableFromPoolAtBidPrice}
+
+### Parameters
+
+*   `baseAssetQuantity` **bigint** 
+*   `quoteAssetQuantity` **bigint** 
+*   `targetPrice` **bigint** 
+*   `idexFeeRate` **bigint** 
+*   `poolFeeRate` **bigint** 
+
+Returns **bigint** 
 
 ## WebSocketRequestTokenPriceSubscription
 
@@ -2616,19 +2624,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `amountBMin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Minimum amount of tokenB to add to the liquidity pool
 *   `to` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Wallet to credit LP tokens, or the custodian contract address to leave on exchange
 
-## calculateGrossBaseValueOfBuyQuantities
-
-Helper function to convert from quote to base quantities
-see: {quantitiesAvailableFromPoolAtAskPrice}
-
-### Parameters
-
-*   `baseAssetQuantity` **bigint** 
-*   `quoteAssetQuantity` **bigint** 
-*   `grossQuoteQuantity` **bigint** 
-
-Returns **bigint** 
-
 ## privateKeySigner
 
 *   **See**: {createPrivateKeyMessageSigner}
@@ -2651,18 +2646,16 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `size` **bigint** 
 *   `numOrders` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 
-## calculateGrossQuoteQuantity
+## calculateGrossBaseValueOfBuyQuantities
 
-Helper function to calculate gross quote available at an ask price
+Helper function to convert from quote to base quantities
 see: {quantitiesAvailableFromPoolAtAskPrice}
 
 ### Parameters
 
 *   `baseAssetQuantity` **bigint** 
 *   `quoteAssetQuantity` **bigint** 
-*   `targetPrice` **bigint** 
-*   `idexFeeRate` **bigint** 
-*   `poolFeeRate` **bigint** 
+*   `grossQuoteQuantity` **bigint** 
 
 Returns **bigint** 
 
@@ -2691,6 +2684,21 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `size` **bigint** 
 *   `numOrders` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 *   `type` **[OrderBookLevelType](#orderbookleveltype)** 
+
+## calculateGrossQuoteQuantity
+
+Helper function to calculate gross quote available at an ask price
+see: {quantitiesAvailableFromPoolAtAskPrice}
+
+### Parameters
+
+*   `baseAssetQuantity` **bigint** 
+*   `quoteAssetQuantity` **bigint** 
+*   `targetPrice` **bigint** 
+*   `idexFeeRate` **bigint** 
+*   `poolFeeRate` **bigint** 
+
+Returns **bigint** 
 
 ## PoolReserveQuantities
 
@@ -2725,19 +2733,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `grossBase` **bigint** 
 *   `grossQuote` **bigint** 
 
-## calculateGrossQuoteValueOfSellQuantities
-
-Helper function to convert from base to quote quantities
-see: {quantitiesAvailableFromPoolAtBidPrice}
-
-### Parameters
-
-*   `baseAssetQuantity` **bigint** 
-*   `quoteAssetQuantity` **bigint** 
-*   `grossBaseQuantity` **bigint** 
-
-Returns **bigint** 
-
 ## RestRequestFindLiquidityChanges
 
 Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
@@ -2750,6 +2745,19 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `end` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Ending timestamp (inclusive)
 *   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Max results to return from 1-1000
 *   `fromId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Deposits created at the same timestamp or after fromId
+
+## calculateGrossQuoteValueOfSellQuantities
+
+Helper function to convert from base to quote quantities
+see: {quantitiesAvailableFromPoolAtBidPrice}
+
+### Parameters
+
+*   `baseAssetQuantity` **bigint** 
+*   `quoteAssetQuantity` **bigint** 
+*   `grossBaseQuantity` **bigint** 
+
+Returns **bigint** 
 
 ## MarketType
 
@@ -2807,22 +2815,6 @@ Type: ([WebSocketRequestBalancesSubscription](#websocketrequestbalancessubscript
 
 Type: ([WebSocketRequestCandlesSubscription](#websocketrequestcandlessubscription) | [WebSocketRequestL1OrderBookSubscription](#websocketrequestl1orderbooksubscription) | [WebSocketRequestL2OrderBookSubscription](#websocketrequestl2orderbooksubscription) | [WebSocketRequestTickersSubscription](#websocketrequesttickerssubscription) | [WebSocketRequestTradesSubscription](#websocketrequesttradessubscription))
 
-## calculateQuoteQuantityOut
-
-Given a taker order size expressed in base, how much quote is received from the pool
-
-see: {L1orL2BestAvailablePrices}
-
-### Parameters
-
-*   `baseAssetQuantity` **bigint** 
-*   `quoteAssetQuantity` **bigint** 
-*   `grossBaseQuantityIn` **bigint** 
-*   `idexFeeRate` **bigint** 
-*   `poolFeeRate` **bigint** 
-
-Returns **bigint** 
-
 ## LiquidityChangeType
 
 Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
@@ -2843,11 +2835,21 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 Type: ([AuthTokenWebSocketRequestBalancesSubscription](#authtokenwebsocketrequestbalancessubscription) | [AuthTokenWebSocketRequestOrdersSubscription](#authtokenwebsocketrequestorderssubscription))
 
-## numerator
+## calculateQuoteQuantityOut
 
-The result needs to be rounded down to prevent the pool's constant
-product from decreasing, ie. the second part of the subtraction (the
-division) needs to be rounded up.
+Given a taker order size expressed in base, how much quote is received from the pool
+
+see: {L1orL2BestAvailablePrices}
+
+### Parameters
+
+*   `baseAssetQuantity` **bigint** 
+*   `quoteAssetQuantity` **bigint** 
+*   `grossBaseQuantityIn` **bigint** 
+*   `idexFeeRate` **bigint** 
+*   `poolFeeRate` **bigint** 
+
+Returns **bigint** 
 
 ## AuthTokenWebSocketRequestSubscription
 
@@ -2873,6 +2875,12 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 *   `q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (baseReserveQuantity) quantity of base asset held in the liquidity pool
 *   `Q` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** (quoteReserveQuantity) quantity of quote asset held in the liquidity pool
+
+## numerator
+
+The result needs to be rounded down to prevent the pool's constant
+product from decreasing, ie. the second part of the subtraction (the
+division) needs to be rounded up.
 
 ## RestResponseLiquidityPool
 
@@ -2928,6 +2936,7 @@ Generates a synthetic orderbook consisting of price levels for pool liquidity on
 *   `visibleSlippage` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** how much slippage per price level, in 1/1000th of a percent (100 = 0.1%)
 *   `idexFeeRate` **bigint?** the idex fee rate to use for calculations (query /v1/exchange for current global setting) (optional, default `BigInt(0)`)
 *   `poolFeeRate` **bigint?** the liquidity pool fee rate to use for calculations (query /v1/exchange for current global setting) (optional, default `BigInt(0)`)
+*   `tickSize` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** minimum price movement expressed in pips (10^-8) (optional, default `1`)
 
 Returns **SyntheticL2OrderBook** a level 2 order book with synthetic price levels only
 
@@ -2994,18 +3003,6 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `txId` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | null)** Ethereum transaction ID, if available
 *   `txStatus` **([EthTransactionStatus](#ethtransactionstatus) | null)** Ethereum transaction status
 
-## recalculateHybridLevelAmounts
-
-Recalculate price level quantities for a book previously sorted with {sortAndMergeLevelsUnadjusted}
-
-### Parameters
-
-*   `orderbook` **[L2OrderBook](#l2orderbook)** an unadjusted level 2 order book as returned by {sortAndMergeLevelsUnadjusted}
-*   `idexFeeRate` **bigint** idex fee rate to use in pool quantity calculations
-*   `poolFeeRate` **bigint** pool fee rate to use in pool quantity calculations
-
-Returns **[L2OrderBook](#l2orderbook)** the recalculated level 2 order book
-
 ## WebSocketRequestUnsubscribe
 
 UnsubscribeRequest
@@ -3018,6 +3015,18 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `cid` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** client-supplied request id
 *   `markets` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** array of market symbols
 *   `subscriptions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<(WebSocketRequestUnsubscribeSubscription | WebSocketRequestUnsubscribeShortNames)>?** array of subscription objects
+
+## recalculateHybridLevelAmounts
+
+Recalculate price level quantities for a book previously sorted with {sortAndMergeLevelsUnadjusted}
+
+### Parameters
+
+*   `orderbook` **[L2OrderBook](#l2orderbook)** an unadjusted level 2 order book as returned by {sortAndMergeLevelsUnadjusted}
+*   `idexFeeRate` **bigint** idex fee rate to use in pool quantity calculations
+*   `poolFeeRate` **bigint** pool fee rate to use in pool quantity calculations
+
+Returns **[L2OrderBook](#l2orderbook)** the recalculated level 2 order book
 
 ## WebSocketRequestSubscriptions
 
@@ -3129,6 +3138,17 @@ Helper function to calculate the asset quantities available at a given price lev
 
 Returns **[PriceLevelQuantities](#pricelevelquantities)** a level 2 order book with synthetic price levels only
 
+## aggregateL2OrderBookAtTickSize
+
+Helper function to re-aggregate L2 orderbook price levels at a larger (more zeroes) tick size
+
+### Parameters
+
+*   `inputBook` **[L2OrderBook](#l2orderbook)** 
+*   `tickSize` **bigint** 
+
+Returns **[L2OrderBook](#l2orderbook)** 
+
 ## L1orL2BestAvailablePrices
 
 Given a minimum taker order size, calculate the best achievable price level using pool liquidity only
@@ -3140,6 +3160,7 @@ Given a minimum taker order size, calculate the best achievable price level usin
 *   `poolFeeRate` **bigint** the pool fee rate to use for pool calculations
 *   `takerMinimumInBase` **bigint** the minimum taker order size, expressed in base asset units
 *   `takerMinimumInQuote` **bigint** the minimum taker order size, expressed in quote asset units
+*   `tickSize` **bigint** 
 
 Returns **[PriceLevelQuantities](#pricelevelquantities)** a level 2 order book with synthetic price levels only
 
@@ -3153,6 +3174,7 @@ Modifies an existing level 2 order book to include better price levels at the de
 *   `idexFeeRate` **bigint** the idex fee rate to use for pool calculations
 *   `poolFeeRate` **bigint** the pool fee rate to use for pool calculations
 *   `takerMinimumInQuote` **bigint** the minimum taker order size, expressed in quote asset units
+*   `tickSize` **bigint** 
 *   `pool` **[PoolReserveQuantities](#poolreservequantities)** pool reserve quantities for the orderbook in question
 
 Returns **{l1: [L1OrderBook](#l1orderbook), l2: [L2OrderBook](#l2orderbook)}** 
@@ -3169,3 +3191,17 @@ Validates assumptions for reserve quantities and pricing required for quantity c
 *   `isBuy` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** if true, the price is targeting buy orders (bids), otherwise sell orders (asks)
 
 Returns **void** validation always succeeds or throws
+
+## adjustPriceToTickSize
+
+Adjusts prices in pips to account for tick size by discarding insignificant digits using
+specified rounding mode. Ex price 123456789 at tick size 1 is 123456789, at tick size 10
+123456780, at 100 123456700, etc
+
+### Parameters
+
+*   `price` **bigint** 
+*   `tickSize` **bigint** 
+*   `roundingMode` **BigNumber.RoundingMode**  (optional, default `BigNumber.ROUND_HALF_UP`)
+
+Returns **bigint** 

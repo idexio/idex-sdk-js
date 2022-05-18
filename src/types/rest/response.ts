@@ -318,17 +318,18 @@ export interface RestResponseOrderFill {
  * Market
  *
  * @typedef {Object} RestResponseMarket
- * @property {string} market - Base-quote pair e.g. 'IDEX-USD'
- * @property {MarketType} type
- * @property {MarketStatus} status
- * @property {string} baseAsset - e.g. 'IDEX'
- * @property {number} baseAssetPrecision
- * @property {string} quoteAsset - e.g. 'USD'
- * @property {number} quoteAssetPrecision
- * @property {string} makerFeeRate
- * @property {string} takerFeeRate
- * @property {string} takerIdexFeeRate
- * @property {string} takerLiquidityProviderFeeRate
+ * @property {string} market - Market symbol
+ * @property {MarketType} type - Market type
+ * @property {MarketStatus} status - Market trading status
+ * @property {string} baseAsset - Base asset symbol
+ * @property {number} baseAssetPrecision - Exchange decimal precision of the base asset, always 8 due to precision normalization
+ * @property {string} quoteAsset - Quote asset symbol
+ * @property {number} quoteAssetPrecision - Exchange decimal precision of the base asset, always 8 due to precision normalization
+ * @property {string} makerFeeRate - Maker trade fee rate
+ * @property {string} takerFeeRate - Total taker trade fee rate
+ * @property {string} takerIdexFeeRate - Taker trade fee rate collected by IDEX; used in computing synthetic price levels for real-time order books
+ * @property {string} takerLiquidityProviderFeeRate - Taker trade fee rate collected by liquidity providers; used in computing synthetic price levels for real-time order books
+ * @property {string} tickSize - Market tick size (minimum change in order price)
  */
 export interface RestResponseMarket {
   market: string;
@@ -342,6 +343,7 @@ export interface RestResponseMarket {
   takerFeeRate: string;
   takerIdexFeeRate: string;
   takerLiquidityProviderFeeRate: string;
+  tickSize: string;
 }
 
 /**

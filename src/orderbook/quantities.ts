@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js';
+
 import {
   dividePips,
   oneInPips,
@@ -18,6 +20,17 @@ import {
 } from '../types';
 
 import { L2toL1OrderBook } from './utils';
+
+export const asksTickRoundingMode = BigNumber.ROUND_UP;
+
+export const bidsTickRoundingMode = BigNumber.ROUND_DOWN;
+
+export const nullLevel: OrderBookLevelL2 = {
+  price: BigInt(0),
+  size: BigInt(0),
+  numOrders: 0,
+  type: 'limit',
+};
 
 /**
  * Helper function to calculate gross base available at a bid price
@@ -191,6 +204,7 @@ export function calculateQuoteQuantityOut(
  * @param {number} visibleSlippage - how much slippage per price level, in 1/1000th of a percent (100 = 0.1%)
  * @param {bigint} [idexFeeRate] - the idex fee rate to use for calculations (query /v1/exchange for current global setting)
  * @param {bigint} [poolFeeRate] - the liquidity pool fee rate to use for calculations (query /v1/exchange for current global setting)
+ * @param {number} [tickSize=1] - minimum price movement expressed in pips (10^-8)
  *
  * @returns {SyntheticL2OrderBook} - a level 2 order book with synthetic price levels only
  */
@@ -201,10 +215,22 @@ export function calculateSyntheticPriceLevels(
   visibleSlippage: number,
   idexFeeRate = BigInt(0),
   poolFeeRate = BigInt(0),
+  tickSize = BigInt(1),
 ): SyntheticL2OrderBook {
-  const poolPrice = dividePips(quoteAssetQuantity, baseAssetQuantity);
-  const priceSlippagePerLevel =
-    (poolPrice * BigInt(visibleSlippage)) / BigInt(100000);
+  const unadjustedPoolPrice = dividePips(quoteAssetQuantity, baseAssetQuantity);
+  const poolPrice = adjustPriceToTickSize(unadjustedPoolPrice, tickSize);
+
+  // Calculate price slippage per level respecting tick size
+  let priceSlippagePerLevel = adjustPriceToTickSize(
+    (poolPrice * BigInt(visibleSlippage)) / BigInt(100000),
+    tickSize,
+  );
+  // If the tick size is too large compared to the price to allow for the specified slippage,
+  // use the tick size itself as the slippage
+  if (priceSlippagePerLevel < tickSize) {
+    priceSlippagePerLevel = tickSize;
+  }
+
   const asks: OrderBookLevelL2[] = [];
   const bids: OrderBookLevelL2[] = [];
 
@@ -556,11 +582,57 @@ export function quantitiesAvailableFromPoolAtBidPrice(
   };
 }
 
+/**
+ * Helper function to re-aggregate L2 orderbook price levels at a larger (more zeroes) tick size
+ */
+export function aggregateL2OrderBookAtTickSize(
+  inputBook: L2OrderBook,
+  tickSize: bigint,
+): L2OrderBook {
+  const askLevelsByPrice = new Map<BigInt, OrderBookLevelL2>();
+  for (const askLevel of inputBook.asks) {
+    const price = adjustPriceToTickSize(
+      askLevel.price,
+      tickSize,
+      asksTickRoundingMode,
+    );
+    const level = askLevelsByPrice.get(price) || { ...nullLevel, price };
+
+    level.numOrders += askLevel.numOrders;
+    level.size += askLevel.size;
+
+    askLevelsByPrice.set(price, level);
+  }
+
+  const bidLevelsByPrice = new Map<BigInt, OrderBookLevelL2>();
+  for (const bidLevel of inputBook.bids) {
+    const price = adjustPriceToTickSize(
+      bidLevel.price,
+      tickSize,
+      bidsTickRoundingMode,
+    );
+    const level = bidLevelsByPrice.get(price) || { ...nullLevel, price };
+
+    level.numOrders += bidLevel.numOrders;
+    level.size += bidLevel.size;
+
+    bidLevelsByPrice.set(price, level);
+  }
+
+  return {
+    asks: Array.from(askLevelsByPrice.values()),
+    bids: Array.from(bidLevelsByPrice.values()),
+    sequence: inputBook.sequence,
+    pool: inputBook.pool,
+  };
+}
+
 function L1BestAvailableBuyPrice(
   pool: PoolReserveQuantities,
   idexFeeRate: bigint,
   poolFeeRate: bigint,
   takerMinimumInQuote: bigint,
+  tickSize: bigint,
 ): bigint {
   const takerMinimumInQuoteAfterIdexFee = multiplyPips(
     takerMinimumInQuote,
@@ -575,9 +647,13 @@ function L1BestAvailableBuyPrice(
     poolFeeRate,
   );
 
-  return dividePips(
-    pool.quoteReserveQuantity + takerMinimumInQuoteAfterIdexFee,
-    pool.baseReserveQuantity - baseReceived,
+  return adjustPriceToTickSize(
+    dividePips(
+      pool.quoteReserveQuantity + takerMinimumInQuoteAfterIdexFee,
+      pool.baseReserveQuantity - baseReceived,
+    ),
+    tickSize,
+    asksTickRoundingMode,
   );
 }
 
@@ -586,6 +662,7 @@ function L1BestAvailableSellPrice(
   idexFeeRate: bigint,
   poolFeeRate: bigint,
   takerMinimumInBase: bigint,
+  tickSize: bigint,
 ): bigint {
   const takerMinimumInBaseAfterIdexFee = multiplyPips(
     takerMinimumInBase,
@@ -600,9 +677,13 @@ function L1BestAvailableSellPrice(
     poolFeeRate,
   );
 
-  return dividePips(
-    pool.quoteReserveQuantity - quoteReceived,
-    pool.baseReserveQuantity + takerMinimumInBaseAfterIdexFee,
+  return adjustPriceToTickSize(
+    dividePips(
+      pool.quoteReserveQuantity - quoteReceived,
+      pool.baseReserveQuantity + takerMinimumInBaseAfterIdexFee,
+    ),
+    tickSize,
+    bidsTickRoundingMode,
   );
 }
 /**
@@ -622,12 +703,14 @@ export function L1orL2BestAvailablePrices(
   poolFeeRate: bigint,
   takerMinimumInBase: bigint,
   takerMinimumInQuote: bigint,
+  tickSize: bigint,
 ): BestAvailablePriceLevels {
   const buyPrice = L1BestAvailableBuyPrice(
     pool,
     idexFeeRate,
     poolFeeRate,
     takerMinimumInQuote,
+    tickSize,
   );
 
   const sellPrice = L1BestAvailableSellPrice(
@@ -635,6 +718,7 @@ export function L1orL2BestAvailablePrices(
     idexFeeRate,
     poolFeeRate,
     takerMinimumInBase,
+    tickSize,
   );
 
   return {
@@ -659,6 +743,7 @@ export function L1L2OrderBooksWithMinimumTaker(
   idexFeeRate: bigint,
   poolFeeRate: bigint,
   takerMinimumInQuote: bigint,
+  tickSize: bigint,
 ): { l1: L1OrderBook; l2: L2OrderBook } {
   if (!l2.pool) {
     return { l1: L2toL1OrderBook(l2), l2 };
@@ -675,6 +760,7 @@ export function L1L2OrderBooksWithMinimumTaker(
     poolFeeRate,
     takerMinimumInBase,
     takerMinimumInQuote,
+    tickSize,
   );
 
   let { grossBase: grossBuyBase } = quantitiesAvailableFromPoolAtAskPrice(
@@ -686,7 +772,7 @@ export function L1L2OrderBooksWithMinimumTaker(
   );
 
   if (grossBuyBase < takerMinimumInBase) {
-    buyPrice += BigInt(1);
+    buyPrice += tickSize;
     grossBuyBase = quantitiesAvailableFromPoolAtAskPrice(
       l2.pool.baseReserveQuantity,
       l2.pool.quoteReserveQuantity,
@@ -708,34 +794,37 @@ export function L1L2OrderBooksWithMinimumTaker(
     }
   }
 
-  let { grossBase: grossSellBase } = quantitiesAvailableFromPoolAtBidPrice(
-    l2.pool.baseReserveQuantity,
-    l2.pool.quoteReserveQuantity,
-    sellPrice,
-    idexFeeRate,
-    poolFeeRate,
-  );
-
-  if (grossSellBase < takerMinimumInBase) {
-    sellPrice -= BigInt(1);
-    grossSellBase = quantitiesAvailableFromPoolAtBidPrice(
+  // Best sell price will be 0 in case there are no bids
+  if (sellPrice > 0) {
+    let { grossBase: grossSellBase } = quantitiesAvailableFromPoolAtBidPrice(
       l2.pool.baseReserveQuantity,
       l2.pool.quoteReserveQuantity,
       sellPrice,
       idexFeeRate,
       poolFeeRate,
-    ).grossBase;
-  }
+    );
 
-  if (!l2.bids[0] || sellPrice > l2.bids[0].price) {
-    l2Values.bids.unshift({
-      price: sellPrice,
-      size: grossSellBase,
-      numOrders: 0,
-      type: 'pool',
-    });
-    if (l2Values.bids.length > 1) {
-      l2Values.bids[1].size -= grossSellBase;
+    if (grossSellBase < takerMinimumInBase) {
+      sellPrice -= tickSize;
+      grossSellBase = quantitiesAvailableFromPoolAtBidPrice(
+        l2.pool.baseReserveQuantity,
+        l2.pool.quoteReserveQuantity,
+        sellPrice,
+        idexFeeRate,
+        poolFeeRate,
+      ).grossBase;
+    }
+
+    if (!l2.bids[0] || sellPrice > l2.bids[0].price) {
+      l2Values.bids.unshift({
+        price: sellPrice,
+        size: grossSellBase,
+        numOrders: 0,
+        type: 'pool',
+      });
+      if (l2Values.bids.length > 1) {
+        l2Values.bids[1].size -= grossSellBase;
+      }
     }
   }
 
@@ -788,4 +877,21 @@ export function validateSyntheticPriceLevelInputs(
       )}) must be below current price (${pipToDecimal(currentPrice)})`,
     );
   }
+}
+
+/**
+ * Adjusts prices in pips to account for tick size by discarding insignificant digits using
+ * specified rounding mode. Ex price 123456789 at tick size 1 is 123456789, at tick size 10
+ * 123456780, at 100 123456700, etc
+ */
+export function adjustPriceToTickSize(
+  price: bigint,
+  tickSize: bigint,
+  roundingMode: BigNumber.RoundingMode = BigNumber.ROUND_HALF_UP,
+): bigint {
+  const significantDigits = new BigNumber(price.toString())
+    .dividedBy(new BigNumber(tickSize.toString()))
+    .toFixed(0, roundingMode);
+
+  return BigInt(significantDigits) * tickSize;
 }

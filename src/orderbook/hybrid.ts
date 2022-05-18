@@ -19,6 +19,7 @@ import { L2toL1OrderBook } from './utils';
  * @param {bigint} poolFeeRate - pool fee rate chared by liquidity pool, expressed in pips
  * @param {boolean} includeMinimumTakerLevels - if true, calculate a synthetic price level at twice the minimum trade size
  * @param {bigint | null} minimumTakerInQuote - minimum trade size expressed in pips, or null if none available
+ * @param {number} tickSize - minimum price movement expressed in pips (10^-8)
  */
 export function L2LimitOrderBookToHybridOrderBooks(
   orderBook: L2OrderBook,
@@ -28,6 +29,7 @@ export function L2LimitOrderBookToHybridOrderBooks(
   poolFeeRate: bigint,
   includeMinimumTakerLevels: boolean,
   minimumTakerInQuote: bigint | null,
+  tickSize: bigint,
 ): { l1: L1OrderBook; l2: L2OrderBook } {
   if (!orderBook.pool) {
     return { l1: L2toL1OrderBook(orderBook), l2: orderBook };
@@ -40,7 +42,13 @@ export function L2LimitOrderBookToHybridOrderBooks(
     visibleSlippage,
     idexFeeRate,
     poolFeeRate,
+    tickSize,
   );
+
+  // Synthetic price level constraints could not be satisfied, return unadjusted orderbook
+  if (!synthetic) {
+    return { l1: L2toL1OrderBook(orderBook), l2: orderBook };
+  }
 
   // need to make a deep copy of asks and bids because they will be modified
   const limitAsksCopy = orderBook.asks.map((order) => {
@@ -80,6 +88,7 @@ export function L2LimitOrderBookToHybridOrderBooks(
         idexFeeRate,
         poolFeeRate,
         minimumTakerInQuote,
+        tickSize,
       )
     : { l1: L2toL1OrderBook(adjustedL2OrderBook), l2: adjustedL2OrderBook };
 }
