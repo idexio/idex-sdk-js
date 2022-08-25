@@ -464,6 +464,8 @@ export class OrderBookRealTimeClient extends EventEmitter {
     for (const market of markets) {
       this.tickSizesByMarket.set(market.market, decimalToPip(market.tickSize));
     }
+
+    this.isTickSizesLoaded = true;
   }
 
   private mapTokensToMarkets(): void {
