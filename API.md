@@ -993,7 +993,7 @@ Load the current state of the level 1 orderbook for this market.
 ###### Parameters
 
 *   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `tickSize` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** minimum price movement expressed in pips (10^-8) (optional, default `1`)
+*   `tickSize` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Minimum price movement expressed in pips (10^-8), defaults to market setting
 
 Returns **[RestResponseOrderBookLevel1](#restresponseorderbooklevel1)** 
 
@@ -1005,7 +1005,7 @@ Load the current state of the level 2 orderbook for this market.
 
 *   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 *   `limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Total number of price levels (bids + asks) to return, between 2 and 1000 (optional, default `100`)
-*   `tickSize` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** minimum price movement expressed in pips (10^-8) (optional, default `1`)
+*   `tickSize` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Minimum price movement expressed in pips (10^-8), defaults to market setting
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[RestResponseOrderBookLevel2](#restresponseorderbooklevel2)>** 
 
