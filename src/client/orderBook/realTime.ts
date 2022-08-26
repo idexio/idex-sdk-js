@@ -121,6 +121,10 @@ export class OrderBookRealTimeClient extends EventEmitter {
 
   private readonly tokenPrices: Map<string, bigint | null> = new Map();
 
+  private isTickSizesLoaded = false;
+
+  private readonly tickSizesByMarket: Map<string, bigint> = new Map();
+
   private readonly webSocketClient: WebSocketClient;
 
   private webSocketConnectionListenersConfigured = false;
@@ -239,12 +243,12 @@ export class OrderBookRealTimeClient extends EventEmitter {
    * Load the current state of the level 1 orderbook for this market.
    *
    * @param {string} market
-   * @param {number} [tickSize=1] - minimum price movement expressed in pips (10^-8)
+   * @param {number} [tickSize] - Minimum price movement expressed in pips (10^-8), defaults to market setting
    * @return {RestResponseOrderBookLevel1}
    */
   public async getOrderBookL1(
     market: string,
-    tickSize = BigInt(1),
+    tickSize?: bigint | undefined,
   ): Promise<RestResponseOrderBookLevel1> {
     return L1OrderBookToRestResponse(
       (await this.getHybridBooks(market, tickSize)).l1,
@@ -256,13 +260,13 @@ export class OrderBookRealTimeClient extends EventEmitter {
    *
    * @param {string} market
    * @param {number} [limit=100] - Total number of price levels (bids + asks) to return, between 2 and 1000
-   * @param {number} [tickSize=1] - minimum price movement expressed in pips (10^-8)
+   * @param {number} [tickSize] - Minimum price movement expressed in pips (10^-8), defaults to market setting
    * @returns {Promise<RestResponseOrderBookLevel2>}
    */
   public async getOrderBookL2(
     market: string,
     limit = 100,
-    tickSize = BigInt(1),
+    tickSize?: bigint | undefined,
   ): Promise<RestResponseOrderBookLevel2> {
     return L2OrderBookToRestResponse(
       (await this.getHybridBooks(market, tickSize)).l2,
@@ -272,17 +276,23 @@ export class OrderBookRealTimeClient extends EventEmitter {
 
   private async getHybridBooks(
     market: string,
-    tickSize: bigint,
+    tickSize?: bigint | undefined,
   ): Promise<{ l1: L1OrderBook; l2: L2OrderBook }> {
+    const appliedTickSize =
+      tickSize || this.tickSizesByMarket.get(market) || BigInt(1);
+
     return L2LimitOrderBookToHybridOrderBooks(
-      aggregateL2OrderBookAtTickSize(await this.loadLevel2(market), tickSize),
+      aggregateL2OrderBookAtTickSize(
+        await this.loadLevel2(market),
+        appliedTickSize,
+      ),
       ORDER_BOOK_MAX_L2_LEVELS,
       ORDER_BOOK_HYBRID_SLIPPAGE,
       this.takerIdexFeeRate,
       this.takerLiquidityProviderFeeRate,
       true,
       this.getMarketMinimum(market),
-      tickSize,
+      appliedTickSize,
     );
   }
 
@@ -399,7 +409,11 @@ export class OrderBookRealTimeClient extends EventEmitter {
       try {
         // Load minimums and token prices first so synthetic orderbook calculations are accurate
         // eslint-disable-next-line no-await-in-loop
-        await Promise.all([this.loadFeesAndMinimums(), this.loadTokenPrices()]);
+        await Promise.all([
+          this.loadFeesAndMinimums(),
+          this.loadTokenPrices(),
+          this.loadTickSizes(),
+        ]);
 
         // eslint-disable-next-line no-await-in-loop
         await Promise.all([
@@ -438,6 +452,20 @@ export class OrderBookRealTimeClient extends EventEmitter {
         );
       }
     }
+  }
+
+  private async loadTickSizes(): Promise<void> {
+    // Market tick sizes only need to be loaded once as they are effectively static
+    if (this.isTickSizesLoaded) {
+      return;
+    }
+
+    const markets = await this.restPublicClient.getMarkets();
+    for (const market of markets) {
+      this.tickSizesByMarket.set(market.market, decimalToPip(market.tickSize));
+    }
+
+    this.isTickSizesLoaded = true;
   }
 
   private mapTokensToMarkets(): void {
