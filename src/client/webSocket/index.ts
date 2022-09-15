@@ -18,6 +18,7 @@ import type {
   WebSocketRequestUnsubscribeSubscription,
   WebSocketResponse,
 } from '../../types';
+import type { Expand } from '../../types/utils';
 
 export { transformWebsocketShortResponseMessage };
 
@@ -87,9 +88,7 @@ export interface WebSocketClientOptions {
  *
  * @param {WebSocketClientOptions} options
  */
-export class WebSocketClient<
-  C extends WebSocketClientOptions = WebSocketClientOptions
-> {
+export class WebSocketClient {
   private state = {
     /**
      * Set to true when the reconnect logic should not be run.
@@ -128,7 +127,7 @@ export class WebSocketClient<
 
   private ws: null | WebSocket = null;
 
-  constructor(options: WebSocketClientOptions) {
+  constructor(options: Expand<WebSocketClientOptions>) {
     const { multiverseChain = 'matic', sandbox = false } = options;
 
     const baseURL = deriveBaseURL({
@@ -255,8 +254,8 @@ export class WebSocketClient<
    */
   public subscribe(
     subscriptions: Array<
-      | AuthTokenWebSocketRequestSubscription
-      | WebSocketRequestUnauthenticatedSubscription['name']
+      | Exclude<WebSocketRequestUnauthenticatedSubscription['name'], 'candles'>
+      | Expand<AuthTokenWebSocketRequestSubscription>
     >,
     markets?: string[],
     cid?: string,
@@ -280,7 +279,7 @@ export class WebSocketClient<
    * @param {string} [cid] - A custom identifier to identify the matching response
    */
   public subscribeAuthenticated(
-    subscriptions: AuthTokenWebSocketRequestAuthenticatedSubscription[],
+    subscriptions: Expand<AuthTokenWebSocketRequestAuthenticatedSubscription>[],
     markets?: string[],
     cid?: string,
   ): this {
@@ -296,7 +295,7 @@ export class WebSocketClient<
    * @param {string} [cid] - A custom identifier to identify the matching response
    */
   public subscribeUnauthenticated(
-    subscriptions: WebSocketRequestUnauthenticatedSubscription[],
+    subscriptions: Expand<WebSocketRequestUnauthenticatedSubscription>[],
     markets?: string[],
     cid?: string,
   ): this {
@@ -306,8 +305,8 @@ export class WebSocketClient<
 
   public unsubscribe(
     subscriptions?: Array<
-      | WebSocketRequestUnsubscribeSubscription
-      | WebSocketRequestUnsubscribeShortNames
+      | WebSocketRequestUnauthenticatedSubscription['name']
+      | Expand<WebSocketRequestUnsubscribeSubscription>
     >,
     markets?: string[],
     cid?: string,

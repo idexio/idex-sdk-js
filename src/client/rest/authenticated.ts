@@ -41,7 +41,7 @@ import * as constants from '../../constants';
 import * as signatures from '../../signatures';
 import { deriveBaseURL } from '../utils';
 import { isNode, createHmacRestRequestSignatureHeader } from '../../utils';
-import { Expand } from '../../types/utils';
+import { AnyObj, Expand } from '../../types/utils';
 
 /**
  * Authenticated API client configuration options.
@@ -144,6 +144,9 @@ export class RestAuthenticatedClient<
 
   /**
    * Add liquidity to a hybrid liquidity pool from assets held by a wallet on the exchange
+   *
+   * @remarks
+   *  My Remarks
    *
    * @param {RestRequestAddLiquidity} addLiquidityRequest
    * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
@@ -343,7 +346,7 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseOrder>}
    */
   public async createOrder(
-    order: RestRequestOrder,
+    order: Expand<RestRequestOrder>,
     signer: undefined | signatures.MessageSigner = this.signer,
   ): Promise<Expand<RestResponseOrder>> {
     if (!signer) {
@@ -388,7 +391,7 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseOrder>}
    */
   public async createTestOrder(
-    order: RestRequestOrder,
+    order: Expand<RestRequestOrder>,
     signer: undefined | signatures.MessageSigner = this.signer,
   ): Promise<Expand<RestResponseOrder>> {
     if (!signer) {
@@ -611,7 +614,7 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseWithdrawal>}
    */
   public async withdraw(
-    withdrawal: RestRequestWithdrawal,
+    withdrawal: Expand<RestRequestWithdrawal>,
     signer: undefined | signatures.MessageSigner = this.signer,
   ): Promise<Expand<RestResponseWithdrawal>> {
     if (!signer) {
@@ -671,7 +674,7 @@ export class RestAuthenticatedClient<
 
   protected async get(
     endpoint: string,
-    params: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    params: AnyObj = {},
   ): Promise<AxiosResponse['data']> {
     return (
       await this.request(endpoint, {
@@ -684,7 +687,7 @@ export class RestAuthenticatedClient<
 
   protected async post(
     endpoint: string,
-    data: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    data: AnyObj = {},
   ): Promise<AxiosResponse['data']> {
     return (
       await this.request(endpoint, {
@@ -696,7 +699,7 @@ export class RestAuthenticatedClient<
 
   protected async delete(
     endpoint: string,
-    data: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    data: AnyObj = {},
   ): Promise<AxiosResponse['data']> {
     return (
       await this.request(endpoint, {
@@ -708,7 +711,7 @@ export class RestAuthenticatedClient<
 
   protected async put(
     endpoint: string,
-    data: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    data: AnyObj = {},
   ): Promise<AxiosResponse['data']> {
     return (
       await this.request(endpoint, {
@@ -720,7 +723,7 @@ export class RestAuthenticatedClient<
 
   protected async patch(
     endpoint: string,
-    data: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    data: AnyObj = {},
   ): Promise<AxiosResponse['data']> {
     return (
       await this.request(endpoint, {

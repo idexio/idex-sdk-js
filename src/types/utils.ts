@@ -2,6 +2,8 @@
 
 export type AnyObj = { [key: string]: any };
 
+export type EmptyObj = { [key: string]: never };
+
 type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 
 export type XOR<T, U> = T | U extends AnyObj

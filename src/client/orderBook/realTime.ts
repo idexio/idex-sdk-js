@@ -24,6 +24,7 @@ import type {
   WebSocketResponse,
   WebSocketResponseTokenPriceLong,
 } from '../../types';
+import type { Expand, ExpandDeep } from '../../types/utils';
 import {
   L1OrderBookToRestResponse,
   L2OrderBookToRestResponse,
@@ -132,8 +133,8 @@ export class OrderBookRealTimeClient extends EventEmitter {
   private webSocketResponseListenerConfigured = false;
 
   constructor(
-    options: OrderBookRealTimeClientOptions,
-    feesAndMinimumsOverride?: OrderBookFeesAndMinimums,
+    options: Expand<OrderBookRealTimeClientOptions>,
+    feesAndMinimumsOverride?: Expand<OrderBookFeesAndMinimums>,
   ) {
     super();
 
@@ -199,7 +200,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
    * @param {Partial<OrderBookFeeRates>} rates
    */
   public setFeesAndMinimumsOverride(
-    feesAndMinimumsOverride: Partial<OrderBookFeesAndMinimums>,
+    feesAndMinimumsOverride: Expand<OrderBookFeesAndMinimums>,
   ): void {
     if (feesAndMinimumsOverride.takerIdexFeeRate) {
       this.takerIdexFeeRate = decimalToPip(
@@ -219,7 +220,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
     }
   }
 
-  public getCurrentFeesAndMinimums(): OrderBookFeesAndMinimums {
+  public getCurrentFeesAndMinimums(): Expand<OrderBookFeesAndMinimums> {
     return {
       takerIdexFeeRate: pipToDecimal(this.takerIdexFeeRate),
       takerLiquidityProviderFeeRate: pipToDecimal(
@@ -249,7 +250,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
   public async getOrderBookL1(
     market: string,
     tickSize?: bigint | undefined,
-  ): Promise<RestResponseOrderBookLevel1> {
+  ): Promise<ExpandDeep<RestResponseOrderBookLevel1>> {
     return L1OrderBookToRestResponse(
       (await this.getHybridBooks(market, tickSize)).l1,
     );
@@ -267,7 +268,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
     market: string,
     limit = 100,
     tickSize?: bigint | undefined,
-  ): Promise<RestResponseOrderBookLevel2> {
+  ): Promise<ExpandDeep<RestResponseOrderBookLevel2>> {
     return L2OrderBookToRestResponse(
       (await this.getHybridBooks(market, tickSize)).l2,
       limit,
@@ -403,6 +404,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
 
     // Updates cannot be applied until successfully synchronized with the REST API, so keep trying
     // with exponential backoff until success
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const backoffSeconds = 2 ** reconnectAttempt;
       reconnectAttempt += 1;
