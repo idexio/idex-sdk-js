@@ -262,7 +262,7 @@ console.log(await publicClient.getTickers('IDEX-ETH'));
 
 Test connectivity to the REST API
 
-Returns **{}** 
+Returns **EmptyObj** 
 
 ##### getServerTime
 
@@ -935,7 +935,7 @@ Orderbook API client
 ##### Parameters
 
 *   `options` **[OrderBookRealTimeClientOptions](#orderbookrealtimeclientoptions)** 
-*   `feesAndMinimumsOverride` **[OrderBookFeesAndMinimums](#orderbookfeesandminimums)?** 
+*   `feesAndMinimumsOverride` **[Expand](#expand)<[OrderBookFeesAndMinimums](#orderbookfeesandminimums)>?** 
 
 ##### Examples
 
@@ -982,7 +982,7 @@ custom fees set.
 
 ###### Parameters
 
-*   `feesAndMinimumsOverride` **Partial<[OrderBookFeesAndMinimums](#orderbookfeesandminimums)>** 
+*   `feesAndMinimumsOverride` **[Expand](#expand)<[OrderBookFeesAndMinimums](#orderbookfeesandminimums)>** 
 *   `rates` **Partial\<OrderBookFeeRates>** 
 
 Returns **void** 

@@ -22,7 +22,7 @@ import type {
 import * as constants from '../../constants';
 
 import { isNode } from '../../utils';
-import { Expand } from '../../types/utils';
+import { AnyObj, EmptyObj, Expand } from '../../types/utils';
 
 /**
  * Public REST API client options
@@ -113,9 +113,9 @@ export class RestPublicClient<
    * Test connectivity to the REST API
    *
    * @see https://api-docs-v3.idex.io/#get-ping
-   * @returns {{}}
+   * @returns {EmptyObj}
    */
-  public async ping(): Promise<{ [key: string]: never }> {
+  public async ping(): Promise<EmptyObj> {
     return this.get('/ping');
   }
 
@@ -261,7 +261,7 @@ export class RestPublicClient<
 
   protected async get(
     endpoint: string,
-    RestRequestParams: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    RestRequestParams: AnyObj = {},
   ): Promise<AxiosResponse['data']> {
     return (
       await this.axios({
