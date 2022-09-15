@@ -7,6 +7,7 @@ dist/
 node_modules/
 yarn-error.log
 
+
 test/quick.ts
 # this will be built and updated by the release bot
 # ./API.md

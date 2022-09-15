@@ -22,6 +22,7 @@ import type {
 import * as constants from '../../constants';
 
 import { isNode } from '../../utils';
+import { Expand } from '../../types/utils';
 
 /**
  * Public REST API client options
@@ -56,7 +57,7 @@ export interface RestPublicClientOptions {
  * @param {RestPublicClientOptions} options
  */
 export class RestPublicClient<
-  C extends RestPublicClientOptions = RestPublicClientOptions
+  C extends Expand<RestPublicClientOptions> = RestPublicClientOptions
 > {
   private axios: AxiosInstance;
 
@@ -137,7 +138,7 @@ export class RestPublicClient<
    *
    * @returns {Promise<RestResponseExchangeInfo>}
    */
-  public async getExchangeInfo(): Promise<RestResponseExchangeInfo> {
+  public async getExchangeInfo(): Promise<Expand<RestResponseExchangeInfo>> {
     return this.get('/exchange');
   }
 
@@ -148,7 +149,7 @@ export class RestPublicClient<
    *
    * @returns {Promise<RestResponseAsset[]>}
    */
-  public async getAssets(): Promise<RestResponseAsset[]> {
+  public async getAssets(): Promise<Expand<RestResponseAsset>[]> {
     return this.get('/assets');
   }
 
@@ -161,8 +162,8 @@ export class RestPublicClient<
    * @returns {Promise<RestResponseMarket[]>}
    */
   public async getMarkets(
-    findMarkets?: RestRequestFindMarkets,
-  ): Promise<RestResponseMarket[]> {
+    findMarkets?: Expand<RestRequestFindMarkets>,
+  ): Promise<Expand<RestResponseMarket>[]> {
     return this.get('/markets', findMarkets);
   }
 
@@ -175,8 +176,8 @@ export class RestPublicClient<
    * @returns {Promise<RestResponseLiquidityPool[]>}
    */
   public async getLiquidityPools(
-    findLiquidityPools?: RestRequestFindLiquidityPools,
-  ): Promise<RestResponseLiquidityPool[]> {
+    findLiquidityPools?: Expand<RestRequestFindLiquidityPools>,
+  ): Promise<Expand<RestResponseLiquidityPool>[]> {
     return this.get('/liquidityPools', findLiquidityPools);
   }
 
@@ -190,7 +191,9 @@ export class RestPublicClient<
    * @param {string} [market] - Base-quote pair e.g. 'IDEX-ETH', if provided limits ticker data to a single market
    * @returns {Promise<RestResponseTicker[]>}
    */
-  public async getTickers(market?: string): Promise<RestResponseTicker[]> {
+  public async getTickers(
+    market?: string,
+  ): Promise<Expand<RestResponseTicker>[]> {
     return this.get('/tickers', market ? { market } : undefined);
   }
 
@@ -203,8 +206,8 @@ export class RestPublicClient<
    * @returns {Promise<RestResponseCandle[]>}
    */
   public async getCandles(
-    findCandles: RestRequestFindCandles,
-  ): Promise<RestResponseCandle[]> {
+    findCandles: Expand<RestRequestFindCandles>,
+  ): Promise<Expand<RestResponseCandle>[]> {
     return this.get('/candles', findCandles);
   }
 
@@ -217,8 +220,8 @@ export class RestPublicClient<
    * @returns {Promise<RestResponseTrade[]>}
    */
   public async getTrades(
-    findTrades: RestRequestFindTrades,
-  ): Promise<RestResponseTrade[]> {
+    findTrades: Expand<RestRequestFindTrades>,
+  ): Promise<Expand<RestResponseTrade>[]> {
     return this.get('/trades', findTrades);
   }
 
@@ -233,7 +236,7 @@ export class RestPublicClient<
   public async getOrderBookLevel1(
     market: string,
     limitOrderOnly = false,
-  ): Promise<RestResponseOrderBookLevel1> {
+  ): Promise<Expand<RestResponseOrderBookLevel1>> {
     return this.get('/orderbook', { level: 1, limitOrderOnly, market });
   }
 
@@ -250,7 +253,7 @@ export class RestPublicClient<
     market: string,
     limit = 50,
     limitOrderOnly = false,
-  ): Promise<RestResponseOrderBookLevel2> {
+  ): Promise<Expand<RestResponseOrderBookLevel2>> {
     return this.get('/orderbook', { level: 2, market, limit, limitOrderOnly });
   }
 
