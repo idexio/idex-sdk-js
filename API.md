@@ -106,6 +106,7 @@
     *   [Properties](#properties-70)
 *   [RestRequestFindLiquidityPools](#restrequestfindliquiditypools)
     *   [Properties](#properties-71)
+*   [Expand](#expand)
 *   [L1OrderBook](#l1orderbook)
     *   [Properties](#properties-72)
 *   [L2LimitOrderBookToHybridOrderBooks](#l2limitorderbooktohybridorderbooks)
@@ -427,7 +428,7 @@ Add liquidity to a hybrid liquidity pool from assets held by a wallet on the exc
 *   `signer` **[MessageSigner](#messagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 *   `dependentTransactions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[RestResponseLiquidityAddition](#restresponseliquidityaddition)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Expand](#expand)<[RestResponseLiquidityAddition](#restresponseliquidityaddition)>>** 
 
 ##### removeLiquidity
 
@@ -440,7 +441,7 @@ exchange
 *   `signer` **[MessageSigner](#messagesigner)?** Required if a private key was not provided in the constructor (optional, default `this.signer`)
 *   `dependentTransaction` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[RestResponseLiquidityRemoval](#restresponseliquidityremoval)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Expand](#expand)<[RestResponseLiquidityRemoval](#restresponseliquidityremoval)>>** 
 
 ##### getLiquidityAddition
 
@@ -448,9 +449,9 @@ Returns information about a single Liquidity Addition from a wallet
 
 ###### Parameters
 
-*   `findLiquidityAddition` **[RestRequestFindLiquidityAddition](#restrequestfindliquidityaddition)** 
+*   `findLiquidityAddition` **[Expand](#expand)<[RestRequestFindLiquidityAddition](#restrequestfindliquidityaddition)>** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[RestResponseLiquidityAddition](#restresponseliquidityaddition)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Expand](#expand)<[RestResponseLiquidityAddition](#restresponseliquidityaddition)>>** 
 
 ##### getLiquidityAdditions
 
@@ -458,9 +459,9 @@ Returns information about multiple Liquidity Additions from a wallet
 
 ###### Parameters
 
-*   `findLiquidityAdditions` **[RestRequestFindLiquidityChanges](#restrequestfindliquiditychanges)** 
+*   `findLiquidityAdditions` **[Expand](#expand)<[RestRequestFindLiquidityChanges](#restrequestfindliquiditychanges)>** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[RestResponseLiquidityAddition](#restresponseliquidityaddition)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[Expand](#expand)<[RestResponseLiquidityAddition](#restresponseliquidityaddition)>>>** 
 
 ##### getLiquidityRemoval
 
@@ -468,9 +469,9 @@ Returns information about a single Liquidity Removal from a wallet
 
 ###### Parameters
 
-*   `findLiquidityRemoval` **[RestRequestFindLiquidityRemoval](#restrequestfindliquidityremoval)** 
+*   `findLiquidityRemoval` **[Expand](#expand)<[RestRequestFindLiquidityRemoval](#restrequestfindliquidityremoval)>** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[RestResponseLiquidityRemoval](#restresponseliquidityremoval)>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Expand](#expand)<[RestResponseLiquidityRemoval](#restresponseliquidityremoval)>>** 
 
 ##### getLiquidityRemovals
 
@@ -478,9 +479,9 @@ Returns information about multiple Liquidity Removals from a wallet
 
 ###### Parameters
 
-*   `findLiquidityRemovals` **[RestRequestFindLiquidityChanges](#restrequestfindliquiditychanges)** 
+*   `findLiquidityRemovals` **[Expand](#expand)<[RestRequestFindLiquidityChanges](#restrequestfindliquiditychanges)>** 
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[RestResponseLiquidityRemoval](#restresponseliquidityremoval)>>** 
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[Expand](#expand)<[RestResponseLiquidityRemoval](#restresponseliquidityremoval)>>>** 
 
 ##### getUser
 
@@ -2476,6 +2477,14 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 *   `market` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Target market
 *   `tokenA` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Address of one reserve token
 *   `tokenB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Address of one reserve token
+
+## Expand
+
+Expand will expand an object type by rebuilding the object
+which can be useful when the type is obscured due to utility types and you want
+to see the underlying type that is expected.
+
+Type: any
 
 ## L1OrderBook
 
