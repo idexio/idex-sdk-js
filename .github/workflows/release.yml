@@ -42,9 +42,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup Node.js
-        uses: actions/setup-node@v2-beta
+        uses: actions/setup-node@v3
         with:
-          node-version: '12'
+          node-version: 14
           check-latest: true
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
