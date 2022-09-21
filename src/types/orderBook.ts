@@ -1,4 +1,4 @@
-import type { MultiverseChain } from './enums';
+import { Expand } from './utils';
 
 /**
  * @typedef {Object} BestAvailablePriceLevels
@@ -78,9 +78,11 @@ export type OrderBookLevelL1 = {
  * @property {number} numOrders
  * @property {OrderBookLevelType} type
  */
-export type OrderBookLevelL2 = OrderBookLevelL1 & {
-  type: OrderBookLevelType;
-};
+export type OrderBookLevelL2 = Expand<
+  OrderBookLevelL1 & {
+    type: OrderBookLevelType;
+  }
+>;
 
 /**
  * @typedef {Object} PoolReserveQuantities

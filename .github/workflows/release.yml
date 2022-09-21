@@ -8,6 +8,7 @@ on:
 env:
   CI: true
   HUSKY_SKIP_HOOKS: 1
+  HUSKY: 0
   GITHUB_TOKEN: ${{ secrets.BOT_GIT_TOKEN }}
   GIT_AUTHOR_NAME: idex-bot
   GIT_AUTHOR_EMAIL: support@idex.io
@@ -41,10 +42,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2-beta
         with:
-          node-version: '12'
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
           check-latest: true
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
