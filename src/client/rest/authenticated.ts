@@ -41,6 +41,7 @@ import * as constants from '../../constants';
 import * as signatures from '../../signatures';
 import { deriveBaseURL } from '../utils';
 import { isNode, createHmacRestRequestSignatureHeader } from '../../utils';
+import { AnyObj, Expand } from '../../types/utils';
 
 /**
  * Authenticated API client configuration options.
@@ -80,7 +81,7 @@ export interface RestAuthenticatedClientOptions {
  * @param {RestAuthenticatedClientOptions} options
  */
 export class RestAuthenticatedClient<
-  C extends RestAuthenticatedClientOptions = RestAuthenticatedClientOptions
+  C extends Expand<RestAuthenticatedClientOptions> = RestAuthenticatedClientOptions
 > {
   private axios: AxiosInstance;
 
@@ -144,14 +145,17 @@ export class RestAuthenticatedClient<
   /**
    * Add liquidity to a hybrid liquidity pool from assets held by a wallet on the exchange
    *
+   * @remarks
+   *  My Remarks
+   *
    * @param {RestRequestAddLiquidity} addLiquidityRequest
    * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
    */
   public async addLiquidity(
-    addLiquidityRequest: RestRequestAddLiquidity,
+    addLiquidityRequest: Expand<RestRequestAddLiquidity>,
     signer: undefined | signatures.MessageSigner = this.signer,
     dependentTransactions?: string[],
-  ): Promise<RestResponseLiquidityAddition> {
+  ): Promise<Expand<RestResponseLiquidityAddition>> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -178,10 +182,10 @@ export class RestAuthenticatedClient<
    * @param {MessageSigner} [signer] - Required if a private key was not provided in the constructor
    */
   public async removeLiquidity(
-    removeLiquidityRequest: RestRequestRemoveLiquidity,
+    removeLiquidityRequest: Expand<RestRequestRemoveLiquidity>,
     signer: undefined | signatures.MessageSigner = this.signer,
     dependentTransaction?: string,
-  ): Promise<RestResponseLiquidityRemoval> {
+  ): Promise<Expand<RestResponseLiquidityRemoval>> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -204,8 +208,8 @@ export class RestAuthenticatedClient<
    * Returns information about a single Liquidity Addition from a wallet
    */
   public async getLiquidityAddition(
-    findLiquidityAddition: RestRequestFindLiquidityAddition,
-  ): Promise<RestResponseLiquidityAddition> {
+    findLiquidityAddition: Expand<RestRequestFindLiquidityAddition>,
+  ): Promise<Expand<RestResponseLiquidityAddition>> {
     return this.get('/liquidityAdditions', findLiquidityAddition);
   }
 
@@ -213,8 +217,8 @@ export class RestAuthenticatedClient<
    * Returns information about multiple Liquidity Additions from a wallet
    */
   public async getLiquidityAdditions(
-    findLiquidityAdditions: RestRequestFindLiquidityChanges,
-  ): Promise<RestResponseLiquidityAddition[]> {
+    findLiquidityAdditions: Expand<RestRequestFindLiquidityChanges>,
+  ): Promise<Expand<RestResponseLiquidityAddition>[]> {
     return this.get('/liquidityAdditions', findLiquidityAdditions);
   }
 
@@ -222,8 +226,8 @@ export class RestAuthenticatedClient<
    * Returns information about a single Liquidity Removal from a wallet
    */
   public async getLiquidityRemoval(
-    findLiquidityRemoval: RestRequestFindLiquidityRemoval,
-  ): Promise<RestResponseLiquidityRemoval> {
+    findLiquidityRemoval: Expand<RestRequestFindLiquidityRemoval>,
+  ): Promise<Expand<RestResponseLiquidityRemoval>> {
     return this.get('/liquidityRemovals', findLiquidityRemoval);
   }
 
@@ -231,8 +235,8 @@ export class RestAuthenticatedClient<
    * Returns information about multiple Liquidity Removals from a wallet
    */
   public async getLiquidityRemovals(
-    findLiquidityRemovals: RestRequestFindLiquidityChanges,
-  ): Promise<RestResponseLiquidityRemoval[]> {
+    findLiquidityRemovals: Expand<RestRequestFindLiquidityChanges>,
+  ): Promise<Expand<RestResponseLiquidityRemoval>[]> {
     return this.get('/liquidityRemovals', findLiquidityRemovals);
   }
 
@@ -246,7 +250,7 @@ export class RestAuthenticatedClient<
    * @param {string} nonce - UUIDv1
    * @returns {Promise<RestResponseUser>}
    */
-  public async getUser(nonce: string): Promise<RestResponseUser> {
+  public async getUser(nonce: string): Promise<Expand<RestResponseUser>> {
     return this.get('/user', { nonce });
   }
 
@@ -258,7 +262,9 @@ export class RestAuthenticatedClient<
    * @param {string} nonce - UUIDv1
    * @returns {Promise<RestResponseWallet[]>}
    */
-  public async getWallets(nonce: string): Promise<RestResponseWallet[]> {
+  public async getWallets(
+    nonce: string,
+  ): Promise<Expand<RestResponseWallet>[]> {
     return this.get('/wallets', { nonce });
   }
 
@@ -271,8 +277,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseBalance[]>}
    */
   public async getBalances(
-    findBalances: RestRequestFindBalances,
-  ): Promise<RestResponseBalance[]> {
+    findBalances: Expand<RestRequestFindBalances>,
+  ): Promise<Expand<RestResponseBalance>[]> {
     return this.get('/balances', findBalances);
   }
 
@@ -298,9 +304,9 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseAssociateWallet>}
    */
   public async associateWallet(
-    associate: RestRequestAssociateWallet,
+    associate: Expand<RestRequestAssociateWallet>,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<RestResponseAssociateWallet> {
+  ): Promise<Expand<RestResponseAssociateWallet>> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -340,9 +346,9 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseOrder>}
    */
   public async createOrder(
-    order: RestRequestOrder,
+    order: Expand<RestRequestOrder>,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<RestResponseOrder> {
+  ): Promise<Expand<RestResponseOrder>> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -385,9 +391,9 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseOrder>}
    */
   public async createTestOrder(
-    order: RestRequestOrder,
+    order: Expand<RestRequestOrder>,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<RestResponseOrder> {
+  ): Promise<Expand<RestResponseOrder>> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -436,9 +442,9 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseCanceledOrder>}
    */
   public async cancelOrder(
-    cancelOrder: RestRequestCancelOrder,
+    cancelOrder: Expand<RestRequestCancelOrder>,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<RestResponseCanceledOrder> {
+  ): Promise<Expand<RestResponseCanceledOrder>> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -481,9 +487,9 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseCanceledOrder>}
    */
   public async cancelOrders(
-    cancelOrders: RestRequestCancelOrders,
+    cancelOrders: Expand<RestRequestCancelOrders>,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<RestResponseCanceledOrder> {
+  ): Promise<Expand<RestResponseCanceledOrder>> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -507,8 +513,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseOrder>}
    */
   public async getOrder(
-    findOrder: RestRequestFindOrder,
-  ): Promise<RestResponseOrder> {
+    findOrder: Expand<RestRequestFindOrder>,
+  ): Promise<Expand<RestResponseOrder>> {
     return this.get('/orders', findOrder);
   }
 
@@ -521,8 +527,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseOrder[]>}
    */
   public async getOrders(
-    findOrders: RestRequestFindOrders,
-  ): Promise<RestResponseOrder[]> {
+    findOrders: Expand<RestRequestFindOrders>,
+  ): Promise<Expand<RestResponseOrder>[]> {
     return this.get('/orders', findOrders);
   }
 
@@ -535,8 +541,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseFill>}
    */
   public async getFill(
-    findFill: RestRequestFindFill,
-  ): Promise<RestResponseFill> {
+    findFill: Expand<RestRequestFindFill>,
+  ): Promise<Expand<RestResponseFill>> {
     return this.get('/fills', findFill);
   }
 
@@ -549,8 +555,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseFill[]>}
    */
   public async getFills(
-    findFills: RestRequestFindFills,
-  ): Promise<RestResponseFill[]> {
+    findFills: Expand<RestRequestFindFills>,
+  ): Promise<Expand<RestResponseFill>[]> {
     return this.get('/fills', findFills);
   }
 
@@ -565,8 +571,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseDeposit>}
    */
   public async getDeposit(
-    findDeposit: RestRequestFindDeposit,
-  ): Promise<RestResponseDeposit> {
+    findDeposit: Expand<RestRequestFindDeposit>,
+  ): Promise<Expand<RestResponseDeposit>> {
     return this.get('/deposits', findDeposit);
   }
 
@@ -579,8 +585,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseDeposit[]>}
    */
   public async getDeposits(
-    findDeposits: RestRequestFindDeposits,
-  ): Promise<RestResponseDeposit[]> {
+    findDeposits: Expand<RestRequestFindDeposits>,
+  ): Promise<Expand<RestResponseDeposit>[]> {
     return this.get('/deposits', findDeposits);
   }
 
@@ -608,9 +614,9 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseWithdrawal>}
    */
   public async withdraw(
-    withdrawal: RestRequestWithdrawal,
+    withdrawal: Expand<RestRequestWithdrawal>,
     signer: undefined | signatures.MessageSigner = this.signer,
-  ): Promise<RestResponseWithdrawal> {
+  ): Promise<Expand<RestResponseWithdrawal>> {
     if (!signer) {
       throw new Error(
         'A "signer" function is required but was not provided during RestAuthenticatedClient constructor or when calling the method',
@@ -631,8 +637,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseWithdrawal>}
    */
   public async getWithdrawal(
-    findWithdrawal: RestRequestFindWithdrawal,
-  ): Promise<RestResponseWithdrawal> {
+    findWithdrawal: Expand<RestRequestFindWithdrawal>,
+  ): Promise<Expand<RestResponseWithdrawal>> {
     return this.get('/withdrawals', findWithdrawal);
   }
 
@@ -645,8 +651,8 @@ export class RestAuthenticatedClient<
    * @returns {Promise<RestResponseWithdrawal[]>}
    */
   public async getWithdrawals(
-    findWithdrawals: RestRequestFindWithdrawals,
-  ): Promise<RestResponseWithdrawal[]> {
+    findWithdrawals: Expand<RestRequestFindWithdrawals>,
+  ): Promise<Expand<RestResponseWithdrawal>[]> {
     return this.get('/withdrawals', findWithdrawals);
   }
 
@@ -668,7 +674,7 @@ export class RestAuthenticatedClient<
 
   protected async get(
     endpoint: string,
-    params: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    params: AnyObj = {},
   ): Promise<AxiosResponse['data']> {
     return (
       await this.request(endpoint, {
@@ -681,7 +687,7 @@ export class RestAuthenticatedClient<
 
   protected async post(
     endpoint: string,
-    data: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    data: AnyObj = {},
   ): Promise<AxiosResponse['data']> {
     return (
       await this.request(endpoint, {
@@ -693,7 +699,7 @@ export class RestAuthenticatedClient<
 
   protected async delete(
     endpoint: string,
-    data: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    data: AnyObj = {},
   ): Promise<AxiosResponse['data']> {
     return (
       await this.request(endpoint, {
@@ -705,7 +711,7 @@ export class RestAuthenticatedClient<
 
   protected async put(
     endpoint: string,
-    data: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    data: AnyObj = {},
   ): Promise<AxiosResponse['data']> {
     return (
       await this.request(endpoint, {
@@ -717,7 +723,7 @@ export class RestAuthenticatedClient<
 
   protected async patch(
     endpoint: string,
-    data: Record<string, any> = {}, // eslint-disable-line @typescript-eslint/no-explicit-any
+    data: AnyObj = {},
   ): Promise<AxiosResponse['data']> {
     return (
       await this.request(endpoint, {
