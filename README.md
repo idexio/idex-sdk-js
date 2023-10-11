@@ -28,16 +28,15 @@ npm install --save @idexio/idex-sdk@beta
 
 ## Getting Started
 
-Get IDEX v3 sandbox [API keys](https://api-docs-v3.idex.io/#sandbox).
-
 ```typescript
 import * as idex from '@idexio/idex-sdk';
 
-const publicClient = new idex.RestPublicClient({
-  sandbox: true,
-});
+const publicClient = new idex.RestPublicClient();
+
 console.log(await publicClient.getServerTime());
 ```
+
+IDEX v3 [API keys](https://exchange.idex.io/login) provide access to private data and increased rate limits.
 
 In-depth usage documentation by endpoint is [available here](API.md).
 

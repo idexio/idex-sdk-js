@@ -81,7 +81,6 @@ export interface WebSocketClientOptions {
  *   apiKey: '1f7c4f52-4af7-4e1b-aa94-94fac8d931aa',
  *   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
  *   shouldReconnectAutomatically: true,
- *   sandbox: true,
  * });
  *
  * await webSocketClient.connect();

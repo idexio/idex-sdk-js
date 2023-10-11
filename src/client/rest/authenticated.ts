@@ -75,7 +75,6 @@ export interface RestAuthenticatedClientOptions {
  *   apiSecret: 'axuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
  *   // Optionally prove a wallet private key to automatically sign requests that need an ECDSA signature
  *   walletPrivateKey: '0x3141592653589793238462643383279502884197169399375105820974944592'
- *   sandbox: true,
  * });
  *
  * @param {RestAuthenticatedClientOptions} options
