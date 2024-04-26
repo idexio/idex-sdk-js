@@ -1,0 +1,156 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>TimeInForce | IDEX SDK Reference</title><meta name="description" content="IDEX v4's TypeScript/Javascript Developer SDK Reference, designed for low-latency and guaranteed execution in a secure trading environment. This documentation outlines a platform where control and transparency are paramount, offering gas-free settlements and Ethereum-backed security. Ensuring only you have the power to move funds, it exemplifies a commitment to security and efficiency for developers seeking robust integration solutions"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css?cache=1714173388368"/><link rel="stylesheet" href="../assets/highlight.css?cache=1714173388368"/><link rel="stylesheet" href="../assets/custom.css?cache=1714173388368"/><script defer src="../assets/main.js?cache=1714173388368"></script><script async src="../assets/icons.js?cache=1714173388368" id="tsd-icons-script"></script><script async src="../assets/search.js?cache=1714173388368" id="tsd-search-script"></script><script async src="../assets/navigation.js?cache=1714173388368" id="tsd-nav-script"></script><link rel="icon" href="../favicon.ico" />
+</head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><div class="table-cell" id="tsd-search" data-base=".."><div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="../assets/icons.svg#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div><div class="field"><div id="tsd-toolbar-links"></div></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">IDEX SDK Reference</a></div><div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><ul class="tsd-breadcrumb"><li><a href="../modules.html">IDEX SDK Reference</a></li><li><a href="TimeInForce.html">TimeInForce</a></li></ul><h1>Enumeration TimeInForce</h1></div><section class="tsd-panel tsd-comment"><div class="tsd-comment tsd-typography"><p>Time in force policies specify the behavior of a <a href="../interfaces/IDEXOrder.html" class="tsd-kind-interface">limit order</a> upon execution.</p>
+</div><div class="tsd-comment tsd-typography"><h4>See</h4><ul>
+<li>docs    <a href="https://api-docs-v4.idex.io/#time-in-force">IDEX API Documentation: Time in Force Explained</a></li>
+<li>request <a href="../interfaces/RestRequestOrderBase.html#timeInForce" class="tsd-kind-property">RestRequestOrder.timeInForce</a><blockquote>
+<p>This enum is most useful when calling the <a href="../classes/RestAuthenticatedClient.html#createOrder" class="tsd-kind-method">RestAuthenticatedClient.createOrder</a>
+method to provide inline completion and documentation for the <code>timeInForce</code> parameter.</p>
+</blockquote>
+</li>
+<li>related <a href="../interfaces/IDEXOrder.html" class="tsd-kind-interface">IDEXOrder</a><blockquote>
+<p>The <code>IDEXOrder</code> interface provides the shape for orders and are returned whenever an order is created or queried.</p>
+</blockquote>
+</li>
+</ul>
+</div></section><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/idexio/idex-sdk-js/blob/09ab6237b1e7035080ee2c67d6901e01ae29c4fa/src/types/enums/request.ts#L81">src/types/enums/request.ts:81</a></li><li>Defined in <a href="https://github.com/idexio/idex-sdk-js/blob/09ab6237b1e7035080ee2c67d6901e01ae29c4fa/src/types/enums/request.ts#L243">src/types/enums/request.ts:243</a></li></ul></aside><section class="tsd-panel-group tsd-index-group"><section class="tsd-panel tsd-index-panel"><details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><h5 class="tsd-index-heading uppercase" role="button" aria-expanded="false" tabIndex="0"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="../assets/icons.svg#icon-chevronSmall"></use></svg> Index</h5></summary><div class="tsd-accordion-details"><section class="tsd-index-section"><h3 class="tsd-index-heading">Enumeration Members</h3><div class="tsd-index-list"><a href="TimeInForce.html#gtcPrev" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-16"></use></svg><span>gtc<wbr/>Prev</span></a>
+<a href="TimeInForce.html#gtc" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-16"></use></svg><span>gtc</span></a>
+<a href="TimeInForce.html#gtxPrev" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-16"></use></svg><span>gtx<wbr/>Prev</span></a>
+<a href="TimeInForce.html#gtx" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-16"></use></svg><span>gtx</span></a>
+<a href="TimeInForce.html#iocPrev" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-16"></use></svg><span>ioc<wbr/>Prev</span></a>
+<a href="TimeInForce.html#ioc" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-16"></use></svg><span>ioc</span></a>
+<a href="TimeInForce.html#fokPrev" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-16"></use></svg><span>fok<wbr/>Prev</span></a>
+<a href="TimeInForce.html#fok" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-16"></use></svg><span>fok</span></a>
+</div></section></div></details></section></section><section class="tsd-panel-group tsd-member-group"><h2>Enumeration Members</h2><section class="tsd-panel tsd-member"><a id="gtcPrev" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><span>gtc<wbr/>Prev</span><a href="#gtcPrev" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="tsd-signature"><span class="tsd-kind-enum-member">gtc<wbr/>Prev</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;gtc&quot;</span></div><div class="tsd-comment tsd-typography"><a id="md:good-till-canceled-gtc" class="tsd-anchor"></a><h3><a href="#md:good-till-canceled-gtc">Good Till Canceled (gtc)</a></h3><ul>
+<li>Under <code>gtc</code> rules, a limit order that is resting on the books remains on the books until canceled.</li>
+<li>This is the default policy if no time in force option is specified.</li>
+</ul>
+</div><div class="tsd-comment tsd-typography"></div><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/idexio/idex-sdk-js/blob/09ab6237b1e7035080ee2c67d6901e01ae29c4fa/src/types/enums/request.ts#L87">src/types/enums/request.ts:87</a></li></ul></aside></section><section class="tsd-panel tsd-member"><a id="gtc" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><span>gtc</span><a href="#gtc" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="tsd-signature"><span class="tsd-kind-enum-member">gtc</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;gtc&quot;</span></div><div class="tsd-comment tsd-typography"><p><strong>Good Till Canceled (gtc)</strong></p>
+<ul>
+<li>The <code>gtc</code> time in force policy keeps a limit order open until it is either filled or manually canceled by the trader.</li>
+<li>This is the default behavior for limit orders if the <a href="../interfaces/RestRequestOrderBase.html#timeInForce" class="tsd-kind-property">timeInForce</a>
+parameter is not provided.</li>
+</ul>
+<hr>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li><strong>Persistence</strong>: A <code>gtc</code> order remains active on the order book until it is executed or canceled.</li>
+<li><strong>Default Option</strong>: If you do not specify a time in force, <code>gtc</code> is assumed.</li>
+</ul>
+<hr>
+</div><div class="tsd-comment tsd-typography"><h4>Example</h4><pre><code class="language-typescript"><span class="hl-3">import</span><span class="hl-1"> { </span><span class="hl-5">TimeInForce</span><span class="hl-1">, </span><span class="hl-5">OrderType</span><span class="hl-1"> } </span><span class="hl-3">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@idexio/idex-sdk&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-5">authenticatedClient</span><span class="hl-1">.</span><span class="hl-0">createOrder</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-5">type:</span><span class="hl-1"> </span><span class="hl-5">OrderType</span><span class="hl-1">.</span><span class="hl-5">limit</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">timeInForce:</span><span class="hl-1"> </span><span class="hl-5">TimeInForce</span><span class="hl-1">.</span><span class="hl-5">gtc</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-6">// ... other limit order parameters</span><br/><span class="hl-1">});</span>
+</code><button>Copy</button></pre>
+<h4>See</h4><p>docs <a href="https://api-docs-v4.idex.io/#time-in-force">IDEX API Documentation: Time in Force Explained</a></p>
+</div><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/idexio/idex-sdk-js/blob/09ab6237b1e7035080ee2c67d6901e01ae29c4fa/src/types/enums/request.ts#L117">src/types/enums/request.ts:117</a></li></ul></aside></section><section class="tsd-panel tsd-member"><a id="gtxPrev" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><span>gtx<wbr/>Prev</span><a href="#gtxPrev" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="tsd-signature"><span class="tsd-kind-enum-member">gtx<wbr/>Prev</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;gtx&quot;</span></div><div class="tsd-comment tsd-typography"><a id="md:good-til-crossing-gtx" class="tsd-anchor"></a><h3><a href="#md:good-til-crossing-gtx">Good Til Crossing (gtx)</a></h3><ul>
+<li>Acts as a post-only flag</li>
+<li>Applicable to all limit orders</li>
+</ul>
+</div><div class="tsd-comment tsd-typography"></div><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/idexio/idex-sdk-js/blob/09ab6237b1e7035080ee2c67d6901e01ae29c4fa/src/types/enums/request.ts#L124">src/types/enums/request.ts:124</a></li></ul></aside></section><section class="tsd-panel tsd-member"><a id="gtx" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><span>gtx</span><a href="#gtx" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="tsd-signature"><span class="tsd-kind-enum-member">gtx</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;gtx&quot;</span></div><div class="tsd-comment tsd-typography"><p><strong>Good Til Crossing (gtx)</strong></p>
+<ul>
+<li>The <code>gtx</code> time in force policy ensures that a limit order will only execute if it does not immediately match with an existing order.</li>
+<li>This policy is used to guarantee that an order will only add liquidity to the market and not take liquidity away.</li>
+<li>Applicable to all limit orders, <code>gtx</code> is particularly useful for traders who wish to avoid paying taker fees.</li>
+</ul>
+<hr>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li><strong>Post-Only</strong>:          A <code>gtx</code> order is rejected if it would immediately match with an existing order upon submission.</li>
+<li><strong>Liquidity Addition</strong>: Ensures the order contributes liquidity, qualifying it for potential maker fee rebates.</li>
+</ul>
+<hr>
+</div><div class="tsd-comment tsd-typography"><h4>Example</h4><pre><code class="language-typescript"><span class="hl-3">import</span><span class="hl-1"> { </span><span class="hl-5">TimeInForce</span><span class="hl-1">, </span><span class="hl-5">OrderType</span><span class="hl-1"> } </span><span class="hl-3">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@idexio/idex-sdk&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-5">authenticatedClient</span><span class="hl-1">.</span><span class="hl-0">createOrder</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-5">type:</span><span class="hl-1"> </span><span class="hl-5">OrderType</span><span class="hl-1">.</span><span class="hl-5">limit</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">timeInForce:</span><span class="hl-1"> </span><span class="hl-5">TimeInForce</span><span class="hl-1">.</span><span class="hl-5">gtx</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-6">// ... other limit order parameters</span><br/><span class="hl-1">});</span>
+</code><button>Copy</button></pre>
+<h4>See</h4><p>docs <a href="https://api-docs-v4.idex.io/#time-in-force">IDEX API Documentation: Time in Force Explained</a></p>
+</div><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/idexio/idex-sdk-js/blob/09ab6237b1e7035080ee2c67d6901e01ae29c4fa/src/types/enums/request.ts#L154">src/types/enums/request.ts:154</a></li></ul></aside></section><section class="tsd-panel tsd-member"><a id="iocPrev" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><span>ioc<wbr/>Prev</span><a href="#iocPrev" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="tsd-signature"><span class="tsd-kind-enum-member">ioc<wbr/>Prev</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;ioc&quot;</span></div><div class="tsd-comment tsd-typography"><a id="md:immediate-or-cancel-ioc" class="tsd-anchor"></a><h3><a href="#md:immediate-or-cancel-ioc">Immediate Or Cancel (ioc)</a></h3><ul>
+<li>Only takes liquidity from the order book</li>
+<li>Never becomes a resting order on the book.</li>
+<li>On execution, any portion of an <code>ioc</code> limit order that matches resting orders is filled,
+and the rest of the order is canceled.</li>
+</ul>
+</div><div class="tsd-comment tsd-typography"></div><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/idexio/idex-sdk-js/blob/09ab6237b1e7035080ee2c67d6901e01ae29c4fa/src/types/enums/request.ts#L163">src/types/enums/request.ts:163</a></li></ul></aside></section><section class="tsd-panel tsd-member"><a id="ioc" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><span>ioc</span><a href="#ioc" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="tsd-signature"><span class="tsd-kind-enum-member">ioc</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;ioc&quot;</span></div><div class="tsd-comment tsd-typography"><p><strong>Immediate Or Cancel (ioc)</strong></p>
+<ul>
+<li>An <code>ioc</code> time in force policy is used for limit orders that should be executed immediately.</li>
+<li>Any portion of the order that cannot be filled right away is canceled, ensuring no part of the order remains on the order book.</li>
+<li>This policy is ideal for traders who prioritize speed of execution over full order fulfillment.</li>
+</ul>
+<hr>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li><strong>Immediate Execution</strong>: An <code>ioc</code> order attempts to fill immediately upon placement.</li>
+<li><strong>Partial Fulfillment</strong>: If the full order cannot be executed, the unfilled portion is immediately canceled.</li>
+<li><strong>No Resting Orders</strong>:   <code>ioc</code> orders do not become resting orders on the book, preventing any residual market impact.</li>
+</ul>
+<hr>
+</div><div class="tsd-comment tsd-typography"><h4>Example</h4><pre><code class="language-typescript"><span class="hl-3">import</span><span class="hl-1"> { </span><span class="hl-5">TimeInForce</span><span class="hl-1">, </span><span class="hl-5">OrderType</span><span class="hl-1"> } </span><span class="hl-3">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@idexio/idex-sdk&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-5">authenticatedClient</span><span class="hl-1">.</span><span class="hl-0">createOrder</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-5">type:</span><span class="hl-1"> </span><span class="hl-5">OrderType</span><span class="hl-1">.</span><span class="hl-5">limit</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">timeInForce:</span><span class="hl-1"> </span><span class="hl-5">TimeInForce</span><span class="hl-1">.</span><span class="hl-5">ioc</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-6">// ... other limit order parameters</span><br/><span class="hl-1">});</span>
+</code><button>Copy</button></pre>
+<h4>See</h4><p>docs <a href="https://api-docs-v4.idex.io/#time-in-force">IDEX API Documentation: Time in Force Explained</a></p>
+</div><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/idexio/idex-sdk-js/blob/09ab6237b1e7035080ee2c67d6901e01ae29c4fa/src/types/enums/request.ts#L194">src/types/enums/request.ts:194</a></li></ul></aside></section><section class="tsd-panel tsd-member"><a id="fokPrev" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><span>fok<wbr/>Prev</span><a href="#fokPrev" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="tsd-signature"><span class="tsd-kind-enum-member">fok<wbr/>Prev</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;fok&quot;</span></div><div class="tsd-comment tsd-typography"><a id="md:fill-or-kill-fok" class="tsd-anchor"></a><h3><a href="#md:fill-or-kill-fok">Fill Or Kill (fok)</a></h3><ul>
+<li>Similar to <a href="TimeInForce.html#ioc" class="tsd-kind-enum-member">TimeInForce.ioc</a> orders, <code>fok</code> limit orders only take liquidity from an order book.</li>
+<li>The entire specified quantity must be matched immediately or the order is rejected without generating any fills.</li>
+<li><code>fok</code> orders must specify the <a href="SelfTradePrevention.html#cn" class="tsd-kind-enum-member">cn</a> (Cancel Newest) to be accepted by the matching engine.</li>
+</ul>
+</div><div class="tsd-comment tsd-typography"><h4>See</h4><p><a href="https://api-docs-v4.idex.io/#self-trade-prevention">API Documentation: Self-Trade Prevention Policy</a></p>
+</div><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/idexio/idex-sdk-js/blob/09ab6237b1e7035080ee2c67d6901e01ae29c4fa/src/types/enums/request.ts#L204">src/types/enums/request.ts:204</a></li></ul></aside></section><section class="tsd-panel tsd-member"><a id="fok" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><span>fok</span><a href="#fok" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="tsd-signature"><span class="tsd-kind-enum-member">fok</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;fok&quot;</span></div><div class="tsd-comment tsd-typography"><p><strong>Fill Or Kill (fok)</strong></p>
+<ul>
+<li>The <code>fok</code> time in force policy requires that a limit order be filled in its entirety immediately upon placement or not at all.</li>
+<li>This policy is used by traders who need a guarantee that their order will be executed as a single transaction at a known price.</li>
+<li><code>fok</code> orders are particularly useful for large orders that could be subject to price slippage if executed in smaller increments.</li>
+<li><code>fok</code> orders must specify the <a href="SelfTradePrevention.html#cn" class="tsd-kind-enum-member">SelfTradePrevention.cn</a> (Cancel Newest)
+<a href="../interfaces/RestRequestOrderBase.html#selfTradePrevention" class="tsd-kind-property">selfTradePrevention</a> policy.</li>
+</ul>
+<hr>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li><strong>All-or-Nothing</strong>: A <code>fok</code> order must be completely filled with a single transaction or it is entirely canceled.</li>
+<li><strong>Price Certainty</strong>: Ensures that the order will execute at a single price point, providing full cost transparency.</li>
+<li><strong>No Partial Fills</strong>: Eliminates the possibility of partial order execution, which can be critical for certain trading strategies.</li>
+</ul>
+<hr>
+</div><div class="tsd-comment tsd-typography"><h4>Example</h4><pre><code class="language-typescript"><span class="hl-3">import</span><span class="hl-1"> { </span><span class="hl-5">TimeInForce</span><span class="hl-1">, </span><span class="hl-5">OrderType</span><span class="hl-1"> } </span><span class="hl-3">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@idexio/idex-sdk&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-5">authenticatedClient</span><span class="hl-1">.</span><span class="hl-0">createOrder</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-5">type:</span><span class="hl-1"> </span><span class="hl-5">OrderType</span><span class="hl-1">.</span><span class="hl-5">limit</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">timeInForce:</span><span class="hl-1"> </span><span class="hl-5">TimeInForce</span><span class="hl-1">.</span><span class="hl-5">fok</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-6">// ... other limit order parameters</span><br/><span class="hl-1">});</span>
+</code><button>Copy</button></pre>
+<h4>See</h4><ul>
+<li>docs <a href="https://api-docs-v4.idex.io/#time-in-force">IDEX API Documentation: Time in Force Explained</a></li>
+<li>enum <a href="SelfTradePrevention.html" class="tsd-kind-enum">SelfTradePrevention</a><blockquote>
+<p><code>fok</code> time in force policy requires that the <a href="../interfaces/RestRequestOrderBase.html#selfTradePrevention" class="tsd-kind-property">selfTradePrevention</a>
+parameter is set to <a href="SelfTradePrevention.html#cn" class="tsd-kind-enum-member">cn</a> (Cancel Newest)</p>
+</blockquote>
+</li>
+</ul>
+</div><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/idexio/idex-sdk-js/blob/09ab6237b1e7035080ee2c67d6901e01ae29c4fa/src/types/enums/request.ts#L240">src/types/enums/request.ts:240</a></li></ul></aside></section></section></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-index-accordion"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><h4 class="uppercase">Member Visibility</h4><form><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-deprecated" name="deprecated"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Deprecated</span></label></li></ul></form></div><div class="tsd-theme-toggle"><h4 class="uppercase">Theme</h4><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-index-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#gtcPrev" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-16"></use></svg><span>gtc<wbr/>Prev</span></a><ul><li><ul><li><ul><li><a href="#md:good-till-canceled-gtc"><span>Good <wbr/>Till <wbr/>Canceled (gtc)</span></a></li></ul></li></ul></li></ul><a href="#gtc" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-16"></use></svg><span>gtc</span></a><a href="#gtxPrev" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-16"></use></svg><span>gtx<wbr/>Prev</span></a><ul><li><ul><li><ul><li><a href="#md:good-til-crossing-gtx"><span>Good <wbr/>Til <wbr/>Crossing (gtx)</span></a></li></ul></li></ul></li></ul><a href="#gtx" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-16"></use></svg><span>gtx</span></a><a href="#iocPrev" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-16"></use></svg><span>ioc<wbr/>Prev</span></a><ul><li><ul><li><ul><li><a href="#md:immediate-or-cancel-ioc"><span>Immediate <wbr/>Or <wbr/>Cancel (ioc)</span></a></li></ul></li></ul></li></ul><a href="#ioc" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-16"></use></svg><span>ioc</span></a><a href="#fokPrev" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-16"></use></svg><span>fok<wbr/>Prev</span></a><ul><li><ul><li><ul><li><a href="#md:fill-or-kill-fok"><span>Fill <wbr/>Or <wbr/>Kill (fok)</span></a></li></ul></li></ul></li></ul><a href="#fok" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-16"></use></svg><span>fok</span></a></div></details></div><div class="site-menu"><nav id="tsd-sidebar-links" class="tsd-navigation"><a href="https://idex.io">IDEX Home</a><a href="https://api-docs-v4.idex.io">IDEX API Docs</a><a href="https://github.com/idexio/idex-sdk-js">SDK GitHub</a><a href="https://exchange-sandbox.idex.io">Exchange Sandbox</a></nav><nav class="tsd-navigation"><a href="../modules.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-1"></use></svg><span>IDEX SDK Reference</span></a><ul class="tsd-small-nested-navigation" id="tsd-nav-container" data-base=".."><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a><br>
+            <span id="generation-date"></span>
+            <script>
+                window.GENERATION_DATE = 1714173389422;
+
+                (() => {
+                    
+        const formatter = new Intl.RelativeTimeFormat('en', {
+            numeric: 'auto',
+            style: 'short',
+        });
+
+        const divisions = [
+            { amount: 60, name: 'seconds' },
+            { amount: 60, name: 'minutes' },
+            { amount: 24, name: 'hours' },
+            { amount: 7, name: 'days' },
+            { amount: 4.34524, name: 'weeks' },
+            { amount: 12, name: 'months' },
+            { amount: Number.POSITIVE_INFINITY, name: 'years' }
+        ];
+
+        function formatTimeAgo(date) {
+            let duration = (date - new Date()) / 1000;
+            
+            for (const division of divisions) {
+                if (Math.abs(duration) < division.amount) {
+                    return formatter.format(Math.round(duration), division.name);
+                }
+                duration /= division.amount;
+            }
+        }
+
+        document.getElementById('generation-date').title = new Date(window.GENERATION_DATE).toLocaleString();
+        document.getElementById('generation-date').innerText = `Last modified ${formatTimeAgo(window.GENERATION_DATE)}`;
+    
+                })();
+            </script>
+        </p></footer><div class="overlay"></div></body></html>

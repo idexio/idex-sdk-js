@@ -1,0 +1,99 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>IDEX SDK Reference</title><meta name="description" content="IDEX v4's TypeScript/Javascript Developer SDK Reference, designed for low-latency and guaranteed execution in a secure trading environment. This documentation outlines a platform where control and transparency are paramount, offering gas-free settlements and Ethereum-backed security. Ensuring only you have the power to move funds, it exemplifies a commitment to security and efficiency for developers seeking robust integration solutions"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css?cache=1714173388368"/><link rel="stylesheet" href="assets/highlight.css?cache=1714173388368"/><link rel="stylesheet" href="assets/custom.css?cache=1714173388368"/><script defer src="assets/main.js?cache=1714173388368"></script><script async src="assets/icons.js?cache=1714173388368" id="tsd-icons-script"></script><script async src="assets/search.js?cache=1714173388368" id="tsd-search-script"></script><script async src="assets/navigation.js?cache=1714173388368" id="tsd-nav-script"></script><link rel="icon" href="favicon.ico" />
+</head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="assets/icons.svg#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div><div class="field"><div id="tsd-toolbar-links"></div></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">IDEX SDK Reference</a></div><div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h2>IDEX SDK Reference</h2></div><div class="tsd-panel tsd-typography"><!-- markdownlint-disable MD033 -->
+
+<div align="center">
+  <p align="center">
+    <img src="assets/hero.jpeg" width="50%" title="eslint-plus-action">
+  </p>
+  <h1>
+      IDEX v4 Typescript/Javascript SDK
+  </h1>
+  <p>
+   The official Typescript/Javascript SDK for <a href="https://idex.io">IDEX v4</a> REST and WebSocket APIs.
+  </p>
+</div>
+
+<p><img src="https://img.shields.io/discord/455246457465733130?label=Discord&style=flat-square" alt="Discord">
+<img src="https://img.shields.io/github/license/idexio/idex-sdk-js?style=flat-square" alt="GitHub">
+<img src="https://img.shields.io/npm/v/@idexio/idex-sdk?style=flat-square" alt="npm">
+<img src="https://img.shields.io/github/issues/idexio/idex-sdk-js?style=flat-square" alt="GitHub issues">
+<img src="https://img.shields.io/twitter/follow/idexio?style=social" alt="Twitter Follow"></p>
+<hr>
+<a id="md:testnet-release" class="tsd-anchor"></a><h2><a href="#md:testnet-release">Testnet Release</a></h2><blockquote>
+<p><strong>IDEX v4 is currently available as a pre-launch testnet sandbox with mainnet launching soon.</strong></p>
+</blockquote>
+<hr>
+<a id="md:summary" class="tsd-anchor"></a><h2><a href="#md:summary">Summary</a></h2><ul>
+<li>🔥 <strong>Built with TypeScript</strong> - Provides a TypeScript/JavaScript SDK for the <a href="https://api-docs-v4.idex.io">IDEX v4 REST and WebSocket APIs</a>.</li>
+<li>⭐ <strong>Powerful Documentation</strong> - Provides complete inline IDE documentation and matching 📖 <a href="https://sdk-js-docs-v4.idex.io">typedoc-generated reference documentation</a>.</li>
+<li>🦺 <strong>End-to-End type safety</strong> - the sdk types are used by IDEX servers and clients so enumerations and types are always up-to-date and accurate.</li>
+<li>🌐 <strong>Universal Compatibility</strong> - Optimized to work in both Node.js and browser environments for maximum compatibility.</li>
+</ul>
+<a id="md:links-amp-resource" class="tsd-anchor"></a><h2><a href="#md:links-amp-resource">Links &amp; Resource</a></h2><ul>
+<li>🏠 <a href="https://idex.io">IDEX Homepage</a></li>
+<li>📈 <a href="https://exchange-sandbox.idex.io">IDEX v4 Exchange Sandbox</a></li>
+<li>📖 <a href="https://sdk-js-docs-v4.idex.io">IDEX v4 Typescript SDK Reference Documentation</a></li>
+<li>📖 <a href="https://api-docs-v4.idex.io">IDEX v4 API Documentation</a></li>
+<li>🔗 <a href="https://github.com/idexio/idex-sdk-js">IDEX v4 SDK GitHub</a></li>
+</ul>
+<a id="md:installation" class="tsd-anchor"></a><h2><a href="#md:installation">Installation</a></h2><pre><code class="language-bash"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-2">@idexio/idex-sdk</span>
+</code><button>Copy</button></pre>
+<a id="md:getting-started" class="tsd-anchor"></a><h2><a href="#md:getting-started">Getting Started</a></h2><pre><code class="language-typescript"><span class="hl-3">import</span><span class="hl-1"> </span><span class="hl-4">*</span><span class="hl-1"> </span><span class="hl-3">as</span><span class="hl-1"> </span><span class="hl-5">idex</span><span class="hl-1"> </span><span class="hl-3">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@idexio/idex-sdk&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">// const publicClient = new idex.RestPublicClient();</span><br/><span class="hl-6">// or, for sandbox API:</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-7">publicClient</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-5">idex</span><span class="hl-1">.</span><span class="hl-0">RestPublicClient</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-6">// no params required for production api client</span><br/><span class="hl-1">  </span><span class="hl-5">sandbox:</span><span class="hl-1"> </span><span class="hl-4">true</span><span class="hl-1">,</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-7">authenticatedClient</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-0">RestAuthenticatedClient</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-5">sandbox:</span><span class="hl-1"> </span><span class="hl-4">false</span><span class="hl-1">,</span><br/><br/><span class="hl-1">  </span><span class="hl-6">// fill these in with your own walletPrivateKey/apiKey/apiSecret</span><br/><span class="hl-1">  </span><span class="hl-5">walletPrivateKey:</span><span class="hl-1"> </span><span class="hl-2">&#39;0x...&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">apiKey:</span><span class="hl-1"> </span><span class="hl-2">&#39;1e7c4f52-4af7-4e1b-aa94-94fac8d931aa&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">apiSecret:</span><span class="hl-1"> </span><span class="hl-2">&#39;ufuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-7">markets</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-5">publicClient</span><span class="hl-1">.</span><span class="hl-0">getMarkets</span><span class="hl-1">();</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-7">wallets</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-5">authenticatedClient</span><span class="hl-1">.</span><span class="hl-0">getWallets</span><span class="hl-1">();</span>
+</code><button>Copy</button></pre>
+<ul>
+<li>Start with <strong>sandbox</strong> testing by getting <a href="https://api-docs-v4.idex.io/#sandbox">IDEX v4 sandbox API keys</a>.</li>
+</ul>
+<a id="md:node-versions" class="tsd-anchor"></a><h2><a href="#md:node-versions">Node Versions</a></h2><p>Minimum supported version is Node v16 with support for import/export map resolution.</p>
+<blockquote>
+<p>The sdk should work with any JavaScript environment that supports <a href="https://nodejs.org/dist/latest-v20.x/docs/api/packages.html#imports">import maps</a> &amp; <a href="https://nodejs.org/dist/latest-v20.x/docs/api/packages.html#exports">export maps</a>.</p>
+</blockquote>
+<a id="md:typescript-support" class="tsd-anchor"></a><h2><a href="#md:typescript-support">Typescript Support</a></h2><p>Your tsconfig/jsconfig must be setup to ensure TypeScript handles import/export map resolution. This is generally done by setting <code>module</code> and <code>moduleResolution</code> to <code>Node16</code> or <code>NodeNext</code>.</p>
+<blockquote>
+<p>See <a href="https://www.typescriptlang.org/tsconfig#resolvePackageJsonExports">resolvePackageJsonExports</a> and <a href="https://www.typescriptlang.org/tsconfig#resolvePackageJsonImports">resolvePacakageJsonImports</a> configuration reference for additional details.</p>
+</blockquote>
+<a id="md:javascript" class="tsd-anchor"></a><h2><a href="#md:javascript">JavaScript</a></h2><p>JavaScript is fully supported, however, it is recommended to add <code>// @ts-check</code> at the top of your files so your IDE will inform you of any
+type-related errors in your code!</p>
+<a id="md:typechain" class="tsd-anchor"></a><h2><a href="#md:typechain">Typechain</a></h2><p>Typechain types and factories for contracts are available by importing them from <code>/typechain</code> export directly, they are not
+exported from the main export.</p>
+<pre><code class="language-typescript"><span class="hl-3">import</span><span class="hl-1"> </span><span class="hl-4">*</span><span class="hl-1"> </span><span class="hl-3">as</span><span class="hl-1"> </span><span class="hl-5">typechain</span><span class="hl-1"> </span><span class="hl-3">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@idexio/idex-sdk/typechain&#39;</span><span class="hl-1">;</span>
+</code><button>Copy</button></pre>
+<a id="md:license" class="tsd-anchor"></a><h2><a href="#md:license">License</a></h2><p>The IDEX JavaScript SDK is released under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.</p>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-index-accordion"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="assets/icons.svg#icon-chevronDown"></use></svg>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><h4 class="uppercase">Member Visibility</h4><form><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-deprecated" name="deprecated"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Deprecated</span></label></li></ul></form></div><div class="tsd-theme-toggle"><h4 class="uppercase">Theme</h4><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-index-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="assets/icons.svg#icon-chevronDown"></use></svg>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#md:testnet-release"><span>Testnet <wbr/>Release</span></a><a href="#md:summary"><span>Summary</span></a><a href="#md:links-amp-resource"><span>Links &amp; <wbr/>Resource</span></a><a href="#md:installation"><span>Installation</span></a><a href="#md:getting-started"><span>Getting <wbr/>Started</span></a><a href="#md:node-versions"><span>Node <wbr/>Versions</span></a><a href="#md:typescript-support"><span>Typescript <wbr/>Support</span></a><a href="#md:javascript"><span>Java<wbr/>Script</span></a><a href="#md:typechain"><span>Typechain</span></a><a href="#md:license"><span>License</span></a></div></details></div><div class="site-menu"><nav id="tsd-sidebar-links" class="tsd-navigation"><a href="https://idex.io">IDEX Home</a><a href="https://api-docs-v4.idex.io">IDEX API Docs</a><a href="https://github.com/idexio/idex-sdk-js">SDK GitHub</a><a href="https://exchange-sandbox.idex.io">Exchange Sandbox</a></nav><nav class="tsd-navigation"><a href="modules.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="assets/icons.svg#icon-1"></use></svg><span>IDEX SDK Reference</span></a><ul class="tsd-small-nested-navigation" id="tsd-nav-container" data-base="."><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a><br>
+            <span id="generation-date"></span>
+            <script>
+                window.GENERATION_DATE = 1714173388999;
+
+                (() => {
+                    
+        const formatter = new Intl.RelativeTimeFormat('en', {
+            numeric: 'auto',
+            style: 'short',
+        });
+
+        const divisions = [
+            { amount: 60, name: 'seconds' },
+            { amount: 60, name: 'minutes' },
+            { amount: 24, name: 'hours' },
+            { amount: 7, name: 'days' },
+            { amount: 4.34524, name: 'weeks' },
+            { amount: 12, name: 'months' },
+            { amount: Number.POSITIVE_INFINITY, name: 'years' }
+        ];
+
+        function formatTimeAgo(date) {
+            let duration = (date - new Date()) / 1000;
+            
+            for (const division of divisions) {
+                if (Math.abs(duration) < division.amount) {
+                    return formatter.format(Math.round(duration), division.name);
+                }
+                duration /= division.amount;
+            }
+        }
+
+        document.getElementById('generation-date').title = new Date(window.GENERATION_DATE).toLocaleString();
+        document.getElementById('generation-date').innerText = `Last modified ${formatTimeAgo(window.GENERATION_DATE)}`;
+    
+                })();
+            </script>
+        </p></footer><div class="overlay"></div></body></html>
