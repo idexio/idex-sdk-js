@@ -1,0 +1,88 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+      - beta
+      - alpha
+env:
+  CI: true
+  SKIP_HOOK_COMMIT_MSG: 1
+  GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  GIT_AUTHOR_NAME: idex-bot
+  GIT_AUTHOR_EMAIL: monitor@idex.io
+  GIT_COMMITTER_NAME: idex-bot
+  GIT_COMMITTER_EMAIL: monitor@idex.io
+
+jobs:
+  pr:
+    name: Create Release PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check For PR
+        env:
+          REF: ${{ env.GITHUB_BASE_REF }}
+          BASE: main
+          GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+        run: |
+          BRANCH=${GITHUB_REF##*/}
+          [[ "$BRANCH" == "$BASE" ]] && exit 0;
+          if [[ "$BRANCH" == "alpha" ]]; then
+            BASE="beta"
+
+            
+          fi
+          echo "Check If PR exists for $GITHUB_REPOSITORY $BRANCH --> $BASE"
+          gh auth status
+          if [[ "$(gh pr list -R "$GITHUB_REPOSITORY" --base "$BASE" --state open --label "Release $BRANCH")" == "" ]]; then
+            echo "Creating PR $BRANCH --> $BASE"
+            RESULT=$(gh api repos/"${GITHUB_REPOSITORY}"/pulls -F head="$BRANCH" -F base="$BASE" -F title="Release $BRANCH" -F body="This PR was generated automatically.  Merging it will transition $BRANCH into ${BASE}.")
+            PR_NUM=$(echo $RESULT | jq -r '.number')
+            printf '{"labels": ["Release %s"]}' $BRANCH | gh api repos/"${GITHUB_REPOSITORY}"/issues/"${PR_NUM}"/labels --input -
+          fi
+  release:
+    name: Release 
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+      id-token: write # to enable use of OIDC for npm provenance
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*"
+      - name: Enable Corepack
+        run: corepack enable
+      # - name: Get yarn cache directory path
+      #   id: yarn-cache-dir-path
+      #   run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      # - uses: actions/cache@v3
+      #   id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      #   with:
+      #     path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+      #     key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-yarn-
+      - name: Install dependencies
+        run: yarn install
+      - name: Build Library
+        run: yarn build
+      - name: Build TypeDoc
+        run: yarn typedoc:build
+      # Build Documentation which will be committed by semantic-release
+      # - name: Build Documentation
+      #   run: yarn generate:docs:commit
+      - name: Semantic Release
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+        run: yarn semantic-release

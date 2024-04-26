@@ -1,0 +1,31 @@
+.DS_Store
+.env
+.idea
+data/
+db/snaps/*.gz
+dist/
+node_modules/
+yarn-error.log
+
+
+src/tests/quick.ts
+test/quick.ts
+debug/quick.ts
+# this will be built and updated by the release bot
+# ./API.md
+
+# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.eslintcache
+coverage/
+debug/*
+!debug/quick.example.ts
+!debug/README.md
+!debug/tsconfig.json
+.cody/

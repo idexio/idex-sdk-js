@@ -1,0 +1,25 @@
+{
+  // @see https://github.com/tsconfig/bases#centralized-recommendations-for-tsconfig-bases
+  "extends": "@tsconfig/node20/tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "declaration": true,
+    "declarationMap": true,
+    "importHelpers": true,
+    "lib": ["dom", "esnext"],
+    "resolvePackageJsonImports": true,
+    "resolvePackageJsonExports": true,
+    "outDir": "dist",
+    "removeComments": false,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "useUnknownInCatchVariables": false,
+    // does not cut off type hints as early
+    "noErrorTruncation": true,
+    "verbatimModuleSyntax": false
+    // needed to trick yarn run:quick to work as tsx
+    // otherwise doesnt understand import/export maps
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}

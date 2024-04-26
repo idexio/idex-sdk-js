@@ -1,0 +1,9 @@
+{
+  // @see https://github.com/tsconfig/bases#centralized-recommendations-for-tsconfig-bases
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "../",
+    "noEmit": true
+  },
+  "include": ["./**/*.ts"]
+}

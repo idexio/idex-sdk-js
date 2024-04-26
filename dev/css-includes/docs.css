@@ -1,0 +1,39 @@
+
+:is(h1, h2, h3, h4, h5) > :any-link:not(.link) {
+  color: var(--color-link);
+
+  &.external {
+    color: var(--color-link);
+  }
+
+  &.tsd-kind-type-alias {
+    color: var(--color-ts-type-alias);
+  }
+
+  &.tsd-kind-interface {
+    color: var(--color-ts-interface);
+  }
+
+  &.tsd-kind-property {
+    color: var(--color-ts-property);
+  }
+  
+}
+
+hr {
+  border-color: var(--color-accent);
+}
+
+.tsd-nested-navigation {
+  margin-left: 2rem;
+}
+
+.tsd-navigation {
+  margin-top: 1rem;
+}
+
+.tsd-typography {
+  & ul > li > ul {
+    margin: 0.25em 0px;
+  }
+}

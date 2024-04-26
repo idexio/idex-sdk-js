@@ -1,0 +1,193 @@
+{
+  "name": "@idexio/idex-sdk-ikon",
+  "version": "3.36.0",
+  "description": "IDEX SDK for Javascript in the browser and Node.js",
+  "repository": "git@github.com:idexio/idex-sdk-js-ikon.git",
+  "license": "MIT",
+  "author": "IDEX <support@idex.io>",
+  "sideEffects": false,
+  "type": "commonjs",
+  "dep-notes": [
+    [
+      "chai v5",
+      "esm-only"
+    ],
+    [
+      "eslint v9",
+      "due to eslint-plugin-import not supporting flat config or ts path resolution"
+    ],
+    [
+      "ethers",
+      "keep in sync with other repos"
+    ]
+  ],
+  "imports": {
+    "#*": {
+      "types": [
+        "./src/*.ts",
+        "./dist/*.d.ts"
+      ],
+      "default": [
+        "./dist/*.js"
+      ]
+    }
+  },
+  "exports": {
+    ".": {
+      "types": [
+        "./src/index.ts",
+        "./dist/index.d.ts"
+      ],
+      "default": "./dist/index.js"
+    },
+    "./abis/*": {
+      "types": [
+        "./dist/abis/*.d.ts",
+        "./src/abis/*"
+      ],
+      "default": "./dist/abis/*"
+    },
+    "./clients": {
+      "types": [
+        "./dist/client/index.d.ts",
+        "./src/client/index.ts"
+      ],
+      "default": "./dist/client/index.js"
+    },
+    "./contracts": {
+      "types": [
+        "./dist/contracts.d.ts",
+        "./src/contracts.ts"
+      ],
+      "default": "./dist/contracts.js"
+    },
+    "./bridge": {
+      "types": [
+        "./dist/bridge/index.d.ts",
+        "./src/bridge/index.ts"
+      ],
+      "default": "./dist/bridge/index.js"
+    },
+    "./typechain": {
+      "types": [
+        "./dist/typechain-types/index.d.ts",
+        "./src/typechain-types/index.ts"
+      ],
+      "default": "./dist/typechain-types/index.js"
+    },
+    "./types": {
+      "types": [
+        "./dist/types/index.d.ts",
+        "./src/types/index.ts"
+      ],
+      "default": "./dist/types/index.js"
+    }
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    ".nvmrc",
+    "contracts",
+    "dist",
+    "package.json",
+    "yarn.lock",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "npm-run-all clean build:tsc build:abis",
+    "build:abis": "cp -rf abis dist/abis/",
+    "build:tsc": "yarn exec tsc",
+    "clean": "rimraf dist",
+    "clean:docs": "rimraf docs",
+    "lint": "eslint --cache 'src/**/*.ts'",
+    "lint:fix": "eslint --cache 'src/**/*.ts' --fix",
+    "lint:fix:staged": "lint-staged",
+    "lint:types": "yarn exec tsc --noEmit",
+    "on:commit": "npm-run-all build test --parallel lint:fix:staged lint:types --",
+    "orderbook:demo": "yarn node dist/orderbook/demo.js",
+    "postinstall": "git config --local core.hooksPath .githooks || echo 'Not a git repository, did not set up git hooks'",
+    "prettier:fix": "yarn exec prettier --cache --write 'src/**/*.ts'",
+    "prettier:fix:staged": "yarn exec pretty-quick --staged",
+    "start:path": "yarn exec tsx --tsconfig tsconfig.tsx.json --",
+    "start:path:watch": "yarn exec tsx watch --tsconfig tsconfig.tsx.json --clear-screen=false --",
+    "test": "mocha --unhandled-rejections=strict 'dist/tests/**/*.test.js'",
+    "typedoc:build": "npm-run-all --sequential clean:docs typedoc:build:run typedoc:build:assets",
+    "typedoc:build:assets": "cp assets/hero.jpeg docs/assets/ && cp assets/CNAME docs/",
+    "typedoc:build:run": "yarn exec typedoc"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "eslint --cache --fix",
+      "prettier --cache --write"
+    ]
+  },
+  "dependencies": {
+    "axios": "1.6.8",
+    "bignumber.js": "^9.1.2",
+    "ethers": "6.9.0",
+    "isomorphic-ws": "^5.0.0",
+    "tslib": "^2.6.2",
+    "uuid": "^9.0.1",
+    "ws": "8.16.0"
+  },
+  "devDependencies": {
+    "@commitlint/config-conventional": "^19.1.0",
+    "@commitlint/types": "^19.0.3",
+    "@eslint/eslintrc": "^3.0.2",
+    "@eslint/js": "^9.0.0",
+    "@qiwi/semantic-release-gh-pages-plugin": "^5.2.12",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^12.0.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^10.0.3",
+    "@semantic-release/npm": "^12.0.0",
+    "@semantic-release/release-notes-generator": "^13.0.0",
+    "@tsconfig/node20": "^20.1.4",
+    "@types/chai": "^4.3.14",
+    "@types/crypto-js": "^4.2.2",
+    "@types/eslint": "^8.56.7",
+    "@types/eslint__js": "^8.42.3",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.12.7",
+    "@types/semantic-release": "^20.0.6",
+    "@types/uuid": "^9.0.8",
+    "@types/ws": "8.5.10",
+    "chai": "4.4.1",
+    "commitizen": "^4.3.0",
+    "commitlint": "^19.2.1",
+    "conventional-changelog-conventionalcommits": "^7.0.2",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "npm:eslint-plugin-i@2.29.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "globals": "^15.0.0",
+    "lint-staged": "^15.2.2",
+    "markdownlint-cli": "^0.39.0",
+    "mocha": "^10.4.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.2.5",
+    "prettier-plugin-package": "^1.4.0",
+    "pretty-quick": "^4.0.0",
+    "rimraf": "^5.0.5",
+    "semantic-release": "^23.0.8",
+    "semantic-release-slack-bot": "^4.0.2",
+    "slackify-markdown": "^4.4.0",
+    "tsx": "^4.7.2",
+    "typedoc": "^0.25.13",
+    "typedoc-plugin-extras": "^3.0.0",
+    "typedoc-plugin-mdn-links": "^3.1.19",
+    "typedoc-plugin-merge-modules": "^5.1.0",
+    "typedoc-plugin-missing-exports": "^2.2.0",
+    "typedoc-theme-category-nav": "^0.0.3",
+    "typescript": "5.4.5",
+    "typescript-eslint": "^7.6.0"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.8"
+  },
+  "packageManager": "yarn@4.1.1"
+}
