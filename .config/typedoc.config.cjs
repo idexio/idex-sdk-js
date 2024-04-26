@@ -36,9 +36,9 @@ const config = {
   // navigationLinks: {},
   sidebarLinks: {
     'IDEX Home': 'https://idex.io',
-    'IDEX Exchange': 'https://exchange.idex.io',
     'IDEX API Docs': 'https://api-docs-v4.idex.io',
     'SDK GitHub': 'https://github.com/idexio/idex-sdk-js',
+    'Exchange Sandbox': 'https://exchange-sandbox.idex.io',
   },
   visibilityFilters: {
     protected: false,

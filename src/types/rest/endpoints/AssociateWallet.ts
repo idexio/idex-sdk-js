@@ -1,8 +1,5 @@
 import type { RestRequestWithSignature } from '#types/utils';
-import type {
-  IDEXWallet,
-  RestRequestByWallet,
-} from '@idexio/idex-sdk-ikon/types';
+import type { IDEXWallet, RestRequestByWallet } from '@idexio/idex-sdk/types';
 
 /**
  * Associate a wallet with the authenticated account.

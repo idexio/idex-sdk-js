@@ -1,7 +1,7 @@
 import {
   OrderBookRealTimeClient,
   OrderBookRealTimeClientEvent,
-} from '@idexio/idex-sdk-ikon';
+} from '@idexio/idex-sdk';
 
 const isSandbox = true;
 const market = 'ETH-USD';
