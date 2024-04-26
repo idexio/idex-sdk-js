@@ -1,6 +1,6 @@
 {
   "name": "@idexio/idex-sdk-ikon",
-  "version": "3.36.0",
+  "version": "3.0.0",
   "description": "IDEX SDK for Javascript in the browser and Node.js",
   "repository": "git@github.com:idexio/idex-sdk-js-ikon.git",
   "license": "MIT",
