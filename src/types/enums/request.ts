@@ -80,13 +80,6 @@ export type CandleInterval =
  */
 export const TimeInForce = Object.freeze({
   /**
-   * ### Good Till Canceled (gtc)
-   * - Under `gtc` rules, a limit order that is resting on the books remains on the books until canceled.
-   * - This is the default policy if no time in force option is specified.
-   */
-  gtcPrev: 'gtc',
-
-  /**
    * **Good Till Canceled (gtc)**
    *
    * - The `gtc` time in force policy keeps a limit order open until it is either filled or manually canceled by the trader.
@@ -115,13 +108,6 @@ export const TimeInForce = Object.freeze({
    * @see docs [IDEX API Documentation: Time in Force Explained](https://api-docs-v4.idex.io/#time-in-force)
    */
   gtc: 'gtc',
-
-  /**
-   * ### Good Til Crossing (gtx)
-   * - Acts as a post-only flag
-   * - Applicable to all limit orders
-   */
-  gtxPrev: 'gtx',
 
   /**
    * **Good Til Crossing (gtx)**
@@ -154,15 +140,6 @@ export const TimeInForce = Object.freeze({
   gtx: 'gtx',
 
   /**
-   * ### Immediate Or Cancel (ioc)
-   * - Only takes liquidity from the order book
-   * - Never becomes a resting order on the book.
-   * - On execution, any portion of an `ioc` limit order that matches resting orders is filled,
-   *   and the rest of the order is canceled.
-   */
-  iocPrev: 'ioc',
-
-  /**
    * **Immediate Or Cancel (ioc)**
    *
    * - An `ioc` time in force policy is used for limit orders that should be executed immediately.
@@ -192,16 +169,6 @@ export const TimeInForce = Object.freeze({
    * @see docs [IDEX API Documentation: Time in Force Explained](https://api-docs-v4.idex.io/#time-in-force)
    */
   ioc: 'ioc',
-
-  /**
-   * ### Fill Or Kill (fok)
-   * - Similar to {@link TimeInForce.ioc TimeInForce.ioc} orders, `fok` limit orders only take liquidity from an order book.
-   * - The entire specified quantity must be matched immediately or the order is rejected without generating any fills.
-   * - `fok` orders must specify the {@link SelfTradePrevention.cn} (Cancel Newest) to be accepted by the matching engine.
-   *
-   * @see [API Documentation: Self-Trade Prevention Policy](https://api-docs-v4.idex.io/#self-trade-prevention)
-   */
-  fokPrev: 'fok',
 
   /**
    * **Fill Or Kill (fok)**
