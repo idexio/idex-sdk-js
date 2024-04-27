@@ -103,7 +103,7 @@ const config = {
       '@qiwi/semantic-release-gh-pages-plugin',
       {
         msg: 'docs: update docs to <%= nextRelease.gitTag %>',
-        branches: [['main', 'docs']],
+        branches: [['beta', 'docs']],
       },
     ],
     // [
