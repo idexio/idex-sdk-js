@@ -82,12 +82,12 @@ const config = {
         preset: 'conventionalcommits',
       },
     ],
-    [
-      '@semantic-release/release-notes-generator',
-      {
-        preset: 'conventionalcommits',
-      },
-    ],
+    // [
+    //   '@semantic-release/release-notes-generator',
+    //   {
+    //     preset: 'conventionalcommits',
+    //   },
+    // ],
     // set package.json version based on commits then publish
     '@semantic-release/npm',
     [
