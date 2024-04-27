@@ -82,6 +82,12 @@ const config = {
         preset: 'conventionalcommits',
       },
     ],
+    // if the github action freezes
+    // on this step, comment it out for
+    // the release as there is likely
+    // something causing it to fail
+    //
+    // it should work again after
     [
       '@semantic-release/release-notes-generator',
       {
