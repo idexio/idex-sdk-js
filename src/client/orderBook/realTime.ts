@@ -1,126 +1,138 @@
 import { EventEmitter } from 'events';
 
-import { aggregateL2OrderBookAtTickSize } from '../../orderbook/quantities';
-import { deriveBaseURL } from '../utils';
-import { RestPublicClient } from '../rest';
-import { WebSocketClient } from '../webSocket';
-import { L2LimitOrderBookToHybridOrderBooks } from '../../orderbook/hybrid';
-import { L2toL1OrderBook } from '../../orderbook/utils';
-import {
-  decimalToPip,
-  oneInPips,
-  multiplyPips,
-  pipToDecimal,
-  exchangeDecimals,
-} from '../../pipmath';
-import { L1Equal, updateL2Levels } from './utils';
-import type {
-  L1OrderBook,
-  L2OrderBook,
-  MultiverseChain,
-  OrderBookFeesAndMinimums,
-  RestResponseOrderBookLevel1,
-  RestResponseOrderBookLevel2,
-  WebSocketResponse,
-  WebSocketResponseTokenPriceLong,
-} from '../../types';
-import type { Expand, ExpandDeep } from '../../types/utils';
+import { decimalToPip, exchangeDecimals } from '#pipmath';
+
+import { L1Equal, updateL2Levels } from '#client/orderBook/utils';
+import { RestPublicClient } from '#client/rest/public';
+import { WebSocketClient } from '#client/webSocket/index';
 import {
   L1OrderBookToRestResponse,
   L2OrderBookToRestResponse,
   restResponseToL2OrderBook,
   webSocketResponseToL2OrderBook,
-} from '../../orderbook/apiConversions';
+} from '#orderbook/apiConversions';
+import { aggregateL2OrderBookAtTickSize } from '#orderbook/quantities';
+import { L2toL1OrderBook } from '#orderbook/utils';
 import {
-  ORDER_BOOK_FIRST_LEVEL_MULTIPLIER_IN_PIPS,
-  ORDER_BOOK_MAX_L2_LEVELS,
-  ORDER_BOOK_HYBRID_SLIPPAGE,
-} from '../../constants';
+  MessageEventType,
+  OrderBookRealTimeClientEvent,
+  SubscriptionNamePublic,
+} from '#types/enums/index';
+
+import type * as idex from '#index';
+import type { IDEXMessageEvent } from '#types/webSocket/request/subscriptions';
+import type { ErrorEvent } from 'ws';
 
 /**
  * Orderbook Client Options
  *
- * @typedef {Object} OrderBookRealTimeClientOptions
- * @property {string} [apiKey] - Increases rate limits if provided
- * @property {number} [connectTimeout] - Connection timeout for websocket (default 5000)
- * @property {boolean} [sandbox] - If true, client will point to API sandbox
- * @property {MultiverseChain} [multiverseChain=matic] - Which multiverse chain the client will point to
+ * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/OrderBookRealTimeClient.html)
  */
 export interface OrderBookRealTimeClientOptions {
+  /**
+   * Optionally provide an `apiKey` for increased rate limiting
+   */
   apiKey?: string;
-  connectTimeout?: number;
+  /**
+   * Controls whether the production or sandbox endpoints will be used
+   */
   sandbox?: boolean;
-  multiverseChain?: MultiverseChain;
-  restBaseURL?: string;
-  websocketBaseURL?: string;
+  /**
+   * Optionally provide a custom url to use when making IDEX REST API requests.
+   *
+   * - Will override the {@link sandbox} option when given.
+   */
+  baseRestApiURL?: string;
+  /**
+   * Optionally provide a custom WebSocket API URL to use when connecting to
+   * the IDEX WebSocket API.
+   *
+   * - Will override the {@link sandbox} option when given.
+   */
+  baseWebSocketURL?: string;
+  marketsResponse?: idex.RestResponseGetMarkets;
 }
 
 /**
  * Orderbook API client
  *
+ * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/OrderBookRealTimeClient.html)
+ * @see options  {@link OrderBookRealTimeClientOptions}
+ * @see events   {@link OrderBookRealTimeClientEvent}
+ *
+ * @category API Clients
+ *
  * @example
- * import { OrderBookRealTimeClient } from '@idexio/idex-sdk';
+ * ```typescript
+ * import {
+ *  OrderBookRealTimeClient,
+ *  OrderBookRealTimeClientEvent,
+ *  type L2OrderBook
+ * } from '@idexio/idex-sdk';
+ *
+ * // type is just to show it will match the form string-string.
+ * // actual type will be typed as string
+ * type MarketSymbol = `${string}-${string}`;
+ *
+ * const LIMIT = 10;
+ * const MARKETS: MarketSymbol[] = ['IDEX-USD'];
  *
  * const client = new OrderBookRealTimeClient({
- *   multiverseChain: 'matic',
- *   sandbox: false,
+ *   sandbox: true,
  * });
  *
- * const markets = ['IDEX-USD'];
- * client.start(markets);
+ * client.start(MARKETS);
  *
- * function handleOrderBook(l2: L2OrderBook) {
- *   const l2 = await client.getOrderBookLevel2('IDEX-USD', 10);
+ * const orderbooksMap = new Map<MarketSymbol, L2OrderBook>()
+ *
+ * async function handleOrderBookLevel2(market: MarketSymbol) {
+ *   const levelTwoOrderBook = await client.getOrderBookL2(market, LIMIT);
+ *
+ *   orderbooksMap.set(market, levelTwoOrderBook)
+ *
+ *   console.log('Updated OrderBook for market: ', market, levelTwoOrderBook);
  * }
  *
- * client.on('ready', handleOrderBook);
- * client.on('l2Changed', handleOrderBook);
+ * client.on(OrderBookRealTimeClientEvent.ready, () => {
+ *  MARKETS.forEach(market => {
+ *    handleOrderBookLevel2(market)
+ *  })
+ * });
  *
- * @param {OrderBookRealTimeClientOptions} options
+ * client.on(OrderBookRealTimeClientEvent.l2, handleOrderBookLevel2);
+ * ```
  */
-export class OrderBookRealTimeClient extends EventEmitter {
-  /**
-   * Set to the global idex fee rate on start (see: RestResponseExchangeInfo.takerIdexFeeRate).
-   * Can be overriden to wallet-specific rates with setCustomFees().
-   * Used to calculate synthetic price levels.
-   *
-   * @private
-   */
-  private takerIdexFeeRate = BigInt(0);
+export class OrderBookRealTimeClient extends EventEmitter<{
+  [OrderBookRealTimeClientEvent.ready]: [market: string];
+  [OrderBookRealTimeClientEvent.connected]: [];
+  [OrderBookRealTimeClientEvent.disconnected]: [];
+  [OrderBookRealTimeClientEvent.error]: [error: Error];
+  [OrderBookRealTimeClientEvent.l1]: [market: string];
+  [OrderBookRealTimeClientEvent.l2]: [market: string];
+  [OrderBookRealTimeClientEvent.sync]: [market: string];
+}> {
+  private readonly l1OrderBooks: Map<string, idex.L1OrderBook> = new Map();
 
-  private isFeesAndMinimumsLoaded = false;
+  private readonly l2OrderBooks: Map<string, idex.L2OrderBook> = new Map();
 
-  private readonly l1OrderBooks: Map<string, L1OrderBook> = new Map();
-
-  private readonly l2OrderBooks: Map<string, L2OrderBook> = new Map();
-
-  private readonly l2OrderBookUpdates = new Map<string, L2OrderBook[]>();
+  private readonly l2OrderBookUpdates = new Map<string, idex.L2OrderBook[]>();
 
   private markets: string[] = [];
 
   private readonly marketsByAssetSymbol = new Map<string, Set<string>>();
 
   /**
-   * Set to the global pool fee rate on start (see: RestResponseExchangeInfo.takerLiquidityProviderFeeRate).
-   * Can be overriden to wallet-specific rates with setCustomFees().
-   * Used to calculate synthetic price levels.
+   * When creating an {@link OrderBookRealTimeClient}, a public client is automatically
+   * created and can be used based to make additional public requests if needed.
    *
-   * @private
-   */
-  private takerLiquidityProviderFeeRate = BigInt(0);
-
-  private readonly restPublicClient: RestPublicClient;
-
-  /**
-   * Set to the global taker minimum trade size on start (see: RestResponseExchangeInfo.takerTradeMinimum).
-   * Can be overriden to wallet-specific rates with setCustomFees().
-   * Used to calculate synthetic price levels.
+   * - Can be utilized to fetch public data instead of creating both clients.
    *
-   * @private
+   * @category Accessors
    */
-  private takerTradeMinimum = BigInt(0);
 
-  private readonly tokenPrices: Map<string, bigint | null> = new Map();
+  public readonly public: RestPublicClient;
+
+  private marketsResponse: idex.RestResponseGetMarkets | undefined = undefined;
 
   private isTickSizesLoaded = false;
 
@@ -132,50 +144,46 @@ export class OrderBookRealTimeClient extends EventEmitter {
 
   private webSocketResponseListenerConfigured = false;
 
-  constructor(
-    options: Expand<OrderBookRealTimeClientOptions>,
-    feesAndMinimumsOverride?: Expand<OrderBookFeesAndMinimums>,
-  ) {
+  /**
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/OrderBookRealTimeClient.html)
+   *
+   * @category Constructor
+   */
+  constructor(options: OrderBookRealTimeClientOptions = {}) {
     super();
 
-    const { multiverseChain = 'matic', sandbox = false } = options;
+    const { sandbox = false } = options;
 
-    const restApiUrl = deriveBaseURL({
-      sandbox,
-      multiverseChain,
-      overrideBaseURL: options.restBaseURL,
-      api: 'rest',
-    });
-    const webSocketApiUrl = deriveBaseURL({
-      sandbox,
-      multiverseChain,
-      overrideBaseURL: options.websocketBaseURL,
-      api: 'websocket',
-    });
+    this.marketsResponse = options.marketsResponse;
 
-    this.restPublicClient = new RestPublicClient({
+    this.public = new RestPublicClient({
+      sandbox,
       apiKey: options.apiKey,
-      baseURL: restApiUrl,
-    });
-    this.webSocketClient = new WebSocketClient({
-      baseURL: webSocketApiUrl,
-      shouldReconnectAutomatically: true,
-      connectTimeout: options.connectTimeout,
+      baseURL: options.baseRestApiURL,
     });
 
-    if (feesAndMinimumsOverride) {
-      this.setFeesAndMinimumsOverride(feesAndMinimumsOverride);
-      this.isFeesAndMinimumsLoaded = true;
-    }
+    this.webSocketClient = new WebSocketClient({
+      sandbox,
+      baseRestApiURL: options.baseRestApiURL,
+      baseWebSocketURL: options.baseWebSocketURL,
+    });
   }
 
   /**
    * Loads initial state from REST API and begin listening to orderbook updates.
    *
-   * @param {string[]} markets
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/OrderBookRealTimeClient.html#start)
+   *
+   * @category Connection Management
    */
-  public async start(markets: string[]): Promise<void> {
+  public async start(
+    markets: string[],
+    marketsResponse?: idex.RestResponseGetMarkets,
+  ) {
     this.markets = markets;
+    if (marketsResponse) {
+      this.marketsResponse = marketsResponse;
+    }
     this.mapTokensToMarkets();
     this.setupInternalWebSocket();
     await this.webSocketClient.connect(true);
@@ -184,57 +192,25 @@ export class OrderBookRealTimeClient extends EventEmitter {
   /**
    * Stop the order book client, and reset internal state.
    * Call this when you are no longer using the client, to release memory and network resources.
+   *
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/OrderBookRealTimeClient.html#stop)
+   *
+   * @category Connection Management
    */
-  public stop(): void {
-    if (this.webSocketClient.isConnected()) {
+  public stop() {
+    if (this.webSocketClient.isConnected) {
       this.unsubscribe();
       this.webSocketClient.disconnect();
     }
     this.resetInternalState();
   }
 
-  /**
-   * Set custom fee rates for synthetic price level calculations. Use this if your wallet has
-   * custom fees set.
-   *
-   * @param {Partial<OrderBookFeeRates>} rates
-   */
-  public setFeesAndMinimumsOverride(
-    feesAndMinimumsOverride: Expand<OrderBookFeesAndMinimums>,
-  ): void {
-    if (feesAndMinimumsOverride.takerIdexFeeRate) {
-      this.takerIdexFeeRate = decimalToPip(
-        feesAndMinimumsOverride.takerIdexFeeRate,
-      );
-    }
-    if (feesAndMinimumsOverride.takerLiquidityProviderFeeRate) {
-      this.takerLiquidityProviderFeeRate = decimalToPip(
-        feesAndMinimumsOverride.takerLiquidityProviderFeeRate,
-      );
-    }
-    if (feesAndMinimumsOverride.takerTradeMinimum) {
-      this.takerTradeMinimum = multiplyPips(
-        ORDER_BOOK_FIRST_LEVEL_MULTIPLIER_IN_PIPS,
-        decimalToPip(feesAndMinimumsOverride.takerTradeMinimum),
-      );
-    }
-  }
-
-  public getCurrentFeesAndMinimums(): Expand<OrderBookFeesAndMinimums> {
-    return {
-      takerIdexFeeRate: pipToDecimal(this.takerIdexFeeRate),
-      takerLiquidityProviderFeeRate: pipToDecimal(
-        this.takerLiquidityProviderFeeRate,
-      ),
-      takerTradeMinimum: pipToDecimal(this.takerTradeMinimum),
-    };
-  }
-
-  public async getMaximumTickSizeUnderSpread(market: string): Promise<bigint> {
+  public async getMaximumTickSizeUnderSpread(market: string) {
     const { bids } = await this.getOrderBookL2(market, 1000);
     const minBidPrice = bids.length > 0 && bids[bids.length - 1][0];
-    const numDigits = minBidPrice
-      ? decimalToPip(minBidPrice).toString().length
+    const numDigits =
+      minBidPrice ?
+        decimalToPip(minBidPrice).toString().length
       : exchangeDecimals;
 
     return BigInt(10 ** (Math.min(numDigits, exchangeDecimals) - 1));
@@ -243,61 +219,62 @@ export class OrderBookRealTimeClient extends EventEmitter {
   /**
    * Load the current state of the level 1 orderbook for this market.
    *
-   * @param {string} market
-   * @param {number} [tickSize] - Minimum price movement expressed in pips (10^-8), defaults to market setting
-   * @return {RestResponseOrderBookLevel1}
+   * @param tickSize
+   *   Minimum price movement expressed in pips (10^-8), defaults to market setting
+   *
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/OrderBookRealTimeClient.html#getOrderBookL1)
+   * @see response {@link RestResponseGetOrderBookLevel1}
+   *
+   * @category Requests
    */
-  public async getOrderBookL1(
-    market: string,
-    tickSize?: bigint | undefined,
-  ): Promise<ExpandDeep<RestResponseOrderBookLevel1>> {
+  public async getOrderBookL1(market: string, tickSize?: bigint | undefined) {
     return L1OrderBookToRestResponse(
-      (await this.getHybridBooks(market, tickSize)).l1,
+      (await this.getOrderBooks(market, tickSize)).l1,
     );
   }
 
   /**
    * Load the current state of the level 2 orderbook for this market.
    *
-   * @param {string} market
-   * @param {number} [limit=100] - Total number of price levels (bids + asks) to return, between 2 and 1000
-   * @param {number} [tickSize] - Minimum price movement expressed in pips (10^-8), defaults to market setting
-   * @returns {Promise<RestResponseOrderBookLevel2>}
+   * @param limit
+   *   Total number of price levels (bids + asks) to return
+   *   - Between 2 and 1000
+   *   - Defaults to `100`
+   * @param tickSize
+   *   Minimum price movement expressed in pips (10^-8), defaults to market setting
+   *
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/OrderBookRealTimeClient.html#getOrderBookL2)
+   * @see response {@link RestResponseGetOrderBookLevel2}
+   *
+   * @category Requests
    */
   public async getOrderBookL2(
     market: string,
-    limit = 100,
+    limit?: number,
     tickSize?: bigint | undefined,
-  ): Promise<ExpandDeep<RestResponseOrderBookLevel2>> {
+  ) {
     return L2OrderBookToRestResponse(
-      (await this.getHybridBooks(market, tickSize)).l2,
-      limit,
+      (await this.getOrderBooks(market, tickSize)).l2,
+      limit ?? 100,
     );
   }
 
-  private async getHybridBooks(
+  private async getOrderBooks(
     market: string,
     tickSize?: bigint | undefined,
-  ): Promise<{ l1: L1OrderBook; l2: L2OrderBook }> {
+  ): Promise<{ l1: idex.L1OrderBook; l2: idex.L2OrderBook }> {
     const appliedTickSize =
       tickSize || this.tickSizesByMarket.get(market) || BigInt(1);
 
-    return L2LimitOrderBookToHybridOrderBooks(
-      aggregateL2OrderBookAtTickSize(
-        await this.loadLevel2(market),
-        appliedTickSize,
-      ),
-      ORDER_BOOK_MAX_L2_LEVELS,
-      ORDER_BOOK_HYBRID_SLIPPAGE,
-      this.takerIdexFeeRate,
-      this.takerLiquidityProviderFeeRate,
-      true,
-      this.getMarketMinimum(market),
+    const l2 = aggregateL2OrderBookAtTickSize(
+      await this.loadLevel2(market),
       appliedTickSize,
     );
+
+    return { l1: L2toL1OrderBook(l2), l2 };
   }
 
-  private async applyOrderBookUpdates(market: string): Promise<void> {
+  private async applyOrderBookUpdates(market: string) {
     const updates = this.l2OrderBookUpdates.get(market);
     if (!updates) {
       return;
@@ -319,15 +296,11 @@ export class OrderBookRealTimeClient extends EventEmitter {
       // an expected next update has arrived
       else if (book.sequence + 1 === update.sequence) {
         updateL2Levels(book, update);
-      }
-      // the pool was updated (sequence does not increment)
-      else if (book.sequence === update.sequence) {
-        book.pool = update.pool;
       } else {
         // If an invalid update arrives, reset all data and synchronize anew
-        this.emit('disconnected');
+        this.emit(OrderBookRealTimeClientEvent.disconnected);
         this.emit(
-          'error',
+          OrderBookRealTimeClientEvent.error,
           new Error(
             `Missing l2 update sequence, current book is ${book.sequence} message was ${update.sequence}`,
           ),
@@ -339,67 +312,26 @@ export class OrderBookRealTimeClient extends EventEmitter {
         // eslint-disable-next-line no-await-in-loop
         await this.synchronizeFromRestApi();
 
-        this.emit('connected');
+        this.emit(OrderBookRealTimeClientEvent.connected);
 
         return;
       }
     }
+
     const afterL1 = L2toL1OrderBook(book);
 
     this.l1OrderBooks.set(market, L2toL1OrderBook(book));
+
     if (!L1Equal(beforeL1, afterL1)) {
-      this.emit('l1', market);
+      this.emit(OrderBookRealTimeClientEvent.l1, market);
     }
-    this.emit('l2', market);
+
+    this.emit(OrderBookRealTimeClientEvent.l2, market);
 
     this.l2OrderBookUpdates.delete(market);
   }
 
-  private applyTokenPriceUpdate(
-    message: WebSocketResponseTokenPriceLong,
-  ): void {
-    this.tokenPrices.set(
-      message.token,
-      message.price ? decimalToPip(message.price) : null,
-    );
-    const markets = this.marketsByAssetSymbol.get(message.token);
-    if (markets) {
-      for (const market of Array.from(markets.values())) {
-        this.emit('l1', market);
-        this.emit('l2', market);
-      }
-    }
-  }
-
-  private async loadFeesAndMinimums(): Promise<void> {
-    // Global fee rates only need to be loaded once as they are static and to allow for overriding
-    if (this.isFeesAndMinimumsLoaded) {
-      return;
-    }
-
-    const {
-      takerLiquidityProviderFeeRate,
-      takerIdexFeeRate,
-      takerTradeMinimum,
-    } = await this.restPublicClient.getExchangeInfo();
-    this.takerLiquidityProviderFeeRate = decimalToPip(
-      takerLiquidityProviderFeeRate,
-    );
-    this.takerIdexFeeRate = decimalToPip(takerIdexFeeRate);
-    this.takerTradeMinimum = multiplyPips(
-      ORDER_BOOK_FIRST_LEVEL_MULTIPLIER_IN_PIPS,
-      decimalToPip(takerTradeMinimum),
-    );
-
-    this.isFeesAndMinimumsLoaded = true;
-  }
-
-  private async synchronizeFromRestApi(): Promise<void> {
-    const sleep = (ms: number) => {
-      return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-      });
-    };
+  private async synchronizeFromRestApi() {
     let reconnectAttempt = 0;
 
     // Updates cannot be applied until successfully synchronized with the REST API, so keep trying
@@ -411,66 +343,59 @@ export class OrderBookRealTimeClient extends EventEmitter {
       try {
         // Load minimums and token prices first so synthetic orderbook calculations are accurate
         // eslint-disable-next-line no-await-in-loop
-        await Promise.all([
-          this.loadFeesAndMinimums(),
-          this.loadTokenPrices(),
-          this.loadTickSizes(),
-        ]);
+        await this.loadTickSizes();
 
         // eslint-disable-next-line no-await-in-loop
         await Promise.all([
           ...this.markets.map(async (market) => {
-            const l2 = await this.loadLevel2(market);
-            this.l2OrderBooks.set(market, l2);
-            this.emit('ready', market);
+            await this.loadLevel2(market);
+            this.emit(OrderBookRealTimeClientEvent.ready, market);
           }),
         ]);
 
         return;
       } catch (error) {
-        this.emit('error', error);
+        this.emit(OrderBookRealTimeClientEvent.error, error);
         // eslint-disable-next-line no-await-in-loop
         await sleep(backoffSeconds * 1000);
       }
     }
   }
 
-  private async loadLevel2(market: string): Promise<L2OrderBook> {
-    return (
-      this.l2OrderBooks.get(market) ||
-      restResponseToL2OrderBook(
-        await this.restPublicClient.getOrderBookLevel2(market, 1000, true),
-      )
-    );
-  }
+  private async loadLevel2(market: string) {
+    let l2 = this.l2OrderBooks.get(market);
 
-  private async loadTokenPrices(): Promise<void> {
-    const assets = await this.restPublicClient.getAssets();
-    for (const asset of assets) {
-      if (!this.tokenPrices.get(asset.symbol)) {
-        this.tokenPrices.set(
-          asset.symbol,
-          asset.maticPrice ? decimalToPip(asset.maticPrice) : null,
-        );
-      }
+    if (!l2) {
+      this.emit(OrderBookRealTimeClientEvent.sync, market);
+      l2 = restResponseToL2OrderBook(
+        await this.public.getOrderBookLevel2({
+          market,
+          limit: 1000,
+        }),
+      );
     }
+
+    this.l2OrderBooks.set(market, l2);
+    return l2;
   }
 
-  private async loadTickSizes(): Promise<void> {
+  private async loadTickSizes() {
     // Market tick sizes only need to be loaded once as they are effectively static
     if (this.isTickSizesLoaded) {
       return;
     }
 
-    const markets = await this.restPublicClient.getMarkets();
-    for (const market of markets) {
+    this.marketsResponse =
+      this.marketsResponse ?? (await this.public.getMarkets());
+
+    for (const market of this.marketsResponse) {
       this.tickSizesByMarket.set(market.market, decimalToPip(market.tickSize));
     }
 
     this.isTickSizesLoaded = true;
   }
 
-  private mapTokensToMarkets(): void {
+  private mapTokensToMarkets() {
     for (const market of this.markets) {
       const [baseSymbol, quoteSymbol] = market.split('-');
       const marketsByBase =
@@ -484,17 +409,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
     }
   }
 
-  private getMarketMinimum(market: string): bigint | null {
-    const quoteSymbol = market.split('-')[1];
-    const price = this.tokenPrices.get(quoteSymbol) || null;
-    return price ? (this.takerTradeMinimum * oneInPips) / price : null;
-  }
-
-  private resetInternalState(): void {
-    this.takerIdexFeeRate = BigInt(0);
-    this.takerLiquidityProviderFeeRate = BigInt(0);
-    this.takerTradeMinimum = BigInt(0);
-    this.tokenPrices.clear();
+  private resetInternalState() {
     this.l1OrderBooks.clear();
     this.l2OrderBooks.clear();
     this.l2OrderBookUpdates.clear();
@@ -502,7 +417,7 @@ export class OrderBookRealTimeClient extends EventEmitter {
 
   /* Connection management */
 
-  private setupInternalWebSocket(): void {
+  private setupInternalWebSocket() {
     if (!this.webSocketConnectionListenersConfigured) {
       this.webSocketClient.onConnect(this.webSocketHandleConnect.bind(this));
       this.webSocketClient.onDisconnect(
@@ -513,24 +428,22 @@ export class OrderBookRealTimeClient extends EventEmitter {
     }
   }
 
-  private subscribe(): void {
-    this.webSocketClient.subscribe([
-      { name: 'l2orderbook', markets: this.markets },
-    ]);
-    this.webSocketClient.subscribe([
-      { name: 'tokenprice', markets: this.markets },
-    ]);
+  private subscribe() {
+    this.webSocketClient.subscribePublic(
+      [{ name: SubscriptionNamePublic.l2orderbook }],
+      this.markets,
+    );
   }
 
-  private unsubscribe(): void {
-    this.webSocketClient.unsubscribe(['l2orderbook', 'tokenprice']);
+  private unsubscribe() {
+    this.webSocketClient.unsubscribe([SubscriptionNamePublic.l2orderbook]);
   }
 
   /* Event handlers */
 
   private async webSocketHandleConnect() {
     if (!this.webSocketResponseListenerConfigured) {
-      this.webSocketClient.onResponse(this.webSocketHandleResponse.bind(this));
+      this.webSocketClient.onMessage(this.webSocketHandleResponse.bind(this));
       this.webSocketResponseListenerConfigured = true;
     }
 
@@ -538,24 +451,25 @@ export class OrderBookRealTimeClient extends EventEmitter {
 
     await this.synchronizeFromRestApi();
 
-    this.emit('connected');
+    this.emit(OrderBookRealTimeClientEvent.connected);
   }
 
   private webSocketHandleDisconnect() {
     // Assume messages will be lost during disconnection and clear state. State will be re-synchronized again on reconnect
     this.resetInternalState();
 
-    this.emit('disconnected');
+    this.emit(OrderBookRealTimeClientEvent.disconnected);
   }
 
-  private webSocketHandleError(error: Error) {
-    this.emit('error', error);
+  private webSocketHandleError(error: Error | ErrorEvent) {
+    this.emit(
+      OrderBookRealTimeClientEvent.error,
+      error instanceof Error ? error : error.error,
+    );
   }
 
-  private async webSocketHandleResponse(
-    response: WebSocketResponse,
-  ): Promise<void> {
-    if (response.type === 'l2orderbook') {
+  private async webSocketHandleResponse(response: IDEXMessageEvent) {
+    if (response.type === MessageEventType.l2orderbook) {
       // accumulate L2 updates to be applied
       const updatesToApply =
         this.l2OrderBookUpdates.get(response.data.market) || [];
@@ -564,9 +478,11 @@ export class OrderBookRealTimeClient extends EventEmitter {
 
       await this.applyOrderBookUpdates(response.data.market);
     }
-
-    if (response.type === 'tokenprice') {
-      return this.applyTokenPriceUpdate(response.data);
-    }
   }
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }

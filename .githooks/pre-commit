@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -e # Causes this script to terminate if any command returns an error
+
+[[ -n $CI ]] || yarn run on:commit

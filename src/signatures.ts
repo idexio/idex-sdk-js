@@ -1,239 +1,438 @@
 import { ethers } from 'ethers';
 
-import * as constants from './constants';
+import * as constants from '#constants';
+import { assertNonceIsValid } from '#utils';
 
-import { LiquidityChangeType, LiquidityChangeOrigination } from './types/enums';
 import {
-  RestRequestAddLiquidity,
-  RestRequestOrder,
-  RestRequestOrderByBaseQuantity,
-  RestRequestOrderByQuoteQuantity,
-  RestRequestOrderWithPrice,
-  RestRequestOrderWithStopPrice,
-  RestRequestRemoveLiquidity,
-  RestRequestWithdrawal,
-  OrderType,
-  OrderSide,
-  OrderTimeInForce,
-  OrderSelfTradePrevention,
-  isWithdrawalByAssetSymbolRequest,
-  isWithdrawalByAssetAddressRequest,
-  RestRequestCancelOrderOrOrders,
+  OrderTypeSigEnum,
+  OrderSideSigEnum,
+  OrderTimeInForceSigEnum,
+  OrderSelfTradePreventionSigEnum,
+  OrderTriggerTypeSigEnum,
+} from '#types/enums/signature';
+import {
   isRestRequestCancelOrder,
   isRestRequestCancelOrders,
-  RestRequestAssociateWallet,
-  MultiverseChain,
-} from './types';
+  isRestRequestCancelOrdersByDelegatedKey,
+  isRestRequestCancelOrdersByMarket,
+} from '#types/rest/common/guards';
 
-/**
- * A function that accepts a string and returns a Promise resolving on its ECDSA signature
- *
- * @typedef {Function} MessageSigner
- */
-export type MessageSigner = (message: string) => Promise<string>;
+import type * as types from '#index';
 
-/**
- * Returns an ethers Wallet signer which takes a message and signs
- * it with the originally provided private key.
- *
- * @param {string} walletPrivateKey - The private key to use when signing any given messages
- * @returns {MessageSigner}
- *
- * @example
- * const signMessage = createPrivateKeyMessageSigner(myPrivateKey)
- * const signed = await signMessage(myMessageToSign)
- */
-export function createPrivateKeyMessageSigner(
+export type SignTypedData = (
+  domain: ethers.TypedDataDomain,
+  typeData: Record<string, Array<ethers.TypedDataField>>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value: Record<string, any>,
+) => Promise<string>;
+
+export function createPrivateKeyTypedDataSigner(
   walletPrivateKey: string,
-): MessageSigner {
-  return (message: string) =>
-    new ethers.Wallet(walletPrivateKey).signMessage(
-      ethers.utils.arrayify(message),
-    );
+): SignTypedData {
+  return (...parameters) =>
+    new ethers.Wallet(walletPrivateKey).signTypedData(...parameters);
 }
 
-// compatibility layer for previously documented method
-/**
- * @deprecated - use createPrivateKeyMessageSigner directly
- * @see {createPrivateKeyMessageSigner}
- */
-export const privateKeySigner = createPrivateKeyMessageSigner;
-
-function signatureHashVersion(
-  multiverseChain: MultiverseChain,
+export const getDomainSeparator = (
+  contractAddress: string,
+  chainId: number,
   sandbox: boolean,
-):
-  | typeof constants.ORDER_SIGNATURE_HASH_VERSION_MATIC
-  | typeof constants.ORDER_SIGNATURE_HASH_VERSION_MATIC_SANDBOX {
-  if (multiverseChain === 'matic') {
-    return sandbox
-      ? constants.ORDER_SIGNATURE_HASH_VERSION_MATIC_SANDBOX
-      : constants.ORDER_SIGNATURE_HASH_VERSION_MATIC;
-  }
-
-  throw new Error(`Invalid multiverse chain: ${multiverseChain}`);
-}
-
-export function createOrderSignature(
-  order: RestRequestOrder,
-  multiverseChain: MultiverseChain,
-  sandbox: boolean,
-): string {
-  const quantity =
-    (order as RestRequestOrderByBaseQuantity).quantity ||
-    (order as RestRequestOrderByQuoteQuantity).quoteOrderQuantity;
-  const isQuantityInQuote = !!(order as RestRequestOrderByQuoteQuantity)
-    .quoteOrderQuantity;
-
-  return solidityHashOfParams([
-    ['uint8', signatureHashVersion(multiverseChain, sandbox)],
-    ['uint128', uuidToUint8Array(order.nonce)],
-    ['address', order.wallet],
-    ['string', order.market],
-    ['uint8', OrderType[order.type]],
-    ['uint8', OrderSide[order.side]],
-    ['string', quantity],
-    ['bool', isQuantityInQuote],
-    ['string', (order as RestRequestOrderWithPrice).price || ''],
-    ['string', (order as RestRequestOrderWithStopPrice).stopPrice || ''],
-    ['string', order.clientOrderId || ''],
-    ['uint8', order.timeInForce ? OrderTimeInForce[order.timeInForce] : 0],
-    [
-      'uint8',
-      order.selfTradePrevention
-        ? OrderSelfTradePrevention[order.selfTradePrevention]
-        : 0,
-    ],
-    ['uint64', order.cancelAfter || 0],
-  ]);
-}
-
-type TypeValuePairings = {
-  string: string;
-  address: string;
-  uint128: Uint8Array;
-  uint8: number;
-  uint64: number;
-  uint256: string;
-  bool: boolean;
+) => {
+  return {
+    name: constants.EIP_712_DOMAIN_NAME,
+    version:
+      sandbox ?
+        constants.EIP_712_DOMAIN_VERSION_SANDBOX
+      : constants.EIP_712_DOMAIN_VERSION,
+    chainId,
+    verifyingContract: contractAddress,
+  } satisfies ethers.TypedDataDomain;
 };
 
-export function createCancelOrderSignature(
-  parameters: RestRequestCancelOrderOrOrders,
-): string {
+export const getWalletAssociationSignatureTypedData = (
+  data: types.RestRequestAssociateWallet,
+  contractAddress: string,
+  chainId: number,
+  sandbox: boolean,
+): Parameters<SignTypedData> => {
+  assertNonceIsValid(data.nonce);
+  return [
+    getDomainSeparator(contractAddress, chainId, sandbox),
+    {
+      WalletAssociation: [
+        { name: 'nonce', type: 'uint128' },
+        { name: 'wallet', type: 'address' },
+      ],
+    },
+    {
+      nonce: uuidToUint128(data.nonce),
+      wallet: data.wallet,
+    },
+  ];
+};
+
+export const getWalletUnlockSignatureTypedData = (
+  { nonce }: { nonce: string },
+  contractAddress: string,
+  chainId: number,
+  sandbox: boolean,
+): Parameters<SignTypedData> => {
+  assertNonceIsValid(nonce);
+  return [
+    getDomainSeparator(contractAddress, chainId, sandbox),
+    {
+      WalletUnlock: [
+        { name: 'nonce', type: 'uint128' },
+        { name: 'message', type: 'string' },
+      ],
+    },
+    {
+      nonce: uuidToUint128(nonce),
+      message: constants.WALLET_SIGNATURE_MESSAGE,
+    },
+  ];
+};
+
+export const getDelegatedKeyAuthorizationSignatureTypedData = (
+  { delegatedKey, nonce }: { delegatedKey: string; nonce: string },
+  contractAddress: string,
+  chainId: number,
+  sandbox: boolean,
+): Parameters<SignTypedData> => {
+  assertNonceIsValid(nonce);
+  return [
+    getDomainSeparator(contractAddress, chainId, sandbox),
+    {
+      DelegatedKeyAuthorization: [
+        { name: 'nonce', type: 'uint128' },
+        { name: 'delegatedPublicKey', type: 'address' },
+        { name: 'message', type: 'string' },
+      ],
+    },
+    {
+      nonce: uuidToUint128(nonce),
+      delegatedPublicKey: delegatedKey,
+      message: constants.WALLET_SIGNATURE_MESSAGE,
+    },
+  ];
+};
+
+export const getOrderSignatureTypedData = (
+  data: types.RestRequestOrder,
+  contractAddress: string,
+  chainId: number,
+  sandbox: boolean,
+): Parameters<SignTypedData> => {
+  assertNonceIsValid(data.nonce);
+
+  const emptyPipString = '0.00000000';
+
+  const { conditionalOrderId, triggerPrice, triggerType } = data;
+
+  return [
+    getDomainSeparator(contractAddress, chainId, sandbox),
+    {
+      Order: [
+        { name: 'nonce', type: 'uint128' },
+        { name: 'wallet', type: 'address' },
+        { name: 'marketSymbol', type: 'string' },
+        { name: 'orderType', type: 'uint8' },
+        { name: 'orderSide', type: 'uint8' },
+        { name: 'quantity', type: 'string' },
+        { name: 'limitPrice', type: 'string' },
+        { name: 'triggerPrice', type: 'string' },
+        { name: 'triggerType', type: 'uint8' },
+        { name: 'callbackRate', type: 'string' },
+        { name: 'conditionalOrderId', type: 'uint128' },
+        { name: 'isReduceOnly', type: 'bool' },
+        { name: 'timeInForce', type: 'uint8' },
+        { name: 'selfTradePrevention', type: 'uint8' },
+        { name: 'isLiquidationAcquisitionOnly', type: 'bool' },
+        { name: 'delegatedPublicKey', type: 'address' },
+        { name: 'clientOrderId', type: 'string' },
+      ],
+    },
+    {
+      nonce: uuidToUint128(data.nonce),
+      wallet: data.wallet,
+      marketSymbol: data.market,
+      orderType: OrderTypeSigEnum[data.type],
+      orderSide: OrderSideSigEnum[data.side],
+      quantity: data.quantity,
+      limitPrice: data.price || emptyPipString,
+      triggerPrice: triggerPrice || emptyPipString,
+      triggerType:
+        triggerType !== undefined ?
+          OrderTriggerTypeSigEnum[triggerType]
+        : OrderTriggerTypeSigEnum.none,
+      callbackRate: data.callbackRate || emptyPipString,
+      conditionalOrderId:
+        conditionalOrderId !== undefined ?
+          uuidToUint128(conditionalOrderId)
+        : 0,
+      isReduceOnly: !!data.reduceOnly,
+      timeInForce:
+        data.timeInForce ? OrderTimeInForceSigEnum[data.timeInForce] : 0,
+      selfTradePrevention:
+        data.selfTradePrevention ?
+          OrderSelfTradePreventionSigEnum[data.selfTradePrevention]
+        : 0,
+      isLiquidationAcquisitionOnly: data.isLiquidationAcquisitionOnly ?? false,
+      delegatedPublicKey: data.delegatedKey || ethers.ZeroAddress,
+      clientOrderId: data.clientOrderId || '',
+    },
+  ];
+};
+
+export const getOrderCancellationByClientIdSignatureTypedData = (
+  data: types.RestRequestCancelOrder,
+  contractAddress: string,
+  chainId: number,
+  sandbox: boolean,
+): Parameters<SignTypedData> => {
+  assertNonceIsValid(data.nonce);
+
+  return [
+    getDomainSeparator(contractAddress, chainId, sandbox),
+    {
+      OrderCancellationByClientId: [
+        { name: 'nonce', type: 'uint128' },
+        { name: 'wallet', type: 'address' },
+        { name: 'delegatedKey', type: 'address' },
+        { name: 'clientId', type: 'string' },
+      ],
+    },
+    {
+      nonce: uuidToUint128(data.nonce),
+      wallet: data.wallet,
+      delegatedKey: data.delegatedKey || ethers.ZeroAddress,
+      clientId: data.orderId,
+    },
+  ];
+};
+
+export const getOrderCancellationByOrderIdSignatureTypedData = (
+  data: types.RestRequestCancelOrder,
+  contractAddress: string,
+  chainId: number,
+  sandbox: boolean,
+): Parameters<SignTypedData> => {
+  assertNonceIsValid(data.nonce);
+
+  return [
+    getDomainSeparator(contractAddress, chainId, sandbox),
+    {
+      OrderCancellationByOrderId: [
+        { name: 'nonce', type: 'uint128' },
+        { name: 'wallet', type: 'address' },
+        { name: 'delegatedKey', type: 'address' },
+        { name: 'orderId', type: 'string' },
+      ],
+    },
+    {
+      nonce: uuidToUint128(data.nonce),
+      wallet: data.wallet,
+      delegatedKey: data.delegatedKey || ethers.ZeroAddress,
+      orderId: data.orderId,
+    },
+  ];
+};
+
+export const getOrderCancellationByDelegatedKeySignatureTypedData = (
+  data: types.RestRequestCancelOrdersByDelegatedKey,
+  contractAddress: string,
+  chainId: number,
+  sandbox: boolean,
+): Parameters<SignTypedData> => {
+  assertNonceIsValid(data.nonce);
+
+  return [
+    getDomainSeparator(contractAddress, chainId, sandbox),
+    {
+      OrderCancellationByDelegatedKey: [
+        { name: 'nonce', type: 'uint128' },
+        { name: 'wallet', type: 'address' },
+        { name: 'delegatedKey', type: 'address' },
+        { name: 'orderDelegatedKey', type: 'address' },
+      ],
+    },
+    {
+      nonce: uuidToUint128(data.nonce),
+      wallet: data.wallet,
+      delegatedKey: data.delegatedKey || ethers.ZeroAddress,
+      orderDelegatedKey: data.orderDelegatedKey,
+    },
+  ];
+};
+
+export const getOrderCancellationByMarketSymbolSignatureTypedData = (
+  data: types.RestRequestCancelOrdersByMarket,
+  contractAddress: string,
+  chainId: number,
+  sandbox: boolean,
+): Parameters<SignTypedData> => {
+  assertNonceIsValid(data.nonce);
+
+  return [
+    getDomainSeparator(contractAddress, chainId, sandbox),
+    {
+      OrderCancellationByMarketSymbol: [
+        { name: 'nonce', type: 'uint128' },
+        { name: 'wallet', type: 'address' },
+        { name: 'delegatedKey', type: 'address' },
+        { name: 'marketSymbol', type: 'string' },
+      ],
+    },
+    {
+      nonce: uuidToUint128(data.nonce),
+      wallet: data.wallet,
+      delegatedKey: data.delegatedKey || ethers.ZeroAddress,
+      marketSymbol: data.market,
+    },
+  ];
+};
+
+export const getOrderCancellationByWalletSignatureTypedData = (
+  data: types.RestRequestCancelOrders,
+  contractAddress: string,
+  chainId: number,
+  sandbox: boolean,
+): Parameters<SignTypedData> => {
+  assertNonceIsValid(data.nonce);
+
+  return [
+    getDomainSeparator(contractAddress, chainId, sandbox),
+    {
+      OrderCancellationByWallet: [
+        { name: 'nonce', type: 'uint128' },
+        { name: 'wallet', type: 'address' },
+        { name: 'delegatedKey', type: 'address' },
+      ],
+    },
+    {
+      nonce: uuidToUint128(data.nonce),
+      wallet: data.wallet,
+      delegatedKey: data.delegatedKey || ethers.ZeroAddress,
+    },
+  ];
+};
+
+export const getOrderCancellationSignatureTypedData = (
+  data: types.RestRequestCancelOrderOrOrders,
+  contractAddress: string,
+  chainId: number,
+  sandbox: boolean,
+): Parameters<SignTypedData> => {
+  assertNonceIsValid(data.nonce);
+
   // Validate either single order or multiple orders
-  if (
-    !isRestRequestCancelOrder(parameters) &&
-    !isRestRequestCancelOrders(parameters)
-  ) {
+  if (!isRestRequestCancelOrder(data) && !isRestRequestCancelOrders(data)) {
     throw new Error(
-      'Cancel orders may specify at most one of orderId or market',
+      'Cancel orders may specify exactly ONE of: orderDelegatedKey, orderId, or market.',
     );
   }
 
-  return solidityHashOfParams([
-    ['uint128', uuidToUint8Array(parameters.nonce)],
-    ['address', parameters.wallet],
-    ['string', isRestRequestCancelOrder(parameters) ? parameters.orderId : ''],
-    [
-      'string',
-      (isRestRequestCancelOrders(parameters) ? parameters.market : '') ?? '',
-    ],
-  ]);
-}
-
-export function createWithdrawalSignature(
-  withdrawal: RestRequestWithdrawal,
-): string {
-  if (
-    !isWithdrawalByAssetSymbolRequest(withdrawal) &&
-    !isWithdrawalByAssetAddressRequest(withdrawal)
-  ) {
-    throw new Error(
-      'Withdrawal must specify exactly one of asset or assetContractAddress',
+  if (isRestRequestCancelOrder(data)) {
+    return data.orderId.startsWith('client:') ?
+        getOrderCancellationByClientIdSignatureTypedData(
+          data,
+          contractAddress,
+          chainId,
+          sandbox,
+        )
+      : getOrderCancellationByOrderIdSignatureTypedData(
+          data,
+          contractAddress,
+          chainId,
+          sandbox,
+        );
+  }
+  if (isRestRequestCancelOrdersByDelegatedKey(data)) {
+    return getOrderCancellationByDelegatedKeySignatureTypedData(
+      data,
+      contractAddress,
+      chainId,
+      sandbox,
     );
   }
-
-  return solidityHashOfParams([
-    ['uint128', uuidToUint8Array(withdrawal.nonce)],
-    ['address', withdrawal.wallet],
-    isWithdrawalByAssetSymbolRequest(withdrawal)
-      ? ['string', withdrawal.asset]
-      : ['address', withdrawal.assetContractAddress],
-    ['string', withdrawal.quantity],
-    ['bool', true], // Auto-dispatch
-  ]);
-}
-
-export function createAddLiquiditySignature(
-  addLiquidity: RestRequestAddLiquidity,
-  multiverseChain: MultiverseChain,
-  sandbox: boolean,
-): string {
-  return solidityHashOfParams([
-    ['uint8', signatureHashVersion(multiverseChain, sandbox)],
-    ['uint8', LiquidityChangeType.Addition],
-    ['uint8', LiquidityChangeOrigination.OffChain],
-    ['uint128', uuidToUint8Array(addLiquidity.nonce)],
-    ['address', addLiquidity.wallet],
-    ['address', addLiquidity.tokenA],
-    ['address', addLiquidity.tokenB],
-    ['uint256', addLiquidity.amountADesired],
-    ['uint256', addLiquidity.amountBDesired],
-    ['uint256', addLiquidity.amountAMin],
-    ['uint256', addLiquidity.amountBMin],
-    ['address', addLiquidity.to],
-    ['uint256', 0], // off chain deadline
-  ]);
-}
-
-export function createRemoveLiquiditySignature(
-  removeLiquidity: RestRequestRemoveLiquidity,
-  multiverseChain: MultiverseChain,
-  sandbox: boolean,
-): string {
-  return solidityHashOfParams([
-    ['uint8', signatureHashVersion(multiverseChain, sandbox)],
-    ['uint8', LiquidityChangeType.Removal],
-    ['uint8', LiquidityChangeOrigination.OffChain],
-    ['uint128', uuidToUint8Array(removeLiquidity.nonce)],
-    ['address', removeLiquidity.wallet],
-    ['address', removeLiquidity.tokenA],
-    ['address', removeLiquidity.tokenB],
-    ['uint256', removeLiquidity.liquidity],
-    ['uint256', removeLiquidity.amountAMin],
-    ['uint256', removeLiquidity.amountBMin],
-    ['address', removeLiquidity.to],
-    ['uint256', 0], // off chain deadline
-  ]);
-}
-
-/**
- * Generates the signature for the associate wallet request
- * @private
- */
-export function createAssociateWalletSignature(
-  associate: RestRequestAssociateWallet,
-): string {
-  if (!associate.wallet || !associate.nonce) {
-    throw new Error('Associate Wallet must provide a wallet and nonce');
+  if (isRestRequestCancelOrdersByMarket(data)) {
+    return getOrderCancellationByMarketSymbolSignatureTypedData(
+      data,
+      contractAddress,
+      chainId,
+      sandbox,
+    );
   }
+  return getOrderCancellationByWalletSignatureTypedData(
+    data,
+    contractAddress,
+    chainId,
+    sandbox,
+  );
+};
 
-  return solidityHashOfParams([
-    ['uint128', uuidToUint8Array(associate.nonce)],
-    ['address', associate.wallet],
-  ]);
+export function getWithdrawalSignatureTypedData(
+  data: types.RestRequestWithdrawFunds,
+  contractAddress: string,
+  chainId: number,
+  sandbox: boolean,
+): Parameters<SignTypedData> {
+  assertNonceIsValid(data.nonce);
+
+  return [
+    getDomainSeparator(contractAddress, chainId, sandbox),
+    {
+      Withdrawal: [
+        { name: 'nonce', type: 'uint128' },
+        { name: 'wallet', type: 'address' },
+        { name: 'quantity', type: 'string' },
+        { name: 'maximumGasFee', type: 'string' },
+        { name: 'bridgeAdapter', type: 'address' },
+        { name: 'bridgeAdapterPayload', type: 'bytes' },
+      ],
+    },
+    {
+      nonce: uuidToUint128(data.nonce),
+      wallet: data.wallet,
+      quantity: data.quantity,
+      maximumGasFee: data.maximumGasFee,
+      bridgeAdapter: data.bridgeAdapterAddress,
+      bridgeAdapterPayload: data.bridgeAdapterPayload,
+    },
+  ];
 }
 
-function solidityHashOfParams<K extends keyof TypeValuePairings>(
-  params: Array<[K, TypeValuePairings[K]]>,
-): string {
-  const fields = params.map((param) => param[0]);
-  const values = params.map((param) => param[1]);
+export function getLeverageSettingsSignatureTypedData(
+  data: types.RestRequestSetLeverage,
+  contractAddress: string,
+  chainId: number,
+  sandbox: boolean,
+): Parameters<SignTypedData> {
+  assertNonceIsValid(data.nonce);
 
-  return ethers.utils.solidityKeccak256(fields, values);
+  return [
+    getDomainSeparator(contractAddress, chainId, sandbox),
+    {
+      LeverageSettings: [
+        { name: 'nonce', type: 'uint128' },
+        { name: 'wallet', type: 'address' },
+        { name: 'marketSymbol', type: 'string' },
+        { name: 'leverage', type: 'string' },
+      ],
+    },
+    {
+      nonce: uuidToUint128(data.nonce),
+      wallet: data.wallet,
+      marketSymbol: data.market,
+      leverage: data.leverage ?? '', // Leverage override value, blank if removing override
+    },
+  ];
 }
 
-function uuidToUint8Array(uuid: string): Uint8Array {
-  return ethers.utils.arrayify(`0x${uuid.replace(/-/g, '')}`);
+function uuidToHexString(uuid: string): string {
+  return `0x${uuid.replace(/-/g, '')}`;
+}
+
+function uuidToUint128(uuid: string): bigint {
+  return BigInt.asUintN(128, BigInt(uuidToHexString(uuid)));
 }

@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 
 export const exchangeDecimals = 8;
 export const oneInPips = BigInt(10 ** exchangeDecimals);
@@ -9,7 +9,7 @@ export const assetUnitsToDecimal = function assetUnitsToDecimal(
   decimals: number,
 ): string {
   const bn = new BigNumber(assetUnits.toString());
-  return bn.shiftedBy(decimals * -1).toFixed(decimals);
+  return bn.shiftedBy(decimals * -1).toFixed(exchangeDecimals);
 };
 
 export const decimalToPip = function decimalToPip(decimal: string): bigint {

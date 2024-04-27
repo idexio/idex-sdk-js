@@ -1,3 +1,3 @@
-export * from './rest';
-export * from './orderBook';
-export * from './webSocket';
+export * from '#client/rest/index';
+export * from '#client/orderBook/index';
+export * from '#client/webSocket/index';

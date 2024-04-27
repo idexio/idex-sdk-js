@@ -1,25 +1,19 @@
-import BigNumber from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 
-import {
-  dividePips,
-  oneInPips,
-  MAX_64_BIT_INT,
-  multiplyPips,
-  pipToDecimal,
-  squareRootBigInt,
-} from '../pipmath';
+import * as pipmath from '#pipmath';
 
-import {
-  BestAvailablePriceLevels,
-  L1OrderBook,
+import { OrderSide } from '#types/enums/request';
+
+import type {
   L2OrderBook,
+  OrderBookLevelL1,
   OrderBookLevelL2,
-  PoolReserveQuantities,
-  PriceLevelQuantities,
-  SyntheticL2OrderBook,
-} from '../types';
+} from '#types/orderBook';
 
-import { L2toL1OrderBook } from './utils';
+/**
+ * Price and Size values form the {@link OrderBookLevelL1} type
+ */
+export type PriceAndSize = Pick<OrderBookLevelL1, 'price' | 'size'>;
 
 export const asksTickRoundingMode = BigNumber.ROUND_UP;
 
@@ -31,37 +25,6 @@ export const nullLevel: OrderBookLevelL2 = {
   numOrders: 0,
   type: 'limit',
 };
-
-/**
- * Helper function to calculate gross base available at a bid price
- * see: {quantitiesAvailableFromPoolAtBidPrice}
- */
-export function calculateGrossBaseQuantity(
-  baseAssetQuantity: bigint,
-  quoteAssetQuantity: bigint,
-  targetPrice: bigint,
-  idexFeeRate: bigint,
-  poolFeeRate: bigint,
-): bigint {
-  validateSyntheticPriceLevelInputs(
-    baseAssetQuantity,
-    quoteAssetQuantity,
-    targetPrice,
-    false,
-  );
-
-  const poolFee =
-    oneInPips - (oneInPips * poolFeeRate) / (oneInPips - idexFeeRate);
-  const v0 = poolFee * baseAssetQuantity + oneInPips * baseAssetQuantity;
-  const v1 =
-    baseAssetQuantity * baseAssetQuantity -
-    (oneInPips * baseAssetQuantity * quoteAssetQuantity) / targetPrice;
-  const numerator =
-    squareRootBigInt(v0 * v0 - BigInt(4) * poolFee * v1 * oneInPips) - v0;
-  const denominator = BigInt(2) * poolFee * (oneInPips - idexFeeRate);
-
-  return (numerator * oneInPips) / denominator;
-}
 
 /**
  * Helper function to convert from quote to base quantities
@@ -77,44 +40,6 @@ export function calculateGrossBaseValueOfBuyQuantities(
     (baseAssetQuantity * quoteAssetQuantity) /
       (quoteAssetQuantity + grossQuoteQuantity)
   );
-}
-
-/**
- * Helper function to calculate gross quote available at an ask price
- * see: {quantitiesAvailableFromPoolAtAskPrice}
- */
-export function calculateGrossQuoteQuantity(
-  baseAssetQuantity: bigint,
-  quoteAssetQuantity: bigint,
-  targetPrice: bigint,
-  idexFeeRate: bigint,
-  poolFeeRate: bigint,
-): bigint {
-  validateSyntheticPriceLevelInputs(
-    baseAssetQuantity,
-    quoteAssetQuantity,
-    targetPrice,
-    true,
-  );
-
-  const poolFee =
-    oneInPips - (oneInPips * poolFeeRate) / (oneInPips - idexFeeRate);
-  const v0 = oneInPips * quoteAssetQuantity * (poolFee + oneInPips);
-  const v1 =
-    quoteAssetQuantity *
-    quoteAssetQuantity *
-    (poolFee * poolFee +
-      BigInt(2) * poolFee * oneInPips +
-      oneInPips * oneInPips);
-  const v2 =
-    quoteAssetQuantity *
-    (oneInPips * quoteAssetQuantity - baseAssetQuantity * targetPrice);
-  const numerator =
-    squareRootBigInt((v1 - BigInt(4) * poolFee * v2) * oneInPips * oneInPips) -
-    v0;
-  const denominator =
-    BigInt(2) * poolFee * oneInPips - BigInt(2) * poolFee * idexFeeRate;
-  return numerator / denominator;
 }
 
 /**
@@ -134,452 +59,143 @@ export function calculateGrossQuoteValueOfSellQuantities(
 }
 
 /**
- * Given a taker order size expressed in quote, how much base is received from the pool
+ * Determines the liquidity available in the given order book (asks or bids)
+ * for a given taker quantity (which may be expressed in base or quote asset)
+ * and price (optional).
+ * In other words, it performs very basic order matching to provide an estimate
+ * of the base and quote quantities with which a taker order of the given
+ * size (quantity) and limit price (optional) would be filled.
  *
- * see: {L1orL2BestAvailablePrices}
+ * The taker order may represent a limit or a market order: If a limit price is
+ * given, it is matched as a limit order (which necessitates specifying whether
+ * it's a buy or a sell). Otherwise it is matched as a market order.
+ *
+ * The provided list of orders or price levels (asks or bids) is expected to be
+ * sorted by best price (ascending for asks (lowest first), descending for bids
+ * (highest first)). Multiple orders per price level are supported.
+ *
+ * To support high-precision calculations in which pip-precision is
+ * insufficient, the result may optionally be returned in double-pip precision;
+ * the returned values then represent numbers with 16 decimals instead of 8.
+ *
+ * @param returnInDoublePipPrecision - Defaults to false
  */
-export function calculateBaseQuantityOut(
-  baseAssetQuantity: bigint,
-  quoteAssetQuantity: bigint,
-  grossQuoteQuantityIn: bigint,
-  idexFeeRate: bigint,
-  poolFeeRate: bigint,
-): bigint {
-  if (quoteAssetQuantity === BigInt(0) || grossQuoteQuantityIn === BigInt(0)) {
-    return BigInt(0);
+export function calculateGrossFillQuantities(
+  makerSideOrders: Iterable<PriceAndSize>,
+  takerOrder: {
+    side: OrderSide;
+    quantity: bigint;
+    isQuantityInQuote: boolean;
+    limitPrice?: bigint;
+  },
+  returnInDoublePipPrecision = false,
+): {
+  baseQuantity: bigint;
+  quoteQuantity: bigint;
+} {
+  const takerQuantity2p = takerOrder.quantity * pipmath.oneInPips;
+
+  let filledBaseQty2p = BigInt(0);
+  let filledQuoteQty2p = BigInt(0);
+
+  const makeReturnValue = (): {
+    baseQuantity: bigint;
+    quoteQuantity: bigint;
+  } => {
+    if (returnInDoublePipPrecision) {
+      return {
+        baseQuantity: filledBaseQty2p,
+        quoteQuantity: filledQuoteQty2p,
+      };
+    }
+    return {
+      baseQuantity: filledBaseQty2p / pipmath.oneInPips,
+      quoteQuantity: filledQuoteQty2p / pipmath.oneInPips,
+    };
+  };
+
+  for (const makerOrder of makerSideOrders) {
+    if (!doOrdersMatch(makerOrder, takerOrder)) {
+      return makeReturnValue();
+    }
+    const maxTakerQuantity2p =
+      takerOrder.isQuantityInQuote ?
+        takerQuantity2p - filledQuoteQty2p
+      : takerQuantity2p - filledBaseQty2p;
+
+    const tradeQuantities = determineTradeQuantities(
+      makerOrder,
+      maxTakerQuantity2p,
+      takerOrder.isQuantityInQuote,
+    );
+    if (
+      tradeQuantities.baseQuantity2p === BigInt(0) ||
+      tradeQuantities.quoteQuantity2p === BigInt(0)
+    ) {
+      return makeReturnValue();
+    }
+    filledBaseQty2p += tradeQuantities.baseQuantity2p;
+    filledQuoteQty2p += tradeQuantities.quoteQuantity2p;
   }
-
-  const numerator = baseAssetQuantity * quoteAssetQuantity * oneInPips;
-  const denominator =
-    quoteAssetQuantity * oneInPips +
-    grossQuoteQuantityIn * (oneInPips - idexFeeRate - poolFeeRate);
-
-  let quotient = numerator / denominator;
-  if (quotient * denominator !== numerator) {
-    quotient += BigInt(1);
-  }
-
-  return baseAssetQuantity - quotient;
+  return makeReturnValue();
 }
 
 /**
- * Given a taker order size expressed in base, how much quote is received from the pool
+ * Operates in double-pip precision ("2p") (16 decimals)
  *
- * see: {L1orL2BestAvailablePrices}
+ * @private
  */
-export function calculateQuoteQuantityOut(
-  baseAssetQuantity: bigint,
-  quoteAssetQuantity: bigint,
-  grossBaseQuantityIn: bigint,
-  idexFeeRate: bigint,
-  poolFeeRate: bigint,
-): bigint {
-  if (baseAssetQuantity === BigInt(0) || grossBaseQuantityIn === BigInt(0)) {
-    return BigInt(0);
-  }
-  /**
-   * The result needs to be rounded down to prevent the pool's constant
-   * product from decreasing, ie. the second part of the subtraction (the
-   * division) needs to be rounded up.
-   */
-  const numerator = baseAssetQuantity * quoteAssetQuantity * oneInPips;
-  const denominator =
-    baseAssetQuantity * oneInPips +
-    grossBaseQuantityIn * (oneInPips - idexFeeRate - poolFeeRate);
+function determineTradeQuantities(
+  makerOrder: PriceAndSize,
+  maxTakerQuantity2p: bigint,
+  isMaxTakerQuantityInQuote: boolean,
+): {
+  baseQuantity2p: bigint;
+  quoteQuantity2p: bigint;
+} {
+  const makerQuantity2p = makerOrder.size * pipmath.oneInPips;
 
-  let quotient = numerator / denominator;
-  if (quotient * denominator !== numerator) {
-    quotient += BigInt(1);
-  }
-
-  return quoteAssetQuantity - quotient;
-}
-
-/**
- * Generates a synthetic orderbook consisting of price levels for pool liquidity only
- *
- * @param {bigint} baseAssetQuantity - pool reserve in base asset, must be at least 1.0 expressed in pips (10^-8)
- * @param {bigint} quoteAssetQuantity - pool reserve in quote asset, must be at least 1.0 expressed in pips (10^-8)
- * @param {number} visibleLevels - how many ask and bid price levels to generate (of each)
- * @param {number} visibleSlippage - how much slippage per price level, in 1/1000th of a percent (100 = 0.1%)
- * @param {bigint} [idexFeeRate] - the idex fee rate to use for calculations (query /v1/exchange for current global setting)
- * @param {bigint} [poolFeeRate] - the liquidity pool fee rate to use for calculations (query /v1/exchange for current global setting)
- * @param {number} [tickSize=1] - minimum price movement expressed in pips (10^-8)
- *
- * @returns {SyntheticL2OrderBook} - a level 2 order book with synthetic price levels only
- */
-export function calculateSyntheticPriceLevels(
-  baseAssetQuantity: bigint,
-  quoteAssetQuantity: bigint,
-  visibleLevels: number,
-  visibleSlippage: number,
-  idexFeeRate = BigInt(0),
-  poolFeeRate = BigInt(0),
-  tickSize = BigInt(1),
-): SyntheticL2OrderBook {
-  const unadjustedPoolPrice = dividePips(quoteAssetQuantity, baseAssetQuantity);
-  const poolPrice = adjustPriceToTickSize(unadjustedPoolPrice, tickSize);
-
-  // Calculate price slippage per level respecting tick size
-  let priceSlippagePerLevel = adjustPriceToTickSize(
-    (poolPrice * BigInt(visibleSlippage)) / BigInt(100000),
-    tickSize,
-  );
-  // If the tick size is too large compared to the price to allow for the specified slippage,
-  // use the tick size itself as the slippage
-  if (priceSlippagePerLevel < tickSize) {
-    priceSlippagePerLevel = tickSize;
-  }
-
-  const asks: OrderBookLevelL2[] = [];
-  const bids: OrderBookLevelL2[] = [];
-
-  let previousAskQuantityInBase = BigInt(0);
-  let previousBidQuantityInBase = BigInt(0);
-
-  for (let level = 1; level <= visibleLevels; level += 1) {
-    const askPrice = poolPrice + BigInt(level) * priceSlippagePerLevel;
-
-    const {
-      grossBase: askQuantityInBase,
-    } = quantitiesAvailableFromPoolAtAskPrice(
-      baseAssetQuantity,
-      quoteAssetQuantity,
-      askPrice,
-      idexFeeRate,
-      poolFeeRate,
+  // Limit by base
+  const fillBaseQty2p =
+    isMaxTakerQuantityInQuote ? makerQuantity2p : (
+      pipmath.minBigInt(maxTakerQuantity2p, makerQuantity2p)
     );
 
-    asks[level - 1] = {
-      price: askPrice,
-      size: askQuantityInBase - previousAskQuantityInBase,
-      numOrders: 0,
-      type: 'pool',
-    };
+  const fillQuoteQty2p = pipmath.multiplyPips(fillBaseQty2p, makerOrder.price);
 
-    const bidPrice = poolPrice - BigInt(level) * priceSlippagePerLevel;
-
-    if (bidPrice > BigInt(0)) {
-      const {
-        grossBase: bidQuantityInBase,
-      } = quantitiesAvailableFromPoolAtBidPrice(
-        baseAssetQuantity,
-        quoteAssetQuantity,
-        bidPrice,
-        idexFeeRate,
-        poolFeeRate,
-      );
-
-      bids[level - 1] = {
-        price: bidPrice,
-        size: bidQuantityInBase - previousBidQuantityInBase,
-        numOrders: 0,
-        type: 'pool',
-      };
-
-      previousBidQuantityInBase = bidQuantityInBase;
-    }
-
-    previousAskQuantityInBase = askQuantityInBase;
-  }
-  return {
-    asks,
-    bids,
-    pool: {
-      baseReserveQuantity: baseAssetQuantity,
-      quoteReserveQuantity: quoteAssetQuantity,
-    },
-  };
-}
-
-/**
- * Recalculate price level quantities for a book previously sorted with {sortAndMergeLevelsUnadjusted}
- *
- * @param {L2OrderBook} orderbook - an unadjusted level 2 order book as returned by {sortAndMergeLevelsUnadjusted}
- * @param {bigint} idexFeeRate - idex fee rate to use in pool quantity calculations
- * @param {bigint} poolFeeRate - pool fee rate to use in pool quantity calculations
- *
- * @returns {L2OrderBook} - the recalculated level 2 order book
- */
-export function recalculateHybridLevelAmounts(
-  orderbook: L2OrderBook,
-  idexFeeRate: bigint,
-  poolFeeRate: bigint,
-): L2OrderBook {
-  if (!orderbook.pool) {
-    return orderbook;
-  }
-  // sanity for empty order books (which may list a "0" price level)
-  while (orderbook.asks.length && orderbook.asks[0].price === BigInt(0)) {
-    orderbook.asks.shift();
-  }
-
-  while (orderbook.bids.length && orderbook.bids[0].price === BigInt(0)) {
-    orderbook.bids.shift();
-  }
-
-  let prevAskLevel = {
-    price: BigInt(0),
-    size: BigInt(0),
-    type: 'pool',
-  };
-
-  for (const level of orderbook.asks) {
-    // empty asks may be represented this way
-    if (level.price === BigInt(0)) {
-      break;
-    }
-
-    // limit levels always accrue pool liquidity from the previous level
-    if (level.type === 'limit') {
-      level.size =
-        level.size +
-        quantitiesAvailableFromPoolAtAskPrice(
-          orderbook.pool.baseReserveQuantity,
-          orderbook.pool.quoteReserveQuantity,
-          level.price,
-          idexFeeRate,
-          poolFeeRate,
-        ).grossBase -
-        (prevAskLevel.price
-          ? quantitiesAvailableFromPoolAtAskPrice(
-              orderbook.pool.baseReserveQuantity,
-              orderbook.pool.quoteReserveQuantity,
-              prevAskLevel.price,
-              idexFeeRate,
-              poolFeeRate,
-            ).grossBase
-          : BigInt(0));
-    }
-
-    // this pool level was previously subdivided
-    if (level.type === 'pool' && prevAskLevel.type !== 'pool') {
-      level.size =
-        quantitiesAvailableFromPoolAtAskPrice(
-          orderbook.pool.baseReserveQuantity,
-          orderbook.pool.quoteReserveQuantity,
-          level.price,
-          idexFeeRate,
-          poolFeeRate,
-        ).grossBase -
-        quantitiesAvailableFromPoolAtAskPrice(
-          orderbook.pool.baseReserveQuantity,
-          orderbook.pool.quoteReserveQuantity,
-          prevAskLevel.price,
-          idexFeeRate,
-          poolFeeRate,
-        ).grossBase;
-    }
-    prevAskLevel = level;
-  }
-
-  let prevBidLevel = {
-    price: BigInt(0),
-    size: BigInt(0),
-    type: 'pool',
-  };
-
-  for (const level of orderbook.bids) {
-    // empty bids may be represented this way
-    if (level.price === BigInt(0)) {
-      break;
-    }
-
-    // limit levels always accrue pool liquidity from the previous level
-    if (level.type === 'limit') {
-      level.size =
-        level.size +
-        quantitiesAvailableFromPoolAtBidPrice(
-          orderbook.pool.baseReserveQuantity,
-          orderbook.pool.quoteReserveQuantity,
-          level.price,
-          idexFeeRate,
-          poolFeeRate,
-        ).grossBase -
-        (prevBidLevel.price
-          ? quantitiesAvailableFromPoolAtBidPrice(
-              orderbook.pool.baseReserveQuantity,
-              orderbook.pool.quoteReserveQuantity,
-              prevBidLevel.price,
-              idexFeeRate,
-              poolFeeRate,
-            ).grossBase
-          : BigInt(0));
-    }
-
-    // this pool level was previously subdivided
-    if (level.type === 'pool' && prevBidLevel.type !== 'pool') {
-      level.size =
-        quantitiesAvailableFromPoolAtBidPrice(
-          orderbook.pool.baseReserveQuantity,
-          orderbook.pool.quoteReserveQuantity,
-          level.price,
-          idexFeeRate,
-          poolFeeRate,
-        ).grossBase -
-        (prevBidLevel.price
-          ? quantitiesAvailableFromPoolAtBidPrice(
-              orderbook.pool.baseReserveQuantity,
-              orderbook.pool.quoteReserveQuantity,
-              prevBidLevel.price,
-              idexFeeRate,
-              poolFeeRate,
-            ).grossBase
-          : BigInt(0));
-    }
-    prevBidLevel = level;
-  }
-
-  return orderbook;
-}
-
-/**
- * Combines limit orders and synthetic price levels into an intermediate sorted state
- * IMPORTANT: this function does not update price level quantities after merging
- *
- * @param {OrderBookLevelL2[]} limitOrderLevels - a level 2 orderbook with only limit orders
- * @param {OrderBookLevelL2[]} syntheticLevels - a level 2 orderbook with only synthetic orders
- * @param {(a: OrderBookLevelL2, b: OrderBookLevelL2) => boolean} isBefore - comparison function for sorting price levels
- *
- * @returns {OrderBookLevelL2[]} - a level 2 order book with synthetic price levels only
- */
-
-export function sortAndMergeLevelsUnadjusted(
-  limitOrderLevels: OrderBookLevelL2[],
-  syntheticLevels: OrderBookLevelL2[],
-  isBefore: (a: OrderBookLevelL2, b: OrderBookLevelL2) => boolean,
-): OrderBookLevelL2[] {
-  const c: OrderBookLevelL2[] = [];
-  while (limitOrderLevels.length && syntheticLevels.length) {
-    if (limitOrderLevels[0].price === syntheticLevels[0].price) {
-      // we can drop synthetic levels that match limit orders
-      // the quantities will be recalculated
-      c.push(limitOrderLevels[0]);
-      limitOrderLevels.shift();
-      syntheticLevels.shift();
-    } else if (isBefore(limitOrderLevels[0], syntheticLevels[0])) {
-      // a[0] comes first
-      c.push(limitOrderLevels[0]);
-      limitOrderLevels.shift();
-    } else {
-      // b[0] comes first
-      c.push(syntheticLevels[0]);
-      syntheticLevels.shift();
-    }
-  }
-  return c.concat(limitOrderLevels).concat(syntheticLevels);
-}
-
-/**
- * Helper function to calculate the asset quantities available at a given price level (pool liquidity only)
- *
- * @param {bigint} baseAssetQuantity - pool reserve in base asset, must be at least 1.0 expressed in pips (10^-8)
- * @param {bigint} quoteAssetQuantity - pool reserve in quote asset, must be at least 1.0 expressed in pips (10^-8)
- * @param {bigint} askPrice - the ask price level to calculate quantities for
- * @param {bigint} [idexFeeRate] - the idex fee rate to use for calculations (query /v1/exchange for current global setting)
- * @param {bigint} [poolFeeRate] - the liquidity pool fee rate to use for calculations (query /v1/exchange for current global setting)
- *
- * @returns {PriceLevelQuantities} - a level 2 order book with synthetic price levels only
- */
-export function quantitiesAvailableFromPoolAtAskPrice(
-  baseAssetQuantity: bigint,
-  quoteAssetQuantity: bigint,
-  askPrice: bigint,
-  idexFeeRate: bigint,
-  poolFeeRate: bigint,
-): PriceLevelQuantities {
-  // if a limit order is equal to the pool price, the pool does not contribute
-  if (askPrice === dividePips(quoteAssetQuantity, baseAssetQuantity)) {
+  // Limit by quote
+  if (isMaxTakerQuantityInQuote && maxTakerQuantity2p < fillQuoteQty2p) {
     return {
-      grossBase: BigInt(0),
-      grossQuote: BigInt(0),
+      // Reduce base proportionally to reduction of fillQuoteQty2p
+      baseQuantity2p: (fillBaseQty2p * maxTakerQuantity2p) / fillQuoteQty2p,
+      quoteQuantity2p: maxTakerQuantity2p,
     };
   }
-
-  const grossQuote = calculateGrossQuoteQuantity(
-    baseAssetQuantity,
-    quoteAssetQuantity,
-    askPrice,
-    idexFeeRate,
-    poolFeeRate,
-  );
-
-  const idexFee = multiplyPips(grossQuote, idexFeeRate);
-  const poolFee = multiplyPips(grossQuote, poolFeeRate);
-
-  let netQuote =
-    (grossQuote * (oneInPips - idexFeeRate - poolFeeRate)) / oneInPips;
-
-  const baseOut =
-    baseAssetQuantity -
-    (baseAssetQuantity * quoteAssetQuantity) / (quoteAssetQuantity + netQuote);
-
-  // new pool balances, including the retained pool fee
-  const resultingBase = baseAssetQuantity - baseOut;
-  const resultingQuote = quoteAssetQuantity + poolFee + netQuote;
-
-  // fix quote quantity for constant pricing
-  const resultingPrice = dividePips(resultingQuote, resultingBase);
-  if (resultingPrice < askPrice) {
-    netQuote += multiplyPips(askPrice, resultingBase, true) - resultingQuote;
-  } else if (resultingPrice > askPrice) {
-    netQuote -= BigInt(1);
-  }
-
-  const grossQuoteIn = netQuote + poolFee + idexFee;
   return {
-    grossBase: calculateGrossBaseValueOfBuyQuantities(
-      baseAssetQuantity,
-      quoteAssetQuantity,
-      grossQuoteIn,
-    ),
-    grossQuote,
+    baseQuantity2p: fillBaseQty2p,
+    quoteQuantity2p: fillQuoteQty2p,
   };
 }
 
 /**
- * Helper function to calculate the asset quantities available at a given price level (pool liquidity only)
- *
- * @param {bigint} baseAssetQuantity - pool reserve in base asset, must be at least 1.0 expressed in pips (10^-8)
- * @param {bigint} quoteAssetQuantity - pool reserve in quote asset, must be at least 1.0 expressed in pips (10^-8)
- * @param {bigint} bidPrice - the bid price level to calculate quantities for
- * @param {bigint} [idexFeeRate] - the idex fee rate to use for calculations (query /v1/exchange for current global setting)
- * @param {bigint} [poolFeeRate] - the liquidity pool fee rate to use for calculations (query /v1/exchange for current global setting)
- *
- * @returns {PriceLevelQuantities} - a level 2 order book with synthetic price levels only
+ * @private
  */
-
-export function quantitiesAvailableFromPoolAtBidPrice(
-  baseAssetQuantity: bigint,
-  quoteAssetQuantity: bigint,
-  bidPrice: bigint,
-  idexFeeRate: bigint,
-  poolFeeRate: bigint,
-): PriceLevelQuantities {
-  // if a limit order is equal to the pool price, the pool does not contribute
-  if (bidPrice === dividePips(quoteAssetQuantity, baseAssetQuantity)) {
-    return {
-      grossBase: BigInt(0),
-      grossQuote: BigInt(0),
-    };
+function doOrdersMatch(
+  makerOrder: PriceAndSize,
+  takerOrder: {
+    side: OrderSide;
+    limitPrice?: bigint;
+  },
+): boolean {
+  if (!takerOrder.limitPrice) {
+    return true;
   }
-
-  const grossBase = calculateGrossBaseQuantity(
-    baseAssetQuantity,
-    quoteAssetQuantity,
-    bidPrice,
-    idexFeeRate,
-    poolFeeRate,
+  return (
+    (takerOrder.side === OrderSide.buy &&
+      takerOrder.limitPrice >= makerOrder.price) ||
+    (takerOrder.side === OrderSide.sell &&
+      takerOrder.limitPrice <= makerOrder.price)
   );
-
-  return {
-    grossBase,
-    grossQuote: calculateGrossQuoteValueOfSellQuantities(
-      baseAssetQuantity,
-      quoteAssetQuantity,
-      grossBase,
-    ),
-  };
 }
 
 /**
@@ -589,7 +205,7 @@ export function aggregateL2OrderBookAtTickSize(
   inputBook: L2OrderBook,
   tickSize: bigint,
 ): L2OrderBook {
-  const askLevelsByPrice = new Map<BigInt, OrderBookLevelL2>();
+  const askLevelsByPrice = new Map<bigint, OrderBookLevelL2>();
   for (const askLevel of inputBook.asks) {
     const price = adjustPriceToTickSize(
       askLevel.price,
@@ -604,7 +220,7 @@ export function aggregateL2OrderBookAtTickSize(
     askLevelsByPrice.set(price, level);
   }
 
-  const bidLevelsByPrice = new Map<BigInt, OrderBookLevelL2>();
+  const bidLevelsByPrice = new Map<bigint, OrderBookLevelL2>();
   for (const bidLevel of inputBook.bids) {
     const price = adjustPriceToTickSize(
       bidLevel.price,
@@ -620,263 +236,10 @@ export function aggregateL2OrderBookAtTickSize(
   }
 
   return {
+    ...inputBook,
     asks: Array.from(askLevelsByPrice.values()),
     bids: Array.from(bidLevelsByPrice.values()),
-    sequence: inputBook.sequence,
-    pool: inputBook.pool,
   };
-}
-
-function L1BestAvailableBuyPrice(
-  pool: PoolReserveQuantities,
-  idexFeeRate: bigint,
-  poolFeeRate: bigint,
-  takerMinimumInQuote: bigint,
-  tickSize: bigint,
-): bigint {
-  const takerMinimumInQuoteAfterIdexFee = multiplyPips(
-    takerMinimumInQuote,
-    oneInPips - idexFeeRate,
-  );
-
-  const baseReceived = calculateBaseQuantityOut(
-    pool.baseReserveQuantity,
-    pool.quoteReserveQuantity,
-    takerMinimumInQuote,
-    idexFeeRate,
-    poolFeeRate,
-  );
-
-  return adjustPriceToTickSize(
-    dividePips(
-      pool.quoteReserveQuantity + takerMinimumInQuoteAfterIdexFee,
-      pool.baseReserveQuantity - baseReceived,
-    ),
-    tickSize,
-    asksTickRoundingMode,
-  );
-}
-
-function L1BestAvailableSellPrice(
-  pool: PoolReserveQuantities,
-  idexFeeRate: bigint,
-  poolFeeRate: bigint,
-  takerMinimumInBase: bigint,
-  tickSize: bigint,
-): bigint {
-  const takerMinimumInBaseAfterIdexFee = multiplyPips(
-    takerMinimumInBase,
-    oneInPips - idexFeeRate,
-  );
-
-  const quoteReceived = calculateQuoteQuantityOut(
-    pool.baseReserveQuantity,
-    pool.quoteReserveQuantity,
-    takerMinimumInBase,
-    idexFeeRate,
-    poolFeeRate,
-  );
-
-  return adjustPriceToTickSize(
-    dividePips(
-      pool.quoteReserveQuantity - quoteReceived,
-      pool.baseReserveQuantity + takerMinimumInBaseAfterIdexFee,
-    ),
-    tickSize,
-    bidsTickRoundingMode,
-  );
-}
-/**
- * Given a minimum taker order size, calculate the best achievable price level using pool liquidity only
- *
- * @param {PoolReserveQuantities} pool - pool reserve quantities for the orderbook in question
- * @param {bigint} idexFeeRate - the idex fee rate to use for pool calculations
- * @param {bigint} poolFeeRate - the pool fee rate to use for pool calculations
- * @param {bigint} takerMinimumInBase - the minimum taker order size, expressed in base asset units
- * @param {bigint} takerMinimumInQuote - the minimum taker order size, expressed in quote asset units
- *
- * @returns {PriceLevelQuantities} - a level 2 order book with synthetic price levels only
- */
-export function L1orL2BestAvailablePrices(
-  pool: PoolReserveQuantities,
-  idexFeeRate: bigint,
-  poolFeeRate: bigint,
-  takerMinimumInBase: bigint,
-  takerMinimumInQuote: bigint,
-  tickSize: bigint,
-): BestAvailablePriceLevels {
-  const buyPrice = L1BestAvailableBuyPrice(
-    pool,
-    idexFeeRate,
-    poolFeeRate,
-    takerMinimumInQuote,
-    tickSize,
-  );
-
-  const sellPrice = L1BestAvailableSellPrice(
-    pool,
-    idexFeeRate,
-    poolFeeRate,
-    takerMinimumInBase,
-    tickSize,
-  );
-
-  return {
-    buyPrice,
-    sellPrice,
-  };
-}
-
-/**
- * Modifies an existing level 2 order book to include better price levels at the desired taker order size, if available from pool reserves
- *
- * @param {PoolReserveQuantities} pool - pool reserve quantities for the orderbook in question
- * @param {bigint} idexFeeRate - the idex fee rate to use for pool calculations
- * @param {bigint} poolFeeRate - the pool fee rate to use for pool calculations
- * @param {bigint} takerMinimumInQuote - the minimum taker order size, expressed in quote asset units
- *
- * @returns {l1: L1OrderBook; l2: L2OrderBook} - the resulting level 1 and level 2 orderbooks
- */
-
-export function L1L2OrderBooksWithMinimumTaker(
-  l2: L2OrderBook,
-  idexFeeRate: bigint,
-  poolFeeRate: bigint,
-  takerMinimumInQuote: bigint,
-  tickSize: bigint,
-): { l1: L1OrderBook; l2: L2OrderBook } {
-  if (!l2.pool) {
-    return { l1: L2toL1OrderBook(l2), l2 };
-  }
-
-  const l2Values = { ...l2 };
-  const takerMinimumInBase =
-    (takerMinimumInQuote * l2.pool.baseReserveQuantity) /
-    l2.pool.quoteReserveQuantity;
-
-  let { buyPrice, sellPrice } = L1orL2BestAvailablePrices(
-    l2.pool,
-    idexFeeRate,
-    poolFeeRate,
-    takerMinimumInBase,
-    takerMinimumInQuote,
-    tickSize,
-  );
-
-  let { grossBase: grossBuyBase } = quantitiesAvailableFromPoolAtAskPrice(
-    l2.pool.baseReserveQuantity,
-    l2.pool.quoteReserveQuantity,
-    buyPrice,
-    idexFeeRate,
-    poolFeeRate,
-  );
-
-  if (grossBuyBase < takerMinimumInBase) {
-    buyPrice += tickSize;
-    grossBuyBase = quantitiesAvailableFromPoolAtAskPrice(
-      l2.pool.baseReserveQuantity,
-      l2.pool.quoteReserveQuantity,
-      buyPrice,
-      idexFeeRate,
-      poolFeeRate,
-    ).grossBase;
-  }
-
-  if (!l2.asks[0] || buyPrice < l2.asks[0].price) {
-    l2Values.asks.unshift({
-      price: buyPrice,
-      size: grossBuyBase,
-      numOrders: 0,
-      type: 'pool',
-    });
-    if (l2Values.asks.length > 1) {
-      l2Values.asks[1].size -= grossBuyBase;
-    }
-  }
-
-  // Best sell price will be 0 in case there are no bids
-  if (sellPrice > 0) {
-    let { grossBase: grossSellBase } = quantitiesAvailableFromPoolAtBidPrice(
-      l2.pool.baseReserveQuantity,
-      l2.pool.quoteReserveQuantity,
-      sellPrice,
-      idexFeeRate,
-      poolFeeRate,
-    );
-
-    if (grossSellBase < takerMinimumInBase) {
-      sellPrice -= tickSize;
-      grossSellBase = quantitiesAvailableFromPoolAtBidPrice(
-        l2.pool.baseReserveQuantity,
-        l2.pool.quoteReserveQuantity,
-        sellPrice,
-        idexFeeRate,
-        poolFeeRate,
-      ).grossBase;
-    }
-
-    if (!l2.bids[0] || sellPrice > l2.bids[0].price) {
-      l2Values.bids.unshift({
-        price: sellPrice,
-        size: grossSellBase,
-        numOrders: 0,
-        type: 'pool',
-      });
-      if (l2Values.bids.length > 1) {
-        l2Values.bids[1].size -= grossSellBase;
-      }
-    }
-  }
-
-  return { l1: L2toL1OrderBook(l2Values), l2: l2Values };
-}
-
-/**
- * Validates assumptions for reserve quantities and pricing required for quantity calculations
- *
- * @param {bigint} baseAssetQuantity - pool reserve in base asset, must be at least 1.0 expressed in pips (10^-8)
- * @param {bigint} quoteAssetQuantity - pool reserve in quote asset, must be at least 1.0 expressed in pips (10^-8)
- * @param {bigint} targetPrice - price expressed in pips, must be 0 < price < 2^64-1 and on the correct side of the spread
- * @param {boolean} isBuy - if true, the price is targeting buy orders (bids), otherwise sell orders (asks)
- *
- * @returns {void} - validation always succeeds or throws
- */
-export function validateSyntheticPriceLevelInputs(
-  baseAssetQuantity: bigint,
-  quoteAssetQuantity: bigint,
-  targetPrice: bigint,
-  isBuy: boolean,
-): void {
-  if (baseAssetQuantity < oneInPips || quoteAssetQuantity < oneInPips) {
-    throw new Error(
-      'Base asset quantity and quote asset quantity must be positive integers, for pools with at least 1 quote and 1 base token',
-    );
-  }
-
-  if (targetPrice <= BigInt(0) || targetPrice > MAX_64_BIT_INT) {
-    throw new Error(
-      `Target price (${pipToDecimal(
-        targetPrice,
-      )}) must be above zero and below the 64 bit integer limit`,
-    );
-  }
-
-  const currentPrice = dividePips(quoteAssetQuantity, baseAssetQuantity);
-  if (isBuy && currentPrice >= targetPrice) {
-    throw new Error(
-      `Target price (${pipToDecimal(
-        targetPrice,
-      )}) must be above current price (${pipToDecimal(currentPrice)})`,
-    );
-  }
-
-  if (!isBuy && currentPrice <= targetPrice) {
-    throw new Error(
-      `Target price (${pipToDecimal(
-        targetPrice,
-      )}) must be below current price (${pipToDecimal(currentPrice)})`,
-    );
-  }
 }
 
 /**
