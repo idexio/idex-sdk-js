@@ -29,11 +29,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
         run: |
           BRANCH=${GITHUB_REF##*/}
+          echo "Branch: $BRANCH"
           [[ "$BRANCH" == "$BASE" ]] && exit 0;
           if [[ "$BRANCH" == "alpha" ]]; then
             BASE="beta"
-
-            
           fi
           echo "Check If PR exists for $GITHUB_REPOSITORY $BRANCH --> $BASE"
           gh auth status
@@ -73,6 +72,8 @@ jobs:
         run: yarn install
       - name: Build Library
         run: yarn build
+      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
+        run: npm audit signatures
       - name: Build TypeDoc
         run: yarn typedoc:build
       # Build Documentation which will be committed by semantic-release
