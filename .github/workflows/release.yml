@@ -15,6 +15,8 @@ env:
   GIT_COMMITTER_NAME: idex-bot
   GIT_COMMITTER_EMAIL: monitor@idex.io
 
+permissions: write-all
+
 jobs:
   pr:
     name: Create Release PR
@@ -44,11 +46,6 @@ jobs:
   release:
     name: Release 
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # to be able to publish a GitHub release
-      issues: write # to be able to comment on released issues
-      pull-requests: write # to be able to comment on released pull requests
-      id-token: write # to enable use of OIDC for npm provenance
     steps:
       - name: Checkout
         uses: actions/checkout@v3

@@ -1,70 +1,70 @@
 // @ts-check
 
-const { chunkifyString } = require('semantic-release-slack-bot/lib/chunkifier');
-const slackifyMarkdown = require('slackify-markdown');
+// const { chunkifyString } = require('semantic-release-slack-bot/lib/chunkifier');
+// const slackifyMarkdown = require('slackify-markdown');
 
-const onSuccessFunction = (
-  pluginConfig,
-  /** @type {import('semantic-release').SuccessContext} */
-  context,
-) => {
-  const releaseNotes =
-    context.nextRelease?.notes ?
-      slackifyMarkdown(context.nextRelease.notes)
-    : '';
-  const text = `Updates have been released to *${context.branch.name}*`;
-  const headerBlock = {
-    type: 'section',
-    text: {
-      type: 'mrkdwn',
-      text,
-    },
-  };
+// const onSuccessFunction = (
+//   pluginConfig,
+//   /** @type {import('semantic-release').SuccessContext} */
+//   context,
+// ) => {
+//   const releaseNotes =
+//     context.nextRelease?.notes ?
+//       slackifyMarkdown(context.nextRelease.notes)
+//     : '';
+//   const text = `Updates have been released to *${context.branch.name}*`;
+//   const headerBlock = {
+//     type: 'section',
+//     text: {
+//       type: 'mrkdwn',
+//       text,
+//     },
+//   };
 
-  try {
-    return {
-      text,
-      blocks: [
-        headerBlock,
-        ...(releaseNotes.length >= 2000 ?
-          chunkifyString(releaseNotes, 2900).map((chunk) => {
-            return {
-              type: 'section',
-              text: {
-                type: 'mrkdwn',
-                text: chunk,
-              },
-            };
-          })
-        : releaseNotes ?
-          [
-            {
-              type: 'section',
-              text: {
-                type: 'mrkdwn',
-                text: releaseNotes,
-              },
-            },
-          ]
-        : []),
-      ],
-    };
-  } catch (err) {
-    return {
-      text,
-      blocks: [
-        headerBlock,
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: '- Failed to chunkify release notes!',
-          },
-        },
-      ],
-    };
-  }
-};
+//   try {
+//     return {
+//       text,
+//       blocks: [
+//         headerBlock,
+//         ...(releaseNotes.length >= 2000 ?
+//           chunkifyString(releaseNotes, 2900).map((chunk) => {
+//             return {
+//               type: 'section',
+//               text: {
+//                 type: 'mrkdwn',
+//                 text: chunk,
+//               },
+//             };
+//           })
+//         : releaseNotes ?
+//           [
+//             {
+//               type: 'section',
+//               text: {
+//                 type: 'mrkdwn',
+//                 text: releaseNotes,
+//               },
+//             },
+//           ]
+//         : []),
+//       ],
+//     };
+//   } catch (err) {
+//     return {
+//       text,
+//       blocks: [
+//         headerBlock,
+//         {
+//           type: 'section',
+//           text: {
+//             type: 'mrkdwn',
+//             text: '- Failed to chunkify release notes!',
+//           },
+//         },
+//       ],
+//     };
+//   }
+// };
 
 /** @type {import('semantic-release').Options} */
 const config = {
@@ -106,14 +106,14 @@ const config = {
         branches: [['main', 'docs']],
       },
     ],
-    [
-      'semantic-release-slack-bot',
-      {
-        notifyOnSuccess: true,
-        notifyOnFail: true,
-        onSuccessFunction,
-      },
-    ],
+    // [
+    //   'semantic-release-slack-bot',
+    //   {
+    //     notifyOnSuccess: true,
+    //     notifyOnFail: true,
+    //     // onSuccessFunction,
+    //   },
+    // ],
   ],
 };
 
