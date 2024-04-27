@@ -44,7 +44,7 @@
 ## Installation
 
 ```bash
-npm install @idexio/idex-sdk
+npm install @idexio/idex-sdk@beta
 ```
 
 ## Getting Started
