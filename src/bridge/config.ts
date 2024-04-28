@@ -1,7 +1,12 @@
-import { BridgeTarget, StargateTarget } from '#types/enums/request';
+import {
+  BridgeTarget,
+  StargateTarget,
+  StargateV2Target,
+} from '#types/enums/request';
 
 export const StargateBridgeTargetsArray = Object.values(BridgeTarget);
 export const StargateTargetsArray = Object.values(StargateTarget);
+export const StargateV2TargetsArray = Object.values(StargateV2Target);
 
 /**
  * TODO_IKON - These configs need to be completed in some areas and should be confirmed as valid
@@ -49,7 +54,7 @@ export const StargateConfig = {
       },
       stargateChainId: 10161,
       /**
-       * @see chain [Ethereum Sepolia](https://chainlist.org/chain/11155111)
+/80       * @see chain [Ethereum Sepolia](https://chainlist.org/chain/11155111)
        */
       evmChainId: 11155111, // Sepolia
       quoteTokenStargatePoolId: 1,
@@ -547,6 +552,95 @@ export const StargateConfigByStargateChainID = {
     // [StargateConfig.testnet[StargateTarget.STARGATE_FANTOM].stargateChainId]: StargateConfig.testnet[StargateTarget.STARGATE_FANTOM],
     // [StargateConfig.testnet[StargateTarget.STARGATE_LINEA].stargateChainId]: StargateConfig.testnet[StargateTarget.STARGATE_LINEA],
     // [StargateConfig.testnet[StargateTarget.STARGATE_KAVA].stargateChainId]: StargateConfig.testnet[StargateTarget.STARGATE_KAVA],,
+  },
+} as const;
+
+/**
+ * TODO_IKON - These configs need to be completed in some areas and should be confirmed as valid
+ *
+ * @see [evmChainId](https://gist.github.com/melwong/c30eb1e21eda17549996a609c35dafb3#file-list-of-chain-ids-for-metamask-csv)
+ *
+ * @category Stargate
+ */
+export const StargateV2Config = {
+  settings: {
+    swapSourceGasLimit: 450_000,
+    swapDestinationGasLimit: 350_000,
+    localBridgeTarget: StargateTarget.STARGATE_AVALANCHE,
+  },
+  // better way to handle the idex config as it doesnt have a
+  // BridgeTarget assignment?
+
+  testnet: {
+    [StargateTarget.STARGATE_AVALANCHE]: {
+      target: StargateTarget.STARGATE_AVALANCHE,
+      isSupported: true,
+      get isBridgeTarget() {
+        return isValidBridgeTarget(this.target);
+      },
+
+      evmChainId: 43113,
+      // https://docs.layerzero.network/v2/developers/evm/technical-reference/endpoints#fuji-avalanche-testnet
+      layerZeroEndpointId: 40106,
+      // https://github.com/stargate-protocol/x-stargate-v2/blob/05de001e429a82234b184290656b14b4fcac3a5f/packages/stg-evm-v2/deployments/avalanche-testnet/StargatePoolUSDT.json#L2
+      stargateOFTAddress: '0xbB936075d22caCe5df6a9F622befE50a1c037eC4',
+    },
+    [StargateTarget.STARGATE_BNB]: {
+      target: StargateTarget.STARGATE_BNB,
+      isSupported: true,
+      get isBridgeTarget() {
+        return isValidBridgeTarget(this.target);
+      },
+
+      evmChainId: 97,
+      // https://docs.layerzero.network/v2/developers/evm/technical-reference/endpoints#bnb-chain-testnet
+      layerZeroEndpointId: 40102,
+      // https://github.com/stargate-protocol/x-stargate-v2/blob/05de001e429a82234b184290656b14b4fcac3a5f/packages/stg-evm-v2/deployments/bsc-testnet/StargatePoolUSDT.json#L2C15-L2C57
+      stargateOFTAddress: '0x95f697F6215ee2653325679709AB37162eaeB13A',
+    },
+  } as const,
+  mainnet: {
+    [StargateTarget.STARGATE_AVALANCHE]: {
+      target: StargateTarget.STARGATE_AVALANCHE,
+      isSupported: false,
+      get isBridgeTarget() {
+        return isValidBridgeTarget(this.target);
+      },
+
+      evmChainId: 43114,
+      // 30102
+      layerZeroEndpointId: 40106,
+      // https://github.com/stargate-protocol/x-stargate-v2/blob/05de001e429a82234b184290656b14b4fcac3a5f/packages/stg-evm-v2/deployments/avalanche-testnet/StargatePoolUSDT.json#L2
+      stargateOFTAddress: null,
+    },
+    [StargateTarget.STARGATE_BNB]: {
+      target: StargateTarget.STARGATE_BNB,
+      isSupported: false,
+      get isBridgeTarget() {
+        return isValidBridgeTarget(this.target);
+      },
+
+      evmChainId: 56,
+      // https://docs.layerzero.network/v2/developers/evm/technical-reference/endpoints#bnb-chain
+      layerZeroEndpointId: 30102,
+      // https://github.com/stargate-protocol/x-stargate-v2/blob/05de001e429a82234b184290656b14b4fcac3a5f/packages/stg-evm-v2/deployments/bsc-testnet/StargatePoolUSDT.json#L2C15-L2C57
+      stargateOFTAddress: null,
+    },
+  } as const,
+} as const;
+
+export const StargateV2ConfigByStargateChainID = {
+  mainnet: {
+    [StargateConfig.mainnet[StargateTarget.STARGATE_AVALANCHE].stargateChainId]:
+      StargateConfig.mainnet[StargateTarget.STARGATE_AVALANCHE],
+    [StargateConfig.mainnet[StargateTarget.STARGATE_BNB].stargateChainId]:
+      StargateConfig.mainnet[StargateTarget.STARGATE_BNB],
+  },
+  testnet: {
+    [StargateConfig.testnet[StargateTarget.STARGATE_AVALANCHE].stargateChainId]:
+      StargateConfig.testnet[StargateTarget.STARGATE_AVALANCHE],
+    [StargateConfig.testnet[StargateTarget.STARGATE_BNB].stargateChainId]:
+      StargateConfig.testnet[StargateTarget.STARGATE_BNB],
   },
 } as const;
 

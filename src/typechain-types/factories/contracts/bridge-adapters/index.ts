@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as exchangeStargateAdapterSol from './ExchangeStargateAdapter.sol';
+export * as exchangeStargateV2AdapterSol from './ExchangeStargateV2Adapter.sol';

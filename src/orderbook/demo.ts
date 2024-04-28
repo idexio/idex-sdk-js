@@ -9,6 +9,8 @@ const l2LevelsToDisplay = 5;
 
 const client = new OrderBookRealTimeClient({
   sandbox: isSandbox,
+  baseRestApiURL: 'https://api-ikon-dev-private-1.idex-dev.com/v4/',
+  baseWebSocketURL: 'wss://websocket-ikon-dev-private-1.idex-dev.com/v4/',
 });
 
 async function main(): Promise<void> {

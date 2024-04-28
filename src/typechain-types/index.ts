@@ -32,6 +32,8 @@ export type { ExchangeStargateAdapter } from './contracts/bridge-adapters/Exchan
 export { ExchangeStargateAdapter__factory } from './factories/contracts/bridge-adapters/ExchangeStargateAdapter.sol/ExchangeStargateAdapter__factory';
 export type { IPool } from './contracts/bridge-adapters/ExchangeStargateAdapter.sol/IPool';
 export { IPool__factory } from './factories/contracts/bridge-adapters/ExchangeStargateAdapter.sol/IPool__factory';
+export type { IStargate as IStargateV2 } from './contracts/bridge-adapters/ExchangeStargateV2Adapter.sol/IStargate';
+export { IStargate__factory as IStargateV2__factory } from './factories/contracts/bridge-adapters/ExchangeStargateV2Adapter.sol/IStargate__factory';
 export type { IStargateFactory } from './contracts/bridge-adapters/ExchangeStargateAdapter.sol/IStargateFactory';
 export { IStargateFactory__factory } from './factories/contracts/bridge-adapters/ExchangeStargateAdapter.sol/IStargateFactory__factory';
 export type { IStargateFeeLibrary } from './contracts/bridge-adapters/ExchangeStargateAdapter.sol/IStargateFeeLibrary';

@@ -2,4 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 import type * as exchangeStargateAdapterSol from './ExchangeStargateAdapter.sol';
-export type { exchangeStargateAdapterSol };
+import type * as exchangeStargateV2AdapterSol from './ExchangeStargateV2Adapter.sol';
+export type { exchangeStargateAdapterSol, exchangeStargateV2AdapterSol };

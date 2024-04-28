@@ -597,6 +597,23 @@ export type StargateTarget =
   (typeof StargateTarget)[keyof typeof StargateTarget];
 
 /**
+ * @internal
+ *
+ * All supported Stargate targets for the deposit source.
+ *
+ * - This includes some targets which are invalid when making withdrawals.
+ *
+ * @enum
+ */
+export const StargateV2Target = {
+  STARGATE_AVALANCHE: 'stargate.avalanche',
+  STARGATE_BNB: 'stargate.bnb',
+} as const;
+
+export type StargateV2Target =
+  (typeof StargateV2Target)[keyof typeof StargateV2Target];
+
+/**
  * An enumeration providing all possible events that the {@link OrderBookRealTimeClient} can emit.
  *
  * @enum
