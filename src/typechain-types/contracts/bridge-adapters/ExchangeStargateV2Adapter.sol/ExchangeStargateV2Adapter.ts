@@ -40,6 +40,7 @@ export interface ExchangeStargateV2AdapterInterface extends Interface {
       | 'removeAdmin'
       | 'removeOwner'
       | 'setAdmin'
+      | 'setDepositEnabled'
       | 'setMinimumWithdrawQuantityMultiplier'
       | 'setOwner'
       | 'setWithdrawEnabled'
@@ -104,6 +105,10 @@ export interface ExchangeStargateV2AdapterInterface extends Interface {
     values: [AddressLike],
   ): string;
   encodeFunctionData(
+    functionFragment: 'setDepositEnabled',
+    values: [boolean],
+  ): string;
+  encodeFunctionData(
     functionFragment: 'setMinimumWithdrawQuantityMultiplier',
     values: [BigNumberish],
   ): string;
@@ -166,6 +171,10 @@ export interface ExchangeStargateV2AdapterInterface extends Interface {
     data: BytesLike,
   ): Result;
   decodeFunctionResult(functionFragment: 'setAdmin', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'setDepositEnabled',
+    data: BytesLike,
+  ): Result;
   decodeFunctionResult(
     functionFragment: 'setMinimumWithdrawQuantityMultiplier',
     data: BytesLike,
@@ -266,7 +275,13 @@ export interface ExchangeStargateV2Adapter extends BaseContract {
       quantity: BigNumberish,
       payload: BytesLike,
     ],
-    [bigint],
+    [
+      [bigint, bigint, bigint] & {
+        estimatedWithdrawQuantityInAssetUnits: bigint;
+        minimumWithdrawQuantityInAssetUnits: bigint;
+        poolDecimals: bigint;
+      },
+    ],
     'view'
   >;
 
@@ -299,6 +314,12 @@ export interface ExchangeStargateV2Adapter extends BaseContract {
   removeOwner: TypedContractMethod<[], [void], 'nonpayable'>;
 
   setAdmin: TypedContractMethod<[newAdmin: AddressLike], [void], 'nonpayable'>;
+
+  setDepositEnabled: TypedContractMethod<
+    [isEnabled: boolean],
+    [void],
+    'nonpayable'
+  >;
 
   setMinimumWithdrawQuantityMultiplier: TypedContractMethod<
     [newMinimumWithdrawQuantityMultiplier: BigNumberish],
@@ -353,7 +374,13 @@ export interface ExchangeStargateV2Adapter extends BaseContract {
       quantity: BigNumberish,
       payload: BytesLike,
     ],
-    [bigint],
+    [
+      [bigint, bigint, bigint] & {
+        estimatedWithdrawQuantityInAssetUnits: bigint;
+        minimumWithdrawQuantityInAssetUnits: bigint;
+        poolDecimals: bigint;
+      },
+    ],
     'view'
   >;
   getFunction(
@@ -396,6 +423,9 @@ export interface ExchangeStargateV2Adapter extends BaseContract {
   getFunction(
     nameOrSignature: 'setAdmin',
   ): TypedContractMethod<[newAdmin: AddressLike], [void], 'nonpayable'>;
+  getFunction(
+    nameOrSignature: 'setDepositEnabled',
+  ): TypedContractMethod<[isEnabled: boolean], [void], 'nonpayable'>;
   getFunction(
     nameOrSignature: 'setMinimumWithdrawQuantityMultiplier',
   ): TypedContractMethod<

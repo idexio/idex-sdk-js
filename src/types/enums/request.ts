@@ -573,6 +573,19 @@ export const BridgeTarget = {
 export type BridgeTarget = (typeof BridgeTarget)[keyof typeof BridgeTarget];
 
 /**
+ * Supported Bridge V2 Targets by IDEX.
+ *
+ * @enum
+ */
+export const BridgeV2Target = {
+  STARGATE_BNB: 'stargate.bnb', //
+  STARGATE_AVALANCHE: 'stargate.avalanche', //
+} as const;
+
+export type BridgeV2Target =
+  (typeof BridgeV2Target)[keyof typeof BridgeV2Target];
+
+/**
  * @internal
  *
  * All supported Stargate targets for the deposit source.
@@ -606,8 +619,7 @@ export type StargateTarget =
  * @enum
  */
 export const StargateV2Target = {
-  STARGATE_AVALANCHE: 'stargate.avalanche',
-  STARGATE_BNB: 'stargate.bnb',
+  ...BridgeV2Target,
 } as const;
 
 export type StargateV2Target =

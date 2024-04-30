@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 import { assetUnitsToDecimal, decimalToPip, multiplyPips } from '#pipmath';
 
 import { getExchangeAddressAndChainFromApi } from '#client/rest/public';
+import { ExchangeStargateV2Adapter__factory } from '#typechain-types/factories/contracts/bridge-adapters/ExchangeStargateV2Adapter.sol/ExchangeStargateV2Adapter__factory';
 import {
   ExchangeStargateAdapter__factory,
   IPool__factory,
@@ -16,40 +17,50 @@ import {
   StargateConfig,
   StargateV2Config,
   StargateConfigByStargateChainID,
+  StargateV2ConfigByLayerZeroEndpointId,
 } from './config';
 
 import type {
   DecodedStargatePayload,
+  DecodedStargateV2Payload,
   EncodedStargatePayload,
 } from '#types/bridge';
 import type { StargateTarget } from '#types/enums/request';
 
-/**
- * Get a stargate config with strict typing to allow narrowing on the
- * `config.supported` boolean
- *
- * @example
- * ```typescript
- * const config = getStargateTargetConfig(StargateTarget.STARGATE_ARBITRUM, true);
- * ```
- */
-export function getStargateTargetConfig<
-  T extends StargateTarget,
-  S extends true | false,
->(stargateTarget: T, sandbox: S) {
-  const targetConfig =
-    sandbox ?
-      StargateConfig.testnet[stargateTarget]
-    : StargateConfig.mainnet[stargateTarget];
+/// Stargate V2 ///
 
-  if (!targetConfig) {
-    throw new Error(
-      `No config found for ${stargateTarget} (testnet/sandbox? ${String(sandbox)})`,
-    );
-  }
+export const StargateV2MainnetLayerZeroEndpointIds = Object.values(
+  StargateV2ConfigByLayerZeroEndpointId.mainnet,
+).map((value) => {
+  return value.layerZeroEndpointId;
+});
 
-  return targetConfig as S extends true ? (typeof StargateConfig.testnet)[T]
-  : (typeof StargateConfig.mainnet)[T];
+export const StargateV2TestnetLayerZeroEndpointIds = Object.values(
+  StargateV2ConfigByLayerZeroEndpointId.testnet,
+).map((value) => {
+  return value.layerZeroEndpointId;
+});
+
+export type StargateV2LayerZeroEndpointIdsMainnet =
+  (typeof StargateV2MainnetLayerZeroEndpointIds)[number];
+
+export type StargateV2LayerZeroEndpointIdsTestnet =
+  (typeof StargateV2TestnetLayerZeroEndpointIds)[number];
+
+export function isStargateV2MainnetLayerZeroEndpointId(
+  layerZeroEndpointId: number,
+): layerZeroEndpointId is StargateV2LayerZeroEndpointIdsMainnet {
+  return StargateV2MainnetLayerZeroEndpointIds.includes(
+    layerZeroEndpointId as StargateV2LayerZeroEndpointIdsMainnet,
+  );
+}
+
+export function isStargateV2TestnetLayerZeroEndpointId(
+  layerZeroEndpointId: number,
+): layerZeroEndpointId is StargateV2LayerZeroEndpointIdsTestnet {
+  return StargateV2TestnetLayerZeroEndpointIds.includes(
+    layerZeroEndpointId as StargateV2LayerZeroEndpointIdsTestnet,
+  );
 }
 
 /**
@@ -80,6 +91,275 @@ export function getStargateV2TargetConfig<
   : (typeof StargateV2Config.mainnet)[T];
 }
 
+export function stargateV2TargetForLayerZeroEndpointId(
+  layerZeroEndpointId: number,
+  sandbox: boolean,
+) {
+  if (!sandbox && isStargateV2MainnetLayerZeroEndpointId(layerZeroEndpointId)) {
+    return StargateV2ConfigByLayerZeroEndpointId.mainnet[layerZeroEndpointId]
+      .target;
+  }
+  if (sandbox && isStargateV2TestnetLayerZeroEndpointId(layerZeroEndpointId)) {
+    return StargateV2ConfigByLayerZeroEndpointId.testnet[layerZeroEndpointId]
+      .target;
+  }
+
+  return null;
+}
+
+/**
+ * Decode an ABI-encoded hex string representing Stargate V2 withdrawal parameters
+ */
+export function decodeStargateV2Payload(
+  payload: EncodedStargatePayload,
+): DecodedStargateV2Payload {
+  return {
+    layerZeroEndpointId: parseInt(
+      ethers.AbiCoder.defaultAbiCoder().decode(['uint32'], payload)[0],
+      10,
+    ),
+  };
+}
+
+/**
+ * ABI-encode Stargate withdrawal parameters
+ */
+export function encodeStargateV2Payload({
+  layerZeroEndpointId,
+}: DecodedStargateV2Payload): EncodedStargatePayload {
+  return ethers.AbiCoder.defaultAbiCoder().encode(
+    ['uint32'],
+    [layerZeroEndpointId],
+  );
+}
+
+/**
+ * Deposit funds cross-chain into the Exchange using Stargate
+ */
+export async function depositViaStargateV2(
+  sourceStargateTarget: StargateV2Target,
+  parameters: {
+    exchangeStargateV2AdapterAddress?: string;
+    minimumWithdrawQuantityMultiplierInPips: bigint;
+    quantityInAssetUnits: bigint;
+    wallet: string;
+  },
+  signer: ethers.Signer,
+  sandbox: boolean,
+): Promise<string> {
+  const { sendParam, sourceConfig } =
+    await getStargateV2DepositSendParamAndSourceConfig(
+      sourceStargateTarget,
+      parameters,
+      sandbox,
+    );
+  const stargate = IStargateV2__factory.connect(
+    sourceConfig.stargateOFTAddress,
+    signer,
+  );
+  const messagingFee = await stargate.quoteSend(sendParam, false, {
+    from: parameters.wallet,
+  });
+
+  const response = await stargate.send(
+    sendParam,
+    { nativeFee: messagingFee.nativeFee, lzTokenFee: 0 },
+    parameters.wallet, // Refund address - extra gas (if any) is returned to this address
+    {
+      from: parameters.wallet,
+      gasLimit: StargateConfig.settings.swapSourceGasLimit,
+      value: messagingFee.nativeFee,
+    }, // Native gas to pay for the cross chain message fee
+  );
+
+  return response.hash;
+}
+
+/**
+ * Estimate native gas fee needed to deposit funds cross-chain into the Exchange using Stargate
+ */
+export async function estimateStargateV2DepositGasFeeAndQuantityDeliveredInAssetUnits(
+  sourceStargateTarget: StargateV2Target,
+  parameters: {
+    exchangeStargateV2AdapterAddress?: string;
+    minimumWithdrawQuantityMultiplierInPips: bigint;
+    quantityInAssetUnits: bigint;
+    wallet: string;
+  },
+  provider: ethers.Provider,
+  sandbox: boolean,
+): Promise<{ gasFee: bigint; quantityDeliveredInAssetUnits: bigint }> {
+  const { sendParam, sourceConfig } =
+    await getStargateV2DepositSendParamAndSourceConfig(
+      sourceStargateTarget,
+      parameters,
+      sandbox,
+    );
+
+  const stargate = IStargateV2__factory.connect(
+    sourceConfig.stargateOFTAddress,
+    provider,
+  );
+  const [[gasFee], [, , receipt]] = await Promise.all([
+    stargate.quoteSend(sendParam, false, {
+      from: parameters.wallet,
+    }),
+    stargate.quoteOFT(sendParam),
+  ]);
+
+  return { gasFee, quantityDeliveredInAssetUnits: receipt.amountReceivedLD };
+}
+
+async function getStargateV2DepositSendParamAndSourceConfig(
+  sourceStargateTarget: StargateV2Target,
+  parameters: {
+    exchangeStargateV2AdapterAddress?: string;
+    minimumWithdrawQuantityMultiplierInPips: bigint;
+    quantityInAssetUnits: bigint;
+    wallet: string;
+  },
+  sandbox: boolean,
+) {
+  const sourceConfig =
+    sandbox ?
+      StargateV2Config.testnet[sourceStargateTarget]
+    : StargateV2Config.mainnet[sourceStargateTarget];
+
+  // TODO StargateV2 is not deployed to XChain so use BNB instead
+  const targetConfig =
+    sandbox ?
+      StargateV2Config.testnet[StargateV2Target.STARGATE_BNB]
+    : StargateV2Config.mainnet[StargateV2Target.STARGATE_BNB];
+
+  if (!sourceConfig || !sourceConfig.isSupported || !targetConfig.isSupported) {
+    throw new Error(
+      `Stargate deposits not supported from chain ${sourceConfig.target} (Chain ID: ${String(sourceConfig.evmChainId)}) to chain ${targetConfig.target} (Chain ID: ${String(targetConfig.evmChainId)})`,
+    );
+  }
+
+  const [{ stargateBridgeAdapterContractAddress }] =
+    parameters.exchangeStargateV2AdapterAddress ?
+      [
+        {
+          stargateBridgeAdapterContractAddress:
+            parameters.exchangeStargateV2AdapterAddress,
+        },
+      ]
+    : await getExchangeAddressAndChainFromApi();
+
+  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/oapp/contracts/oapp/libs/OptionsBuilder.sol#L92
+  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/protocol/contracts/messagelib/libs/ExecutorOptions.sol#L82
+  const option = ethers.solidityPacked(
+    ['uint16', 'uint128'],
+    [0, StargateConfig.settings.swapDestinationGasLimit],
+  );
+  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/oapp/contracts/oapp/libs/OptionsBuilder.sol#L133
+  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/protocol/contracts/messagelib/libs/ExecutorOptions.sol#L10
+  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/protocol/contracts/messagelib/libs/ExecutorOptions.sol#L14
+  const extraOptions = ethers.solidityPacked(
+    ['uint16', 'uint8', 'uint16', 'uint8', 'bytes'],
+    [3, 1, 2 + 16 + 1, 3, option],
+  );
+
+  const sendParam = {
+    dstEid: targetConfig.layerZeroEndpointId,
+    to: ethers.zeroPadValue(stargateBridgeAdapterContractAddress, 32),
+    amountLD: parameters.quantityInAssetUnits,
+    minAmountLD: multiplyPips(
+      parameters.quantityInAssetUnits,
+      parameters.minimumWithdrawQuantityMultiplierInPips,
+    ),
+    extraOptions,
+    composeMsg: ethers.AbiCoder.defaultAbiCoder().encode(
+      ['address'],
+      [parameters.wallet],
+    ),
+    oftCmd: '0x',
+  };
+
+  return { sendParam, sourceConfig };
+}
+
+/**
+ * Estimate the quantity of tokens delivered to the target chain via Stargate v2 withdrawal
+ */
+export async function estimateStargateV2WithdrawQuantity(
+  parameters: {
+    exchangeStargateV2AdapterAddress: string;
+    payload: string;
+    quantityInDecimal: string;
+    wallet: string;
+  },
+  provider: ethers.Provider,
+): Promise<{
+  estimatedWithdrawQuantityInDecimal: string;
+  minimumWithdrawQuantityInDecimal: string;
+  willSucceed: boolean;
+}> {
+  const exchangeStargateAdapter = ExchangeStargateV2Adapter__factory.connect(
+    parameters.exchangeStargateV2AdapterAddress,
+    provider,
+  );
+
+  const [
+    estimatedWithdrawQuantityInAssetUnits,
+    minimumWithdrawQuantityInAssetUnits,
+    poolDecimals,
+  ] = await exchangeStargateAdapter.estimateWithdrawQuantityInAssetUnits(
+    parameters.wallet,
+    decimalToPip(parameters.quantityInDecimal).toString(),
+    parameters.payload,
+  );
+
+  const estimatedWithdrawQuantityInDecimal = assetUnitsToDecimal(
+    estimatedWithdrawQuantityInAssetUnits,
+    Number(poolDecimals),
+  );
+
+  const minimumWithdrawQuantityInDecimal = assetUnitsToDecimal(
+    minimumWithdrawQuantityInAssetUnits,
+    Number(poolDecimals),
+  );
+
+  const willSucceed =
+    BigInt(estimatedWithdrawQuantityInAssetUnits) >=
+    BigInt(minimumWithdrawQuantityInAssetUnits);
+
+  return {
+    estimatedWithdrawQuantityInDecimal,
+    minimumWithdrawQuantityInDecimal,
+    willSucceed,
+  };
+}
+
+/**
+ * Get a stargate config with strict typing to allow narrowing on the
+ * `config.supported` boolean
+ *
+ * @example
+ * ```typescript
+ * const config = getStargateTargetConfig(StargateTarget.STARGATE_ARBITRUM, true);
+ * ```
+ */
+export function getStargateTargetConfig<
+  T extends StargateTarget,
+  S extends true | false,
+>(stargateTarget: T, sandbox: S) {
+  const targetConfig =
+    sandbox ?
+      StargateConfig.testnet[stargateTarget]
+    : StargateConfig.mainnet[stargateTarget];
+
+  if (!targetConfig) {
+    throw new Error(
+      `No config found for ${stargateTarget} (testnet/sandbox? ${String(sandbox)})`,
+    );
+  }
+
+  return targetConfig as S extends true ? (typeof StargateConfig.testnet)[T]
+  : (typeof StargateConfig.mainnet)[T];
+}
+
 export const StargateMainnetChainIDs = Object.values(
   StargateConfigByStargateChainID.mainnet,
 ).map((value) => {
@@ -95,7 +375,6 @@ export const StargateTestNetChainIDs = Object.values(
 export type StargateChainIDsMainnet = (typeof StargateMainnetChainIDs)[number];
 
 export type StargateChainIDsTestNet = (typeof StargateTestNetChainIDs)[number];
-
 export function isStargateMainnetChainID(
   stargateChainID: number,
 ): stargateChainID is StargateChainIDsMainnet {
@@ -222,7 +501,6 @@ export function decodeStargatePayload(
     targetPoolId: parseInt(result[2].toString(), 10),
   };
 }
-
 /**
  * ABI-encode Stargate withdrawal parameters
  */
@@ -323,88 +601,6 @@ export async function estimateStargateDepositGasFeeInNativeAssetUnits(
   );
 
   return gasFee.toString();
-}
-
-/**
- * Estimate native gas fee needed to deposit funds cross-chain into the Exchange using Stargate
- */
-export async function estimateStargateV2DepositGasFeeAndDeliveredQuantityInAssetUnits(
-  sourceStargateTarget: StargateV2Target,
-  parameters: {
-    exchangeStargateV2AdapterAddress?: string;
-    minimumWithdrawQuantityMultiplierInPips: bigint;
-    quantityInAssetUnits: string;
-    wallet: string;
-  },
-  provider: ethers.Provider,
-  sandbox: boolean,
-): Promise<[bigint, bigint]> {
-  const sourceConfig =
-    sandbox ?
-      StargateV2Config.testnet[sourceStargateTarget]
-    : StargateV2Config.mainnet[sourceStargateTarget];
-
-  // TODO StargateV2 is not deployed to XChain so use BNB instead
-  const targetConfig =
-    sandbox ?
-      StargateV2Config.testnet[StargateV2Target.STARGATE_BNB]
-    : StargateV2Config.mainnet[StargateV2Target.STARGATE_BNB];
-
-  if (!sourceConfig || !sourceConfig.isSupported || !targetConfig.isSupported) {
-    throw new Error(
-      `Stargate deposits not supported from chain ${sourceConfig.target} (Chain ID: ${String(sourceConfig.evmChainId)}) to chain ${targetConfig.target} (Chain ID: ${String(targetConfig.evmChainId)})`,
-    );
-  }
-
-  const [{ stargateBridgeAdapterContractAddress }] =
-    parameters.exchangeStargateV2AdapterAddress ?
-      [
-        {
-          stargateBridgeAdapterContractAddress:
-            parameters.exchangeStargateV2AdapterAddress,
-        },
-      ]
-    : await getExchangeAddressAndChainFromApi();
-
-  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/oapp/contracts/oapp/libs/OptionsBuilder.sol#L92
-  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/protocol/contracts/messagelib/libs/ExecutorOptions.sol#L82
-  const option = ethers.solidityPacked(
-    ['uint16', 'uint128'],
-    [0, StargateConfig.settings.swapDestinationGasLimit],
-  );
-  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/oapp/contracts/oapp/libs/OptionsBuilder.sol#L133
-  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/protocol/contracts/messagelib/libs/ExecutorOptions.sol#L10
-  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/protocol/contracts/messagelib/libs/ExecutorOptions.sol#L14
-  const extraOptions = ethers.solidityPacked(
-    ['uint16', 'uint8', 'uint16', 'uint8', 'bytes'],
-    [3, 1, 2 + 16 + 1, 3, option],
-  );
-
-  const sendParam = {
-    dstEid: targetConfig.layerZeroEndpointId,
-    to: ethers.zeroPadValue(stargateBridgeAdapterContractAddress, 32),
-    amountLD: parameters.quantityInAssetUnits,
-    minAmountLD: multiplyPips(
-      BigInt(parameters.quantityInAssetUnits),
-      parameters.minimumWithdrawQuantityMultiplierInPips,
-    ),
-    extraOptions,
-    composeMsg: parameters.wallet,
-    oftCmd: '0x',
-  };
-
-  const stargate = IStargateV2__factory.connect(
-    sourceConfig.stargateOFTAddress,
-    provider,
-  );
-  const [[gasFee], [, , receipt]] = await Promise.all([
-    stargate.quoteSend(sendParam, false, {
-      from: parameters.wallet,
-    }),
-    stargate.quoteOFT(sendParam),
-  ]);
-
-  return [gasFee, receipt.amountReceivedLD];
 }
 
 /**

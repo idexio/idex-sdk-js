@@ -4,8 +4,14 @@ import {
   StargateV2Target,
 } from '#types/enums/request';
 
+import type { BridgeV2Target } from '#types/enums/request';
+
 export const StargateBridgeTargetsArray = Object.values(BridgeTarget);
 export const StargateTargetsArray = Object.values(StargateTarget);
+export const StargateV2BridgeTargetsArray = [
+  StargateV2Target.STARGATE_BNB,
+  StargateV2Target.STARGATE_AVALANCHE,
+];
 export const StargateV2TargetsArray = Object.values(StargateV2Target);
 
 /**
@@ -576,7 +582,7 @@ export const StargateV2Config = {
       target: StargateTarget.STARGATE_AVALANCHE,
       isSupported: true,
       get isBridgeTarget() {
-        return isValidBridgeTarget(this.target);
+        return isValidStargateV2BridgeTarget(this.target);
       },
 
       evmChainId: 43113,
@@ -589,7 +595,7 @@ export const StargateV2Config = {
       target: StargateTarget.STARGATE_BNB,
       isSupported: true,
       get isBridgeTarget() {
-        return isValidBridgeTarget(this.target);
+        return isValidStargateV2BridgeTarget(this.target);
       },
 
       evmChainId: 97,
@@ -608,9 +614,9 @@ export const StargateV2Config = {
       },
 
       evmChainId: 43114,
-      // 30102
-      layerZeroEndpointId: 40106,
-      // https://github.com/stargate-protocol/x-stargate-v2/blob/05de001e429a82234b184290656b14b4fcac3a5f/packages/stg-evm-v2/deployments/avalanche-testnet/StargatePoolUSDT.json#L2
+      // https://docs.layerzero.network/v2/developers/evm/technical-reference/endpoints#avalanche
+      layerZeroEndpointId: 30106,
+      // TODO
       stargateOFTAddress: null,
     },
     [StargateTarget.STARGATE_BNB]: {
@@ -623,26 +629,30 @@ export const StargateV2Config = {
       evmChainId: 56,
       // https://docs.layerzero.network/v2/developers/evm/technical-reference/endpoints#bnb-chain
       layerZeroEndpointId: 30102,
-      // https://github.com/stargate-protocol/x-stargate-v2/blob/05de001e429a82234b184290656b14b4fcac3a5f/packages/stg-evm-v2/deployments/bsc-testnet/StargatePoolUSDT.json#L2C15-L2C57
+      // TODO
       stargateOFTAddress: null,
     },
   } as const,
 } as const;
 
-export const StargateV2ConfigByStargateChainID = {
+export const StargateV2ConfigByLayerZeroEndpointId = {
   mainnet: {
-    [StargateConfig.mainnet[StargateTarget.STARGATE_AVALANCHE].stargateChainId]:
-      StargateConfig.mainnet[StargateTarget.STARGATE_AVALANCHE],
-    [StargateConfig.mainnet[StargateTarget.STARGATE_BNB].stargateChainId]:
-      StargateConfig.mainnet[StargateTarget.STARGATE_BNB],
+    [StargateV2Config.mainnet[StargateV2Target.STARGATE_AVALANCHE]
+      .layerZeroEndpointId]:
+      StargateV2Config.mainnet[StargateV2Target.STARGATE_AVALANCHE],
+    [StargateV2Config.mainnet[StargateV2Target.STARGATE_BNB]
+      .layerZeroEndpointId]:
+      StargateV2Config.mainnet[StargateV2Target.STARGATE_BNB],
   },
   testnet: {
-    [StargateConfig.testnet[StargateTarget.STARGATE_AVALANCHE].stargateChainId]:
-      StargateConfig.testnet[StargateTarget.STARGATE_AVALANCHE],
-    [StargateConfig.testnet[StargateTarget.STARGATE_BNB].stargateChainId]:
-      StargateConfig.testnet[StargateTarget.STARGATE_BNB],
+    [StargateV2Config.testnet[StargateV2Target.STARGATE_AVALANCHE]
+      .layerZeroEndpointId]:
+      StargateV2Config.testnet[StargateV2Target.STARGATE_AVALANCHE],
+    [StargateV2Config.testnet[StargateV2Target.STARGATE_BNB]
+      .layerZeroEndpointId]:
+      StargateV2Config.testnet[StargateV2Target.STARGATE_BNB],
   },
-} as const;
+};
 
 /**
  * A type guard that checks if the given value is a valid {@link StargateTarget} value.
@@ -673,4 +683,13 @@ export function isValidBridgeTarget(
   value: any,
 ): value is BridgeTarget {
   return value && StargateBridgeTargetsArray.includes(value as BridgeTarget);
+}
+
+export function isValidStargateV2BridgeTarget(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value: any,
+): value is BridgeV2Target {
+  return (
+    value && StargateV2BridgeTargetsArray.includes(value as BridgeV2Target)
+  );
 }
