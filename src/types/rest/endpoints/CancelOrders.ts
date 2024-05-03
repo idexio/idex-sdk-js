@@ -19,6 +19,13 @@ interface RestRequestCancelOrderCommon
    */
   readonly orderId?: string;
   /**
+   * - When specified, cancels multiple orders by orderId.
+   *   - You may provide an orders {@link idex.IDEXOrder.orderId orderId}
+   *   - You may provide an orders {@link idex.IDEXOrder.clientOrderId clientOrderId}
+   *     by prefixing it with `client:`
+   */
+  readonly orderIds?: string[];
+  /**
    * - Delegated key used for the order, if any
    * - This is only allowed when using the `cancelOrders` client method.
    */
@@ -42,6 +49,7 @@ interface RestRequestCancelOrdersBase extends RestRequestCancelOrderCommon {
 export interface RestRequestCancelOrder extends RestRequestCancelOrderCommon {
   market?: undefined;
   orderDelegatedKey?: undefined;
+  orderIds?: undefined;
   /**
    * @inheritDoc
    */
@@ -59,6 +67,21 @@ export interface RestRequestCancelOrdersByWallet
   extends RestRequestCancelOrdersBase {
   market?: undefined;
   orderDelegatedKey?: undefined;
+  orderIds?: undefined;
+}
+
+/**
+ * Allows cancelling all open orders by order ids.
+ *
+ * @category IDEX - Cancel Order
+ *
+ * @see request {@link RestRequestCancelOrders}
+ */
+export interface RestRequestCancelOrdersByOrderIds
+  extends RestRequestCancelOrdersBase {
+  market?: undefined;
+  orderDelegatedKey?: undefined;
+  readonly orderIds: string[];
 }
 
 /**
@@ -107,6 +130,7 @@ export interface RestRequestCancelOrdersByDelegatedKey
  */
 export type RestRequestCancelOrders =
   | RestRequestCancelOrdersByWallet
+  | RestRequestCancelOrdersByOrderIds
   | RestRequestCancelOrdersByMarket
   | RestRequestCancelOrdersByDelegatedKey;
 
