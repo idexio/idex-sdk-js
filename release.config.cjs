@@ -88,12 +88,12 @@ const config = {
     // something causing it to fail
     //
     // it should work again after
-    [
-      '@semantic-release/release-notes-generator',
-      {
-        preset: 'conventionalcommits',
-      },
-    ],
+    // [
+    //   '@semantic-release/release-notes-generator',
+    //   {
+    //     preset: 'conventionalcommits',
+    //   },
+    // ],
     // set package.json version based on commits then publish
     '@semantic-release/npm',
     [
