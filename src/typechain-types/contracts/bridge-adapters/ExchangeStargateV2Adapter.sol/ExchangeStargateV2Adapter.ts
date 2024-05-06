@@ -23,28 +23,28 @@ import type {
   TypedContractMethod,
 } from '../../../common';
 
-export interface ExchangeStargateAdapterInterface extends Interface {
+export interface ExchangeStargateV2AdapterInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | 'PIP_PRICE_MULTIPLIER'
       | 'adminWallet'
       | 'custodian'
-      | 'estimateWithdrawQuantityInAssetUnitsAfterPoolFees'
+      | 'estimateWithdrawQuantityInAssetUnits'
       | 'isDepositEnabled'
       | 'isWithdrawEnabled'
-      | 'loadGasFeesInAssetUnits'
+      | 'lzCompose'
+      | 'lzEndpoint'
       | 'minimumWithdrawQuantityMultiplier'
       | 'ownerWallet'
       | 'quoteAsset'
       | 'removeAdmin'
       | 'removeOwner'
-      | 'router'
       | 'setAdmin'
       | 'setDepositEnabled'
       | 'setMinimumWithdrawQuantityMultiplier'
       | 'setOwner'
       | 'setWithdrawEnabled'
-      | 'sgReceive'
-      | 'skimToken'
+      | 'stargate'
       | 'withdrawNativeAsset'
       | 'withdrawQuoteAsset',
   ): FunctionFragment;
@@ -52,13 +52,17 @@ export interface ExchangeStargateAdapterInterface extends Interface {
   getEvent(nameOrSignatureOrTopic: 'WithdrawQuoteAssetFailed'): EventFragment;
 
   encodeFunctionData(
+    functionFragment: 'PIP_PRICE_MULTIPLIER',
+    values?: undefined,
+  ): string;
+  encodeFunctionData(
     functionFragment: 'adminWallet',
     values?: undefined,
   ): string;
   encodeFunctionData(functionFragment: 'custodian', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'estimateWithdrawQuantityInAssetUnitsAfterPoolFees',
-    values: [BytesLike, BigNumberish, AddressLike],
+    functionFragment: 'estimateWithdrawQuantityInAssetUnits',
+    values: [AddressLike, BigNumberish, BytesLike],
   ): string;
   encodeFunctionData(
     functionFragment: 'isDepositEnabled',
@@ -69,8 +73,12 @@ export interface ExchangeStargateAdapterInterface extends Interface {
     values?: undefined,
   ): string;
   encodeFunctionData(
-    functionFragment: 'loadGasFeesInAssetUnits',
-    values: [BigNumberish[]],
+    functionFragment: 'lzCompose',
+    values: [AddressLike, BytesLike, BytesLike, AddressLike, BytesLike],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'lzEndpoint',
+    values?: undefined,
   ): string;
   encodeFunctionData(
     functionFragment: 'minimumWithdrawQuantityMultiplier',
@@ -92,7 +100,6 @@ export interface ExchangeStargateAdapterInterface extends Interface {
     functionFragment: 'removeOwner',
     values?: undefined,
   ): string;
-  encodeFunctionData(functionFragment: 'router', values?: undefined): string;
   encodeFunctionData(
     functionFragment: 'setAdmin',
     values: [AddressLike],
@@ -113,21 +120,7 @@ export interface ExchangeStargateAdapterInterface extends Interface {
     functionFragment: 'setWithdrawEnabled',
     values: [boolean],
   ): string;
-  encodeFunctionData(
-    functionFragment: 'sgReceive',
-    values: [
-      BigNumberish,
-      BytesLike,
-      BigNumberish,
-      AddressLike,
-      BigNumberish,
-      BytesLike,
-    ],
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'skimToken',
-    values: [AddressLike, AddressLike],
-  ): string;
+  encodeFunctionData(functionFragment: 'stargate', values?: undefined): string;
   encodeFunctionData(
     functionFragment: 'withdrawNativeAsset',
     values: [AddressLike, BigNumberish],
@@ -138,12 +131,16 @@ export interface ExchangeStargateAdapterInterface extends Interface {
   ): string;
 
   decodeFunctionResult(
+    functionFragment: 'PIP_PRICE_MULTIPLIER',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
     functionFragment: 'adminWallet',
     data: BytesLike,
   ): Result;
   decodeFunctionResult(functionFragment: 'custodian', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'estimateWithdrawQuantityInAssetUnitsAfterPoolFees',
+    functionFragment: 'estimateWithdrawQuantityInAssetUnits',
     data: BytesLike,
   ): Result;
   decodeFunctionResult(
@@ -154,10 +151,8 @@ export interface ExchangeStargateAdapterInterface extends Interface {
     functionFragment: 'isWithdrawEnabled',
     data: BytesLike,
   ): Result;
-  decodeFunctionResult(
-    functionFragment: 'loadGasFeesInAssetUnits',
-    data: BytesLike,
-  ): Result;
+  decodeFunctionResult(functionFragment: 'lzCompose', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'lzEndpoint', data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: 'minimumWithdrawQuantityMultiplier',
     data: BytesLike,
@@ -175,7 +170,6 @@ export interface ExchangeStargateAdapterInterface extends Interface {
     functionFragment: 'removeOwner',
     data: BytesLike,
   ): Result;
-  decodeFunctionResult(functionFragment: 'router', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setAdmin', data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: 'setDepositEnabled',
@@ -190,8 +184,7 @@ export interface ExchangeStargateAdapterInterface extends Interface {
     functionFragment: 'setWithdrawEnabled',
     data: BytesLike,
   ): Result;
-  decodeFunctionResult(functionFragment: 'sgReceive', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'skimToken', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'stargate', data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: 'withdrawNativeAsset',
     data: BytesLike,
@@ -227,11 +220,11 @@ export namespace WithdrawQuoteAssetFailedEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export interface ExchangeStargateAdapter extends BaseContract {
-  connect(runner?: ContractRunner | null): ExchangeStargateAdapter;
+export interface ExchangeStargateV2Adapter extends BaseContract {
+  connect(runner?: ContractRunner | null): ExchangeStargateV2Adapter;
   waitForDeployment(): Promise<this>;
 
-  interface: ExchangeStargateAdapterInterface;
+  interface: ExchangeStargateV2AdapterInterface;
 
   queryFilter<TCEvent extends TypedContractEvent>(
     event: TCEvent,
@@ -270,12 +263,18 @@ export interface ExchangeStargateAdapter extends BaseContract {
     event?: TCEvent,
   ): Promise<this>;
 
+  PIP_PRICE_MULTIPLIER: TypedContractMethod<[], [bigint], 'view'>;
+
   adminWallet: TypedContractMethod<[], [string], 'view'>;
 
   custodian: TypedContractMethod<[], [string], 'view'>;
 
-  estimateWithdrawQuantityInAssetUnitsAfterPoolFees: TypedContractMethod<
-    [payload: BytesLike, quantity: BigNumberish, wallet: AddressLike],
+  estimateWithdrawQuantityInAssetUnits: TypedContractMethod<
+    [
+      destinationWallet: AddressLike,
+      quantity: BigNumberish,
+      payload: BytesLike,
+    ],
     [
       [bigint, bigint, bigint] & {
         estimatedWithdrawQuantityInAssetUnits: bigint;
@@ -290,11 +289,19 @@ export interface ExchangeStargateAdapter extends BaseContract {
 
   isWithdrawEnabled: TypedContractMethod<[], [boolean], 'view'>;
 
-  loadGasFeesInAssetUnits: TypedContractMethod<
-    [chainIds: BigNumberish[]],
-    [bigint[]],
-    'view'
+  lzCompose: TypedContractMethod<
+    [
+      _from: AddressLike,
+      arg1: BytesLike,
+      _message: BytesLike,
+      arg3: AddressLike,
+      arg4: BytesLike,
+    ],
+    [void],
+    'payable'
   >;
+
+  lzEndpoint: TypedContractMethod<[], [string], 'view'>;
 
   minimumWithdrawQuantityMultiplier: TypedContractMethod<[], [bigint], 'view'>;
 
@@ -305,8 +312,6 @@ export interface ExchangeStargateAdapter extends BaseContract {
   removeAdmin: TypedContractMethod<[], [void], 'nonpayable'>;
 
   removeOwner: TypedContractMethod<[], [void], 'nonpayable'>;
-
-  router: TypedContractMethod<[], [string], 'view'>;
 
   setAdmin: TypedContractMethod<[newAdmin: AddressLike], [void], 'nonpayable'>;
 
@@ -330,24 +335,7 @@ export interface ExchangeStargateAdapter extends BaseContract {
     'nonpayable'
   >;
 
-  sgReceive: TypedContractMethod<
-    [
-      arg0: BigNumberish,
-      arg1: BytesLike,
-      arg2: BigNumberish,
-      token: AddressLike,
-      amountLD: BigNumberish,
-      payload: BytesLike,
-    ],
-    [void],
-    'nonpayable'
-  >;
-
-  skimToken: TypedContractMethod<
-    [tokenAddress: AddressLike, destinationWallet: AddressLike],
-    [void],
-    'nonpayable'
-  >;
+  stargate: TypedContractMethod<[], [string], 'view'>;
 
   withdrawNativeAsset: TypedContractMethod<
     [destinationContractOrWallet: AddressLike, quantity: BigNumberish],
@@ -370,15 +358,22 @@ export interface ExchangeStargateAdapter extends BaseContract {
   ): T;
 
   getFunction(
+    nameOrSignature: 'PIP_PRICE_MULTIPLIER',
+  ): TypedContractMethod<[], [bigint], 'view'>;
+  getFunction(
     nameOrSignature: 'adminWallet',
   ): TypedContractMethod<[], [string], 'view'>;
   getFunction(
     nameOrSignature: 'custodian',
   ): TypedContractMethod<[], [string], 'view'>;
   getFunction(
-    nameOrSignature: 'estimateWithdrawQuantityInAssetUnitsAfterPoolFees',
+    nameOrSignature: 'estimateWithdrawQuantityInAssetUnits',
   ): TypedContractMethod<
-    [payload: BytesLike, quantity: BigNumberish, wallet: AddressLike],
+    [
+      destinationWallet: AddressLike,
+      quantity: BigNumberish,
+      payload: BytesLike,
+    ],
     [
       [bigint, bigint, bigint] & {
         estimatedWithdrawQuantityInAssetUnits: bigint;
@@ -395,8 +390,21 @@ export interface ExchangeStargateAdapter extends BaseContract {
     nameOrSignature: 'isWithdrawEnabled',
   ): TypedContractMethod<[], [boolean], 'view'>;
   getFunction(
-    nameOrSignature: 'loadGasFeesInAssetUnits',
-  ): TypedContractMethod<[chainIds: BigNumberish[]], [bigint[]], 'view'>;
+    nameOrSignature: 'lzCompose',
+  ): TypedContractMethod<
+    [
+      _from: AddressLike,
+      arg1: BytesLike,
+      _message: BytesLike,
+      arg3: AddressLike,
+      arg4: BytesLike,
+    ],
+    [void],
+    'payable'
+  >;
+  getFunction(
+    nameOrSignature: 'lzEndpoint',
+  ): TypedContractMethod<[], [string], 'view'>;
   getFunction(
     nameOrSignature: 'minimumWithdrawQuantityMultiplier',
   ): TypedContractMethod<[], [bigint], 'view'>;
@@ -412,9 +420,6 @@ export interface ExchangeStargateAdapter extends BaseContract {
   getFunction(
     nameOrSignature: 'removeOwner',
   ): TypedContractMethod<[], [void], 'nonpayable'>;
-  getFunction(
-    nameOrSignature: 'router',
-  ): TypedContractMethod<[], [string], 'view'>;
   getFunction(
     nameOrSignature: 'setAdmin',
   ): TypedContractMethod<[newAdmin: AddressLike], [void], 'nonpayable'>;
@@ -435,26 +440,8 @@ export interface ExchangeStargateAdapter extends BaseContract {
     nameOrSignature: 'setWithdrawEnabled',
   ): TypedContractMethod<[isEnabled: boolean], [void], 'nonpayable'>;
   getFunction(
-    nameOrSignature: 'sgReceive',
-  ): TypedContractMethod<
-    [
-      arg0: BigNumberish,
-      arg1: BytesLike,
-      arg2: BigNumberish,
-      token: AddressLike,
-      amountLD: BigNumberish,
-      payload: BytesLike,
-    ],
-    [void],
-    'nonpayable'
-  >;
-  getFunction(
-    nameOrSignature: 'skimToken',
-  ): TypedContractMethod<
-    [tokenAddress: AddressLike, destinationWallet: AddressLike],
-    [void],
-    'nonpayable'
-  >;
+    nameOrSignature: 'stargate',
+  ): TypedContractMethod<[], [string], 'view'>;
   getFunction(
     nameOrSignature: 'withdrawNativeAsset',
   ): TypedContractMethod<

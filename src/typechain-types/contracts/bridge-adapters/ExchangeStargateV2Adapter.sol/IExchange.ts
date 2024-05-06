@@ -21,55 +21,22 @@ import type {
   TypedContractMethod,
 } from '../../../common';
 
-export declare namespace IPool {
-  export type SwapObjStruct = {
-    amount: BigNumberish;
-    eqFee: BigNumberish;
-    eqReward: BigNumberish;
-    lpFee: BigNumberish;
-    protocolFee: BigNumberish;
-    lkbRemove: BigNumberish;
-  };
-
-  export type SwapObjStructOutput = [
-    amount: bigint,
-    eqFee: bigint,
-    eqReward: bigint,
-    lpFee: bigint,
-    protocolFee: bigint,
-    lkbRemove: bigint,
-  ] & {
-    amount: bigint;
-    eqFee: bigint;
-    eqReward: bigint;
-    lpFee: bigint;
-    protocolFee: bigint;
-    lkbRemove: bigint;
-  };
-}
-
-export interface IStargateFeeLibraryInterface extends Interface {
-  getFunction(nameOrSignature: 'getFees'): FunctionFragment;
+export interface IExchangeInterface extends Interface {
+  getFunction(nameOrSignature: 'deposit'): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: 'getFees',
-    values: [
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      AddressLike,
-      BigNumberish,
-    ],
+    functionFragment: 'deposit',
+    values: [BigNumberish, AddressLike],
   ): string;
 
-  decodeFunctionResult(functionFragment: 'getFees', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'deposit', data: BytesLike): Result;
 }
 
-export interface IStargateFeeLibrary extends BaseContract {
-  connect(runner?: ContractRunner | null): IStargateFeeLibrary;
+export interface IExchange extends BaseContract {
+  connect(runner?: ContractRunner | null): IExchange;
   waitForDeployment(): Promise<this>;
 
-  interface: IStargateFeeLibraryInterface;
+  interface: IExchangeInterface;
 
   queryFilter<TCEvent extends TypedContractEvent>(
     event: TCEvent,
@@ -108,16 +75,10 @@ export interface IStargateFeeLibrary extends BaseContract {
     event?: TCEvent,
   ): Promise<this>;
 
-  getFees: TypedContractMethod<
-    [
-      _srcPoolId: BigNumberish,
-      _dstPoolId: BigNumberish,
-      _dstChainId: BigNumberish,
-      _from: AddressLike,
-      _amountSD: BigNumberish,
-    ],
-    [IPool.SwapObjStructOutput],
-    'view'
+  deposit: TypedContractMethod<
+    [quantityInAssetUnits: BigNumberish, destinationWallet: AddressLike],
+    [void],
+    'nonpayable'
   >;
 
   getFunction<T extends ContractMethod = ContractMethod>(
@@ -125,17 +86,11 @@ export interface IStargateFeeLibrary extends BaseContract {
   ): T;
 
   getFunction(
-    nameOrSignature: 'getFees',
+    nameOrSignature: 'deposit',
   ): TypedContractMethod<
-    [
-      _srcPoolId: BigNumberish,
-      _dstPoolId: BigNumberish,
-      _dstChainId: BigNumberish,
-      _from: AddressLike,
-      _amountSD: BigNumberish,
-    ],
-    [IPool.SwapObjStructOutput],
-    'view'
+    [quantityInAssetUnits: BigNumberish, destinationWallet: AddressLike],
+    [void],
+    'nonpayable'
   >;
 
   filters: {};

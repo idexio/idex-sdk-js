@@ -558,16 +558,14 @@ export const PayoutProgram = Object.freeze({
 export type PayoutProgram = (typeof PayoutProgram)[keyof typeof PayoutProgram];
 
 /**
- * Supported Bridge Targets by IDEX.
+ * Supported Bridge Targets
  *
  * @enum
  */
 export const BridgeTarget = {
-  XCHAIN_XCHAIN: 'xchain.xchain', //
-  STARGATE_ETHEREUM: 'stargate.ethereum', //
-  STARGATE_POLYGON: 'stargate.polygon', //
-  STARGATE_ARBITRUM: 'stargate.arbitrum', //
-  STARGATE_OPTIMISM: 'stargate.optimism', //
+  XCHAIN_XCHAIN: 'xchain.xchain',
+  STARGATE_BNB: 'stargate.bnb',
+  STARGATE_AVALANCHE: 'stargate.avalanche',
 } as const;
 
 export type BridgeTarget = (typeof BridgeTarget)[keyof typeof BridgeTarget];
@@ -575,26 +573,18 @@ export type BridgeTarget = (typeof BridgeTarget)[keyof typeof BridgeTarget];
 /**
  * @internal
  *
- * All supported Stargate targets for the deposit source.
+ * All supported Stargate V2 targets for the deposit source.
  *
  * - This includes some targets which are invalid when making withdrawals.
  *
  * @enum
  */
-export const StargateTarget = {
+export const StargateV2Target = {
   ...BridgeTarget,
-  STARGATE_AVALANCHE: 'stargate.avalanche',
-  STARGATE_BNB: 'stargate.bnb',
-  STARGATE_METIS: 'stargate.metis',
-  STARGATE_FANTOM: 'stargate.fantom',
-  STARGATE_LINEA: 'stargate.linea',
-  STARGATE_KAVA: 'stargate.kava',
-  STARGATE_MANTLE: 'stargate.mantle',
-  STARGATE_BASE: 'stargate.base',
 } as const;
 
-export type StargateTarget =
-  (typeof StargateTarget)[keyof typeof StargateTarget];
+export type StargateV2Target =
+  (typeof StargateV2Target)[keyof typeof StargateV2Target];
 
 /**
  * An enumeration providing all possible events that the {@link OrderBookRealTimeClient} can emit.

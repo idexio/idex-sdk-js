@@ -23,13 +23,3 @@ export const Exchangev4Contract =
  */
 export const ERC20Contract =
   factories.openzeppelin.contracts.token.erc20.ERC20__factory;
-
-/**
- * A typechain factory for interacting with the IStargateRouter contract.
- *
- * @see [Stargate Documentation: How To Swap](https://stargateprotocol.gitbook.io/stargate/developers/how-to-swap)
- * @category Smart Contracts
- */
-export const IStargateRouterContract =
-  factories.contracts.bridgeAdapters.exchangeStargateAdapterSol
-    .IStargateRouter__factory;
