@@ -19,34 +19,19 @@ import type {
   TypedContractMethod,
 } from '../../../common';
 
-export interface IPoolInterface extends Interface {
-  getFunction(
-    nameOrSignature: 'feeLibrary' | 'sharedDecimals' | 'token',
-  ): FunctionFragment;
+export interface ICustodianInterface extends Interface {
+  getFunction(nameOrSignature: 'exchange'): FunctionFragment;
 
-  encodeFunctionData(
-    functionFragment: 'feeLibrary',
-    values?: undefined,
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'sharedDecimals',
-    values?: undefined,
-  ): string;
-  encodeFunctionData(functionFragment: 'token', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'exchange', values?: undefined): string;
 
-  decodeFunctionResult(functionFragment: 'feeLibrary', data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: 'sharedDecimals',
-    data: BytesLike,
-  ): Result;
-  decodeFunctionResult(functionFragment: 'token', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'exchange', data: BytesLike): Result;
 }
 
-export interface IPool extends BaseContract {
-  connect(runner?: ContractRunner | null): IPool;
+export interface ICustodian extends BaseContract {
+  connect(runner?: ContractRunner | null): ICustodian;
   waitForDeployment(): Promise<this>;
 
-  interface: IPoolInterface;
+  interface: ICustodianInterface;
 
   queryFilter<TCEvent extends TypedContractEvent>(
     event: TCEvent,
@@ -85,24 +70,14 @@ export interface IPool extends BaseContract {
     event?: TCEvent,
   ): Promise<this>;
 
-  feeLibrary: TypedContractMethod<[], [string], 'view'>;
-
-  sharedDecimals: TypedContractMethod<[], [bigint], 'view'>;
-
-  token: TypedContractMethod<[], [string], 'view'>;
+  exchange: TypedContractMethod<[], [string], 'view'>;
 
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment,
   ): T;
 
   getFunction(
-    nameOrSignature: 'feeLibrary',
-  ): TypedContractMethod<[], [string], 'view'>;
-  getFunction(
-    nameOrSignature: 'sharedDecimals',
-  ): TypedContractMethod<[], [bigint], 'view'>;
-  getFunction(
-    nameOrSignature: 'token',
+    nameOrSignature: 'exchange',
   ): TypedContractMethod<[], [string], 'view'>;
 
   filters: {};

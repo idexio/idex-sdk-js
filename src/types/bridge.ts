@@ -1,13 +1,11 @@
 /**
- * Decoded Stargate Payload
+ * Decoded Stargate v2 Payload
  */
-export type DecodedStargatePayload = {
-  targetChainId: number;
-  sourcePoolId: number;
-  targetPoolId: number;
+export type DecodedStargateV2Payload = {
+  layerZeroEndpointId: number;
 };
 
 /**
  * Encoded Stargate Payload
  */
-export type EncodedStargatePayload = string;
+export type EncodedStargateV2Payload = string;
