@@ -25,3 +25,7 @@ Release notes are automatically generated and added to the release PR based on t
 > It is not known what causes this but seems related to [this issue](https://github.com/semantic-release/release-notes-generator/issues/459)
 >
 > The solution if this comes up as of now is seen in the release.config.cjs file, we have to comment out release notes generator plugin and do a release then uncomment it out after. I have posted in the linked issue hoping to help with a solution.
+
+## Fixing Release State Issues
+
+This should not occur when using semantic-release properly, but as a reference, if the release state gets broken due to a manual version being done or similar, we will need to manually fix it by pushing the proper tags and state: (see: [stackoverflow](https://stackoverflow.com/questions/59429283/how-to-force-a-version-in-semantic-release))
