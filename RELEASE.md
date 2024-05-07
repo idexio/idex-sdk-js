@@ -23,3 +23,5 @@ Release notes are automatically generated and added to the release PR based on t
 
 > **NOTE**: There is a bug in the generator at times where the `generateNotes` step will fail silently, causing a release to not be created. You can see an example by looking at the `Semantic Release` step in github actions (see [Example](https://github.com/idexio/idex-sdk-js/actions/runs/8963899307/job/24614859968)) where it simply stops silently after it gets to the `generateNotes`.  
 > It is not known what causes this but seems related to [this issue](https://github.com/semantic-release/release-notes-generator/issues/459)
+>
+> The solution if this comes up as of now is seen in the release.config.cjs file, we have to comment out release notes generator plugin and do a release then uncomment it out after. I have posted in the linked issue hoping to help with a solution.
