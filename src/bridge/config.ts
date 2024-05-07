@@ -14,7 +14,7 @@ export const StargateV2Config = {
   settings: {
     swapSourceGasLimit: 450_000,
     swapDestinationGasLimit: 350_000,
-    localBridgeTarget: StargateV2Target.STARGATE_AVALANCHE,
+    localBridgeTarget: StargateV2Target.XCHAIN_XCHAIN,
   },
   // better way to handle the idex config as it doesnt have a
   // BridgeTarget assignment?
