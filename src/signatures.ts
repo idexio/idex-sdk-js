@@ -10,12 +10,6 @@ import {
   OrderSelfTradePreventionSigEnum,
   OrderTriggerTypeSigEnum,
 } from '#types/enums/signature';
-import {
-  isRestRequestCancelOrder,
-  isRestRequestCancelOrders,
-  isRestRequestCancelOrdersByDelegatedKey,
-  isRestRequestCancelOrdersByMarket,
-} from '#types/rest/common/guards';
 
 import type * as types from '#index';
 
@@ -184,35 +178,8 @@ export const getOrderSignatureTypedData = (
   ];
 };
 
-export const getOrderCancellationByClientIdSignatureTypedData = (
-  data: types.RestRequestCancelOrder,
-  contractAddress: string,
-  chainId: number,
-  sandbox: boolean,
-): Parameters<SignTypedData> => {
-  assertNonceIsValid(data.nonce);
-
-  return [
-    getDomainSeparator(contractAddress, chainId, sandbox),
-    {
-      OrderCancellationByClientId: [
-        { name: 'nonce', type: 'uint128' },
-        { name: 'wallet', type: 'address' },
-        { name: 'delegatedKey', type: 'address' },
-        { name: 'clientId', type: 'string' },
-      ],
-    },
-    {
-      nonce: uuidToUint128(data.nonce),
-      wallet: data.wallet,
-      delegatedKey: data.delegatedKey || ethers.ZeroAddress,
-      clientId: data.orderId,
-    },
-  ];
-};
-
 export const getOrderCancellationByOrderIdSignatureTypedData = (
-  data: types.RestRequestCancelOrder,
+  data: types.RestRequestCancelOrdersByOrderIds,
   contractAddress: string,
   chainId: number,
   sandbox: boolean,
@@ -226,14 +193,14 @@ export const getOrderCancellationByOrderIdSignatureTypedData = (
         { name: 'nonce', type: 'uint128' },
         { name: 'wallet', type: 'address' },
         { name: 'delegatedKey', type: 'address' },
-        { name: 'orderId', type: 'string' },
+        { name: 'orderIds', type: 'string[]' },
       ],
     },
     {
       nonce: uuidToUint128(data.nonce),
       wallet: data.wallet,
       delegatedKey: data.delegatedKey || ethers.ZeroAddress,
-      orderId: data.orderId,
+      orderIds: data.orderIds,
     },
   ];
 };
@@ -318,36 +285,23 @@ export const getOrderCancellationByWalletSignatureTypedData = (
 };
 
 export const getOrderCancellationSignatureTypedData = (
-  data: types.RestRequestCancelOrderOrOrders,
+  data: types.RestRequestCancelOrders,
   contractAddress: string,
   chainId: number,
   sandbox: boolean,
 ): Parameters<SignTypedData> => {
   assertNonceIsValid(data.nonce);
 
-  // Validate either single order or multiple orders
-  if (!isRestRequestCancelOrder(data) && !isRestRequestCancelOrders(data)) {
-    throw new Error(
-      'Cancel orders may specify exactly ONE of: orderDelegatedKey, orderId, or market.',
+  if (data.orderIds) {
+    return getOrderCancellationByOrderIdSignatureTypedData(
+      data,
+      contractAddress,
+      chainId,
+      sandbox,
     );
   }
 
-  if (isRestRequestCancelOrder(data)) {
-    return data.orderId.startsWith('client:') ?
-        getOrderCancellationByClientIdSignatureTypedData(
-          data,
-          contractAddress,
-          chainId,
-          sandbox,
-        )
-      : getOrderCancellationByOrderIdSignatureTypedData(
-          data,
-          contractAddress,
-          chainId,
-          sandbox,
-        );
-  }
-  if (isRestRequestCancelOrdersByDelegatedKey(data)) {
+  if (data.orderDelegatedKey) {
     return getOrderCancellationByDelegatedKeySignatureTypedData(
       data,
       contractAddress,
@@ -355,7 +309,8 @@ export const getOrderCancellationSignatureTypedData = (
       sandbox,
     );
   }
-  if (isRestRequestCancelOrdersByMarket(data)) {
+
+  if (data.market) {
     return getOrderCancellationByMarketSymbolSignatureTypedData(
       data,
       contractAddress,
@@ -363,6 +318,7 @@ export const getOrderCancellationSignatureTypedData = (
       sandbox,
     );
   }
+
   return getOrderCancellationByWalletSignatureTypedData(
     data,
     contractAddress,
