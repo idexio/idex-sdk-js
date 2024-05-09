@@ -6,46 +6,24 @@ import type * as idex from '@idexio/idex-sdk/types';
  *
  * @category Base Types
  */
-interface RestRequestCancelOrderCommon
+interface RestRequestCancelOrdersBase
   extends idex.RestRequestByWallet,
     idex.DelegatedKeyParams,
     idex.RestRequestByMarketOptional {
   /**
-   * - When specified, cancels a single order.
+   * - When specified, cancels multiple orders by orderId or clientOrderId.
    *   - You may provide an orders {@link idex.IDEXOrder.orderId orderId}
    *   - You may provide an orders {@link idex.IDEXOrder.clientOrderId clientOrderId}
    *     by prefixing it with `client:`
-   * - This property is only allowed when using the `cancelOrder` client method.
+   *
+   * @throws {BAD_REQUEST} If `orderIds` array is empty
    */
-  readonly orderId?: string;
+  readonly orderIds?: string[];
   /**
    * - Delegated key used for the order, if any
    * - This is only allowed when using the `cancelOrders` client method.
    */
   readonly orderDelegatedKey?: string;
-}
-
-/**
- * [[include:unexported.md]]
- *
- * @category Base Types
- */
-interface RestRequestCancelOrdersBase extends RestRequestCancelOrderCommon {
-  readonly orderId?: undefined;
-}
-
-/**
- * @category IDEX - Cancel Order
- *
- * @see related {@link RestRequestCancelOrders}
- */
-export interface RestRequestCancelOrder extends RestRequestCancelOrderCommon {
-  market?: undefined;
-  orderDelegatedKey?: undefined;
-  /**
-   * @inheritDoc
-   */
-  readonly orderId: string;
 }
 
 /**
@@ -59,6 +37,24 @@ export interface RestRequestCancelOrdersByWallet
   extends RestRequestCancelOrdersBase {
   market?: undefined;
   orderDelegatedKey?: undefined;
+  orderIds?: undefined;
+}
+
+/**
+ * Allows cancelling all open orders by one or more orderId's or clientOrderId's.
+ *
+ * @category IDEX - Cancel Order
+ *
+ * @see request {@link RestRequestCancelOrders}
+ */
+export interface RestRequestCancelOrdersByOrderIds
+  extends RestRequestCancelOrdersBase {
+  market?: undefined;
+  orderDelegatedKey?: undefined;
+  /**
+   * @inheritDoc
+   */
+  readonly orderIds: string[];
 }
 
 /**
@@ -75,6 +71,7 @@ export interface RestRequestCancelOrdersByMarket
    */
   readonly market: string;
   orderDelegatedKey?: undefined;
+  orderIds?: undefined;
 }
 
 /**
@@ -87,6 +84,7 @@ export interface RestRequestCancelOrdersByMarket
 export interface RestRequestCancelOrdersByDelegatedKey
   extends RestRequestCancelOrdersBase {
   market?: undefined;
+  orderIds?: undefined;
   /**
    * @inheritDoc
    */
@@ -98,6 +96,7 @@ export interface RestRequestCancelOrdersByDelegatedKey
  * the desired behavior.
  *
  * - {@link RestRequestCancelOrdersByWallet} - Cancel all open orders for a given wallet.
+ * - {@link RestRequestCancelOrdersByOrderIds} - Cancel all orders for a given wallet by one or more orderId's or clientOrderId's.
  * - {@link RestRequestCancelOrdersByMarket} - Cancel all open orders for a given wallet on a specific market.
  * - {@link RestRequestCancelOrdersByDelegatedKey} - Cancel all open orders for a given wallet using a specific delegated key.
  *
@@ -107,15 +106,9 @@ export interface RestRequestCancelOrdersByDelegatedKey
  */
 export type RestRequestCancelOrders =
   | RestRequestCancelOrdersByWallet
+  | RestRequestCancelOrdersByOrderIds
   | RestRequestCancelOrdersByMarket
   | RestRequestCancelOrdersByDelegatedKey;
-
-/**
- * @internal
- */
-export type RestRequestCancelOrderOrOrders =
-  | RestRequestCancelOrder
-  | RestRequestCancelOrders;
 
 /**
  * Response to "cancel order" requests (single or multiple orders). Includes
@@ -143,4 +136,4 @@ export type RestResponseCancelOrders = IDEXCanceledOrder[];
  * @internal
  */
 export type RestRequestCancelOrdersSigned =
-  RestRequestWithSignature<RestRequestCancelOrderOrOrders>;
+  RestRequestWithSignature<RestRequestCancelOrders>;
