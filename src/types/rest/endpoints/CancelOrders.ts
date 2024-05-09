@@ -105,10 +105,10 @@ export interface RestRequestCancelOrdersByDelegatedKey
  * @category IDEX - Cancel Order
  */
 export type RestRequestCancelOrders =
-  | RestRequestCancelOrdersByWallet
   | RestRequestCancelOrdersByOrderIds
   | RestRequestCancelOrdersByMarket
-  | RestRequestCancelOrdersByDelegatedKey;
+  | RestRequestCancelOrdersByDelegatedKey
+  | RestRequestCancelOrdersByWallet;
 
 /**
  * Response to "cancel order" requests (single or multiple orders). Includes
