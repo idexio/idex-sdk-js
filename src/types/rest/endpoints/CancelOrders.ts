@@ -120,6 +120,11 @@ export type RestRequestCancelOrders =
 export interface IDEXCanceledOrder {
   /** Exchange-assigned order identifier */
   readonly orderId: string;
+  /**
+   * If the order was created with a `clientOrderId`, it will be included
+   * within the cancel object when cancelled by any of your requests.
+   */
+  readonly clientOrderId?: string;
 }
 
 /**

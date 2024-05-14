@@ -177,7 +177,7 @@
     "semantic-release-slack-bot": "^4.0.2",
     "slackify-markdown": "^4.4.0",
     "tsx": "^4.7.2",
-    "typedoc": "^0.25.13",
+    "typedoc": "0.25.13",
     "typedoc-plugin-extras": "^3.0.0",
     "typedoc-plugin-mdn-links": "^3.1.19",
     "typedoc-plugin-merge-modules": "^5.1.0",
