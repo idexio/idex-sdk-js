@@ -51,6 +51,10 @@ export const FillType = Object.freeze({
    * Position closure as the counterparty to an ADL action.
    */
   deleverage: 'deleverage',
+  /**
+   * Position closures resulting from forced dust liquidation
+   */
+  closure: 'closure',
 } as const);
 
 export type FillType = (typeof FillType)[keyof typeof FillType];
