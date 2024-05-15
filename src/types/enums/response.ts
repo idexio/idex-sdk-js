@@ -52,7 +52,7 @@ export const FillType = Object.freeze({
    */
   deleverage: 'deleverage',
   /**
-   * Position closures resulting from forced dust liquidation
+   * Position closures resulting from forced dust liquidation.
    */
   closure: 'closure',
 } as const);
