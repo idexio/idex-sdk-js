@@ -55,6 +55,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
+          node-version-file: ".nvmrc"
           check-latest: true
       - name: Enable Corepack
         run: corepack enable
@@ -70,16 +71,13 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-yarn-
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
       - name: Build Library
         run: yarn build
       - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
         run: npm audit signatures
       - name: Build TypeDoc
         run: yarn typedoc:build
-      # Build Documentation which will be committed by semantic-release
-      # - name: Build Documentation
-      #   run: yarn generate:docs:commit
       - name: Semantic Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -676,83 +676,11 @@ export class RestAuthenticatedClient {
   }
 
   /**
-   * Cancel a single order by using one of the available methods to give a value
-   * for the {@link idex.RestRequestCancelOrder.orderId orderId} request parameter:
-   *
-   * - Can be an order's {@link idex.IDEXOrder.orderId orderId}
-   * - To cancel an order by its {@link idex.IDEXOrder.clientOrderId clientOrderId},
-   *   you should prefix the parameter with `client:`.
-   *
-   * ---
-   * **Endpoint Parameters**
-   *
-   * > - **HTTP Request:**         `DELETE /v4/orders`
-   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Trade](https://api-docs-v4.idex.io/#api-keys)
-   * > - **Pagination:**           `None`
-   * ---
-   *
-   * @returns
-   * - Returns an array of any cancelled orders matching the {@link idex.IDEXCanceledOrder IDEXCanceledOrder} interface.
-   *
-   * ---
-   *
-   * @example
-   * ```typescript
-   * const responseByOrderId = await client.cancelOrder({
-   *   nonce: uuidv1(),
-   *   wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
-   *   orderId: 'f077a010-ce18-11ea-9557-a9d3f954788d',
-   * });
-   *
-   * const clientOrderId = '0001_23234_18863_IDEX_ETH';
-   *
-   * const responseByClientId = await client.cancelOrder({
-   *   nonce: uuidv1(),
-   *   wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
-   *   orderId: `client:${clientOrderId}`,
-   * });
-   * ```
-   *
-   * <br />
-   *
-   * ---
-   *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#cancelOrder)
-   * @see request  {@link idex.RestRequestCancelOrder RestRequestCancelOrder}
-   * @see response {@link idex.RestResponseCancelOrders RestResponseCancelOrders}
-   * @see type     {@link idex.IDEXCanceledOrder IDEXCanceledOrder}
-   * @see related  {@link cancelOrders client.cancelOrders}
-   *
-   * @category Orders
-   */
-  public async cancelOrder(
-    params: idex.RestRequestCancelOrder,
-    signer: undefined | idex.SignTypedData = this.#signer,
-  ) {
-    ensureSigner(signer);
-
-    const { chainId, exchangeContractAddress } =
-      await this.getContractAndChainId();
-
-    return this.delete<idex.RestResponseCancelOrders>('/orders', {
-      parameters: params,
-      signature: await signer(
-        ...getOrderCancellationSignatureTypedData(
-          params,
-          exchangeContractAddress,
-          chainId,
-          this.#config.sandbox,
-        ),
-      ),
-    });
-  }
-
-  /**
    * Cancel multiple matching orders using one of the following methods:
    *
    * - By {@link idex.RestRequestCancelOrdersByWallet.wallet wallet} (params: {@link idex.RestRequestCancelOrdersByWallet RestRequestCancelOrdersByWallet})
    * - By {@link idex.RestRequestCancelOrdersByMarket.wallet wallet} & {@link idex.RestRequestCancelOrdersByMarket.market market} (params: {@link idex.RestRequestCancelOrdersByMarket RestRequestCancelOrdersByMarket})
+   * - By {@link idex.RestRequestCancelOrdersByMarket.wallet wallet} & {@link idex.RestRequestCancelOrdersByOrderIds.orderIds orderIds} (params: {@link idex.RestRequestCancelOrdersByOrderIds RestRequestCancelOrdersByOrderIds})
    *
    * ---
    * **Endpoint Parameters**
