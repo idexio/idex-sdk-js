@@ -129,14 +129,14 @@ const transformOrderFill = (
     quoteQuantity: short.Q,
     realizedPnL: short.rn,
     time: short.t,
-    ...(short.y !== FillType.liquidation && short.y !== FillType.deleverage ?
+    ...(isWebSocketResponseOrderFillShortGeneral(short) ?
       {
         makerSide: short.s,
         sequence: short.u,
       }
     : {}),
     fee: short.f,
-    ...(short.y !== FillType.liquidation && short.y !== FillType.deleverage ?
+    ...(isWebSocketResponseOrderFillShortGeneral(short) ?
       {
         liquidity: short.l,
       }
@@ -313,3 +313,10 @@ export const transformWebsocketShortResponseMessage = (
       );
   }
 };
+
+const isWebSocketResponseOrderFillShortGeneral = (
+  short: idex.WebSocketResponseOrderFillShort,
+): short is idex.WebSocketResponseOrderFillShortGeneral =>
+  short.y !== FillType.closure &&
+  short.y !== FillType.liquidation &&
+  short.y !== FillType.deleverage;
