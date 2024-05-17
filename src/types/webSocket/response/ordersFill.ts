@@ -37,7 +37,7 @@ export interface IDEXOrderFillEventDataLiquidation
   /**
    * @inheritDoc
    */
-  type: typeof FillType.liquidation;
+  type: typeof FillType.closure | typeof FillType.liquidation;
 }
 
 /**
