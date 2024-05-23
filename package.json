@@ -1,6 +1,6 @@
 {
   "name": "@idexio/idex-sdk",
-  "version": "4.0.0-beta.11",
+  "version": "4.0.0-beta.12",
   "description": "IDEX SDK for Javascript in the browser and Node.js",
   "repository": "git@github.com:idexio/idex-sdk-js.git",
   "license": "MIT",
