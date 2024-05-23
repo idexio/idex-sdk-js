@@ -57,6 +57,13 @@ export interface IDEXOrderEvent extends IDEXSubscriptionEventBase {
 export interface IDEXOrderEventDataBase
   extends Pick<IDEXOrder, 'market' | 'wallet' | 'side'> {
   /**
+   * - When `undefined`, indicates the message is a `liquidation` or `deleverage`
+   *   where `fills` will include a single  {@link IDEXOrderFillEventData.type} of
+   *   {@link idex.FillType.liquidation liquidation} or
+   *   {@link idex.FillType.deleverage deleverage}.
+   */
+  type?: OrderEventType;
+  /**
    * Timestamp of the most recent update
    */
   executionTime: number;
