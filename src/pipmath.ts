@@ -2,8 +2,6 @@ import { BigNumber } from 'bignumber.js';
 
 export const exchangeDecimals = 8;
 export const oneInPips = BigInt(10 ** exchangeDecimals);
-// todo remove this?
-export const MAX_64_BIT_INT = BigInt('18446744073709551615');
 
 export function absBigInt(a: bigint): bigint {
   return a < BigInt(0) ? -a : a;
