@@ -126,15 +126,23 @@ function setUpStandardTestAccount(): {
   };
 }
 
+const standardTestOrderBookSellSide: orderbook.PriceAndSize[] = [
+  { price: decimalToPip('0.011'), size: decimalToPip('1000') },
+  { price: decimalToPip('0.012'), size: decimalToPip('1000') },
+  { price: decimalToPip('0.013'), size: decimalToPip('1000') },
+  { price: decimalToPip('0.014'), size: decimalToPip('1000') },
+];
+
+const standardTestOrderBookBuySide: orderbook.PriceAndSize[] = [
+  { price: decimalToPip('0.009'), size: decimalToPip('1000') },
+  { price: decimalToPip('0.008'), size: decimalToPip('1000') },
+  { price: decimalToPip('0.007'), size: decimalToPip('1000') },
+  { price: decimalToPip('0.006'), size: decimalToPip('1000') },
+];
+
 describe('orderbook/quantities', () => {
   describe('calculateBuySellPanelEstimate', () => {
     it('should succeed for a buy', () => {
-      const sellSideMakerOrders: orderbook.PriceAndSize[] = [
-        { price: decimalToPip('0.011'), size: decimalToPip('1000') },
-        { price: decimalToPip('0.012'), size: decimalToPip('1000') },
-        { price: decimalToPip('0.013'), size: decimalToPip('1000') },
-        { price: decimalToPip('0.014'), size: decimalToPip('1000') },
-      ];
       const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
         setUpStandardTestAccount();
 
@@ -144,7 +152,7 @@ describe('orderbook/quantities', () => {
           heldCollateral,
           initialMarginFractionOverride: null,
           leverageParameters: market,
-          makerSideOrders: sellSideMakerOrders,
+          makerSideOrders: standardTestOrderBookSellSide,
           market,
           quoteBalance,
           sliderFactor: 0.97,
@@ -190,13 +198,83 @@ describe('orderbook/quantities', () => {
       });
     });
 
+    const runDesiredPositionQtyBuyScenario = (
+      desiredQtys: {
+        desiredPositionBaseQuantity?: bigint;
+        desiredPositionQuoteQuantity?: bigint;
+      },
+      expectedResult: {
+        baseQuantity: bigint;
+        quoteQuantity: bigint;
+      },
+    ) => {
+      const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
+        setUpStandardTestAccount();
+
+      expect(
+        orderbook.calculateBuySellPanelEstimate({
+          allWalletPositions: [positionInAnotherMarket],
+          ...desiredQtys,
+          heldCollateral,
+          initialMarginFractionOverride: null,
+          leverageParameters: market,
+          makerSideOrders: standardTestOrderBookSellSide,
+          market,
+          quoteBalance,
+          takerSide: 'buy',
+        }),
+      ).to.eql(expectedResult);
+    };
+
+    describe('desiredPositionBaseQuantity (buy)', () => {
+      it('should succeed', () =>
+        runDesiredPositionQtyBuyScenario(
+          {
+            desiredPositionBaseQuantity: decimalToPip('3000'),
+          },
+          {
+            baseQuantity: decimalToPip('3000'),
+            quoteQuantity: decimalToPip('36'),
+          },
+        ));
+
+      it("should not exceed the taker's buying power", () =>
+        runDesiredPositionQtyBuyScenario(
+          {
+            desiredPositionBaseQuantity: decimalToPip('4000'),
+          },
+          {
+            baseQuantity: decimalToPip('3720.93023255'),
+            quoteQuantity: decimalToPip('46.09302325'),
+          },
+        ));
+    });
+
+    describe('desiredPositionQuoteQuantity (buy)', () => {
+      it('should succeed', () =>
+        runDesiredPositionQtyBuyScenario(
+          {
+            desiredPositionQuoteQuantity: decimalToPip('40'),
+          },
+          {
+            baseQuantity: decimalToPip('3285.71428587'),
+            quoteQuantity: decimalToPip('40'),
+          },
+        ));
+
+      it("should not exceed the taker's buying power", () =>
+        runDesiredPositionQtyBuyScenario(
+          {
+            desiredPositionQuoteQuantity: decimalToPip('50'),
+          },
+          {
+            baseQuantity: decimalToPip('3720.93023255'),
+            quoteQuantity: decimalToPip('46.09302325'),
+          },
+        ));
+    });
+
     it('should succeed for a sell', () => {
-      const buySideMakerOrders: orderbook.PriceAndSize[] = [
-        { price: decimalToPip('0.009'), size: decimalToPip('1000') },
-        { price: decimalToPip('0.008'), size: decimalToPip('1000') },
-        { price: decimalToPip('0.007'), size: decimalToPip('1000') },
-        { price: decimalToPip('0.006'), size: decimalToPip('1000') },
-      ];
       const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
         setUpStandardTestAccount();
 
@@ -206,7 +284,7 @@ describe('orderbook/quantities', () => {
           heldCollateral,
           initialMarginFractionOverride: null,
           leverageParameters: market,
-          makerSideOrders: buySideMakerOrders,
+          makerSideOrders: standardTestOrderBookBuySide,
           market,
           quoteBalance,
           sliderFactor: 0.97,
@@ -250,6 +328,106 @@ describe('orderbook/quantities', () => {
         baseQuantity: decimalToPip('-3651.16279069'),
         quoteQuantity: decimalToPip('-27.90697674'),
       });
+    });
+
+    const runDesiredPositionQtySellScenario = (
+      desiredQtys: {
+        desiredPositionBaseQuantity?: bigint;
+        desiredPositionQuoteQuantity?: bigint;
+      },
+      expectedResult: {
+        baseQuantity: bigint;
+        quoteQuantity: bigint;
+      },
+    ) => {
+      const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
+        setUpStandardTestAccount();
+
+      expect(
+        orderbook.calculateBuySellPanelEstimate({
+          allWalletPositions: [positionInAnotherMarket],
+          ...desiredQtys,
+          heldCollateral,
+          initialMarginFractionOverride: null,
+          leverageParameters: market,
+          makerSideOrders: standardTestOrderBookBuySide,
+          market,
+          quoteBalance,
+          takerSide: 'sell',
+        }),
+      ).to.eql(expectedResult);
+    };
+
+    describe('desiredPositionBaseQuantity (sell)', () => {
+      it('should succeed', () =>
+        runDesiredPositionQtySellScenario(
+          {
+            desiredPositionBaseQuantity: decimalToPip('-3000'),
+          },
+          {
+            baseQuantity: decimalToPip('-3000'),
+            quoteQuantity: decimalToPip('-24'),
+          },
+        ));
+
+      it('should ensure the correct sign', () =>
+        runDesiredPositionQtySellScenario(
+          {
+            // Positive value, should be interpreted as a negative value
+            desiredPositionBaseQuantity: decimalToPip('3000'),
+          },
+          {
+            baseQuantity: decimalToPip('-3000'),
+            quoteQuantity: decimalToPip('-24'),
+          },
+        ));
+
+      it("should not exceed the taker's buying power", () =>
+        runDesiredPositionQtySellScenario(
+          {
+            desiredPositionBaseQuantity: decimalToPip('-4000'),
+          },
+          {
+            baseQuantity: decimalToPip('-3720.93023255'),
+            quoteQuantity: decimalToPip('-28.32558139'),
+          },
+        ));
+    });
+
+    describe('desiredPositionQuoteQuantity (sell)', () => {
+      it('should succeed', () =>
+        runDesiredPositionQtySellScenario(
+          {
+            desiredPositionQuoteQuantity: decimalToPip('-20'),
+          },
+          {
+            baseQuantity: decimalToPip('-2428.57142875'),
+            quoteQuantity: decimalToPip('-20'),
+          },
+        ));
+
+      it('should ensure the correct sign', () =>
+        runDesiredPositionQtySellScenario(
+          {
+            // Positive value, should be interpreted as a negative value
+            desiredPositionQuoteQuantity: decimalToPip('20'),
+          },
+          {
+            baseQuantity: decimalToPip('-2428.57142875'),
+            quoteQuantity: decimalToPip('-20'),
+          },
+        ));
+
+      it("should not exceed the taker's buying power", () =>
+        runDesiredPositionQtySellScenario(
+          {
+            desiredPositionQuoteQuantity: decimalToPip('-30'),
+          },
+          {
+            baseQuantity: decimalToPip('-3720.93023255'),
+            quoteQuantity: decimalToPip('-28.32558139'),
+          },
+        ));
     });
 
     const runOrderBookLiquidityExceededScenario = (
@@ -320,12 +498,62 @@ describe('orderbook/quantities', () => {
     it('should return zero for negative availableCollateral', () =>
       runNoAvailableCollateralScenario('negative'));
 
-    it('should return zero for a zero sliderFactor', () => {
+    const runWrongNumberOfQtyInputsScenario = (qtyInputs: {
+      desiredPositionBaseQuantity?: bigint;
+      desiredPositionQuoteQuantity?: bigint;
+      sliderFactor?: number;
+    }) => {
+      const market = makeAMarket(BigInt(123));
+
+      expect(() =>
+        orderbook.calculateBuySellPanelEstimate({
+          ...qtyInputs,
+
+          allWalletPositions: [],
+          heldCollateral: BigInt(0),
+          initialMarginFractionOverride: null,
+          leverageParameters: market,
+          makerSideOrders: [],
+          market,
+          quoteBalance: BigInt(0),
+          takerSide: 'buy',
+        }),
+      ).to.throw(
+        'Either desiredPositionBaseQuantity, desiredPositionQuoteQuantity, or sliderFactor needs to be provided',
+      );
+    };
+
+    it('should require at least one quantity input ', () =>
+      runWrongNumberOfQtyInputsScenario({}));
+
+    it('should reject multiple quantity inputs ', () => {
+      runWrongNumberOfQtyInputsScenario({
+        desiredPositionBaseQuantity: BigInt(123),
+        desiredPositionQuoteQuantity: BigInt(123),
+      });
+      runWrongNumberOfQtyInputsScenario({
+        desiredPositionBaseQuantity: BigInt(123),
+        sliderFactor: 0.123,
+      });
+      runWrongNumberOfQtyInputsScenario({
+        desiredPositionBaseQuantity: BigInt(123),
+        desiredPositionQuoteQuantity: BigInt(123),
+        sliderFactor: 0.123,
+      });
+    });
+
+    const runZeroInputScenario = (qtyInputs: {
+      desiredPositionBaseQuantity?: bigint;
+      desiredPositionQuoteQuantity?: bigint;
+      sliderFactor?: number;
+    }) => {
       const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
         setUpStandardTestAccount();
 
       expect(
         orderbook.calculateBuySellPanelEstimate({
+          ...qtyInputs,
+
           allWalletPositions: [positionInAnotherMarket],
           heldCollateral,
           initialMarginFractionOverride: null,
@@ -335,14 +563,22 @@ describe('orderbook/quantities', () => {
           ],
           market,
           quoteBalance,
-          sliderFactor: 0,
           takerSide: 'buy',
         }),
       ).to.eql({
         baseQuantity: BigInt(0),
         quoteQuantity: BigInt(0),
       });
-    });
+    };
+
+    it('should return zero for a zero desiredPositionBaseQuantity', () =>
+      runZeroInputScenario({ desiredPositionBaseQuantity: BigInt(0) }));
+
+    it('should return zero for a zero desiredPositionQuoteQuantity', () =>
+      runZeroInputScenario({ desiredPositionQuoteQuantity: BigInt(0) }));
+
+    it('should return zero for a zero sliderFactor', () =>
+      runZeroInputScenario({ sliderFactor: 0 }));
 
     it('should reject a negative sliderFactor', () => {
       const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =

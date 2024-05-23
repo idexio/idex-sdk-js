@@ -67,6 +67,14 @@ export const nullLevel: OrderBookLevelL2 = {
 export function calculateBuySellPanelEstimate(args: {
   /** All the wallet's open positions, including any in the current market */
   allWalletPositions: IDEXPosition[];
+  /**
+   * The desired position qty to be acquired.
+   * Either desiredPositionBaseQuantity, desiredPositionQuoteQuantity, or
+   * sliderFactor needs to be provided. An error is thrown if none or more than
+   * one is provided.
+   */
+  desiredPositionBaseQuantity?: bigint;
+  desiredPositionQuoteQuantity?: bigint;
   /** Free collateral committed to open limit orders (unsigned) */
   heldCollateral: bigint;
   initialMarginFractionOverride: bigint | null;
@@ -78,8 +86,11 @@ export function calculateBuySellPanelEstimate(args: {
   /**
    * Floating point number between 0 and 1 that indicates the amount of the
    * available collateral to be spent.
+   * Either desiredPositionBaseQuantity, desiredPositionQuoteQuantity, or
+   * sliderFactor needs to be provided. An error is thrown if none or more than
+   * one is provided.
    */
-  sliderFactor: number;
+  sliderFactor?: number;
   takerSide: OrderSide;
 }): {
   baseQuantity: bigint;
@@ -97,9 +108,38 @@ export function calculateBuySellPanelEstimate(args: {
     takerSide,
   } = args;
 
-  /*
-   * Slider calculations
-   */
+  let { desiredPositionBaseQuantity, desiredPositionQuoteQuantity } = args;
+
+  const undefinedQtyInputs = [
+    desiredPositionBaseQuantity,
+    desiredPositionQuoteQuantity,
+    sliderFactor,
+  ].filter((value) => typeof value === 'undefined');
+
+  if (undefinedQtyInputs.length !== 2) {
+    throw new Error(
+      'Either desiredPositionBaseQuantity, desiredPositionQuoteQuantity, or sliderFactor needs to be provided',
+    );
+  }
+  // Ensure the correct sign of desired position qtys
+  if (typeof desiredPositionBaseQuantity !== 'undefined') {
+    desiredPositionBaseQuantity =
+      absBigInt(desiredPositionBaseQuantity) *
+      BigInt(takerSide === 'buy' ? 1 : -1);
+  }
+  if (typeof desiredPositionQuoteQuantity !== 'undefined') {
+    desiredPositionQuoteQuantity =
+      absBigInt(desiredPositionQuoteQuantity) *
+      BigInt(takerSide === 'buy' ? 1 : -1);
+  }
+  if (typeof sliderFactor !== 'undefined') {
+    if (sliderFactor < 0 || sliderFactor > 1) {
+      throw new Error(
+        'sliderFactor must be a floating point number between 0 and 1',
+      );
+    }
+  }
+
   const accountValue =
     quoteBalance + calculateNotionalQuoteValueOfPositions(allWalletPositions);
 
@@ -111,21 +151,32 @@ export function calculateBuySellPanelEstimate(args: {
   const initialAvailableCollateral =
     accountValue - initialMarginRequirementOfAllPositions - heldCollateral;
 
-  if (initialAvailableCollateral <= BigInt(0) || sliderFactor === 0) {
+  if (
+    initialAvailableCollateral <= BigInt(0) ||
+    desiredPositionBaseQuantity === BigInt(0) ||
+    desiredPositionQuoteQuantity === BigInt(0) ||
+    sliderFactor === 0
+  ) {
     return {
       baseQuantity: BigInt(0),
       quoteQuantity: BigInt(0),
     };
   }
-  if (sliderFactor < 0 || sliderFactor > 1) {
-    throw new Error(
-      'sliderFactor must be a floating point number between 0 and 1',
-    );
-  }
-  const sliderFactorInPips = decimalToPip(sliderFactor.toString());
 
-  const remainingAvailableCollateral =
-    initialAvailableCollateral * (oneInPips - sliderFactorInPips);
+  /*
+   * Slider calculations
+   *
+   * Don't limit the amount of available collateral to be spent if limiting by
+   * desired position qty.
+   */
+  let desiredRemainingAvailableCollateral = BigInt(0);
+
+  if (typeof sliderFactor !== 'undefined') {
+    const sliderFactorInPips = decimalToPip(sliderFactor.toString());
+
+    desiredRemainingAvailableCollateral =
+      initialAvailableCollateral * (oneInPips - sliderFactorInPips);
+  }
 
   /*
    * Execute against order book
@@ -197,12 +248,12 @@ export function calculateBuySellPanelEstimate(args: {
     );
 
     // Signed
-    const maxTakerBaseQty =
+    const maxBuyingPowerBase =
       ((-quoteBalance2p -
         quoteValueOfPosition2p -
         quoteValueOfOtherPositions2p +
         heldCollateral2p +
-        remainingAvailableCollateral +
+        desiredRemainingAvailableCollateral +
         initialMarginRequirementOfPosition2p +
         initialMarginRequirementOfOtherPositions2p) *
         oneInPips) /
@@ -212,12 +263,47 @@ export function calculateBuySellPanelEstimate(args: {
           indexPrice *
           initialMarginFraction);
 
+    let maxTakerBaseQty = maxBuyingPowerBase;
+    if (desiredPositionBaseQuantity) {
+      // Limit base to buying power and desired position qty
+      maxTakerBaseQty =
+        takerSide === 'buy' ?
+          minBigInt(
+            maxBuyingPowerBase,
+            desiredPositionBaseQuantity - additionalPositionQty,
+          )
+        : maxBigInt(
+            maxBuyingPowerBase,
+            desiredPositionBaseQuantity - additionalPositionQty,
+          );
+    }
+
+    let maxTakerQuoteQty = multiplyPips(maxTakerBaseQty, makerOrder.price);
+
+    if (desiredPositionQuoteQuantity) {
+      // Limit quote to buying power and desired position qty
+      const maxTakerQuoteQtyBefore = maxTakerQuoteQty;
+      maxTakerQuoteQty =
+        takerSide === 'buy' ?
+          minBigInt(
+            maxTakerQuoteQty,
+            desiredPositionQuoteQuantity - additionalPositionCostBasis,
+          )
+        : maxBigInt(
+            maxTakerQuoteQty,
+            desiredPositionQuoteQuantity - additionalPositionCostBasis,
+          );
+
+      if (maxTakerQuoteQty !== maxTakerQuoteQtyBefore) {
+        // Reduce base proportionally to reduction of quote
+        maxTakerBaseQty =
+          (maxTakerBaseQty * maxTakerQuoteQty) / maxTakerQuoteQtyBefore;
+      }
+    }
+
     if (absBigInt(maxTakerBaseQty) < makerOrder.size) {
       additionalPositionQty += maxTakerBaseQty;
-      additionalPositionCostBasis += multiplyPips(
-        maxTakerBaseQty,
-        makerOrder.price,
-      );
+      additionalPositionCostBasis += maxTakerQuoteQty;
       return {
         baseQuantity: additionalPositionQty,
         quoteQuantity: additionalPositionCostBasis,
