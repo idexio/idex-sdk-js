@@ -1,10 +1,6 @@
 import { UnreachableCaseError } from '#utils';
 
-import {
-  FillType,
-  OrderEventType,
-  MessageEventType,
-} from '#types/enums/response';
+import { FillType, MessageEventType } from '#types/enums/response';
 
 import type * as idex from '#types/index';
 import type { AnyObj } from '#types/utils';
@@ -118,10 +114,8 @@ const transformL2orderbookMessage = (
     indexPrice: short.ip,
   });
 
-const transformOrderFill = (
-  short: idex.WebSocketResponseOrderFillShort,
-): idex.IDEXOrderFillEventData =>
-  removeUndefinedFromObj({
+function transformOrderFill(short: idex.WebSocketResponseOrderFillShort) {
+  return removeUndefinedFromObj({
     type: short.y,
     fillId: short.i,
     price: short.p,
@@ -146,30 +140,22 @@ const transformOrderFill = (
     txId: short.T,
     txStatus: short.S,
   });
+}
 
-const transformOrdersMessage = (
+function transformOrdersMessage(
   short: idex.WebSocketResponseOrderShort,
-): idex.IDEXOrderEventData => {
-  if (short.o === OrderEventType.liquidation) {
+): idex.IDEXOrderEventData {
+  if (!short.o) {
     return removeUndefinedFromObj({
       market: short.m,
       wallet: short.w,
       executionTime: short.t,
-      type: OrderEventType.liquidation,
       side: short.s,
-      ...(short.F && { fills: short.F.map(transformOrderFill) }),
-    } satisfies idex.IDEXOrderEventDataLiquidation);
+      // should only include a single fill but we map for future compat
+      fills: short.F.map(transformOrderFill),
+    } satisfies idex.IDEXOrderEventDataSystemFill);
   }
-  if (short.o === OrderEventType.deleverage) {
-    return removeUndefinedFromObj({
-      market: short.m,
-      wallet: short.w,
-      executionTime: short.t,
-      type: OrderEventType.deleverage,
-      side: short.s,
-      ...(short.F && { fills: short.F.map(transformOrderFill) }),
-    } satisfies idex.IDEXOrderEventDataDeleverage);
-  }
+
   return removeUndefinedFromObj({
     market: short.m,
     orderId: short.i,
@@ -200,7 +186,7 @@ const transformOrdersMessage = (
     isLiquidationAcquisitionOnly: short.la,
     ...(short.F && { fills: short.F.map(transformOrderFill) }),
   } satisfies idex.IDEXOrderEventDataGeneral);
-};
+}
 
 const transformDepositsMessage = (
   short: idex.WebSocketResponseDepositsShort,
