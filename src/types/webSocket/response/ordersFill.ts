@@ -1,4 +1,8 @@
-import type { FillType } from '#types/enums/response';
+import type {
+  FillType,
+  FillTypeOrder,
+  FillTypeSystem,
+} from '#types/enums/response';
 import type { IDEXOrderFill } from '#types/rest/index';
 
 /**
@@ -15,34 +19,29 @@ export interface IDEXOrderFillEventDataBase
 }
 
 /**
- * Deleverage Order Fill Type
+ * Fills of type {@link FillTypeSystem}
  *
+ * - These types of fills do not include values from {@link IDEXOrderFill}
+ *   that other fill types include:
+ *   - {@link IDEXOrderFill.makerSide makerSide}
+ *   - {@link IDEXOrderFill.sequence sequence}
+ *   - {@link IDEXOrderFill.liquidity liquidity}
+ *
+ * @see type {@link FillTypeSystem}
  * @category IDEX - Get Orders
  */
-export interface IDEXOrderFillEventDataDeleverage
+export interface IDEXOrderFillEventDataSystem
   extends IDEXOrderFillEventDataBase {
   /**
    * @inheritDoc
    */
-  type: typeof FillType.deleverage;
-}
-
-/**
- * liquidation Order Fill Type
- *
- * @category IDEX - Get Orders
- */
-export interface IDEXOrderFillEventDataLiquidation
-  extends IDEXOrderFillEventDataBase {
-  /**
-   * @inheritDoc
-   */
-  type: typeof FillType.closure | typeof FillType.liquidation;
+  type: FillTypeSystem;
 }
 
 /**
  * Non-liquidation Order Fill Type
  *
+ * @see type {@link FillTypeOrder}
  * @category IDEX - Get Orders
  */
 export interface IDEXOrderFillEventDataGeneral
@@ -51,10 +50,7 @@ export interface IDEXOrderFillEventDataGeneral
   /**
    * @inheritDoc
    */
-  type: Exclude<
-    FillType,
-    typeof FillType.liquidation | typeof FillType.deleverage
-  >;
+  type: FillTypeOrder;
 }
 
 /**
@@ -64,8 +60,7 @@ export interface IDEXOrderFillEventDataGeneral
  * @category IDEX - Get Orders
  */
 export type IDEXOrderFillEventData =
-  | IDEXOrderFillEventDataDeleverage
-  | IDEXOrderFillEventDataLiquidation
+  | IDEXOrderFillEventDataSystem
   | IDEXOrderFillEventDataGeneral;
 
 /**
@@ -125,23 +120,12 @@ export interface WebSocketResponseOrderFillShortBase {
 /**
  * @internal
  */
-export interface WebSocketResponseOrderFillShortDeleverage
+export interface WebSocketResponseOrderFillShortSystem
   extends WebSocketResponseOrderFillShortBase {
   /**
    * @see inflated {@link IDEXOrderFillEventData.type}
    */
-  y: IDEXOrderFillEventDataDeleverage['type'];
-}
-
-/**
- * @internal
- */
-export interface WebSocketResponseOrderFillShortLiquidation
-  extends WebSocketResponseOrderFillShortBase {
-  /**
-   * @see inflated {@link IDEXOrderFillEventData.type}
-   */
-  y: IDEXOrderFillEventDataLiquidation['type'];
+  y: IDEXOrderFillEventDataSystem['type'];
 }
 
 /**
@@ -171,6 +155,5 @@ export interface WebSocketResponseOrderFillShortGeneral
  * @internal
  */
 export type WebSocketResponseOrderFillShort =
-  | WebSocketResponseOrderFillShortDeleverage
-  | WebSocketResponseOrderFillShortGeneral
-  | WebSocketResponseOrderFillShortLiquidation;
+  | WebSocketResponseOrderFillShortSystem
+  | WebSocketResponseOrderFillShortGeneral;
