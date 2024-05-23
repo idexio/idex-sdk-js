@@ -114,10 +114,8 @@ const transformL2orderbookMessage = (
     indexPrice: short.ip,
   });
 
-const transformOrderFill = (
-  short: idex.WebSocketResponseOrderFillShort,
-): idex.IDEXOrderFillEventData =>
-  removeUndefinedFromObj({
+function transformOrderFill(short: idex.WebSocketResponseOrderFillShort) {
+  return removeUndefinedFromObj({
     type: short.y,
     fillId: short.i,
     price: short.p,
@@ -142,20 +140,20 @@ const transformOrderFill = (
     txId: short.T,
     txStatus: short.S,
   });
+}
 
-const transformOrdersMessage = (
+function transformOrdersMessage(
   short: idex.WebSocketResponseOrderShort,
-): idex.IDEXOrderEventData => {
-  if (!('o' in short)) {
+): idex.IDEXOrderEventData {
+  if (!short.o) {
     return removeUndefinedFromObj({
       market: short.m,
       wallet: short.w,
       executionTime: short.t,
       side: short.s,
-      ...(short.F && { fills: short.F.map(transformOrderFill) }),
-    } satisfies
-      | idex.IDEXOrderEventDataLiquidation
-      | idex.IDEXOrderEventDataDeleverage);
+      // should only include a single fill but we map for future compat
+      fills: short.F.map(transformOrderFill),
+    } satisfies idex.IDEXOrderEventDataSystemFill);
   }
 
   return removeUndefinedFromObj({
@@ -188,7 +186,7 @@ const transformOrdersMessage = (
     isLiquidationAcquisitionOnly: short.la,
     ...(short.F && { fills: short.F.map(transformOrderFill) }),
   } satisfies idex.IDEXOrderEventDataGeneral);
-};
+}
 
 const transformDepositsMessage = (
   short: idex.WebSocketResponseDepositsShort,

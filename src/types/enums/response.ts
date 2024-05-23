@@ -1,5 +1,4 @@
 import {
-  OrderType,
   SubscriptionNameAuthenticated,
   SubscriptionNamePublic,
 } from '#types/enums/request';
@@ -28,21 +27,10 @@ export const PositionSide = Object.freeze({
 export type PositionSide = (typeof PositionSide)[keyof typeof PositionSide];
 
 /**
- * Whether the fill increases or decreases the notional value of the position
- *
- *
- * @category Enums - Response Properties
- * @enum
+ * Specialized fill types which do not include orders and may produce different
+ * messaging / types in various places within the code.
  */
-export const FillType = Object.freeze({
-  /**
-   * Fills resulting from any type of market order.
-   */
-  market: 'market',
-  /**
-   * Fills resulting from any type of limit order.
-   */
-  limit: 'limit',
+export const FillTypeSystem = Object.freeze({
   /**
    * Position closures resulting from forced liquidation or ADL.
    */
@@ -56,6 +44,39 @@ export const FillType = Object.freeze({
    */
   closure: 'closure',
 } as const);
+
+export type FillTypeSystem =
+  (typeof FillTypeSystem)[keyof typeof FillTypeSystem];
+
+/**
+ * Fill types associated with an order.
+ */
+export const FillTypeOrder = Object.freeze({
+  /**
+   * Fills resulting from any type of market order.
+   */
+  market: 'market',
+  /**
+   * Fills resulting from any type of limit order.
+   */
+  limit: 'limit',
+} as const);
+
+export type FillTypeOrder = (typeof FillTypeOrder)[keyof typeof FillTypeOrder];
+
+/**
+ * Whether the fill increases or decreases the notional value of the position.
+ *
+ * - Includes {@link FillTypeSysem} properties which may produce different
+ *   message types in places like the WebSocket API.
+ *
+ * @category Enums - Response Properties
+ * @enum
+ */
+export const FillType = Object.freeze({
+  ...FillTypeOrder,
+  ...FillTypeSystem,
+});
 
 export type FillType = (typeof FillType)[keyof typeof FillType];
 
@@ -243,22 +264,6 @@ export const OrderBookLevelType = Object.freeze({
 
 export type OrderBookLevelType =
   (typeof OrderBookLevelType)[keyof typeof OrderBookLevelType];
-
-/**
- * Can be used as a convenience when specifying your orders for WebSocket
- * to benefit from inline documentation and auto-complete.
- *
- * @category Enums - Response Properties
- * @enum
- *
- * @see docs [API Documentation: Order Types](https://api-docs-v4.idex.io/#order-types)
- */
-export const OrderEventType = Object.freeze({
-  ...OrderType,
-} as const);
-
-export type OrderEventType =
-  (typeof OrderEventType)[keyof typeof OrderEventType];
 
 /**
  * Can be used as a convenience when specifying your orders for WebSocket
