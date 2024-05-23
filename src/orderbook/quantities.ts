@@ -1,6 +1,16 @@
 import { BigNumber } from 'bignumber.js';
 
-import * as pipmath from '#pipmath';
+import {
+  ROUNDING,
+  absBigInt,
+  arraySumBigInt,
+  decimalToPip,
+  divideBigInt,
+  maxBigInt,
+  minBigInt,
+  multiplyPips,
+  oneInPips,
+} from '#pipmath';
 
 import { OrderSide } from '#types/enums/request';
 
@@ -9,6 +19,19 @@ import type {
   OrderBookLevelL1,
   OrderBookLevelL2,
 } from '#types/orderBook';
+import type { IDEXMarket, IDEXPosition } from '#types/rest/endpoints/index';
+
+type LeverageParameters = Pick<
+  IDEXMarket,
+  | 'maximumPositionSize'
+  | 'initialMarginFraction'
+  | 'maintenanceMarginFraction'
+  | 'basePositionSize'
+  | 'incrementalPositionSize'
+  | 'incrementalInitialMarginFraction'
+>;
+
+export type LeverageParametersBigInt = Record<keyof LeverageParameters, bigint>;
 
 /**
  * Price and Size values form the {@link OrderBookLevelL1} type
@@ -27,35 +50,272 @@ export const nullLevel: OrderBookLevelL2 = {
 };
 
 /**
- * Helper function to convert from quote to base quantities
- * see: {quantitiesAvailableFromPoolAtAskPrice}
+ * Determines the liquidity (expressed in the market's base asset) that can be
+ * taken off the given order book (asks or bids) by spending the specified
+ * fraction of a wallet's available collateral and taking into account the
+ * margin requirement for the newly acquired position balance.
+ *
+ * Also returns the cost basis of the newly acquired position balance (i.e. the
+ * quote quantity that is exchanged to acquire the position balance).
+ *
+ * Both values are signed (positive for buys, negative for sells).
+ *
+ * The provided list of orders or price levels (asks or bids) is expected to be
+ * sorted by best price (ascending for asks (lowest first), descending for bids
+ * (highest first)). Multiple orders per price level are supported.
  */
-export function calculateGrossBaseValueOfBuyQuantities(
-  baseAssetQuantity: bigint,
-  quoteAssetQuantity: bigint,
-  grossQuoteQuantity: bigint,
+export function calculateBuySellPanelEstimate(args: {
+  /** All the wallet's open positions, including any in the current market */
+  allWalletPositions: IDEXPosition[];
+  /** Free collateral committed to open limit orders (unsigned) */
+  heldCollateral: bigint;
+  initialMarginFractionOverride: bigint | null;
+  leverageParameters: LeverageParameters;
+  makerSideOrders: Iterable<PriceAndSize>;
+  market: Pick<IDEXMarket, 'market' | 'indexPrice'>;
+  /** Quote token balance (USDC) (signed) */
+  quoteBalance: bigint;
+  /**
+   * Floating point number between 0 and 1 that indicates the amount of the
+   * available collateral to be spent.
+   */
+  sliderFactor: number;
+  takerSide: OrderSide;
+}): {
+  baseQuantity: bigint;
+  quoteQuantity: bigint;
+} {
+  const {
+    allWalletPositions,
+    market,
+    heldCollateral,
+    initialMarginFractionOverride,
+    leverageParameters,
+    makerSideOrders,
+    quoteBalance,
+    sliderFactor,
+    takerSide,
+  } = args;
+
+  /*
+   * Slider calculations
+   */
+  const accountValue =
+    quoteBalance + calculateNotionalQuoteValueOfPositions(allWalletPositions);
+
+  const initialMarginRequirementOfAllPositions = arraySumBigInt(
+    allWalletPositions.map((position) =>
+      decimalToPip(position.marginRequirement),
+    ),
+  );
+  const initialAvailableCollateral =
+    accountValue - initialMarginRequirementOfAllPositions - heldCollateral;
+
+  if (initialAvailableCollateral <= BigInt(0) || sliderFactor === 0) {
+    return {
+      baseQuantity: BigInt(0),
+      quoteQuantity: BigInt(0),
+    };
+  }
+  if (sliderFactor < 0 || sliderFactor > 1) {
+    throw new Error(
+      'sliderFactor must be a floating point number between 0 and 1',
+    );
+  }
+  const sliderFactorInPips = decimalToPip(sliderFactor.toString());
+
+  const remainingAvailableCollateral =
+    initialAvailableCollateral * (oneInPips - sliderFactorInPips);
+
+  /*
+   * Execute against order book
+   */
+  const indexPrice = decimalToPip(market.indexPrice);
+  const indexPrice2p = indexPrice * oneInPips;
+
+  const heldCollateral2p = heldCollateral * oneInPips;
+
+  const currentPosition = allWalletPositions.find(
+    (position) => position.market === market.market,
+  );
+  const otherPositions = allWalletPositions.filter(
+    (position) => position.market !== market.market,
+  );
+
+  const quoteValueOfOtherPositions =
+    calculateNotionalQuoteValueOfPositions(otherPositions);
+  const quoteValueOfOtherPositions2p = quoteValueOfOtherPositions * oneInPips;
+
+  const initialMarginRequirementOfOtherPositions = arraySumBigInt(
+    otherPositions.map((position) => decimalToPip(position.marginRequirement)),
+  );
+  const initialMarginRequirementOfOtherPositions2p =
+    initialMarginRequirementOfOtherPositions * oneInPips;
+
+  const leverageParametersBigInt =
+    convertToLeverageParametersBigInt(leverageParameters);
+
+  let additionalPositionQty = BigInt(0); // Signed
+  let additionalPositionCostBasis = BigInt(0); // Signed
+  let quoteBalance2p = quoteBalance * oneInPips; // Signed
+
+  for (const makerOrder of makerSideOrders) {
+    if (!doOrdersMatch(makerOrder, { side: takerSide })) {
+      return {
+        baseQuantity: additionalPositionQty,
+        quoteQuantity: additionalPositionCostBasis,
+      };
+    }
+    if (
+      takerSide === 'buy' ?
+        indexPrice >= makerOrder.price
+      : indexPrice <= makerOrder.price
+    ) {
+      return {
+        baseQuantity: additionalPositionQty,
+        quoteQuantity: additionalPositionCostBasis,
+      };
+    }
+    const makerOrderPrice2p = makerOrder.price * oneInPips;
+
+    const positionBalance =
+      (currentPosition ? decimalToPip(currentPosition.quantity) : BigInt(0)) +
+      additionalPositionQty;
+
+    const quoteValueOfPosition2p = positionBalance * indexPrice; // Signed
+
+    const initialMarginFraction = calculateInitialMarginFractionWithOverride({
+      initialMarginFractionOverride,
+      leverageParameters: leverageParametersBigInt,
+      positionBalance,
+    });
+
+    // Unsigned
+    const initialMarginRequirementOfPosition2p = multiplyPips(
+      absBigInt(quoteValueOfPosition2p),
+      initialMarginFraction,
+    );
+
+    // Signed
+    const maxTakerBaseQty =
+      ((-quoteBalance2p -
+        quoteValueOfPosition2p -
+        quoteValueOfOtherPositions2p +
+        heldCollateral2p +
+        remainingAvailableCollateral +
+        initialMarginRequirementOfPosition2p +
+        initialMarginRequirementOfOtherPositions2p) *
+        oneInPips) /
+      (indexPrice2p -
+        makerOrderPrice2p +
+        BigInt(takerSide === 'buy' ? -1 : 1) *
+          indexPrice *
+          initialMarginFraction);
+
+    if (absBigInt(maxTakerBaseQty) < makerOrder.size) {
+      additionalPositionQty += maxTakerBaseQty;
+      additionalPositionCostBasis += multiplyPips(
+        maxTakerBaseQty,
+        makerOrder.price,
+      );
+      return {
+        baseQuantity: additionalPositionQty,
+        quoteQuantity: additionalPositionCostBasis,
+      };
+    }
+    const tradeBaseQty = makerOrder.size * BigInt(takerSide === 'buy' ? 1 : -1);
+    const tradeQuoteQty = multiplyPips(tradeBaseQty, makerOrder.price);
+    additionalPositionQty += tradeBaseQty;
+    additionalPositionCostBasis += tradeQuoteQty;
+
+    quoteBalance2p -= tradeBaseQty * makerOrder.price;
+  }
+  return {
+    baseQuantity: additionalPositionQty,
+    quoteQuantity: additionalPositionCostBasis,
+  };
+}
+
+/**
+ * @private
+ */
+function calculateInitialMarginFraction(
+  leverageParameters: LeverageParametersBigInt,
+  positionBalance: bigint,
 ): bigint {
+  const absPositionBalance = absBigInt(positionBalance);
+  if (absPositionBalance <= leverageParameters.basePositionSize) {
+    return leverageParameters.initialMarginFraction;
+  }
   return (
-    baseAssetQuantity -
-    (baseAssetQuantity * quoteAssetQuantity) /
-      (quoteAssetQuantity + grossQuoteQuantity)
+    leverageParameters.initialMarginFraction +
+    divideBigInt(
+      absPositionBalance - leverageParameters.basePositionSize,
+      leverageParameters.incrementalPositionSize,
+      ROUNDING.RoundUp,
+    ) *
+      leverageParameters.incrementalInitialMarginFraction
   );
 }
 
 /**
- * Helper function to convert from base to quote quantities
- * see: {quantitiesAvailableFromPoolAtBidPrice}
+ * @private
  */
-export function calculateGrossQuoteValueOfSellQuantities(
-  baseAssetQuantity: bigint,
-  quoteAssetQuantity: bigint,
-  grossBaseQuantity: bigint,
-): bigint {
-  return (
-    quoteAssetQuantity -
-    (baseAssetQuantity * quoteAssetQuantity) /
-      (baseAssetQuantity + grossBaseQuantity)
+function calculateInitialMarginFractionWithOverride(args: {
+  initialMarginFractionOverride: bigint | null;
+  leverageParameters: LeverageParametersBigInt;
+  positionBalance: bigint;
+}): bigint {
+  const { initialMarginFractionOverride, leverageParameters, positionBalance } =
+    args;
+
+  return maxBigInt(
+    calculateInitialMarginFraction(leverageParameters, positionBalance),
+    initialMarginFractionOverride ?? BigInt(0),
   );
+}
+
+/**
+ * @private
+ */
+function calculateNotionalQuoteValueOfPosition(position: IDEXPosition): bigint {
+  return multiplyPips(
+    decimalToPip(position.quantity),
+    decimalToPip(position.indexPrice),
+  );
+}
+
+/**
+ * @private
+ */
+function calculateNotionalQuoteValueOfPositions(
+  positions: IDEXPosition[],
+): bigint {
+  return arraySumBigInt(positions.map(calculateNotionalQuoteValueOfPosition));
+}
+
+/**
+ * @private
+ */
+function convertToLeverageParametersBigInt(
+  leverageParameters: LeverageParameters,
+): LeverageParametersBigInt {
+  return {
+    maximumPositionSize: decimalToPip(leverageParameters.maximumPositionSize),
+    initialMarginFraction: decimalToPip(
+      leverageParameters.initialMarginFraction,
+    ),
+    maintenanceMarginFraction: decimalToPip(
+      leverageParameters.maintenanceMarginFraction,
+    ),
+    basePositionSize: decimalToPip(leverageParameters.basePositionSize),
+    incrementalPositionSize: decimalToPip(
+      leverageParameters.incrementalPositionSize,
+    ),
+    incrementalInitialMarginFraction: decimalToPip(
+      leverageParameters.incrementalInitialMarginFraction,
+    ),
+  };
 }
 
 /**
@@ -93,7 +353,7 @@ export function calculateGrossFillQuantities(
   baseQuantity: bigint;
   quoteQuantity: bigint;
 } {
-  const takerQuantity2p = takerOrder.quantity * pipmath.oneInPips;
+  const takerQuantity2p = takerOrder.quantity * oneInPips;
 
   let filledBaseQty2p = BigInt(0);
   let filledQuoteQty2p = BigInt(0);
@@ -109,8 +369,8 @@ export function calculateGrossFillQuantities(
       };
     }
     return {
-      baseQuantity: filledBaseQty2p / pipmath.oneInPips,
-      quoteQuantity: filledQuoteQty2p / pipmath.oneInPips,
+      baseQuantity: filledBaseQty2p / oneInPips,
+      quoteQuantity: filledQuoteQty2p / oneInPips,
     };
   };
 
@@ -153,15 +413,15 @@ function determineTradeQuantities(
   baseQuantity2p: bigint;
   quoteQuantity2p: bigint;
 } {
-  const makerQuantity2p = makerOrder.size * pipmath.oneInPips;
+  const makerQuantity2p = makerOrder.size * oneInPips;
 
   // Limit by base
   const fillBaseQty2p =
     isMaxTakerQuantityInQuote ? makerQuantity2p : (
-      pipmath.minBigInt(maxTakerQuantity2p, makerQuantity2p)
+      minBigInt(maxTakerQuantity2p, makerQuantity2p)
     );
 
-  const fillQuoteQty2p = pipmath.multiplyPips(fillBaseQty2p, makerOrder.price);
+  const fillQuoteQty2p = multiplyPips(fillBaseQty2p, makerOrder.price);
 
   // Limit by quote
   if (isMaxTakerQuantityInQuote && maxTakerQuantity2p < fillQuoteQty2p) {
