@@ -57,16 +57,6 @@ export interface IDEXOrderEvent extends IDEXSubscriptionEventBase {
 export interface IDEXOrderEventDataBase
   extends Pick<IDEXOrder, 'market' | 'wallet' | 'side'> {
   /**
-   * Order type which is all of {@link IDEXOrder.type} but
-   * may include the following additional types:
-   *
-   * - {@link OrderEventType.deleverage deleverage}
-   * - {@link OrderEventType.liquidation liquidation}
-   *
-   * @see enum {@link OrderEventType}
-   */
-  type: OrderEventType;
-  /**
    * Timestamp of the most recent update
    */
   executionTime: number;
@@ -84,12 +74,7 @@ export interface IDEXOrderEventDataBase
  *
  * @category IDEX - Get Orders
  */
-export interface IDEXOrderEventDataDeleverage extends IDEXOrderEventDataBase {
-  /**
-   * @inheritDoc
-   */
-  readonly type: typeof OrderEventType.deleverage;
-}
+export interface IDEXOrderEventDataDeleverage extends IDEXOrderEventDataBase {}
 
 /**
  * {@link OrderEventType.deleverage} and {@link OrderEventType.liquidation} updates do not
@@ -97,12 +82,7 @@ export interface IDEXOrderEventDataDeleverage extends IDEXOrderEventDataBase {
  *
  * @category IDEX - Get Orders
  */
-export interface IDEXOrderEventDataLiquidation extends IDEXOrderEventDataBase {
-  /**
-   * @inheritDoc
-   */
-  readonly type: typeof OrderEventType.liquidation;
-}
+export interface IDEXOrderEventDataLiquidation extends IDEXOrderEventDataBase {}
 
 /**
  * All types other than {@link OrderEventType.deleverage deleverage}
@@ -117,10 +97,7 @@ export interface IDEXOrderEventDataGeneral
   /**
    * @inheritDoc
    */
-  readonly type: Exclude<
-    OrderEventType,
-    typeof OrderEventType.deleverage | typeof OrderEventType.liquidation
-  >;
+  readonly type: OrderEventType;
   /**
    * Type of order update
    *
@@ -186,11 +163,6 @@ export interface WebSocketResponseSubscriptionMessageShortOrders
 
 export interface WebSocketResponseOrderShortBase {
   /**
-   * @see enum {@link OrderEventType}
-   * @see inflated {@link IDEXOrderEventDataGeneral.type}
-   */
-  o: IDEXOrderEventDataBase['type'];
-  /**
    * @see related {@link IDEXOrder.market}
    * @see inflated {@link IDEXOrderEventDataGeneral.market}
    */
@@ -228,12 +200,7 @@ export interface WebSocketResponseOrderShortBase {
  * `liquidation` types do not include many of the properties of other order types
  */
 export interface WebSocketResponseOrderShortDeleverage
-  extends WebSocketResponseOrderShortBase {
-  /**
-   * @inheritDoc
-   */
-  o: typeof OrderEventType.deleverage;
-}
+  extends WebSocketResponseOrderShortBase {}
 
 /**
  * @internal
@@ -241,12 +208,7 @@ export interface WebSocketResponseOrderShortDeleverage
  * `liquidation` types do not include many of the properties of other order types
  */
 export interface WebSocketResponseOrderShortLiquidation
-  extends WebSocketResponseOrderShortBase {
-  /**
-   * @inheritDoc
-   */
-  o: typeof OrderEventType.liquidation;
-}
+  extends WebSocketResponseOrderShortBase {}
 
 /**
  * @internal

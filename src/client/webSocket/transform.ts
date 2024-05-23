@@ -1,10 +1,6 @@
 import { UnreachableCaseError } from '#utils';
 
-import {
-  FillType,
-  OrderEventType,
-  MessageEventType,
-} from '#types/enums/response';
+import { FillType, MessageEventType } from '#types/enums/response';
 
 import type * as idex from '#types/index';
 import type { AnyObj } from '#types/utils';
@@ -150,26 +146,18 @@ const transformOrderFill = (
 const transformOrdersMessage = (
   short: idex.WebSocketResponseOrderShort,
 ): idex.IDEXOrderEventData => {
-  if (short.o === OrderEventType.liquidation) {
+  if (!('o' in short)) {
     return removeUndefinedFromObj({
       market: short.m,
       wallet: short.w,
       executionTime: short.t,
-      type: OrderEventType.liquidation,
       side: short.s,
       ...(short.F && { fills: short.F.map(transformOrderFill) }),
-    } satisfies idex.IDEXOrderEventDataLiquidation);
+    } satisfies
+      | idex.IDEXOrderEventDataLiquidation
+      | idex.IDEXOrderEventDataDeleverage);
   }
-  if (short.o === OrderEventType.deleverage) {
-    return removeUndefinedFromObj({
-      market: short.m,
-      wallet: short.w,
-      executionTime: short.t,
-      type: OrderEventType.deleverage,
-      side: short.s,
-      ...(short.F && { fills: short.F.map(transformOrderFill) }),
-    } satisfies idex.IDEXOrderEventDataDeleverage);
-  }
+
   return removeUndefinedFromObj({
     market: short.m,
     orderId: short.i,

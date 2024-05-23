@@ -255,18 +255,6 @@ export type OrderBookLevelType =
  */
 export const OrderEventType = Object.freeze({
   ...OrderType,
-  /**
-   * - Used by WebSockets Orders subscription
-   *
-   * Position closures resulting from forced liquidation or ADL
-   */
-  liquidation: 'liquidation',
-  /**
-   * - Used by WebSockets Orders subscription
-   *
-   * Position closure as the counterparty to an ADL action
-   */
-  deleverage: 'deleverage',
 } as const);
 
 export type OrderEventType =
