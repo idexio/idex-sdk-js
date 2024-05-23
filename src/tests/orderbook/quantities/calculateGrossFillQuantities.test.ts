@@ -1,8 +1,11 @@
+import * as chai from 'chai';
+
 import { decimalToPip } from '#pipmath';
 
 import * as orderbook from '#orderbook/index';
-import * as testHelpers from '#tests/testHelpers';
 import { OrderSide } from '#types/enums/request';
+
+const { expect } = chai;
 
 describe('orderbook/quantities', () => {
   describe('calculateGrossFillQuantities', () => {
@@ -29,12 +32,10 @@ describe('orderbook/quantities', () => {
             : undefined,
         },
       );
-      testHelpers.assertBigintsEqual(
-        takerQuantities.baseQuantity,
+      expect(takerQuantities.baseQuantity).to.eql(
         decimalToPip(args.expectedBaseFillQuantity),
       );
-      testHelpers.assertBigintsEqual(
-        takerQuantities.quoteQuantity,
+      expect(takerQuantities.quoteQuantity).to.eql(
         decimalToPip(args.expectedQuoteFillQuantity),
       );
     };
@@ -310,14 +311,8 @@ describe('orderbook/quantities', () => {
         },
         false,
       );
-      testHelpers.assertBigintsEqual(
-        takerQuantities.baseQuantity,
-        decimalToPip('1'),
-      );
-      testHelpers.assertBigintsEqual(
-        takerQuantities.quoteQuantity,
-        decimalToPip('3'),
-      );
+      expect(takerQuantities.baseQuantity).to.eql(decimalToPip('1'));
+      expect(takerQuantities.quoteQuantity).to.eql(decimalToPip('3'));
 
       const takerQuantities2p = orderbook.calculateGrossFillQuantities(
         makerSideOrders,
@@ -328,12 +323,10 @@ describe('orderbook/quantities', () => {
         },
         true,
       );
-      testHelpers.assertBigintsEqual(
-        takerQuantities2p.baseQuantity,
+      expect(takerQuantities2p.baseQuantity).to.eql(
         BigInt(10000000000000000), // 1 in 16 decimals
       );
-      testHelpers.assertBigintsEqual(
-        takerQuantities2p.quoteQuantity,
+      expect(takerQuantities2p.quoteQuantity).to.eql(
         BigInt(30000000000000000), // 3 in 16 decimals
       );
     });
@@ -352,14 +345,8 @@ describe('orderbook/quantities', () => {
         },
         false,
       );
-      testHelpers.assertBigintsEqual(
-        takerQuantities.baseQuantity,
-        decimalToPip('0.33333333'),
-      );
-      testHelpers.assertBigintsEqual(
-        takerQuantities.quoteQuantity,
-        decimalToPip('1'),
-      );
+      expect(takerQuantities.baseQuantity).to.eql(decimalToPip('0.33333333'));
+      expect(takerQuantities.quoteQuantity).to.eql(decimalToPip('1'));
 
       const takerQuantities2p = orderbook.calculateGrossFillQuantities(
         makerSideOrders,
@@ -370,12 +357,10 @@ describe('orderbook/quantities', () => {
         },
         true,
       );
-      testHelpers.assertBigintsEqual(
-        takerQuantities2p.baseQuantity,
+      expect(takerQuantities2p.baseQuantity).to.eql(
         BigInt(3333333333333333), // 1/3 in 16 decimals
       );
-      testHelpers.assertBigintsEqual(
-        takerQuantities2p.quoteQuantity,
+      expect(takerQuantities2p.quoteQuantity).to.eql(
         BigInt(10000000000000000), // 1 in 16 decimals
       );
     });
