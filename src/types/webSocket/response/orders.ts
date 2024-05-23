@@ -1,9 +1,10 @@
 import type * as idex from '#index';
-import type { MessageEventType } from '#types/enums/index';
-import type { OrderEventType, OrderStateChange } from '#types/enums/response';
+import type { MessageEventType, OrderType } from '#types/enums/index';
+import type { OrderStateChange } from '#types/enums/response';
 import type { IDEXOrder } from '#types/rest/endpoints/GetOrders';
 import type { IDEXSubscriptionEventBase } from '#types/webSocket/base';
 import type { IDEXOrderFillEventData } from './ordersFill.js';
+
 /**
  * - `orders` updates provided to the message handler when subscribed.
  *
@@ -57,15 +58,11 @@ export interface IDEXOrderEvent extends IDEXSubscriptionEventBase {
 export interface IDEXOrderEventDataBase
   extends Pick<IDEXOrder, 'market' | 'wallet' | 'side'> {
   /**
-   * Order type which is all of {@link IDEXOrder.type} but
-   * may include the following additional types:
-   *
-   * - {@link OrderEventType.deleverage deleverage}
-   * - {@link OrderEventType.liquidation liquidation}
-   *
-   * @see enum {@link OrderEventType}
+   * - When `undefined`, indicates the message is a `liquidation` or `deleverage`
+   *   where `fills` will include a single  {@link IDEXOrderFillEventData.type} of
+   *   {@link idex.FillTypeSystem FillTypeSystem}.
    */
-  type: OrderEventType;
+  readonly type?: OrderType;
   /**
    * Timestamp of the most recent update
    */
@@ -75,39 +72,25 @@ export interface IDEXOrderEventDataBase
    *
    * @see type {@link IDEXOrderFillEventData}
    */
-  fills?: IDEXOrderFillEventData[];
+  readonly fills?: IDEXOrderFillEventData[];
 }
 
 /**
- * {@link OrderEventType.deleverage} and {@link OrderEventType.liquidation} updates do not
+ * {@link idex.IDEXOrderFillEventDataSystem IDEXOrderFillEventDataSystem} updates do not
  * include many of the standard order update properties
+ *
+ * - Note that these types include a single {@link IDEXOrderFillEventDataSystem}.
  *
  * @category IDEX - Get Orders
  */
-export interface IDEXOrderEventDataDeleverage extends IDEXOrderEventDataBase {
-  /**
-   * @inheritDoc
-   */
-  readonly type: typeof OrderEventType.deleverage;
+export interface IDEXOrderEventDataSystemFill extends IDEXOrderEventDataBase {
+  readonly type?: undefined;
+  readonly fills: IDEXOrderFillEventData[];
 }
 
 /**
- * {@link OrderEventType.deleverage} and {@link OrderEventType.liquidation} updates do not
- * include many of the standard order update properties
- *
- * @category IDEX - Get Orders
- */
-export interface IDEXOrderEventDataLiquidation extends IDEXOrderEventDataBase {
-  /**
-   * @inheritDoc
-   */
-  readonly type: typeof OrderEventType.liquidation;
-}
-
-/**
- * All types other than {@link OrderEventType.deleverage deleverage}
- * and {@link OrderEventType.liquidation liquidation} include extra
- * properties representing the order update.
+ * All types other than {@link IDEXOrderEventDataSystemFill} include
+ * most properties from {@link IDEXOrder}
  *
  * @category IDEX - Get Orders
  */
@@ -117,10 +100,7 @@ export interface IDEXOrderEventDataGeneral
   /**
    * @inheritDoc
    */
-  readonly type: Exclude<
-    OrderEventType,
-    typeof OrderEventType.deleverage | typeof OrderEventType.liquidation
-  >;
+  readonly type: OrderType;
   /**
    * Type of order update
    *
@@ -133,6 +113,7 @@ export interface IDEXOrderEventDataGeneral
    * @see related {@link idex.IDEXOrderBook.sequence}
    */
   sequence?: idex.IDEXOrderBook['sequence'];
+  readonly fills?: IDEXOrderFillEventData[];
 }
 
 /**
@@ -140,24 +121,26 @@ export interface IDEXOrderEventDataGeneral
  * REST API in several ways.
  *
  * - In addition to the order types received when getting orders from the REST API, WebSocket update events
- *   may also provide the following types:
- *    - {@link OrderEventType.deleverage OrderEventType.deleverage}
- *    - {@link OrderEventType.liquidation OrderEventType.liquidation}
+ *   may also provide the following `undefined` type indicating a {@link IDEXOrderEventDataSystemFill}
+ *   where the `fills` property will include a {@link idex.FillTypeSystem FillTypeSystem} fill matching
+ *   {@link idex.IDEXOrderFillEventDataSystem IDEXOrderFillEventDataSystem}
  * - It is best to narrow on the `type` property between these types and all the
  *   others as shown in the example below.
- *   - This is made easiest by using the {@link OrderEventType} enum as shown.
+ *   - This is made easiest by using the {@link OrderType} enum as shown.
  *
  * @example
  * ```typescript
- *  import { OrderEventType } from '@idexio/idex-sdk';
+ *  import { OrderType } from '@idexio/idex-sdk';
  *
- *  if (
- *    orderEventData.type === OrderEventType.liquidation ||
- *    orderEventData.type === OrderEventType.deleverage
- *  ) {
- *    // orderLong is of type IDEXOrderEventDataLiquidation | IDEXOrderEventDataDeleverage
+ *  if (!orderEventData.type) {
+ *    // orderLong is of type IIDEXOrderEventDataSystemFill
  *  } else {
  *   // orderLong is of type IDEXOrderEventDataGeneral
+ *   switch(orderEventData.type) {
+ *    case OrderType.fill:
+ *      break;
+ *    // ...etc
+ *   }
  *  }
  * ```
  *
@@ -169,14 +152,12 @@ export interface IDEXOrderEventDataGeneral
  * @category WebSocket - Message Types
  *
  * @see union {@link IDEXOrderEventDataGeneral}
- * @see union {@link IDEXOrderEventDataLiquidation}
- * @see union {@link IDEXOrderEventDataDeleverage}
+ * @see union {@link IDEXOrderEventDataSystemFill}
  * @see parent {@link IDEXOrderEvent}
  */
 export type IDEXOrderEventData =
-  | IDEXOrderEventDataGeneral
-  | IDEXOrderEventDataLiquidation
-  | IDEXOrderEventDataDeleverage;
+  | IDEXOrderEventDataSystemFill
+  | IDEXOrderEventDataGeneral;
 
 export interface WebSocketResponseSubscriptionMessageShortOrders
   extends IDEXSubscriptionEventBase {
@@ -186,10 +167,10 @@ export interface WebSocketResponseSubscriptionMessageShortOrders
 
 export interface WebSocketResponseOrderShortBase {
   /**
-   * @see enum {@link OrderEventType}
+   * @see related {@link IDEXOrder.type}
    * @see inflated {@link IDEXOrderEventDataGeneral.type}
    */
-  o: IDEXOrderEventDataBase['type'];
+  o?: IDEXOrderEventDataGeneral['type'];
   /**
    * @see related {@link IDEXOrder.market}
    * @see inflated {@link IDEXOrderEventDataGeneral.market}
@@ -225,27 +206,16 @@ export interface WebSocketResponseOrderShortBase {
 /**
  * @internal
  *
- * `liquidation` types do not include many of the properties of other order types
+ * `liquidation`, `deleverage`, and `closure` types do not include many of the
+ * properties of other order types
  */
-export interface WebSocketResponseOrderShortDeleverage
+export interface WebSocketResponseOrderShortSystem
   extends WebSocketResponseOrderShortBase {
   /**
    * @inheritDoc
    */
-  o: typeof OrderEventType.deleverage;
-}
-
-/**
- * @internal
- *
- * `liquidation` types do not include many of the properties of other order types
- */
-export interface WebSocketResponseOrderShortLiquidation
-  extends WebSocketResponseOrderShortBase {
-  /**
-   * @inheritDoc
-   */
-  o: typeof OrderEventType.liquidation;
+  readonly o?: undefined;
+  readonly F: idex.WebSocketResponseOrderFillShort[];
 }
 
 /**
@@ -255,6 +225,9 @@ export interface WebSocketResponseOrderShortLiquidation
  */
 export interface WebSocketResponseOrderShortGeneral
   extends WebSocketResponseOrderShortBase {
+  /**
+   * @inheritDoc
+   */
   o: IDEXOrderEventDataGeneral['type'];
   /**
    * @see related {@link IDEXOrder.orderId}
@@ -376,9 +349,9 @@ export interface WebSocketResponseOrderShortGeneral
  *
  * This type is a discriminated union by property `o` of two types:
  *  - {@link WebSocketResponseOrderShortGeneral}
- *  - {@link WebSocketResponseOrderShortLiquidation}
+ *  - {@link WebSocketResponseOrderShortSystem}
  *
- * When `o` is `liquidation`, the type is {@link WebSocketResponseOrderShortLiquidation} and
+ * When `o` is `liquidation`, the type is {@link WebSocketResponseOrderShortSystem} and
  * will not include many of the properties that are included when `o` is not `liquidation`.
  *
  * @example
@@ -392,5 +365,4 @@ export interface WebSocketResponseOrderShortGeneral
  */
 export type WebSocketResponseOrderShort =
   | WebSocketResponseOrderShortGeneral
-  | WebSocketResponseOrderShortDeleverage
-  | WebSocketResponseOrderShortLiquidation;
+  | WebSocketResponseOrderShortSystem;
