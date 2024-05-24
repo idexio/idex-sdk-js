@@ -1,6 +1,12 @@
 import * as chai from 'chai';
 
-import { decimalToPip, pipToDecimal } from '#pipmath';
+import {
+  absBigInt,
+  decimalToPip,
+  multiplyPips,
+  oneInPips,
+  pipToDecimal,
+} from '#pipmath';
 
 import * as orderbook from '#orderbook/index';
 
@@ -634,9 +640,83 @@ describe('orderbook/quantities', () => {
       );
     });
 
-    const runIndexPriceMismatchBuyScenario = (arePricesEqual: boolean) => {
-      const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
+    function calculateAvailableCollateral(args: {
+      heldCollateral: bigint;
+      market: IDEXMarket;
+      positionInAnotherMarket: IDEXPosition;
+      positionQuantity: bigint;
+      quoteBalance: bigint;
+    }): bigint {
+      const {
+        heldCollateral,
+        market,
+        positionInAnotherMarket,
+        positionQuantity,
+        quoteBalance,
+      } = args;
+
+      // Signed
+      const quoteValueOfPosition = multiplyPips(
+        positionQuantity,
+        decimalToPip(market.indexPrice),
+      );
+
+      const initialMarginRequirement = multiplyPips(
+        absBigInt(quoteValueOfPosition),
+        decimalToPip(market.initialMarginFraction),
+      );
+
+      const accountValue =
+        quoteBalance +
+        quoteValueOfPosition +
+        // Other position has index price 1; see `setUpStandardTestAccount`
+        decimalToPip(positionInAnotherMarket.quantity);
+
+      return (
+        accountValue -
+        initialMarginRequirement -
+        decimalToPip(positionInAnotherMarket.marginRequirement) -
+        heldCollateral
+      );
+    }
+
+    const runTradeIncreasesAvailableCollateralBuyScenario = (
+      runAvailableCollateralStaysTheSameScenario: boolean,
+    ) => {
+      const { market, positionInAnotherMarket, heldCollateral } =
         setUpStandardTestAccount();
+
+      // The test account's quote balance equals its available collateral
+      const quoteBalance = BigInt(1);
+
+      expect(
+        calculateAvailableCollateral({
+          heldCollateral,
+          market,
+          positionInAnotherMarket,
+          positionQuantity: BigInt(0),
+          quoteBalance,
+        }),
+      ).to.eql(BigInt(1));
+
+      /*
+       * Buy trades increase available collateral if
+       * trade price <= index price * (1 - IMF)
+       * 0.01 index price * (1 - 0.03 IMF) = 0.0097
+       */
+      const priceThreshold = multiplyPips(
+        decimalToPip(market.indexPrice),
+        oneInPips - decimalToPip(market.initialMarginFraction),
+      );
+
+      const orderQty = decimalToPip('1');
+      const orderPrice =
+        runAvailableCollateralStaysTheSameScenario ? priceThreshold : (
+          priceThreshold - BigInt(1)
+        );
+
+      const expectedBaseQty = orderQty;
+      const expectedQuoteQty = orderPrice; // order price * order qty (1)
 
       expect(
         orderbook.calculateBuySellPanelEstimate({
@@ -646,30 +726,76 @@ describe('orderbook/quantities', () => {
           leverageParameters: market,
           makerSideOrders: [
             {
-              price: decimalToPip(arePricesEqual ? '0.01' : '0.009'),
-              size: decimalToPip('123'),
+              price: orderPrice,
+              size: orderQty,
             },
           ],
           market,
           quoteBalance,
-          sliderFactor: 0.123,
+          sliderFactor: 0.123, // Should have no effect
           takerSide: 'buy',
         }),
       ).to.eql({
-        baseQuantity: BigInt(0),
-        quoteQuantity: BigInt(0),
+        baseQuantity: expectedBaseQty,
+        quoteQuantity: expectedQuoteQty,
       });
+
+      expect(
+        calculateAvailableCollateral({
+          heldCollateral,
+          market,
+          positionInAnotherMarket,
+          positionQuantity: expectedBaseQty,
+          quoteBalance: quoteBalance - expectedQuoteQty,
+        }),
+      ).to.eql(
+        runAvailableCollateralStaysTheSameScenario ? BigInt(1) : BigInt(2),
+      );
     };
 
-    it('should stop matching when the index price exceeds a maker sell price (taker buy)', () =>
-      runIndexPriceMismatchBuyScenario(false));
+    it("should allow trades that don't change available collateral (taker buy)", () =>
+      runTradeIncreasesAvailableCollateralBuyScenario(true));
 
-    it('should stop matching when the index price is equal to a maker sell price (taker buy)', () =>
-      runIndexPriceMismatchBuyScenario(true));
+    it('should allow trades that increase available collateral (taker buy)', () =>
+      runTradeIncreasesAvailableCollateralBuyScenario(false));
 
-    const runIndexPriceMismatchSellScenario = (arePricesEqual: boolean) => {
-      const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
+    const runTradeIncreasesAvailableCollateralSellScenario = (
+      runAvailableCollateralStaysTheSameScenario: boolean,
+    ) => {
+      const { market, positionInAnotherMarket, heldCollateral } =
         setUpStandardTestAccount();
+
+      // The test account's quote balance equals its available collateral
+      const quoteBalance = BigInt(1);
+
+      expect(
+        calculateAvailableCollateral({
+          heldCollateral,
+          market,
+          positionInAnotherMarket,
+          positionQuantity: BigInt(0),
+          quoteBalance,
+        }),
+      ).to.eql(BigInt(1));
+
+      /*
+       * Sell trades increase available collateral if
+       * trade price >= index price * (1 + IMF)
+       * 0.01 index price * (1 + 0.03 IMF) = 0.0103
+       */
+      const priceThreshold = multiplyPips(
+        decimalToPip(market.indexPrice),
+        oneInPips + decimalToPip(market.initialMarginFraction),
+      );
+
+      const orderQty = decimalToPip('1');
+      const orderPrice =
+        runAvailableCollateralStaysTheSameScenario ? priceThreshold : (
+          priceThreshold + BigInt(1)
+        );
+
+      const expectedBaseQty = -orderQty;
+      const expectedQuoteQty = -orderPrice; // -(order price * order qty (1))
 
       expect(
         orderbook.calculateBuySellPanelEstimate({
@@ -679,25 +805,37 @@ describe('orderbook/quantities', () => {
           leverageParameters: market,
           makerSideOrders: [
             {
-              price: decimalToPip(arePricesEqual ? '0.01' : '0.011'),
-              size: decimalToPip('123'),
+              price: orderPrice,
+              size: orderQty,
             },
           ],
           market,
           quoteBalance,
-          sliderFactor: 0.123,
+          sliderFactor: 0.123, // Should have no effect
           takerSide: 'sell',
         }),
       ).to.eql({
-        baseQuantity: BigInt(0),
-        quoteQuantity: BigInt(0),
+        baseQuantity: expectedBaseQty,
+        quoteQuantity: expectedQuoteQty,
       });
+
+      expect(
+        calculateAvailableCollateral({
+          heldCollateral,
+          market,
+          positionInAnotherMarket,
+          positionQuantity: expectedBaseQty,
+          quoteBalance: quoteBalance - expectedQuoteQty,
+        }),
+      ).to.eql(
+        runAvailableCollateralStaysTheSameScenario ? BigInt(1) : BigInt(2),
+      );
     };
 
-    it('should stop matching when the index price is below a maker buy price (taker sell)', () =>
-      runIndexPriceMismatchSellScenario(false));
+    it("should allow trades that don't change available collateral (taker sell)", () =>
+      runTradeIncreasesAvailableCollateralSellScenario(true));
 
-    it('should stop matching when the index price is equal to a maker buy price (taker sell)', () =>
-      runIndexPriceMismatchSellScenario(true));
+    it('should allow trades that increase available collateral (taker sell)', () =>
+      runTradeIncreasesAvailableCollateralSellScenario(false));
   });
 });

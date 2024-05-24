@@ -180,12 +180,12 @@ export function calculateBuySellPanelEstimate(
    * Don't limit the amount of available collateral to be spent if limiting by
    * desired position qty.
    */
-  let desiredRemainingAvailableCollateral = BigInt(0);
+  let desiredRemainingAvailableCollateral2p = BigInt(0);
 
   if (typeof sliderFactor !== 'undefined') {
     const sliderFactorInPips = decimalToPip(sliderFactor.toString());
 
-    desiredRemainingAvailableCollateral =
+    desiredRemainingAvailableCollateral2p =
       initialAvailableCollateral * (oneInPips - sliderFactorInPips);
   }
 
@@ -228,16 +228,6 @@ export function calculateBuySellPanelEstimate(
         quoteQuantity: additionalPositionCostBasis,
       };
     }
-    if (
-      takerSide === 'buy' ?
-        indexPrice >= makerOrder.price
-      : indexPrice <= makerOrder.price
-    ) {
-      return {
-        baseQuantity: additionalPositionQty,
-        quoteQuantity: additionalPositionCostBasis,
-      };
-    }
     const makerOrderPrice2p = makerOrder.price * oneInPips;
 
     const positionBalance =
@@ -252,39 +242,55 @@ export function calculateBuySellPanelEstimate(
       positionBalance,
     });
 
-    // Unsigned
-    const initialMarginRequirementOfPosition2p = multiplyPips(
-      absBigInt(quoteValueOfPosition2p),
-      initialMarginFraction,
-    );
-
     // Signed
-    const maxBuyingPowerBase =
-      ((-quoteBalance2p -
-        quoteValueOfPosition2p -
-        quoteValueOfOtherPositions2p +
-        heldCollateral2p +
-        desiredRemainingAvailableCollateral +
-        initialMarginRequirementOfPosition2p +
-        initialMarginRequirementOfOtherPositions2p) *
-        oneInPips) /
-      (indexPrice2p -
-        makerOrderPrice2p +
-        BigInt(takerSide === 'buy' ? -1 : 1) *
-          indexPrice *
-          initialMarginFraction);
+    let maxTakerBaseQty =
+      makerOrder.size * BigInt(takerSide === 'buy' ? 1 : -1);
 
-    let maxTakerBaseQty = maxBuyingPowerBase;
+    if (
+      takerSide === 'buy' ?
+        makerOrder.price >
+        multiplyPips(indexPrice, oneInPips - initialMarginFraction)
+      : multiplyPips(indexPrice, oneInPips + initialMarginFraction) >
+        makerOrder.price
+    ) {
+      /*
+       * Trade decreases available collateral; determine the taker's buying
+       * power (may exceed the maker order size).
+       */
+
+      // Unsigned
+      const initialMarginRequirementOfPosition2p = multiplyPips(
+        absBigInt(quoteValueOfPosition2p),
+        initialMarginFraction,
+      );
+
+      // Signed
+      maxTakerBaseQty =
+        ((-quoteBalance2p -
+          quoteValueOfPosition2p -
+          quoteValueOfOtherPositions2p +
+          heldCollateral2p +
+          desiredRemainingAvailableCollateral2p +
+          initialMarginRequirementOfPosition2p +
+          initialMarginRequirementOfOtherPositions2p) *
+          oneInPips) /
+        (indexPrice2p -
+          makerOrderPrice2p +
+          BigInt(takerSide === 'buy' ? -1 : 1) *
+            indexPrice *
+            initialMarginFraction);
+    }
+
     if (desiredPositionBaseQuantity) {
-      // Limit base to buying power and desired position qty
+      // Limit max base to desired position qty and buying power
       maxTakerBaseQty =
         takerSide === 'buy' ?
           minBigInt(
-            maxBuyingPowerBase,
+            maxTakerBaseQty,
             desiredPositionBaseQuantity - additionalPositionQty,
           )
         : maxBigInt(
-            maxBuyingPowerBase,
+            maxTakerBaseQty,
             desiredPositionBaseQuantity - additionalPositionQty,
           );
     }
@@ -292,7 +298,7 @@ export function calculateBuySellPanelEstimate(
     let maxTakerQuoteQty = multiplyPips(maxTakerBaseQty, makerOrder.price);
 
     if (desiredPositionQuoteQuantity) {
-      // Limit quote to buying power and desired position qty
+      // Limit max quote to desired position qty and buying power
       const maxTakerQuoteQtyBefore = maxTakerQuoteQty;
       maxTakerQuoteQty =
         takerSide === 'buy' ?
@@ -327,6 +333,7 @@ export function calculateBuySellPanelEstimate(
 
     quoteBalance2p -= tradeBaseQty * makerOrder.price;
   }
+
   return {
     baseQuantity: additionalPositionQty,
     quoteQuantity: additionalPositionCostBasis,
