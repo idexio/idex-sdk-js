@@ -199,10 +199,13 @@ describe('orderbook/quantities', () => {
     });
 
     const runDesiredPositionQtyBuyScenario = (
-      desiredQtys: {
-        desiredPositionBaseQuantity?: bigint;
-        desiredPositionQuoteQuantity?: bigint;
-      },
+      desiredQtys:
+        | {
+            desiredPositionBaseQuantity: bigint;
+          }
+        | {
+            desiredPositionQuoteQuantity: bigint;
+          },
       expectedResult: {
         baseQuantity: bigint;
         quoteQuantity: bigint;
@@ -331,10 +334,13 @@ describe('orderbook/quantities', () => {
     });
 
     const runDesiredPositionQtySellScenario = (
-      desiredQtys: {
-        desiredPositionBaseQuantity?: bigint;
-        desiredPositionQuoteQuantity?: bigint;
-      },
+      desiredQtys:
+        | {
+            desiredPositionBaseQuantity: bigint;
+          }
+        | {
+            desiredPositionQuoteQuantity: bigint;
+          },
       expectedResult: {
         baseQuantity: bigint;
         quoteQuantity: bigint;
@@ -506,18 +512,21 @@ describe('orderbook/quantities', () => {
       const market = makeAMarket(BigInt(123));
 
       expect(() =>
-        orderbook.calculateBuySellPanelEstimate({
-          ...qtyInputs,
+        orderbook.calculateBuySellPanelEstimate(
+          // @ts-expect-error the type declarations protect against this
+          {
+            ...qtyInputs,
 
-          allWalletPositions: [],
-          heldCollateral: BigInt(0),
-          initialMarginFractionOverride: null,
-          leverageParameters: market,
-          makerSideOrders: [],
-          market,
-          quoteBalance: BigInt(0),
-          takerSide: 'buy',
-        }),
+            allWalletPositions: [],
+            heldCollateral: BigInt(0),
+            initialMarginFractionOverride: null,
+            leverageParameters: market,
+            makerSideOrders: [],
+            market,
+            quoteBalance: BigInt(0),
+            takerSide: 'buy',
+          },
+        ),
       ).to.throw(
         'Either desiredPositionBaseQuantity, desiredPositionQuoteQuantity, or sliderFactor needs to be provided',
       );
@@ -551,20 +560,23 @@ describe('orderbook/quantities', () => {
         setUpStandardTestAccount();
 
       expect(
-        orderbook.calculateBuySellPanelEstimate({
-          ...qtyInputs,
+        orderbook.calculateBuySellPanelEstimate(
+          // @ts-expect-error the type declarations protect against this
+          {
+            ...qtyInputs,
 
-          allWalletPositions: [positionInAnotherMarket],
-          heldCollateral,
-          initialMarginFractionOverride: null,
-          leverageParameters: market,
-          makerSideOrders: [
-            { price: decimalToPip('123'), size: decimalToPip('123') },
-          ],
-          market,
-          quoteBalance,
-          takerSide: 'buy',
-        }),
+            allWalletPositions: [positionInAnotherMarket],
+            heldCollateral,
+            initialMarginFractionOverride: null,
+            leverageParameters: market,
+            makerSideOrders: [
+              { price: decimalToPip('123'), size: decimalToPip('123') },
+            ],
+            market,
+            quoteBalance,
+            takerSide: 'buy',
+          },
+        ),
       ).to.eql({
         baseQuantity: BigInt(0),
         quoteQuantity: BigInt(0),

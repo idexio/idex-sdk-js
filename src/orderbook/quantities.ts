@@ -64,35 +64,46 @@ export const nullLevel: OrderBookLevelL2 = {
  * sorted by best price (ascending for asks (lowest first), descending for bids
  * (highest first)). Multiple orders per price level are supported.
  */
-export function calculateBuySellPanelEstimate(args: {
-  /** All the wallet's open positions, including any in the current market */
-  allWalletPositions: IDEXPosition[];
-  /**
-   * The desired position qty to be acquired.
+export function calculateBuySellPanelEstimate(
+  args: {
+    /** All the wallet's open positions, including any in the current market */
+    allWalletPositions: IDEXPosition[];
+    /** Free collateral committed to open limit orders (unsigned) */
+    heldCollateral: bigint;
+    initialMarginFractionOverride: bigint | null;
+    leverageParameters: LeverageParameters;
+    makerSideOrders: Iterable<PriceAndSize>;
+    market: Pick<IDEXMarket, 'market' | 'indexPrice'>;
+    /** Quote token balance (USDC) (signed) */
+    quoteBalance: bigint;
+    takerSide: OrderSide;
+  } /**
    * Either desiredPositionBaseQuantity, desiredPositionQuoteQuantity, or
-   * sliderFactor needs to be provided. An error is thrown if none or more than
-   * one is provided.
-   */
-  desiredPositionBaseQuantity?: bigint;
-  desiredPositionQuoteQuantity?: bigint;
-  /** Free collateral committed to open limit orders (unsigned) */
-  heldCollateral: bigint;
-  initialMarginFractionOverride: bigint | null;
-  leverageParameters: LeverageParameters;
-  makerSideOrders: Iterable<PriceAndSize>;
-  market: Pick<IDEXMarket, 'market' | 'indexPrice'>;
-  /** Quote token balance (USDC) (signed) */
-  quoteBalance: bigint;
-  /**
-   * Floating point number between 0 and 1 that indicates the amount of the
-   * available collateral to be spent.
-   * Either desiredPositionBaseQuantity, desiredPositionQuoteQuantity, or
-   * sliderFactor needs to be provided. An error is thrown if none or more than
-   * one is provided.
-   */
-  sliderFactor?: number;
-  takerSide: OrderSide;
-}): {
+   * sliderFactor needs to be provided.
+   */ & (
+    | {
+        /** The desired base position qty to be acquired */
+        desiredPositionBaseQuantity: bigint;
+        desiredPositionQuoteQuantity?: undefined;
+        sliderFactor?: undefined;
+      }
+    | {
+        desiredPositionBaseQuantity?: undefined;
+        /** The desired quote position qty to be acquired */
+        desiredPositionQuoteQuantity: bigint;
+        sliderFactor?: undefined;
+      }
+    | {
+        desiredPositionBaseQuantity?: undefined;
+        desiredPositionQuoteQuantity?: undefined;
+        /**
+         * Floating point number between 0 and 1 that indicates the amount of
+         * the available collateral to be spent
+         */
+        sliderFactor: number;
+      }
+  ),
+): {
   baseQuantity: bigint;
   quoteQuantity: bigint;
 } {
