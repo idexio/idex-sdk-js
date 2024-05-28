@@ -202,7 +202,7 @@ export class OrderBookRealTimeClient extends EventEmitter<{
       this.unsubscribe();
       this.webSocketClient.disconnect();
     }
-    this.resetInternalState();
+    this.resetInternalState(true);
   }
 
   public async getMaximumTickSizeUnderSpread(market: string) {
