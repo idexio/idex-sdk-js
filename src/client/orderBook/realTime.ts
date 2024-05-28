@@ -303,7 +303,7 @@ export class OrderBookRealTimeClient extends EventEmitter<{
         this.emit(
           OrderBookRealTimeClientEvent.error,
           new Error(
-            `Missing l2 update sequence, current book is ${book.sequence} message was ${update.sequence}`,
+            `Missing l2 update sequence, current book is ${book.sequence} message was ${update.sequence}, awaiting ${update.sequence - book.sequence} updates from REST API...`,
           ),
         );
         // this.unsubscribe();
