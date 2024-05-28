@@ -610,7 +610,7 @@ __metadata:
     eslint-config-airbnb-base: "npm:^15.0.0"
     eslint-config-prettier: "npm:^9.1.0"
     eslint-import-resolver-typescript: "npm:^3.6.1"
-    eslint-plugin-import: "npm:eslint-plugin-i@2.29.1"
+    eslint-plugin-import: "npm:eslint-plugin-i@latest"
     eslint-plugin-promise: "npm:^6.1.1"
     ethers: "npm:6.9.0"
     globals: "npm:^15.2.0"
@@ -4004,7 +4004,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-import@npm:eslint-plugin-i@2.29.1":
+"eslint-plugin-import@npm:eslint-plugin-i@latest":
   version: 2.29.1
   resolution: "eslint-plugin-i@npm:2.29.1"
   dependencies:
