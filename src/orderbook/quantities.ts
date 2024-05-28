@@ -242,9 +242,9 @@ export function calculateBuySellPanelEstimate(args: {
     const quoteValueOfPosition2p = positionBalance * indexPrice; // Signed
 
     const initialMarginFraction = calculateInitialMarginFractionWithOverride({
+      baseQuantity: positionBalance,
       initialMarginFractionOverride,
       leverageParameters: leverageParametersBigInt,
-      positionBalance,
     });
 
     // Signed
@@ -350,9 +350,9 @@ export function calculateBuySellPanelEstimate(args: {
  */
 function calculateInitialMarginFraction(
   leverageParameters: LeverageParametersBigInt,
-  positionBalance: bigint,
+  baseQuantity: bigint,
 ): bigint {
-  const absPositionBalance = absBigInt(positionBalance);
+  const absPositionBalance = absBigInt(baseQuantity);
   if (absPositionBalance <= leverageParameters.basePositionSize) {
     return leverageParameters.initialMarginFraction;
   }
@@ -371,17 +371,135 @@ function calculateInitialMarginFraction(
  * @private
  */
 function calculateInitialMarginFractionWithOverride(args: {
+  baseQuantity: bigint;
   initialMarginFractionOverride: bigint | null;
   leverageParameters: LeverageParametersBigInt;
-  positionBalance: bigint;
 }): bigint {
-  const { initialMarginFractionOverride, leverageParameters, positionBalance } =
+  const { initialMarginFractionOverride, leverageParameters, baseQuantity } =
     args;
 
   return maxBigInt(
-    calculateInitialMarginFraction(leverageParameters, positionBalance),
+    calculateInitialMarginFraction(leverageParameters, baseQuantity),
     initialMarginFractionOverride ?? BigInt(0),
   );
+}
+
+/**
+ * Determines the maximum maker order size that can be supported by the given
+ * available collateral, taking into account the (incremental) margin
+ * requirement for that order size. Returns both values in addition to the
+ * initial margin fraction (margin requirement / order size).
+ */
+export function calculateMaximumMakerOrderSizeForAvailableCollateral(args: {
+  availableCollateral: bigint;
+  indexPrice: bigint;
+  initialMarginFractionOverride: bigint | null;
+  leverageParameters: LeverageParametersBigInt;
+}): {
+  orderSize: bigint;
+  initialMarginFraction: bigint;
+  initialMarginRequirement: bigint;
+} {
+  const {
+    availableCollateral,
+    indexPrice,
+    initialMarginFractionOverride,
+    leverageParameters,
+  } = args;
+
+  if (availableCollateral === BigInt(0)) {
+    return {
+      orderSize: BigInt(0),
+      initialMarginFraction: BigInt(0),
+      initialMarginRequirement: BigInt(0),
+    };
+  }
+
+  const baselineImf = maxBigInt(
+    leverageParameters.initialMarginFraction,
+    initialMarginFractionOverride ?? BigInt(0),
+  );
+  const baselineMaxPositionSizeMarginRequirement =
+    (leverageParameters.basePositionSize * indexPrice * baselineImf) /
+    oneInPips /
+    oneInPips;
+
+  if (availableCollateral <= baselineMaxPositionSizeMarginRequirement) {
+    return {
+      orderSize:
+        (leverageParameters.basePositionSize * availableCollateral) /
+        baselineMaxPositionSizeMarginRequirement,
+      initialMarginFraction: baselineImf,
+      initialMarginRequirement: availableCollateral,
+    };
+  }
+
+  let currentMaxima = {
+    orderSize: leverageParameters.basePositionSize,
+    initialMarginFraction: baselineImf,
+    initialMarginRequirement: baselineMaxPositionSizeMarginRequirement,
+  };
+
+  /*
+   * Iterate through incremental position sizes and correlated incremental IMFs,
+   * calculate the range of margin required for the min and max position sizes
+   * at each level, and determine where the given amount of available collateral
+   * falls.
+   */
+  for (
+    let i = 1;
+    leverageParameters.basePositionSize +
+      leverageParameters.incrementalPositionSize * BigInt(i) <=
+    leverageParameters.maximumPositionSize;
+    i += 1
+  ) {
+    const currentImfLevel = maxBigInt(
+      leverageParameters.initialMarginFraction +
+        leverageParameters.incrementalInitialMarginFraction * BigInt(i),
+      initialMarginFractionOverride ?? BigInt(0),
+    );
+    const fromOrderSize =
+      leverageParameters.basePositionSize +
+      leverageParameters.incrementalPositionSize * BigInt(i - 1) +
+      BigInt(1);
+
+    const toOrderSize =
+      leverageParameters.basePositionSize +
+      leverageParameters.incrementalPositionSize * BigInt(i);
+
+    const fromMarginRequirement =
+      (fromOrderSize * indexPrice * currentImfLevel) / oneInPips / oneInPips;
+
+    const toMarginRequirement =
+      (toOrderSize * indexPrice * currentImfLevel) / oneInPips / oneInPips;
+
+    if (availableCollateral < fromMarginRequirement) {
+      /*
+       * The starting position size at the current IMF level exceeds the maximum
+       * position size that the given available collateral can support; the
+       * given available collateral can support only up to the maximum position
+       * size of the previous IMF level.
+       */
+      return currentMaxima;
+    }
+
+    if (
+      fromMarginRequirement <= availableCollateral &&
+      availableCollateral <= toMarginRequirement
+    ) {
+      return {
+        orderSize: (toOrderSize * availableCollateral) / toMarginRequirement,
+        initialMarginFraction: currentImfLevel,
+        initialMarginRequirement: availableCollateral,
+      };
+    }
+    currentMaxima = {
+      orderSize: toOrderSize,
+      initialMarginFraction: currentImfLevel,
+      initialMarginRequirement: toMarginRequirement,
+    };
+  }
+  return currentMaxima;
 }
 
 /**
