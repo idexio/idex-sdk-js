@@ -12,6 +12,8 @@ import * as orderbook from '#orderbook/index';
 
 import type { IDEXMarket, IDEXPosition } from '#types/rest/endpoints/index';
 
+type ReturnValue = ReturnType<typeof orderbook.calculateBuySellPanelEstimate>;
+
 const { expect } = chai;
 
 const defaultLeverageParameters: orderbook.LeverageParametersBigInt = {
@@ -169,9 +171,11 @@ describe('orderbook/quantities', () => {
           },
         }),
       ).to.eql({
-        baseQuantity: decimalToPip('3651.16279069'),
-        quoteQuantity: decimalToPip('45.11627906'),
-      });
+        makerBaseQuantity: BigInt(0),
+        makerQuoteQuantity: BigInt(0),
+        takerBaseQuantity: decimalToPip('3651.16279069'),
+        takerQuoteQuantity: decimalToPip('45.11627906'),
+      } satisfies ReturnValue);
     });
 
     it('should succeed for a sell', () => {
@@ -195,9 +199,11 @@ describe('orderbook/quantities', () => {
           },
         }),
       ).to.eql({
-        baseQuantity: decimalToPip('-3651.16279069'),
-        quoteQuantity: decimalToPip('-27.90697674'),
-      });
+        makerBaseQuantity: BigInt(0),
+        makerQuoteQuantity: BigInt(0),
+        takerBaseQuantity: decimalToPip('-3651.16279069'),
+        takerQuoteQuantity: decimalToPip('-27.90697674'),
+      } satisfies ReturnValue);
     });
 
     it('should succeed for a buy with a limit price', () => {
@@ -222,9 +228,12 @@ describe('orderbook/quantities', () => {
           },
         }),
       ).to.eql({
-        baseQuantity: decimalToPip('2000'),
-        quoteQuantity: decimalToPip('23'),
-      });
+        takerBaseQuantity: decimalToPip('2000'),
+        takerQuoteQuantity: decimalToPip('23'),
+        // Maker qtys are incidental and not covered by this test
+        makerBaseQuantity: decimalToPip('15250'),
+        makerQuoteQuantity: decimalToPip('183'),
+      } satisfies ReturnValue);
     });
 
     it('should succeed for a sell with a limit price', () => {
@@ -249,9 +258,67 @@ describe('orderbook/quantities', () => {
           },
         }),
       ).to.eql({
-        baseQuantity: decimalToPip('-2000'),
-        quoteQuantity: decimalToPip('-17'),
+        takerBaseQuantity: decimalToPip('-2000'),
+        takerQuoteQuantity: decimalToPip('-17'),
+        // Maker qtys are incidental and not covered by this test
+        makerBaseQuantity: decimalToPip('15250'),
+        makerQuoteQuantity: decimalToPip('122'),
+      } satisfies ReturnValue);
+    });
+
+    /**
+     * Maker qtys require a limit price
+     */
+    it('should determine maker qtys for available collateral that does not match order book liquidity', () => {
+      const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
+        setUpStandardTestAccount();
+
+      expect(
+        orderbook.calculateBuySellPanelEstimate({
+          formInputs: {
+            limitPrice: decimalToPip('0.011'),
+            takerSide: 'buy',
+            sliderFactor: 1,
+          },
+          initialMarginFractionOverride: null,
+          leverageParameters: market,
+          makerSideOrders: standardTestOrderBookSellSide,
+          market,
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
+        }),
+      ).to.eql({
+        /*
+         * Matches only the first maker order (after which 8.7 available
+         * collateral remains)
+         */
+        takerBaseQuantity: decimalToPip('1000'),
+        takerQuoteQuantity: decimalToPip('11'),
+        /*
+         * 20,000 maker base qty * 0.011 limit price = 220 maker quote qty
+         *
+         * 20,000 maker base qty * 0.01 index price = 200 quote value * 0.04 IMF
+         * = 8 margin requirement. Maker qtys above 20k require 0.05 IMF ->
+         * 200 quote value * 0.05 IMF = 10 margin requirement, which exceeds
+         * the 8.7 available collateral, thus the 0.04 IMF level is used, and
+         * 0.7 available collateral remain.
+         */
+        makerBaseQuantity: decimalToPip('20000'),
+        makerQuoteQuantity: decimalToPip('220'),
+      } satisfies ReturnValue);
+
+      // Confirm the held collateral value stated in the above comment
+      const availableCollateral = calculateAvailableCollateral({
+        heldCollateral,
+        market,
+        positionInAnotherMarket,
+        positionQuantity: decimalToPip('1000'),
+        quoteBalance: quoteBalance - decimalToPip('11'),
       });
+      expect(availableCollateral).to.eql(decimalToPip('8.7'));
     });
 
     /**
@@ -287,9 +354,11 @@ describe('orderbook/quantities', () => {
           },
         }),
       ).to.eql({
-        baseQuantity: decimalToPip('3651.16279069'),
-        quoteQuantity: decimalToPip('45.11627906'),
-      });
+        makerBaseQuantity: BigInt(0),
+        makerQuoteQuantity: BigInt(0),
+        takerBaseQuantity: decimalToPip('3651.16279069'),
+        takerQuoteQuantity: decimalToPip('45.11627906'),
+      } satisfies ReturnValue);
     });
 
     /**
@@ -325,9 +394,11 @@ describe('orderbook/quantities', () => {
           },
         }),
       ).to.eql({
-        baseQuantity: decimalToPip('-3651.16279069'),
-        quoteQuantity: decimalToPip('-27.90697674'),
-      });
+        makerBaseQuantity: BigInt(0),
+        makerQuoteQuantity: BigInt(0),
+        takerBaseQuantity: decimalToPip('-3651.16279069'),
+        takerQuoteQuantity: decimalToPip('-27.90697674'),
+      } satisfies ReturnValue);
     });
 
     const runDesiredPositionQtyBuyScenario = (
@@ -338,10 +409,7 @@ describe('orderbook/quantities', () => {
         | {
             desiredPositionQuoteQuantity: bigint;
           },
-      expectedResult: {
-        baseQuantity: bigint;
-        quoteQuantity: bigint;
-      },
+      expectedResult: ReturnValue,
     ) => {
       const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
         setUpStandardTestAccount();
@@ -372,8 +440,10 @@ describe('orderbook/quantities', () => {
             desiredPositionBaseQuantity: decimalToPip('3000'),
           },
           {
-            baseQuantity: decimalToPip('3000'),
-            quoteQuantity: decimalToPip('36'),
+            makerBaseQuantity: BigInt(0),
+            makerQuoteQuantity: BigInt(0),
+            takerBaseQuantity: decimalToPip('3000'),
+            takerQuoteQuantity: decimalToPip('36'),
           },
         ));
 
@@ -383,8 +453,10 @@ describe('orderbook/quantities', () => {
             desiredPositionBaseQuantity: decimalToPip('4000'),
           },
           {
-            baseQuantity: decimalToPip('3720.93023255'),
-            quoteQuantity: decimalToPip('46.09302325'),
+            makerBaseQuantity: BigInt(0),
+            makerQuoteQuantity: BigInt(0),
+            takerBaseQuantity: decimalToPip('3720.93023255'),
+            takerQuoteQuantity: decimalToPip('46.09302325'),
           },
         ));
     });
@@ -396,8 +468,10 @@ describe('orderbook/quantities', () => {
             desiredPositionQuoteQuantity: decimalToPip('40'),
           },
           {
-            baseQuantity: decimalToPip('3285.71428587'),
-            quoteQuantity: decimalToPip('40'),
+            makerBaseQuantity: BigInt(0),
+            makerQuoteQuantity: BigInt(0),
+            takerBaseQuantity: decimalToPip('3285.71428587'),
+            takerQuoteQuantity: decimalToPip('40'),
           },
         ));
 
@@ -407,8 +481,10 @@ describe('orderbook/quantities', () => {
             desiredPositionQuoteQuantity: decimalToPip('50'),
           },
           {
-            baseQuantity: decimalToPip('3720.93023255'),
-            quoteQuantity: decimalToPip('46.09302325'),
+            makerBaseQuantity: BigInt(0),
+            makerQuoteQuantity: BigInt(0),
+            takerBaseQuantity: decimalToPip('3720.93023255'),
+            takerQuoteQuantity: decimalToPip('46.09302325'),
           },
         ));
     });
@@ -421,10 +497,7 @@ describe('orderbook/quantities', () => {
         | {
             desiredPositionQuoteQuantity: bigint;
           },
-      expectedResult: {
-        baseQuantity: bigint;
-        quoteQuantity: bigint;
-      },
+      expectedResult: ReturnValue,
     ) => {
       const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
         setUpStandardTestAccount();
@@ -455,8 +528,10 @@ describe('orderbook/quantities', () => {
             desiredPositionBaseQuantity: decimalToPip('-3000'),
           },
           {
-            baseQuantity: decimalToPip('-3000'),
-            quoteQuantity: decimalToPip('-24'),
+            makerBaseQuantity: BigInt(0),
+            makerQuoteQuantity: BigInt(0),
+            takerBaseQuantity: decimalToPip('-3000'),
+            takerQuoteQuantity: decimalToPip('-24'),
           },
         ));
 
@@ -467,8 +542,10 @@ describe('orderbook/quantities', () => {
             desiredPositionBaseQuantity: decimalToPip('3000'),
           },
           {
-            baseQuantity: decimalToPip('-3000'),
-            quoteQuantity: decimalToPip('-24'),
+            makerBaseQuantity: BigInt(0),
+            makerQuoteQuantity: BigInt(0),
+            takerBaseQuantity: decimalToPip('-3000'),
+            takerQuoteQuantity: decimalToPip('-24'),
           },
         ));
 
@@ -478,8 +555,10 @@ describe('orderbook/quantities', () => {
             desiredPositionBaseQuantity: decimalToPip('-4000'),
           },
           {
-            baseQuantity: decimalToPip('-3720.93023255'),
-            quoteQuantity: decimalToPip('-28.32558139'),
+            makerBaseQuantity: BigInt(0),
+            makerQuoteQuantity: BigInt(0),
+            takerBaseQuantity: decimalToPip('-3720.93023255'),
+            takerQuoteQuantity: decimalToPip('-28.32558139'),
           },
         ));
     });
@@ -491,8 +570,10 @@ describe('orderbook/quantities', () => {
             desiredPositionQuoteQuantity: decimalToPip('-20'),
           },
           {
-            baseQuantity: decimalToPip('-2428.57142875'),
-            quoteQuantity: decimalToPip('-20'),
+            makerBaseQuantity: BigInt(0),
+            makerQuoteQuantity: BigInt(0),
+            takerBaseQuantity: decimalToPip('-2428.57142875'),
+            takerQuoteQuantity: decimalToPip('-20'),
           },
         ));
 
@@ -503,8 +584,10 @@ describe('orderbook/quantities', () => {
             desiredPositionQuoteQuantity: decimalToPip('20'),
           },
           {
-            baseQuantity: decimalToPip('-2428.57142875'),
-            quoteQuantity: decimalToPip('-20'),
+            makerBaseQuantity: BigInt(0),
+            makerQuoteQuantity: BigInt(0),
+            takerBaseQuantity: decimalToPip('-2428.57142875'),
+            takerQuoteQuantity: decimalToPip('-20'),
           },
         ));
 
@@ -514,8 +597,10 @@ describe('orderbook/quantities', () => {
             desiredPositionQuoteQuantity: decimalToPip('-30'),
           },
           {
-            baseQuantity: decimalToPip('-3720.93023255'),
-            quoteQuantity: decimalToPip('-28.32558139'),
+            makerBaseQuantity: BigInt(0),
+            makerQuoteQuantity: BigInt(0),
+            takerBaseQuantity: decimalToPip('-3720.93023255'),
+            takerQuoteQuantity: decimalToPip('-28.32558139'),
           },
         ));
     });
@@ -548,9 +633,13 @@ describe('orderbook/quantities', () => {
           },
         }),
       ).to.eql({
-        baseQuantity: decimalToPip(takerSide === 'buy' ? '1' : '-1'),
-        quoteQuantity: decimalToPip(takerSide === 'buy' ? '0.011' : '-0.009'),
-      });
+        makerBaseQuantity: BigInt(0),
+        makerQuoteQuantity: BigInt(0),
+        takerBaseQuantity: decimalToPip(takerSide === 'buy' ? '1' : '-1'),
+        takerQuoteQuantity: decimalToPip(
+          takerSide === 'buy' ? '0.011' : '-0.009',
+        ),
+      } satisfies ReturnValue);
     };
 
     it("should succeed when the taker's buying power exceeds order book liquidity (buy)", () =>
@@ -587,9 +676,11 @@ describe('orderbook/quantities', () => {
           },
         }),
       ).to.eql({
-        baseQuantity: BigInt(0),
-        quoteQuantity: BigInt(0),
-      });
+        makerBaseQuantity: BigInt(0),
+        makerQuoteQuantity: BigInt(0),
+        takerBaseQuantity: BigInt(0),
+        takerQuoteQuantity: BigInt(0),
+      } satisfies ReturnValue);
     };
 
     it('should return zero for zero availableCollateral', () =>
@@ -674,9 +765,11 @@ describe('orderbook/quantities', () => {
           },
         }),
       ).to.eql({
-        baseQuantity: BigInt(0),
-        quoteQuantity: BigInt(0),
-      });
+        makerBaseQuantity: BigInt(0),
+        makerQuoteQuantity: BigInt(0),
+        takerBaseQuantity: BigInt(0),
+        takerQuoteQuantity: BigInt(0),
+      } satisfies ReturnValue);
     };
 
     it('should return zero for a zero desiredPositionBaseQuantity', () =>
@@ -838,9 +931,11 @@ describe('orderbook/quantities', () => {
           },
         }),
       ).to.eql({
-        baseQuantity: expectedBaseQty,
-        quoteQuantity: expectedQuoteQty,
-      });
+        makerBaseQuantity: BigInt(0),
+        makerQuoteQuantity: BigInt(0),
+        takerBaseQuantity: expectedBaseQty,
+        takerQuoteQuantity: expectedQuoteQty,
+      } satisfies ReturnValue);
 
       expect(
         calculateAvailableCollateral({
@@ -921,9 +1016,11 @@ describe('orderbook/quantities', () => {
           },
         }),
       ).to.eql({
-        baseQuantity: expectedBaseQty,
-        quoteQuantity: expectedQuoteQty,
-      });
+        makerBaseQuantity: BigInt(0),
+        makerQuoteQuantity: BigInt(0),
+        takerBaseQuantity: expectedBaseQty,
+        takerQuoteQuantity: expectedQuoteQty,
+      } satisfies ReturnValue);
 
       expect(
         calculateAvailableCollateral({
