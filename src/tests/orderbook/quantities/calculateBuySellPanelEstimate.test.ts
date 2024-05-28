@@ -154,15 +154,19 @@ describe('orderbook/quantities', () => {
 
       expect(
         orderbook.calculateBuySellPanelEstimate({
-          allWalletPositions: [positionInAnotherMarket],
-          heldCollateral,
+          formInputs: {
+            takerSide: 'buy',
+            sliderFactor: 0.97,
+          },
           initialMarginFractionOverride: null,
           leverageParameters: market,
           makerSideOrders: standardTestOrderBookSellSide,
           market,
-          quoteBalance,
-          sliderFactor: 0.97,
-          takerSide: 'buy',
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
         }),
       ).to.eql({
         baseQuantity: decimalToPip('3651.16279069'),
@@ -170,10 +174,90 @@ describe('orderbook/quantities', () => {
       });
     });
 
+    it('should succeed for a sell', () => {
+      const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
+        setUpStandardTestAccount();
+
+      expect(
+        orderbook.calculateBuySellPanelEstimate({
+          formInputs: {
+            takerSide: 'sell',
+            sliderFactor: 0.97,
+          },
+          initialMarginFractionOverride: null,
+          leverageParameters: market,
+          makerSideOrders: standardTestOrderBookBuySide,
+          market,
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
+        }),
+      ).to.eql({
+        baseQuantity: decimalToPip('-3651.16279069'),
+        quoteQuantity: decimalToPip('-27.90697674'),
+      });
+    });
+
+    it('should succeed for a buy with a limit price', () => {
+      const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
+        setUpStandardTestAccount();
+
+      expect(
+        orderbook.calculateBuySellPanelEstimate({
+          formInputs: {
+            limitPrice: decimalToPip('0.012'),
+            takerSide: 'buy',
+            sliderFactor: 0.97,
+          },
+          initialMarginFractionOverride: null,
+          leverageParameters: market,
+          makerSideOrders: standardTestOrderBookSellSide,
+          market,
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
+        }),
+      ).to.eql({
+        baseQuantity: decimalToPip('2000'),
+        quoteQuantity: decimalToPip('23'),
+      });
+    });
+
+    it('should succeed for a sell with a limit price', () => {
+      const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
+        setUpStandardTestAccount();
+
+      expect(
+        orderbook.calculateBuySellPanelEstimate({
+          formInputs: {
+            limitPrice: decimalToPip('0.008'),
+            takerSide: 'sell',
+            sliderFactor: 0.97,
+          },
+          initialMarginFractionOverride: null,
+          leverageParameters: market,
+          makerSideOrders: standardTestOrderBookBuySide,
+          market,
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
+        }),
+      ).to.eql({
+        baseQuantity: decimalToPip('-2000'),
+        quoteQuantity: decimalToPip('-17'),
+      });
+    });
+
     /**
-     * Same as above, but matching continues after order #4 even though the
-     * taker has no buying power remaining, and should stop with order #5.
-     * Asserts that the equation correctly yields zero for order #5.
+     * Same as the first buy test, but matching continues after order #4 even
+     * though the taker has no buying power remaining, and should stop with
+     * order #5. Asserts that the equation correctly yields zero for order #5.
      */
     it('should stop matching when the taker has no buying power remaining (buy)', () => {
       const sellSideMakerOrders: orderbook.PriceAndSize[] = [
@@ -188,19 +272,61 @@ describe('orderbook/quantities', () => {
 
       expect(
         orderbook.calculateBuySellPanelEstimate({
-          allWalletPositions: [positionInAnotherMarket],
-          heldCollateral,
+          formInputs: {
+            sliderFactor: 0.97,
+            takerSide: 'buy',
+          },
           initialMarginFractionOverride: null,
           leverageParameters: market,
           makerSideOrders: sellSideMakerOrders,
           market,
-          quoteBalance,
-          sliderFactor: 0.97,
-          takerSide: 'buy',
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
         }),
       ).to.eql({
         baseQuantity: decimalToPip('3651.16279069'),
         quoteQuantity: decimalToPip('45.11627906'),
+      });
+    });
+
+    /**
+     * Same as the first sell test, but matching continues after order #4 even
+     * though the taker has no buying power remaining, and should stop with
+     * order #5. Asserts that the equation correctly yields zero for order #5.
+     */
+    it('should stop matching when the taker has no buying power remaining (sell)', () => {
+      const buySideMakerOrders: orderbook.PriceAndSize[] = [
+        { price: decimalToPip('0.009'), size: decimalToPip('1000') },
+        { price: decimalToPip('0.008'), size: decimalToPip('1000') },
+        { price: decimalToPip('0.007'), size: decimalToPip('1000') },
+        { price: decimalToPip('0.006'), size: decimalToPip('651.16279069') },
+        { price: decimalToPip('0.005'), size: decimalToPip('1000') },
+      ];
+      const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
+        setUpStandardTestAccount();
+
+      expect(
+        orderbook.calculateBuySellPanelEstimate({
+          formInputs: {
+            takerSide: 'sell',
+            sliderFactor: 0.97,
+          },
+          initialMarginFractionOverride: null,
+          leverageParameters: market,
+          makerSideOrders: buySideMakerOrders,
+          market,
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
+        }),
+      ).to.eql({
+        baseQuantity: decimalToPip('-3651.16279069'),
+        quoteQuantity: decimalToPip('-27.90697674'),
       });
     });
 
@@ -222,15 +348,19 @@ describe('orderbook/quantities', () => {
 
       expect(
         orderbook.calculateBuySellPanelEstimate({
-          allWalletPositions: [positionInAnotherMarket],
-          ...desiredQtys,
-          heldCollateral,
+          formInputs: {
+            takerSide: 'buy',
+            ...desiredQtys,
+          },
           initialMarginFractionOverride: null,
           leverageParameters: market,
           makerSideOrders: standardTestOrderBookSellSide,
           market,
-          quoteBalance,
-          takerSide: 'buy',
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
         }),
       ).to.eql(expectedResult);
     };
@@ -283,62 +413,6 @@ describe('orderbook/quantities', () => {
         ));
     });
 
-    it('should succeed for a sell', () => {
-      const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
-        setUpStandardTestAccount();
-
-      expect(
-        orderbook.calculateBuySellPanelEstimate({
-          allWalletPositions: [positionInAnotherMarket],
-          heldCollateral,
-          initialMarginFractionOverride: null,
-          leverageParameters: market,
-          makerSideOrders: standardTestOrderBookBuySide,
-          market,
-          quoteBalance,
-          sliderFactor: 0.97,
-          takerSide: 'sell',
-        }),
-      ).to.eql({
-        baseQuantity: decimalToPip('-3651.16279069'),
-        quoteQuantity: decimalToPip('-27.90697674'),
-      });
-    });
-
-    /**
-     * Same as above, but matching continues after order #4 even though the
-     * taker has no buying power remaining, and should stop with order #5.
-     * Asserts that the equation correctly yields zero for order #5.
-     */
-    it('should stop matching when the taker has no buying power remaining (sell)', () => {
-      const buySideMakerOrders: orderbook.PriceAndSize[] = [
-        { price: decimalToPip('0.009'), size: decimalToPip('1000') },
-        { price: decimalToPip('0.008'), size: decimalToPip('1000') },
-        { price: decimalToPip('0.007'), size: decimalToPip('1000') },
-        { price: decimalToPip('0.006'), size: decimalToPip('651.16279069') },
-        { price: decimalToPip('0.005'), size: decimalToPip('1000') },
-      ];
-      const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
-        setUpStandardTestAccount();
-
-      expect(
-        orderbook.calculateBuySellPanelEstimate({
-          allWalletPositions: [positionInAnotherMarket],
-          heldCollateral,
-          initialMarginFractionOverride: null,
-          leverageParameters: market,
-          makerSideOrders: buySideMakerOrders,
-          market,
-          quoteBalance,
-          sliderFactor: 0.97,
-          takerSide: 'sell',
-        }),
-      ).to.eql({
-        baseQuantity: decimalToPip('-3651.16279069'),
-        quoteQuantity: decimalToPip('-27.90697674'),
-      });
-    });
-
     const runDesiredPositionQtySellScenario = (
       desiredQtys:
         | {
@@ -357,15 +431,19 @@ describe('orderbook/quantities', () => {
 
       expect(
         orderbook.calculateBuySellPanelEstimate({
-          allWalletPositions: [positionInAnotherMarket],
-          ...desiredQtys,
-          heldCollateral,
+          formInputs: {
+            takerSide: 'sell',
+            ...desiredQtys,
+          },
           initialMarginFractionOverride: null,
           leverageParameters: market,
           makerSideOrders: standardTestOrderBookBuySide,
           market,
-          quoteBalance,
-          takerSide: 'sell',
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
         }),
       ).to.eql(expectedResult);
     };
@@ -450,20 +528,24 @@ describe('orderbook/quantities', () => {
 
       expect(
         orderbook.calculateBuySellPanelEstimate({
-          allWalletPositions: [positionInAnotherMarket],
-          heldCollateral,
+          formInputs: {
+            takerSide,
+            sliderFactor: 0.97,
+          },
           initialMarginFractionOverride: null,
           leverageParameters: market,
           market,
-          quoteBalance,
           makerSideOrders: [
             {
               price: decimalToPip(takerSide === 'buy' ? '0.011' : '0.009'),
               size: decimalToPip('1'),
             },
           ],
-          sliderFactor: 0.97,
-          takerSide,
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
         }),
       ).to.eql({
         baseQuantity: decimalToPip(takerSide === 'buy' ? '1' : '-1'),
@@ -485,18 +567,24 @@ describe('orderbook/quantities', () => {
 
       expect(
         orderbook.calculateBuySellPanelEstimate({
-          allWalletPositions: [positionInAnotherMarket],
-          heldCollateral,
+          formInputs: {
+            takerSide: 'buy',
+            sliderFactor: 0.123,
+          },
           initialMarginFractionOverride: null,
           leverageParameters: market,
           makerSideOrders: [
             { price: decimalToPip('123'), size: decimalToPip('123') },
           ],
           market,
-          quoteBalance:
-            availableCollateral === 'negative' ? decimalToPip('-1') : BigInt(0),
-          sliderFactor: 0.123,
-          takerSide: 'buy',
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance:
+              availableCollateral === 'negative' ?
+                decimalToPip('-1')
+              : BigInt(0),
+          },
         }),
       ).to.eql({
         baseQuantity: BigInt(0),
@@ -518,21 +606,22 @@ describe('orderbook/quantities', () => {
       const market = makeAMarket(BigInt(123));
 
       expect(() =>
-        orderbook.calculateBuySellPanelEstimate(
+        orderbook.calculateBuySellPanelEstimate({
           // @ts-expect-error the type declarations protect against this
-          {
-            ...qtyInputs,
-
-            allWalletPositions: [],
-            heldCollateral: BigInt(0),
-            initialMarginFractionOverride: null,
-            leverageParameters: market,
-            makerSideOrders: [],
-            market,
-            quoteBalance: BigInt(0),
+          formInputs: {
             takerSide: 'buy',
+            ...qtyInputs,
           },
-        ),
+          initialMarginFractionOverride: null,
+          leverageParameters: market,
+          makerSideOrders: [],
+          market,
+          wallet: {
+            heldCollateral: BigInt(0),
+            positions: [],
+            quoteBalance: BigInt(0),
+          },
+        }),
       ).to.throw(
         'Either desiredPositionBaseQuantity, desiredPositionQuoteQuantity, or sliderFactor needs to be provided',
       );
@@ -566,23 +655,24 @@ describe('orderbook/quantities', () => {
         setUpStandardTestAccount();
 
       expect(
-        orderbook.calculateBuySellPanelEstimate(
+        orderbook.calculateBuySellPanelEstimate({
           // @ts-expect-error the type declarations protect against this
-          {
-            ...qtyInputs,
-
-            allWalletPositions: [positionInAnotherMarket],
-            heldCollateral,
-            initialMarginFractionOverride: null,
-            leverageParameters: market,
-            makerSideOrders: [
-              { price: decimalToPip('123'), size: decimalToPip('123') },
-            ],
-            market,
-            quoteBalance,
+          formInputs: {
             takerSide: 'buy',
+            ...qtyInputs,
           },
-        ),
+          initialMarginFractionOverride: null,
+          leverageParameters: market,
+          makerSideOrders: [
+            { price: decimalToPip('123'), size: decimalToPip('123') },
+          ],
+          market,
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
+        }),
       ).to.eql({
         baseQuantity: BigInt(0),
         quoteQuantity: BigInt(0),
@@ -604,15 +694,19 @@ describe('orderbook/quantities', () => {
 
       expect(() =>
         orderbook.calculateBuySellPanelEstimate({
-          allWalletPositions: [positionInAnotherMarket],
-          heldCollateral,
+          formInputs: {
+            takerSide: 'buy',
+            sliderFactor: -0.123,
+          },
           initialMarginFractionOverride: null,
           leverageParameters: market,
           makerSideOrders: [],
           market,
-          quoteBalance,
-          sliderFactor: -0.123,
-          takerSide: 'buy',
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
         }),
       ).to.throw(
         'sliderFactor must be a floating point number between 0 and 1',
@@ -625,15 +719,19 @@ describe('orderbook/quantities', () => {
 
       expect(() =>
         orderbook.calculateBuySellPanelEstimate({
-          allWalletPositions: [positionInAnotherMarket],
-          heldCollateral,
+          formInputs: {
+            takerSide: 'buy',
+            sliderFactor: 1.1,
+          },
           initialMarginFractionOverride: null,
           leverageParameters: market,
           makerSideOrders: [],
           market,
-          quoteBalance,
-          sliderFactor: 1.1,
-          takerSide: 'buy',
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
         }),
       ).to.throw(
         'sliderFactor must be a floating point number between 0 and 1',
@@ -720,8 +818,10 @@ describe('orderbook/quantities', () => {
 
       expect(
         orderbook.calculateBuySellPanelEstimate({
-          allWalletPositions: [positionInAnotherMarket],
-          heldCollateral,
+          formInputs: {
+            takerSide: 'buy',
+            sliderFactor: 0.123, // Should have no effect
+          },
           initialMarginFractionOverride: null,
           leverageParameters: market,
           makerSideOrders: [
@@ -731,9 +831,11 @@ describe('orderbook/quantities', () => {
             },
           ],
           market,
-          quoteBalance,
-          sliderFactor: 0.123, // Should have no effect
-          takerSide: 'buy',
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
         }),
       ).to.eql({
         baseQuantity: expectedBaseQty,
@@ -799,8 +901,10 @@ describe('orderbook/quantities', () => {
 
       expect(
         orderbook.calculateBuySellPanelEstimate({
-          allWalletPositions: [positionInAnotherMarket],
-          heldCollateral,
+          formInputs: {
+            takerSide: 'sell',
+            sliderFactor: 0.123, // Should have no effect
+          },
           initialMarginFractionOverride: null,
           leverageParameters: market,
           makerSideOrders: [
@@ -810,9 +914,11 @@ describe('orderbook/quantities', () => {
             },
           ],
           market,
-          quoteBalance,
-          sliderFactor: 0.123, // Should have no effect
-          takerSide: 'sell',
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
         }),
       ).to.eql({
         baseQuantity: expectedBaseQty,

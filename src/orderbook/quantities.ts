@@ -64,23 +64,14 @@ export const nullLevel: OrderBookLevelL2 = {
  * sorted by best price (ascending for asks (lowest first), descending for bids
  * (highest first)). Multiple orders per price level are supported.
  */
-export function calculateBuySellPanelEstimate(
-  args: {
-    /** All the wallet's open positions, including any in the current market */
-    allWalletPositions: IDEXPosition[];
-    /** Free collateral committed to open limit orders (unsigned) */
-    heldCollateral: bigint;
-    initialMarginFractionOverride: bigint | null;
-    leverageParameters: LeverageParameters;
-    makerSideOrders: Iterable<PriceAndSize>;
-    market: Pick<IDEXMarket, 'market' | 'indexPrice'>;
-    /** Quote token balance (USDC) (signed) */
-    quoteBalance: bigint;
+export function calculateBuySellPanelEstimate(args: {
+  formInputs: {
+    limitPrice?: bigint;
     takerSide: OrderSide;
-  } /**
+  } & /**
    * Either desiredPositionBaseQuantity, desiredPositionQuoteQuantity, or
    * sliderFactor needs to be provided.
-   */ & (
+   */ (
     | {
         /** The desired base position qty to be acquired */
         desiredPositionBaseQuantity: bigint;
@@ -102,24 +93,38 @@ export function calculateBuySellPanelEstimate(
          */
         sliderFactor: number;
       }
-  ),
-): {
+  );
+  initialMarginFractionOverride: bigint | null;
+  leverageParameters: LeverageParameters;
+  makerSideOrders: Iterable<PriceAndSize>;
+  market: Pick<IDEXMarket, 'market' | 'indexPrice'>;
+  wallet: {
+    /** Free collateral committed to open limit orders (unsigned) */
+    heldCollateral: bigint;
+    /** All the wallet's open positions, including any in the current market */
+    positions: IDEXPosition[];
+    /** Quote token balance (USDC) (signed) */
+    quoteBalance: bigint;
+  };
+}): {
   baseQuantity: bigint;
   quoteQuantity: bigint;
 } {
   const {
-    allWalletPositions,
-    market,
-    heldCollateral,
     initialMarginFractionOverride,
     leverageParameters,
     makerSideOrders,
-    quoteBalance,
-    sliderFactor,
-    takerSide,
+    market,
   } = args;
+  const { limitPrice, takerSide, sliderFactor } = args.formInputs;
+  const {
+    heldCollateral,
+    positions: allWalletPositions,
+    quoteBalance,
+  } = args.wallet;
 
-  let { desiredPositionBaseQuantity, desiredPositionQuoteQuantity } = args;
+  let { desiredPositionBaseQuantity, desiredPositionQuoteQuantity } =
+    args.formInputs;
 
   const undefinedQtyInputs = [
     desiredPositionBaseQuantity,
@@ -222,7 +227,7 @@ export function calculateBuySellPanelEstimate(
   let quoteBalance2p = quoteBalance * oneInPips; // Signed
 
   for (const makerOrder of makerSideOrders) {
-    if (!doOrdersMatch(makerOrder, { side: takerSide })) {
+    if (!doOrdersMatch(makerOrder, { side: takerSide, limitPrice })) {
       return {
         baseQuantity: additionalPositionQty,
         quoteQuantity: additionalPositionCostBasis,
