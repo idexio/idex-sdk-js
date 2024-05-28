@@ -202,7 +202,7 @@ export class OrderBookRealTimeClient extends EventEmitter<{
       this.unsubscribe();
       this.webSocketClient.disconnect();
     }
-    this.resetInternalState();
+    this.resetInternalState(true);
   }
 
   public async getMaximumTickSizeUnderSpread(market: string) {
@@ -287,9 +287,10 @@ export class OrderBookRealTimeClient extends EventEmitter<{
     }
 
     const beforeL1 = L2toL1OrderBook(book);
+
     for (const update of updates) {
       // outdated sequence, ignore
-      if (book.sequence > update.sequence) {
+      if (book.sequence >= update.sequence) {
         // eslint-disable-next-line no-continue
         continue;
       }
@@ -302,12 +303,12 @@ export class OrderBookRealTimeClient extends EventEmitter<{
         this.emit(
           OrderBookRealTimeClientEvent.error,
           new Error(
-            `Missing l2 update sequence, current book is ${book.sequence} message was ${update.sequence}`,
+            `Missing l2 update sequence, current book is ${book.sequence} message was ${update.sequence}, awaiting ${update.sequence - book.sequence} updates from REST API...`,
           ),
         );
-        this.unsubscribe();
+        // this.unsubscribe();
         this.resetInternalState();
-        this.subscribe();
+        // this.subscribe();
 
         // eslint-disable-next-line no-await-in-loop
         await this.synchronizeFromRestApi();
@@ -409,10 +410,13 @@ export class OrderBookRealTimeClient extends EventEmitter<{
     }
   }
 
-  private resetInternalState() {
+  private resetInternalState(includeUpdates = false) {
     this.l1OrderBooks.clear();
     this.l2OrderBooks.clear();
-    this.l2OrderBookUpdates.clear();
+    if (includeUpdates) {
+      this.l2OrderBookUpdates.clear();
+    }
+    //
   }
 
   /* Connection management */
@@ -456,7 +460,7 @@ export class OrderBookRealTimeClient extends EventEmitter<{
 
   private webSocketHandleDisconnect() {
     // Assume messages will be lost during disconnection and clear state. State will be re-synchronized again on reconnect
-    this.resetInternalState();
+    this.resetInternalState(true);
 
     this.emit(OrderBookRealTimeClientEvent.disconnected);
   }
