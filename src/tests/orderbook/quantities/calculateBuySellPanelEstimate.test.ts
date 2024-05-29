@@ -157,6 +157,7 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly: false,
             takerSide: 'buy',
             sliderFactor: 0.97,
           },
@@ -173,8 +174,11 @@ describe('orderbook/quantities', () => {
       ).to.eql({
         makerBaseQuantity: BigInt(0),
         makerQuoteQuantity: BigInt(0),
+
         takerBaseQuantity: decimalToPip('3651.16279069'),
         takerQuoteQuantity: decimalToPip('45.11627906'),
+
+        cost: decimalToPip('9.69999999'),
       } satisfies ReturnValue);
     });
 
@@ -185,6 +189,7 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly: false,
             takerSide: 'sell',
             sliderFactor: 0.97,
           },
@@ -201,8 +206,11 @@ describe('orderbook/quantities', () => {
       ).to.eql({
         makerBaseQuantity: BigInt(0),
         makerQuoteQuantity: BigInt(0),
+
         takerBaseQuantity: decimalToPip('3651.16279069'),
         takerQuoteQuantity: decimalToPip('27.90697674'),
+
+        cost: decimalToPip('9.69999999'),
       } satisfies ReturnValue);
     });
 
@@ -213,6 +221,7 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly: false,
             limitPrice: decimalToPip('0.012'),
             takerSide: 'buy',
             sliderFactor: 0.97,
@@ -230,9 +239,12 @@ describe('orderbook/quantities', () => {
       ).to.eql({
         takerBaseQuantity: decimalToPip('2000'),
         takerQuoteQuantity: decimalToPip('23'),
+
         // Maker qtys are incidental and not covered by this test
         makerBaseQuantity: decimalToPip('12708.33333333'),
         makerQuoteQuantity: decimalToPip('152.49999999'),
+
+        cost: decimalToPip('9.69999999'),
       } satisfies ReturnValue);
     });
 
@@ -243,6 +255,7 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly: false,
             limitPrice: decimalToPip('0.008'),
             takerSide: 'sell',
             sliderFactor: 0.97,
@@ -260,22 +273,26 @@ describe('orderbook/quantities', () => {
       ).to.eql({
         takerBaseQuantity: decimalToPip('2000'),
         takerQuoteQuantity: decimalToPip('17'),
+
         // Maker qtys are incidental and not covered by this test
         makerBaseQuantity: decimalToPip('19062.5'),
         makerQuoteQuantity: decimalToPip('152.5'),
+
+        cost: decimalToPip('9.7'),
       } satisfies ReturnValue);
     });
 
     /**
      * Maker qtys require a limit price
      */
-    it('should determine maker qtys for available collateral that does not match order book liquidity', () => {
+    const runMakerQtysSliderScenario = (isReduceOnly: boolean) => {
       const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
         setUpStandardTestAccount();
 
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly,
             limitPrice: decimalToPip('0.011'),
             takerSide: 'buy',
             sliderFactor: 0.15,
@@ -305,6 +322,15 @@ describe('orderbook/quantities', () => {
          */
         makerBaseQuantity: decimalToPip('606.06060606'),
         makerQuoteQuantity: decimalToPip('6.66666666'),
+        /*
+         * - Wallet has 10 available collateral
+         * - Total cost is 1.49999999, matching the 15% slider factor
+         * - 6.66... maker quote qty * 0.03 IMF = 0.199... margin requirement
+         * - Reduce-only maker orders don't require margin:
+         *   1.49999999 original cost - 0.199... maker qty margin requirement
+         *   = 1.3
+         */
+        cost: decimalToPip(isReduceOnly ? '1.3' : '1.49999999'),
       } satisfies ReturnValue);
 
       // Confirm the 8.7 available collateral value stated in the above comment
@@ -316,7 +342,13 @@ describe('orderbook/quantities', () => {
         quoteBalance: quoteBalance - decimalToPip('11'),
       });
       expect(availableCollateral).to.eql(decimalToPip('8.7'));
-    });
+    };
+
+    it('should determine maker qtys for available collateral that does not match order book liquidity', () =>
+      runMakerQtysSliderScenario(false));
+
+    it('should determine maker qtys for available collateral that does not match order book liquidity (reduce-only)', () =>
+      runMakerQtysSliderScenario(true));
 
     /**
      * Maker qtys require a limit price
@@ -328,6 +360,7 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly: false,
             limitPrice: decimalToPip('0.011'),
             takerSide: 'buy',
             desiredTradeBaseQuantity: decimalToPip('1500'),
@@ -346,9 +379,13 @@ describe('orderbook/quantities', () => {
         // Only the first maker order is matched (limited by price)
         takerBaseQuantity: decimalToPip('1000'),
         takerQuoteQuantity: decimalToPip('11'),
+
         // 500 base qty * 0.011 limit price = 5.5 quote
         makerBaseQuantity: decimalToPip('500'),
         makerQuoteQuantity: decimalToPip('5.5'),
+
+        // Cost is not covered by this test
+        cost: decimalToPip('1.465'),
       } satisfies ReturnValue);
     });
 
@@ -362,6 +399,7 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly: false,
             limitPrice: decimalToPip('0.011'),
             takerSide: 'buy',
             desiredTradeQuoteQuantity: decimalToPip('12.1'),
@@ -386,6 +424,9 @@ describe('orderbook/quantities', () => {
          */
         makerBaseQuantity: decimalToPip('100'),
         makerQuoteQuantity: decimalToPip('1.1'),
+
+        // Cost is not covered by this test
+        cost: decimalToPip('1.333'),
       } satisfies ReturnValue);
     });
 
@@ -408,6 +449,7 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly: false,
             sliderFactor: 0.97,
             takerSide: 'buy',
           },
@@ -424,8 +466,11 @@ describe('orderbook/quantities', () => {
       ).to.eql({
         makerBaseQuantity: BigInt(0),
         makerQuoteQuantity: BigInt(0),
+
         takerBaseQuantity: decimalToPip('3651.16279069'),
         takerQuoteQuantity: decimalToPip('45.11627906'),
+
+        cost: decimalToPip('9.69999999'),
       } satisfies ReturnValue);
     });
 
@@ -448,6 +493,7 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly: false,
             takerSide: 'sell',
             sliderFactor: 0.97,
           },
@@ -464,8 +510,11 @@ describe('orderbook/quantities', () => {
       ).to.eql({
         makerBaseQuantity: BigInt(0),
         makerQuoteQuantity: BigInt(0),
+
         takerBaseQuantity: decimalToPip('3651.16279069'),
         takerQuoteQuantity: decimalToPip('27.90697674'),
+
+        cost: decimalToPip('9.69999999'),
       } satisfies ReturnValue);
     });
 
@@ -485,6 +534,7 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly: false,
             takerSide: 'buy',
             ...desiredQtys,
           },
@@ -512,6 +562,8 @@ describe('orderbook/quantities', () => {
             makerQuoteQuantity: BigInt(0),
             takerBaseQuantity: decimalToPip('3000'),
             takerQuoteQuantity: decimalToPip('36'),
+            // Cost is not covered by this test
+            cost: decimalToPip('6.9'),
           },
         ));
 
@@ -525,6 +577,7 @@ describe('orderbook/quantities', () => {
             makerQuoteQuantity: BigInt(0),
             takerBaseQuantity: decimalToPip('3720.93023255'),
             takerQuoteQuantity: decimalToPip('46.09302325'),
+            cost: decimalToPip('9.99999999'),
           },
         ));
     });
@@ -540,6 +593,8 @@ describe('orderbook/quantities', () => {
             makerQuoteQuantity: BigInt(0),
             takerBaseQuantity: decimalToPip('3285.71428587'),
             takerQuoteQuantity: decimalToPip('40'),
+            // Cost is not covered by this test
+            cost: decimalToPip('8.12857143'),
           },
         ));
 
@@ -553,6 +608,7 @@ describe('orderbook/quantities', () => {
             makerQuoteQuantity: BigInt(0),
             takerBaseQuantity: decimalToPip('3720.93023255'),
             takerQuoteQuantity: decimalToPip('46.09302325'),
+            cost: decimalToPip('9.99999999'),
           },
         ));
     });
@@ -573,6 +629,7 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly: false,
             takerSide: 'sell',
             ...desiredQtys,
           },
@@ -600,6 +657,8 @@ describe('orderbook/quantities', () => {
             makerQuoteQuantity: BigInt(0),
             takerBaseQuantity: decimalToPip('3000'),
             takerQuoteQuantity: decimalToPip('24'),
+            // Cost is not covered by this test
+            cost: decimalToPip('6.9'),
           },
         ));
 
@@ -614,6 +673,8 @@ describe('orderbook/quantities', () => {
             makerQuoteQuantity: BigInt(0),
             takerBaseQuantity: decimalToPip('3000'),
             takerQuoteQuantity: decimalToPip('24'),
+            // Cost is not covered by this test
+            cost: decimalToPip('6.9'),
           },
         ));
 
@@ -627,6 +688,7 @@ describe('orderbook/quantities', () => {
             makerQuoteQuantity: BigInt(0),
             takerBaseQuantity: decimalToPip('3720.93023255'),
             takerQuoteQuantity: decimalToPip('28.32558139'),
+            cost: decimalToPip('9.99999999'),
           },
         ));
     });
@@ -642,6 +704,8 @@ describe('orderbook/quantities', () => {
             makerQuoteQuantity: BigInt(0),
             takerBaseQuantity: decimalToPip('2428.57142875'),
             takerQuoteQuantity: decimalToPip('20'),
+            // Cost is not covered by this test
+            cost: decimalToPip('5.01428570'),
           },
         ));
 
@@ -656,6 +720,8 @@ describe('orderbook/quantities', () => {
             makerQuoteQuantity: BigInt(0),
             takerBaseQuantity: decimalToPip('2428.57142875'),
             takerQuoteQuantity: decimalToPip('20'),
+            // Cost is not covered by this test
+            cost: decimalToPip('5.01428570'),
           },
         ));
 
@@ -669,6 +735,7 @@ describe('orderbook/quantities', () => {
             makerQuoteQuantity: BigInt(0),
             takerBaseQuantity: decimalToPip('3720.93023255'),
             takerQuoteQuantity: decimalToPip('28.32558139'),
+            cost: decimalToPip('9.99999999'),
           },
         ));
     });
@@ -682,6 +749,7 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly: false,
             takerSide,
             sliderFactor: 0.97,
           },
@@ -707,6 +775,8 @@ describe('orderbook/quantities', () => {
         takerQuoteQuantity: decimalToPip(
           takerSide === 'buy' ? '0.011' : '0.009',
         ),
+        // Cost is not covered by this test
+        cost: decimalToPip('0.0013'),
       } satisfies ReturnValue);
     };
 
@@ -725,6 +795,7 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly: false,
             takerSide: 'buy',
             sliderFactor: 0.123,
           },
@@ -748,6 +819,7 @@ describe('orderbook/quantities', () => {
         makerQuoteQuantity: BigInt(0),
         takerBaseQuantity: BigInt(0),
         takerQuoteQuantity: BigInt(0),
+        cost: BigInt(0),
       } satisfies ReturnValue);
     };
 
@@ -837,6 +909,7 @@ describe('orderbook/quantities', () => {
         makerQuoteQuantity: BigInt(0),
         takerBaseQuantity: BigInt(0),
         takerQuoteQuantity: BigInt(0),
+        cost: BigInt(0),
       } satisfies ReturnValue);
     };
 
@@ -856,6 +929,7 @@ describe('orderbook/quantities', () => {
       expect(() =>
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly: false,
             takerSide: 'buy',
             sliderFactor: -0.123,
           },
@@ -881,6 +955,7 @@ describe('orderbook/quantities', () => {
       expect(() =>
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly: false,
             takerSide: 'buy',
             sliderFactor: 1.1,
           },
@@ -980,6 +1055,7 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly: false,
             takerSide: 'buy',
             sliderFactor: 0.123, // Should have no effect
           },
@@ -1003,6 +1079,7 @@ describe('orderbook/quantities', () => {
         makerQuoteQuantity: BigInt(0),
         takerBaseQuantity: expectedBaseQty,
         takerQuoteQuantity: expectedQuoteQty,
+        cost: BigInt(0),
       } satisfies ReturnValue);
 
       expect(
@@ -1065,6 +1142,7 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
+            isReduceOnly: false,
             takerSide: 'sell',
             sliderFactor: 0.123, // Should have no effect
           },
@@ -1088,6 +1166,7 @@ describe('orderbook/quantities', () => {
         makerQuoteQuantity: BigInt(0),
         takerBaseQuantity: absBigInt(expectedBaseQty),
         takerQuoteQuantity: absBigInt(expectedQuoteQty),
+        cost: BigInt(0),
       } satisfies ReturnValue);
 
       expect(
