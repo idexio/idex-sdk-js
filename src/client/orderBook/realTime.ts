@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 
 import { decimalToPip, exchangeDecimals } from '#pipmath';
+import { INTERNAL_SYMBOL } from '#utils';
 
 import { L1Equal, updateL2Levels } from '#client/orderBook/utils';
 import { RestPublicClient } from '#client/rest/public';
@@ -161,6 +162,9 @@ export class OrderBookRealTimeClient extends EventEmitter<{
       apiKey: options.apiKey,
       baseURL: options.baseRestApiURL,
     });
+
+    // monitor realtime client
+    this.public[INTERNAL_SYMBOL].realtime();
 
     this.webSocketClient = new WebSocketClient({
       sandbox,

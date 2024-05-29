@@ -190,6 +190,8 @@ export class RestPublicClient {
     this.axios = Axios.create(this.#axiosConfig);
   }
 
+  #realtime = false;
+
   /**
    * Tests connectivity to the REST API
    *
@@ -529,7 +531,11 @@ export class RestPublicClient {
    *
    * @internal
    */
-  public readonly [INTERNAL_SYMBOL] = Object.freeze({} as const);
+  public readonly [INTERNAL_SYMBOL] = Object.freeze({
+    realtime: () => {
+      this.#realtime = true;
+    },
+  } as const);
 
   // Internal methods exposed for advanced usage.
 
@@ -561,6 +567,10 @@ export class RestPublicClient {
       headers: config.headers ?? {},
       url: endpoint,
     } satisfies AxiosRequestConfig;
+
+    if (this.#realtime && !request.headers['IDEX-Web-Client']) {
+      request.headers['IDEX-Web-Client'] = 'realtime-sdk';
+    }
 
     return this.axios<R>(request);
   }
