@@ -231,8 +231,8 @@ describe('orderbook/quantities', () => {
         takerBaseQuantity: decimalToPip('2000'),
         takerQuoteQuantity: decimalToPip('23'),
         // Maker qtys are incidental and not covered by this test
-        makerBaseQuantity: decimalToPip('15250'),
-        makerQuoteQuantity: decimalToPip('183'),
+        makerBaseQuantity: decimalToPip('12708.33333333'),
+        makerQuoteQuantity: decimalToPip('152.49999999'),
       } satisfies ReturnValue);
     });
 
@@ -261,8 +261,8 @@ describe('orderbook/quantities', () => {
         takerBaseQuantity: decimalToPip('-2000'),
         takerQuoteQuantity: decimalToPip('-17'),
         // Maker qtys are incidental and not covered by this test
-        makerBaseQuantity: decimalToPip('15250'),
-        makerQuoteQuantity: decimalToPip('122'),
+        makerBaseQuantity: decimalToPip('19062.5'),
+        makerQuoteQuantity: decimalToPip('152.5'),
       } satisfies ReturnValue);
     });
 
@@ -278,7 +278,7 @@ describe('orderbook/quantities', () => {
           formInputs: {
             limitPrice: decimalToPip('0.011'),
             takerSide: 'buy',
-            sliderFactor: 1,
+            sliderFactor: 0.15,
           },
           initialMarginFractionOverride: null,
           leverageParameters: market,
@@ -291,26 +291,23 @@ describe('orderbook/quantities', () => {
           },
         }),
       ).to.eql({
-        /*
-         * Matches only the first maker order (after which 8.7 available
-         * collateral remains)
-         */
+        // Only the first maker order is matched (limited by price)
         takerBaseQuantity: decimalToPip('1000'),
         takerQuoteQuantity: decimalToPip('11'),
         /*
-         * 20,000 maker base qty * 0.011 limit price = 220 maker quote qty
-         *
-         * 20,000 maker base qty * 0.01 index price = 200 quote value * 0.04 IMF
-         * = 8 margin requirement. Maker qtys above 20k require 0.05 IMF ->
-         * 200 quote value * 0.05 IMF = 10 margin requirement, which exceeds
-         * the 8.7 available collateral, thus the 0.04 IMF level is used, and
-         * 0.7 available collateral remain.
+         * - Wallet has 10 available collateral
+         * - 85% of which (8.5) should remain (15% slider factor)
+         * - After matching only the first maker order, 8.7 available collateral
+         *   remains => 8.7 - 8.5 = 0.2 collateral can be put towards a maker
+         *   order
+         * - 6.66... order quote qty * 0.03 IMF = 0.2 margin requirement (rounded)
+         * - 6.66... order quote qty / 0.011 limit price = 606.06060606 base qty
          */
-        makerBaseQuantity: decimalToPip('20000'),
-        makerQuoteQuantity: decimalToPip('220'),
+        makerBaseQuantity: decimalToPip('606.06060606'),
+        makerQuoteQuantity: decimalToPip('6.66666666'),
       } satisfies ReturnValue);
 
-      // Confirm the held collateral value stated in the above comment
+      // Confirm the 8.7 available collateral value stated in the above comment
       const availableCollateral = calculateAvailableCollateral({
         heldCollateral,
         market,
