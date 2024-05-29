@@ -319,6 +319,77 @@ describe('orderbook/quantities', () => {
     });
 
     /**
+     * Maker qtys require a limit price
+     */
+    it('should determine maker qtys for a desired base trade qty that does not match order book liquidity', () => {
+      const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
+        setUpStandardTestAccount();
+
+      expect(
+        orderbook.calculateBuySellPanelEstimate({
+          formInputs: {
+            limitPrice: decimalToPip('0.011'),
+            takerSide: 'buy',
+            desiredTradeBaseQuantity: decimalToPip('1500'),
+          },
+          initialMarginFractionOverride: null,
+          leverageParameters: market,
+          makerSideOrders: standardTestOrderBookSellSide,
+          market,
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
+        }),
+      ).to.eql({
+        // Only the first maker order is matched (limited by price)
+        takerBaseQuantity: decimalToPip('1000'),
+        takerQuoteQuantity: decimalToPip('11'),
+        // 500 base qty * 0.011 limit price = 5.5 quote
+        makerBaseQuantity: decimalToPip('500'),
+        makerQuoteQuantity: decimalToPip('5.5'),
+      } satisfies ReturnValue);
+    });
+
+    /**
+     * Maker qtys require a limit price
+     */
+    it('should determine maker qtys for a desired quote trade qty that does not match order book liquidity', () => {
+      const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
+        setUpStandardTestAccount();
+
+      expect(
+        orderbook.calculateBuySellPanelEstimate({
+          formInputs: {
+            limitPrice: decimalToPip('0.011'),
+            takerSide: 'buy',
+            desiredTradeQuoteQuantity: decimalToPip('12.1'),
+          },
+          initialMarginFractionOverride: null,
+          leverageParameters: market,
+          makerSideOrders: standardTestOrderBookSellSide,
+          market,
+          wallet: {
+            heldCollateral,
+            positions: [positionInAnotherMarket],
+            quoteBalance,
+          },
+        }),
+      ).to.eql({
+        // Only the first maker order is matched (limited by price)
+        takerBaseQuantity: decimalToPip('1000'),
+        takerQuoteQuantity: decimalToPip('11'),
+        /*
+         * 12.1 desired quote trade qty - 11 order book match = 1.1 quote can
+         * be put towards a maker order. 1.1 / 0.011 limit price = 100 base
+         */
+        makerBaseQuantity: decimalToPip('100'),
+        makerQuoteQuantity: decimalToPip('1.1'),
+      } satisfies ReturnValue);
+    });
+
+    /**
      * Same as the first buy test, but matching continues after order #4 even
      * though the taker has no buying power remaining, and should stop with
      * order #5. Asserts that the equation correctly yields zero for order #5.
@@ -401,10 +472,10 @@ describe('orderbook/quantities', () => {
     const runDesiredPositionQtyBuyScenario = (
       desiredQtys:
         | {
-            desiredPositionBaseQuantity: bigint;
+            desiredTradeBaseQuantity: bigint;
           }
         | {
-            desiredPositionQuoteQuantity: bigint;
+            desiredTradeQuoteQuantity: bigint;
           },
       expectedResult: ReturnValue,
     ) => {
@@ -430,11 +501,11 @@ describe('orderbook/quantities', () => {
       ).to.eql(expectedResult);
     };
 
-    describe('desiredPositionBaseQuantity (buy)', () => {
+    describe('desiredTradeBaseQuantity (buy)', () => {
       it('should succeed', () =>
         runDesiredPositionQtyBuyScenario(
           {
-            desiredPositionBaseQuantity: decimalToPip('3000'),
+            desiredTradeBaseQuantity: decimalToPip('3000'),
           },
           {
             makerBaseQuantity: BigInt(0),
@@ -447,7 +518,7 @@ describe('orderbook/quantities', () => {
       it("should not exceed the taker's buying power", () =>
         runDesiredPositionQtyBuyScenario(
           {
-            desiredPositionBaseQuantity: decimalToPip('4000'),
+            desiredTradeBaseQuantity: decimalToPip('4000'),
           },
           {
             makerBaseQuantity: BigInt(0),
@@ -458,11 +529,11 @@ describe('orderbook/quantities', () => {
         ));
     });
 
-    describe('desiredPositionQuoteQuantity (buy)', () => {
+    describe('desiredTradeQuoteQuantity (buy)', () => {
       it('should succeed', () =>
         runDesiredPositionQtyBuyScenario(
           {
-            desiredPositionQuoteQuantity: decimalToPip('40'),
+            desiredTradeQuoteQuantity: decimalToPip('40'),
           },
           {
             makerBaseQuantity: BigInt(0),
@@ -475,7 +546,7 @@ describe('orderbook/quantities', () => {
       it("should not exceed the taker's buying power", () =>
         runDesiredPositionQtyBuyScenario(
           {
-            desiredPositionQuoteQuantity: decimalToPip('50'),
+            desiredTradeQuoteQuantity: decimalToPip('50'),
           },
           {
             makerBaseQuantity: BigInt(0),
@@ -489,10 +560,10 @@ describe('orderbook/quantities', () => {
     const runDesiredPositionQtySellScenario = (
       desiredQtys:
         | {
-            desiredPositionBaseQuantity: bigint;
+            desiredTradeBaseQuantity: bigint;
           }
         | {
-            desiredPositionQuoteQuantity: bigint;
+            desiredTradeQuoteQuantity: bigint;
           },
       expectedResult: ReturnValue,
     ) => {
@@ -518,11 +589,11 @@ describe('orderbook/quantities', () => {
       ).to.eql(expectedResult);
     };
 
-    describe('desiredPositionBaseQuantity (sell)', () => {
+    describe('desiredTradeBaseQuantity (sell)', () => {
       it('should succeed', () =>
         runDesiredPositionQtySellScenario(
           {
-            desiredPositionBaseQuantity: decimalToPip('-3000'),
+            desiredTradeBaseQuantity: decimalToPip('-3000'),
           },
           {
             makerBaseQuantity: BigInt(0),
@@ -536,7 +607,7 @@ describe('orderbook/quantities', () => {
         runDesiredPositionQtySellScenario(
           {
             // Positive value, should be interpreted as a negative value
-            desiredPositionBaseQuantity: decimalToPip('3000'),
+            desiredTradeBaseQuantity: decimalToPip('3000'),
           },
           {
             makerBaseQuantity: BigInt(0),
@@ -549,7 +620,7 @@ describe('orderbook/quantities', () => {
       it("should not exceed the taker's buying power", () =>
         runDesiredPositionQtySellScenario(
           {
-            desiredPositionBaseQuantity: decimalToPip('-4000'),
+            desiredTradeBaseQuantity: decimalToPip('-4000'),
           },
           {
             makerBaseQuantity: BigInt(0),
@@ -560,11 +631,11 @@ describe('orderbook/quantities', () => {
         ));
     });
 
-    describe('desiredPositionQuoteQuantity (sell)', () => {
+    describe('desiredTradeQuoteQuantity (sell)', () => {
       it('should succeed', () =>
         runDesiredPositionQtySellScenario(
           {
-            desiredPositionQuoteQuantity: decimalToPip('-20'),
+            desiredTradeQuoteQuantity: decimalToPip('-20'),
           },
           {
             makerBaseQuantity: BigInt(0),
@@ -578,7 +649,7 @@ describe('orderbook/quantities', () => {
         runDesiredPositionQtySellScenario(
           {
             // Positive value, should be interpreted as a negative value
-            desiredPositionQuoteQuantity: decimalToPip('20'),
+            desiredTradeQuoteQuantity: decimalToPip('20'),
           },
           {
             makerBaseQuantity: BigInt(0),
@@ -591,7 +662,7 @@ describe('orderbook/quantities', () => {
       it("should not exceed the taker's buying power", () =>
         runDesiredPositionQtySellScenario(
           {
-            desiredPositionQuoteQuantity: decimalToPip('-30'),
+            desiredTradeQuoteQuantity: decimalToPip('-30'),
           },
           {
             makerBaseQuantity: BigInt(0),
@@ -687,8 +758,8 @@ describe('orderbook/quantities', () => {
       runNoAvailableCollateralScenario('negative'));
 
     const runWrongNumberOfQtyInputsScenario = (qtyInputs: {
-      desiredPositionBaseQuantity?: bigint;
-      desiredPositionQuoteQuantity?: bigint;
+      desiredTradeBaseQuantity?: bigint;
+      desiredTradeQuoteQuantity?: bigint;
       sliderFactor?: number;
     }) => {
       const market = makeAMarket(BigInt(123));
@@ -711,7 +782,7 @@ describe('orderbook/quantities', () => {
           },
         }),
       ).to.throw(
-        'Either desiredPositionBaseQuantity, desiredPositionQuoteQuantity, or sliderFactor needs to be provided',
+        'Either desiredTradeBaseQuantity, desiredTradeQuoteQuantity, or sliderFactor needs to be provided',
       );
     };
 
@@ -720,23 +791,23 @@ describe('orderbook/quantities', () => {
 
     it('should reject multiple quantity inputs ', () => {
       runWrongNumberOfQtyInputsScenario({
-        desiredPositionBaseQuantity: BigInt(123),
-        desiredPositionQuoteQuantity: BigInt(123),
+        desiredTradeBaseQuantity: BigInt(123),
+        desiredTradeQuoteQuantity: BigInt(123),
       });
       runWrongNumberOfQtyInputsScenario({
-        desiredPositionBaseQuantity: BigInt(123),
+        desiredTradeBaseQuantity: BigInt(123),
         sliderFactor: 0.123,
       });
       runWrongNumberOfQtyInputsScenario({
-        desiredPositionBaseQuantity: BigInt(123),
-        desiredPositionQuoteQuantity: BigInt(123),
+        desiredTradeBaseQuantity: BigInt(123),
+        desiredTradeQuoteQuantity: BigInt(123),
         sliderFactor: 0.123,
       });
     });
 
     const runZeroInputScenario = (qtyInputs: {
-      desiredPositionBaseQuantity?: bigint;
-      desiredPositionQuoteQuantity?: bigint;
+      desiredTradeBaseQuantity?: bigint;
+      desiredTradeQuoteQuantity?: bigint;
       sliderFactor?: number;
     }) => {
       const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
@@ -769,11 +840,11 @@ describe('orderbook/quantities', () => {
       } satisfies ReturnValue);
     };
 
-    it('should return zero for a zero desiredPositionBaseQuantity', () =>
-      runZeroInputScenario({ desiredPositionBaseQuantity: BigInt(0) }));
+    it('should return zero for a zero desiredTradeBaseQuantity', () =>
+      runZeroInputScenario({ desiredTradeBaseQuantity: BigInt(0) }));
 
-    it('should return zero for a zero desiredPositionQuoteQuantity', () =>
-      runZeroInputScenario({ desiredPositionQuoteQuantity: BigInt(0) }));
+    it('should return zero for a zero desiredTradeQuoteQuantity', () =>
+      runZeroInputScenario({ desiredTradeQuoteQuantity: BigInt(0) }));
 
     it('should return zero for a zero sliderFactor', () =>
       runZeroInputScenario({ sliderFactor: 0 }));

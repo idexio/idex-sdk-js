@@ -6,6 +6,7 @@ import {
   arraySumBigInt,
   decimalToPip,
   divideBigInt,
+  dividePips,
   maxBigInt,
   minBigInt,
   multiplyPips,
@@ -98,24 +99,24 @@ export function calculateBuySellPanelEstimate(args: {
     limitPrice?: bigint;
     takerSide: OrderSide;
   } & /**
-   * Either desiredPositionBaseQuantity, desiredPositionQuoteQuantity, or
+   * Either desiredTradeBaseQuantity, desiredTradeQuoteQuantity, or
    * sliderFactor needs to be provided.
    */ (
     | {
-        /** The desired base position qty to be acquired */
-        desiredPositionBaseQuantity: bigint;
-        desiredPositionQuoteQuantity?: undefined;
+        /** The desired base position qty to be bought or sold (unsigned) */
+        desiredTradeBaseQuantity: bigint;
+        desiredTradeQuoteQuantity?: undefined;
         sliderFactor?: undefined;
       }
     | {
-        desiredPositionBaseQuantity?: undefined;
-        /** The desired quote position qty to be acquired */
-        desiredPositionQuoteQuantity: bigint;
+        desiredTradeBaseQuantity?: undefined;
+        /** The desired quote position qty to be bought or sold (unsigned) */
+        desiredTradeQuoteQuantity: bigint;
         sliderFactor?: undefined;
       }
     | {
-        desiredPositionBaseQuantity?: undefined;
-        desiredPositionQuoteQuantity?: undefined;
+        desiredTradeBaseQuantity?: undefined;
+        desiredTradeQuoteQuantity?: undefined;
         /**
          * Floating point number between 0 and 1 that indicates the amount of
          * the available collateral to be spent
@@ -150,29 +151,28 @@ export function calculateBuySellPanelEstimate(args: {
   } = args;
   const { limitPrice, takerSide, sliderFactor } = args.formInputs;
 
-  let { desiredPositionBaseQuantity, desiredPositionQuoteQuantity } =
-    args.formInputs;
+  let { desiredTradeBaseQuantity, desiredTradeQuoteQuantity } = args.formInputs;
 
   const undefinedQtyInputs = [
-    desiredPositionBaseQuantity,
-    desiredPositionQuoteQuantity,
+    desiredTradeBaseQuantity,
+    desiredTradeQuoteQuantity,
     sliderFactor,
   ].filter((value) => typeof value === 'undefined');
 
   if (undefinedQtyInputs.length !== 2) {
     throw new Error(
-      'Either desiredPositionBaseQuantity, desiredPositionQuoteQuantity, or sliderFactor needs to be provided',
+      'Either desiredTradeBaseQuantity, desiredTradeQuoteQuantity, or sliderFactor needs to be provided',
     );
   }
   // Ensure the correct sign of desired position qtys
-  if (typeof desiredPositionBaseQuantity !== 'undefined') {
-    desiredPositionBaseQuantity =
-      absBigInt(desiredPositionBaseQuantity) *
+  if (typeof desiredTradeBaseQuantity !== 'undefined') {
+    desiredTradeBaseQuantity =
+      absBigInt(desiredTradeBaseQuantity) *
       BigInt(takerSide === 'buy' ? 1 : -1);
   }
-  if (typeof desiredPositionQuoteQuantity !== 'undefined') {
-    desiredPositionQuoteQuantity =
-      absBigInt(desiredPositionQuoteQuantity) *
+  if (typeof desiredTradeQuoteQuantity !== 'undefined') {
+    desiredTradeQuoteQuantity =
+      absBigInt(desiredTradeQuoteQuantity) *
       BigInt(takerSide === 'buy' ? 1 : -1);
   }
   if (typeof sliderFactor !== 'undefined') {
@@ -192,8 +192,8 @@ export function calculateBuySellPanelEstimate(args: {
 
   if (
     initialAvailableCollateral <= BigInt(0) ||
-    desiredPositionBaseQuantity === BigInt(0) ||
-    desiredPositionQuoteQuantity === BigInt(0) ||
+    desiredTradeBaseQuantity === BigInt(0) ||
+    desiredTradeQuoteQuantity === BigInt(0) ||
     sliderFactor === 0
   ) {
     return {
@@ -259,6 +259,24 @@ export function calculateBuySellPanelEstimate(args: {
       return {
         makerBaseQuantity: BigInt(0),
         makerQuoteQuantity: BigInt(0),
+      };
+    }
+    if (desiredTradeBaseQuantity) {
+      const remainingBaseQty =
+        desiredTradeBaseQuantity - absBigInt(additionalPositionQty);
+
+      return {
+        makerBaseQuantity: remainingBaseQty,
+        makerQuoteQuantity: multiplyPips(remainingBaseQty, limitPrice),
+      };
+    }
+    if (desiredTradeQuoteQuantity) {
+      const remainingQuoteQty =
+        desiredTradeQuoteQuantity - absBigInt(additionalPositionCostBasis);
+
+      return {
+        makerBaseQuantity: dividePips(remainingQuoteQty, limitPrice),
+        makerQuoteQuantity: remainingQuoteQty,
       };
     }
     const maxOrderSize = calculateBuySellPanelMaxMakerOrderSize({
@@ -339,34 +357,34 @@ export function calculateBuySellPanelEstimate(args: {
             initialMarginFraction);
     }
 
-    if (desiredPositionBaseQuantity) {
-      // Limit max base to desired position qty and buying power
+    if (desiredTradeBaseQuantity) {
+      // Limit max base to desired trade qty and buying power
       maxTakerBaseQty =
         takerSide === 'buy' ?
           minBigInt(
             maxTakerBaseQty,
-            desiredPositionBaseQuantity - additionalPositionQty,
+            desiredTradeBaseQuantity - additionalPositionQty,
           )
         : maxBigInt(
             maxTakerBaseQty,
-            desiredPositionBaseQuantity - additionalPositionQty,
+            desiredTradeBaseQuantity - additionalPositionQty,
           );
     }
 
     let maxTakerQuoteQty = multiplyPips(maxTakerBaseQty, makerOrder.price);
 
-    if (desiredPositionQuoteQuantity) {
-      // Limit max quote to desired position qty and buying power
+    if (desiredTradeQuoteQuantity) {
+      // Limit max quote to desired trade qty and buying power
       const maxTakerQuoteQtyBefore = maxTakerQuoteQty;
       maxTakerQuoteQty =
         takerSide === 'buy' ?
           minBigInt(
             maxTakerQuoteQty,
-            desiredPositionQuoteQuantity - additionalPositionCostBasis,
+            desiredTradeQuoteQuantity - additionalPositionCostBasis,
           )
         : maxBigInt(
             maxTakerQuoteQty,
-            desiredPositionQuoteQuantity - additionalPositionCostBasis,
+            desiredTradeQuoteQuantity - additionalPositionCostBasis,
           );
 
       if (maxTakerQuoteQty !== maxTakerQuoteQtyBefore) {
