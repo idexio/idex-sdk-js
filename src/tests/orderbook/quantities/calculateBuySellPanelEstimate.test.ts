@@ -201,8 +201,8 @@ describe('orderbook/quantities', () => {
       ).to.eql({
         makerBaseQuantity: BigInt(0),
         makerQuoteQuantity: BigInt(0),
-        takerBaseQuantity: decimalToPip('-3651.16279069'),
-        takerQuoteQuantity: decimalToPip('-27.90697674'),
+        takerBaseQuantity: decimalToPip('3651.16279069'),
+        takerQuoteQuantity: decimalToPip('27.90697674'),
       } satisfies ReturnValue);
     });
 
@@ -258,8 +258,8 @@ describe('orderbook/quantities', () => {
           },
         }),
       ).to.eql({
-        takerBaseQuantity: decimalToPip('-2000'),
-        takerQuoteQuantity: decimalToPip('-17'),
+        takerBaseQuantity: decimalToPip('2000'),
+        takerQuoteQuantity: decimalToPip('17'),
         // Maker qtys are incidental and not covered by this test
         makerBaseQuantity: decimalToPip('19062.5'),
         makerQuoteQuantity: decimalToPip('152.5'),
@@ -464,8 +464,8 @@ describe('orderbook/quantities', () => {
       ).to.eql({
         makerBaseQuantity: BigInt(0),
         makerQuoteQuantity: BigInt(0),
-        takerBaseQuantity: decimalToPip('-3651.16279069'),
-        takerQuoteQuantity: decimalToPip('-27.90697674'),
+        takerBaseQuantity: decimalToPip('3651.16279069'),
+        takerQuoteQuantity: decimalToPip('27.90697674'),
       } satisfies ReturnValue);
     });
 
@@ -593,13 +593,13 @@ describe('orderbook/quantities', () => {
       it('should succeed', () =>
         runDesiredPositionQtySellScenario(
           {
-            desiredTradeBaseQuantity: decimalToPip('-3000'),
+            desiredTradeBaseQuantity: decimalToPip('3000'),
           },
           {
             makerBaseQuantity: BigInt(0),
             makerQuoteQuantity: BigInt(0),
-            takerBaseQuantity: decimalToPip('-3000'),
-            takerQuoteQuantity: decimalToPip('-24'),
+            takerBaseQuantity: decimalToPip('3000'),
+            takerQuoteQuantity: decimalToPip('24'),
           },
         ));
 
@@ -612,21 +612,21 @@ describe('orderbook/quantities', () => {
           {
             makerBaseQuantity: BigInt(0),
             makerQuoteQuantity: BigInt(0),
-            takerBaseQuantity: decimalToPip('-3000'),
-            takerQuoteQuantity: decimalToPip('-24'),
+            takerBaseQuantity: decimalToPip('3000'),
+            takerQuoteQuantity: decimalToPip('24'),
           },
         ));
 
       it("should not exceed the taker's buying power", () =>
         runDesiredPositionQtySellScenario(
           {
-            desiredTradeBaseQuantity: decimalToPip('-4000'),
+            desiredTradeBaseQuantity: decimalToPip('4000'),
           },
           {
             makerBaseQuantity: BigInt(0),
             makerQuoteQuantity: BigInt(0),
-            takerBaseQuantity: decimalToPip('-3720.93023255'),
-            takerQuoteQuantity: decimalToPip('-28.32558139'),
+            takerBaseQuantity: decimalToPip('3720.93023255'),
+            takerQuoteQuantity: decimalToPip('28.32558139'),
           },
         ));
     });
@@ -635,13 +635,13 @@ describe('orderbook/quantities', () => {
       it('should succeed', () =>
         runDesiredPositionQtySellScenario(
           {
-            desiredTradeQuoteQuantity: decimalToPip('-20'),
+            desiredTradeQuoteQuantity: decimalToPip('20'),
           },
           {
             makerBaseQuantity: BigInt(0),
             makerQuoteQuantity: BigInt(0),
-            takerBaseQuantity: decimalToPip('-2428.57142875'),
-            takerQuoteQuantity: decimalToPip('-20'),
+            takerBaseQuantity: decimalToPip('2428.57142875'),
+            takerQuoteQuantity: decimalToPip('20'),
           },
         ));
 
@@ -654,21 +654,21 @@ describe('orderbook/quantities', () => {
           {
             makerBaseQuantity: BigInt(0),
             makerQuoteQuantity: BigInt(0),
-            takerBaseQuantity: decimalToPip('-2428.57142875'),
-            takerQuoteQuantity: decimalToPip('-20'),
+            takerBaseQuantity: decimalToPip('2428.57142875'),
+            takerQuoteQuantity: decimalToPip('20'),
           },
         ));
 
       it("should not exceed the taker's buying power", () =>
         runDesiredPositionQtySellScenario(
           {
-            desiredTradeQuoteQuantity: decimalToPip('-30'),
+            desiredTradeQuoteQuantity: decimalToPip('30'),
           },
           {
             makerBaseQuantity: BigInt(0),
             makerQuoteQuantity: BigInt(0),
-            takerBaseQuantity: decimalToPip('-3720.93023255'),
-            takerQuoteQuantity: decimalToPip('-28.32558139'),
+            takerBaseQuantity: decimalToPip('3720.93023255'),
+            takerQuoteQuantity: decimalToPip('28.32558139'),
           },
         ));
     });
@@ -703,9 +703,9 @@ describe('orderbook/quantities', () => {
       ).to.eql({
         makerBaseQuantity: BigInt(0),
         makerQuoteQuantity: BigInt(0),
-        takerBaseQuantity: decimalToPip(takerSide === 'buy' ? '1' : '-1'),
+        takerBaseQuantity: decimalToPip('1'),
         takerQuoteQuantity: decimalToPip(
-          takerSide === 'buy' ? '0.011' : '-0.009',
+          takerSide === 'buy' ? '0.011' : '0.009',
         ),
       } satisfies ReturnValue);
     };
@@ -1086,8 +1086,8 @@ describe('orderbook/quantities', () => {
       ).to.eql({
         makerBaseQuantity: BigInt(0),
         makerQuoteQuantity: BigInt(0),
-        takerBaseQuantity: expectedBaseQty,
-        takerQuoteQuantity: expectedQuoteQty,
+        takerBaseQuantity: absBigInt(expectedBaseQty),
+        takerQuoteQuantity: absBigInt(expectedQuoteQty),
       } satisfies ReturnValue);
 
       expect(

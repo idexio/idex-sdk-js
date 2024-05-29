@@ -81,14 +81,21 @@ export function calculateAvailableCollateral(wallet: {
 
 /**
  * Determines the liquidity (expressed in the market's base asset) that can be
- * taken off the given order book (asks or bids) by spending the specified
- * fraction of a wallet's available collateral and taking into account the
- * margin requirement for the newly acquired position balance.
+ * taken off the given order book (asks or bids) by trading either absolute
+ * quantities (specified in base or quote) or a specified fraction of a wallet's
+ * available collateral, and taking into account the margin requirement for the
+ * newly acquired position balance. If a limit price is specified, any amount
+ * that cannot be matched against the order book (e.g. limited by limit price)
+ * is used to estimate the quantity that would be added to the book as a maker
+ * order, taking into account the margin requirement for that maker order.
  *
- * Also returns the cost basis of the newly acquired position balance (i.e. the
- * quote quantity that is exchanged to acquire the position balance).
+ * Returns the estimated trade quantities (taker base and quote) and the
+ * estimated size of the maker order (maker base and quote). The trade (taker)
+ * quote quantity represents the cost basis of the newly acquired position
+ * balance (i.e. the quote quantity that is exchanged to acquire the position
+ * balance).
  *
- * Both values are signed (positive for buys, negative for sells).
+ * All returned values are unsigned.
  *
  * The provided list of orders or price levels (asks or bids) is expected to be
  * sorted by best price (ascending for asks (lowest first), descending for bids
@@ -208,7 +215,7 @@ export function calculateBuySellPanelEstimate(args: {
    * Slider calculations
    *
    * Don't limit the amount of available collateral to be spent if limiting by
-   * desired position qty.
+   * desired trade qty.
    */
   let desiredRemainingAvailableCollateral2p = BigInt(0);
 
@@ -300,8 +307,8 @@ export function calculateBuySellPanelEstimate(args: {
     if (!doOrdersMatch(makerOrder, { side: takerSide, limitPrice })) {
       return {
         ...calculateMakerQtys(),
-        takerBaseQuantity: additionalPositionQty,
-        takerQuoteQuantity: additionalPositionCostBasis,
+        takerBaseQuantity: absBigInt(additionalPositionQty),
+        takerQuoteQuantity: absBigInt(additionalPositionCostBasis),
       };
     }
     const makerOrderPrice2p = makerOrder.price * oneInPips;
@@ -400,8 +407,8 @@ export function calculateBuySellPanelEstimate(args: {
       return {
         makerBaseQuantity: BigInt(0),
         makerQuoteQuantity: BigInt(0),
-        takerBaseQuantity: additionalPositionQty,
-        takerQuoteQuantity: additionalPositionCostBasis,
+        takerBaseQuantity: absBigInt(additionalPositionQty),
+        takerQuoteQuantity: absBigInt(additionalPositionCostBasis),
       };
     }
     const tradeBaseQty = makerOrder.size * BigInt(takerSide === 'buy' ? 1 : -1);
@@ -414,8 +421,8 @@ export function calculateBuySellPanelEstimate(args: {
 
   return {
     ...calculateMakerQtys(),
-    takerBaseQuantity: additionalPositionQty,
-    takerQuoteQuantity: additionalPositionCostBasis,
+    takerBaseQuantity: absBigInt(additionalPositionQty),
+    takerQuoteQuantity: absBigInt(additionalPositionCostBasis),
   };
 }
 
