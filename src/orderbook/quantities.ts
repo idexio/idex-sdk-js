@@ -86,29 +86,7 @@ export function calculateAvailableCollateral(wallet: {
   return accountValue - initialMarginRequirementOfAllPositions - heldCollateral;
 }
 
-/**
- * Determines the liquidity (expressed in the market's base asset) that can be
- * taken off the given order book (asks or bids) by trading either absolute
- * quantities (specified in base or quote) or a specified fraction of a wallet's
- * available collateral, and taking into account the margin requirement for the
- * newly acquired position balance. If a limit price is specified, any amount
- * that cannot be matched against the order book (e.g. limited by limit price)
- * is used to estimate the quantity that would be added to the book as a maker
- * order, taking into account the margin requirement for that maker order.
- *
- * Returns the estimated trade quantities (taker base and quote), the estimated
- * size of the maker order (maker base and quote), and the estimated decrease in
- * available collateral (cost). The trade (taker) quote quantity represents the
- * cost basis of the newly acquired position balance (i.e. the quote quantity
- * that is exchanged to acquire the position balance).
- *
- * All returned values are unsigned.
- *
- * The provided list of orders or price levels (asks or bids) is expected to be
- * sorted by best price (ascending for asks (lowest first), descending for bids
- * (highest first)). Multiple orders per price level are supported.
- */
-export function calculateBuySellPanelEstimate(args: {
+export type CalculateBuySellPanelEstimateArgs = {
   formInputs: {
     /** Currently used only in the cost calculations */
     isReduceOnly: boolean;
@@ -152,7 +130,33 @@ export function calculateBuySellPanelEstimate(args: {
     /** Quote token balance (USDC) (signed) */
     quoteBalance: bigint;
   };
-}): MakerAndTakerQuantities & {
+};
+
+/**
+ * Determines the liquidity (expressed in the market's base asset) that can be
+ * taken off the given order book (asks or bids) by trading either absolute
+ * quantities (specified in base or quote) or a specified fraction of a wallet's
+ * available collateral, and taking into account the margin requirement for the
+ * newly acquired position balance. If a limit price is specified, any amount
+ * that cannot be matched against the order book (e.g. limited by limit price)
+ * is used to estimate the quantity that would be added to the book as a maker
+ * order, taking into account the margin requirement for that maker order.
+ *
+ * Returns the estimated trade quantities (taker base and quote), the estimated
+ * size of the maker order (maker base and quote), and the estimated decrease in
+ * available collateral (cost). The trade (taker) quote quantity represents the
+ * cost basis of the newly acquired position balance (i.e. the quote quantity
+ * that is exchanged to acquire the position balance).
+ *
+ * All returned values are unsigned.
+ *
+ * The provided list of orders or price levels (asks or bids) is expected to be
+ * sorted by best price (ascending for asks (lowest first), descending for bids
+ * (highest first)). Multiple orders per price level are supported.
+ */
+export function calculateBuySellPanelEstimate(
+  args: CalculateBuySellPanelEstimateArgs,
+): MakerAndTakerQuantities & {
   /** The estimated decrease in available collateral (unsigned) */
   cost: bigint;
 } {
@@ -276,8 +280,8 @@ export function calculateBuySellPanelEstimate(args: {
       };
     }
     if (desiredTradeBaseQuantity) {
-      const remainingBaseQty =
-        desiredTradeBaseQuantity - absBigInt(additionalPositionQty);
+      // Signed
+      const remainingBaseQty = desiredTradeBaseQuantity - additionalPositionQty;
 
       return {
         makerBaseQuantity: remainingBaseQty,
@@ -285,8 +289,9 @@ export function calculateBuySellPanelEstimate(args: {
       };
     }
     if (desiredTradeQuoteQuantity) {
+      // Signed
       const remainingQuoteQty =
-        desiredTradeQuoteQuantity - absBigInt(additionalPositionCostBasis);
+        desiredTradeQuoteQuantity - additionalPositionCostBasis;
 
       return {
         makerBaseQuantity: dividePips(remainingQuoteQty, limitPrice),
@@ -316,9 +321,8 @@ export function calculateBuySellPanelEstimate(args: {
     cost: bigint;
   } => {
     return {
-      // Maker qtys are already unsigned
-      makerBaseQuantity: makerAndTakerQtys.makerBaseQuantity,
-      makerQuoteQuantity: makerAndTakerQtys.makerQuoteQuantity,
+      makerBaseQuantity: absBigInt(makerAndTakerQtys.makerBaseQuantity),
+      makerQuoteQuantity: absBigInt(makerAndTakerQtys.makerQuoteQuantity),
       takerBaseQuantity: absBigInt(makerAndTakerQtys.takerBaseQuantity),
       takerQuoteQuantity: absBigInt(makerAndTakerQtys.takerQuoteQuantity),
       cost: calculateBuySellPanelCost({
