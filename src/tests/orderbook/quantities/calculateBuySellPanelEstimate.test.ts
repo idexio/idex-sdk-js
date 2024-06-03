@@ -283,154 +283,6 @@ describe('orderbook/quantities', () => {
     });
 
     /**
-     * Maker qtys require a limit price
-     */
-    const runMakerQtysSliderScenario = (isReduceOnly: boolean) => {
-      const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
-        setUpStandardTestAccount();
-
-      expect(
-        orderbook.calculateBuySellPanelEstimate({
-          formInputs: {
-            isReduceOnly,
-            limitPrice: decimalToPip('0.011'),
-            takerSide: 'buy',
-            sliderFactor: 0.15,
-          },
-          initialMarginFractionOverride: null,
-          leverageParameters: market,
-          makerSideOrders: standardTestOrderBookSellSide,
-          market,
-          wallet: {
-            heldCollateral,
-            positions: [positionInAnotherMarket],
-            quoteBalance,
-          },
-        }),
-      ).to.eql({
-        // Only the first maker order is matched (limited by price)
-        takerBaseQuantity: decimalToPip('1000'),
-        takerQuoteQuantity: decimalToPip('11'),
-        /*
-         * - Wallet has 10 available collateral
-         * - 85% of which (8.5) should remain (15% slider factor)
-         * - After matching only the first maker order, 8.7 available collateral
-         *   remains => 8.7 - 8.5 = 0.2 collateral can be put towards a maker
-         *   order
-         * - 6.66... order quote qty * 0.03 IMF = 0.2 margin requirement (rounded)
-         * - 6.66... order quote qty / 0.011 limit price = 606.06060606 base qty
-         */
-        makerBaseQuantity: decimalToPip('606.06060606'),
-        makerQuoteQuantity: decimalToPip('6.66666666'),
-        /*
-         * - Wallet has 10 available collateral
-         * - Total cost is 1.49999999, matching the 15% slider factor
-         * - 6.66... maker quote qty * 0.03 IMF = 0.199... margin requirement
-         * - Reduce-only maker orders don't require margin:
-         *   1.49999999 original cost - 0.199... maker qty margin requirement
-         *   = 1.3
-         */
-        cost: decimalToPip(isReduceOnly ? '1.3' : '1.49999999'),
-      } satisfies ReturnValue);
-
-      // Confirm the 8.7 available collateral value stated in the above comment
-      const availableCollateral = calculateAvailableCollateral({
-        heldCollateral,
-        market,
-        positionInAnotherMarket,
-        positionQuantity: decimalToPip('1000'),
-        quoteBalance: quoteBalance - decimalToPip('11'),
-      });
-      expect(availableCollateral).to.eql(decimalToPip('8.7'));
-    };
-
-    it('should determine maker qtys for available collateral that does not match order book liquidity', () =>
-      runMakerQtysSliderScenario(false));
-
-    it('should determine maker qtys for available collateral that does not match order book liquidity (reduce-only)', () =>
-      runMakerQtysSliderScenario(true));
-
-    /**
-     * Maker qtys require a limit price
-     */
-    it('should determine maker qtys for a desired base trade qty that does not match order book liquidity', () => {
-      const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
-        setUpStandardTestAccount();
-
-      expect(
-        orderbook.calculateBuySellPanelEstimate({
-          formInputs: {
-            isReduceOnly: false,
-            limitPrice: decimalToPip('0.011'),
-            takerSide: 'buy',
-            desiredTradeBaseQuantity: decimalToPip('1500'),
-          },
-          initialMarginFractionOverride: null,
-          leverageParameters: market,
-          makerSideOrders: standardTestOrderBookSellSide,
-          market,
-          wallet: {
-            heldCollateral,
-            positions: [positionInAnotherMarket],
-            quoteBalance,
-          },
-        }),
-      ).to.eql({
-        // Only the first maker order is matched (limited by price)
-        takerBaseQuantity: decimalToPip('1000'),
-        takerQuoteQuantity: decimalToPip('11'),
-
-        // 500 base qty * 0.011 limit price = 5.5 quote
-        makerBaseQuantity: decimalToPip('500'),
-        makerQuoteQuantity: decimalToPip('5.5'),
-
-        // Cost is not covered by this test
-        cost: decimalToPip('1.465'),
-      } satisfies ReturnValue);
-    });
-
-    /**
-     * Maker qtys require a limit price
-     */
-    it('should determine maker qtys for a desired quote trade qty that does not match order book liquidity', () => {
-      const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
-        setUpStandardTestAccount();
-
-      expect(
-        orderbook.calculateBuySellPanelEstimate({
-          formInputs: {
-            isReduceOnly: false,
-            limitPrice: decimalToPip('0.011'),
-            takerSide: 'buy',
-            desiredTradeQuoteQuantity: decimalToPip('12.1'),
-          },
-          initialMarginFractionOverride: null,
-          leverageParameters: market,
-          makerSideOrders: standardTestOrderBookSellSide,
-          market,
-          wallet: {
-            heldCollateral,
-            positions: [positionInAnotherMarket],
-            quoteBalance,
-          },
-        }),
-      ).to.eql({
-        // Only the first maker order is matched (limited by price)
-        takerBaseQuantity: decimalToPip('1000'),
-        takerQuoteQuantity: decimalToPip('11'),
-        /*
-         * 12.1 desired quote trade qty - 11 order book match = 1.1 quote can
-         * be put towards a maker order. 1.1 / 0.011 limit price = 100 base
-         */
-        makerBaseQuantity: decimalToPip('100'),
-        makerQuoteQuantity: decimalToPip('1.1'),
-
-        // Cost is not covered by this test
-        cost: decimalToPip('1.333'),
-      } satisfies ReturnValue);
-    });
-
-    /**
      * Same as the first buy test, but matching continues after order #4 even
      * though the taker has no buying power remaining, and should stop with
      * order #5. Asserts that the equation correctly yields zero for order #5.
@@ -738,6 +590,386 @@ describe('orderbook/quantities', () => {
             cost: decimalToPip('9.99999999'),
           },
         ));
+    });
+
+    /**
+     * Maker qtys require a limit price
+     */
+    describe('Maker quantities', () => {
+      const runMakerQtysSliderScenario = (isReduceOnly: boolean) => {
+        const {
+          market,
+          positionInAnotherMarket,
+          heldCollateral,
+          quoteBalance,
+        } = setUpStandardTestAccount();
+
+        expect(
+          orderbook.calculateBuySellPanelEstimate({
+            formInputs: {
+              isReduceOnly,
+              limitPrice: decimalToPip('0.011'),
+              takerSide: 'buy',
+              sliderFactor: 0.15,
+            },
+            initialMarginFractionOverride: null,
+            leverageParameters: market,
+            makerSideOrders: standardTestOrderBookSellSide,
+            market,
+            wallet: {
+              heldCollateral,
+              positions: [positionInAnotherMarket],
+              quoteBalance,
+            },
+          }),
+        ).to.eql({
+          // Only the first maker order is matched (limited by price)
+          takerBaseQuantity: decimalToPip('1000'),
+          takerQuoteQuantity: decimalToPip('11'),
+          /*
+           * - Wallet has 10 available collateral
+           * - 85% of which (8.5) should remain (15% slider factor)
+           * - After matching only the first maker order, 8.7 available collateral
+           *   remains => 8.7 - 8.5 = 0.2 collateral can be put towards a maker
+           *   order
+           * - 6.66... order quote qty * 0.03 IMF = 0.2 margin requirement (rounded)
+           * - 6.66... order quote qty / 0.011 limit price = 606.06060606 base qty
+           */
+          makerBaseQuantity: decimalToPip('606.06060606'),
+          makerQuoteQuantity: decimalToPip('6.66666666'),
+          /*
+           * - Wallet has 10 available collateral
+           * - Total cost is 1.49999999, matching the 15% slider factor
+           * - 6.66... maker quote qty * 0.03 IMF = 0.199... margin requirement
+           * - Reduce-only maker orders don't require margin:
+           *   1.49999999 original cost - 0.199... maker qty margin requirement
+           *   = 1.3
+           */
+          cost: decimalToPip(isReduceOnly ? '1.3' : '1.49999999'),
+        } satisfies ReturnValue);
+
+        // Confirm the 8.7 available collateral value stated in the above comment
+        const availableCollateral = calculateAvailableCollateral({
+          heldCollateral,
+          market,
+          positionInAnotherMarket,
+          positionQuantity: decimalToPip('1000'),
+          quoteBalance: quoteBalance - decimalToPip('11'),
+        });
+        expect(availableCollateral).to.eql(decimalToPip('8.7'));
+      };
+
+      it('should determine maker qtys for available collateral that does not match order book liquidity', () =>
+        runMakerQtysSliderScenario(false));
+
+      it('should determine maker qtys for available collateral that does not match order book liquidity (reduce-only)', () =>
+        runMakerQtysSliderScenario(true));
+
+      it('should determine maker qtys for a desired base trade qty that does not match order book liquidity (buy)', () => {
+        const {
+          market,
+          positionInAnotherMarket,
+          heldCollateral,
+          quoteBalance,
+        } = setUpStandardTestAccount();
+
+        expect(
+          orderbook.calculateBuySellPanelEstimate({
+            formInputs: {
+              isReduceOnly: false,
+              limitPrice: decimalToPip('0.011'),
+              takerSide: 'buy',
+              desiredTradeBaseQuantity: decimalToPip('1500'),
+            },
+            initialMarginFractionOverride: null,
+            leverageParameters: market,
+            makerSideOrders: standardTestOrderBookSellSide,
+            market,
+            wallet: {
+              heldCollateral,
+              positions: [positionInAnotherMarket],
+              quoteBalance,
+            },
+          }),
+        ).to.eql({
+          // Only the first maker order is matched (limited by price)
+          takerBaseQuantity: decimalToPip('1000'),
+          takerQuoteQuantity: decimalToPip('11'),
+
+          // 500 base qty * 0.011 limit price = 5.5 quote
+          makerBaseQuantity: decimalToPip('500'),
+          makerQuoteQuantity: decimalToPip('5.5'),
+
+          // Cost is not covered by this test
+          cost: decimalToPip('1.465'),
+        } satisfies ReturnValue);
+      });
+
+      it('should determine maker qtys for a desired base trade qty that does not match order book liquidity (sell)', () => {
+        const {
+          market,
+          positionInAnotherMarket,
+          heldCollateral,
+          quoteBalance,
+        } = setUpStandardTestAccount();
+
+        expect(
+          orderbook.calculateBuySellPanelEstimate({
+            formInputs: {
+              isReduceOnly: false,
+              limitPrice: decimalToPip('0.009'),
+              takerSide: 'sell',
+              desiredTradeBaseQuantity: decimalToPip('1500'),
+            },
+            initialMarginFractionOverride: null,
+            leverageParameters: market,
+            makerSideOrders: standardTestOrderBookBuySide,
+            market,
+            wallet: {
+              heldCollateral,
+              positions: [positionInAnotherMarket],
+              quoteBalance,
+            },
+          }),
+        ).to.eql({
+          // Only the first maker order is matched (limited by price)
+          takerBaseQuantity: decimalToPip('1000'),
+          takerQuoteQuantity: decimalToPip('9'),
+
+          // 500 base qty * 0.009 limit price = 4.5 quote
+          makerBaseQuantity: decimalToPip('500'),
+          makerQuoteQuantity: decimalToPip('4.5'),
+
+          // Cost is not covered by this test
+          cost: decimalToPip('1.435'),
+        } satisfies ReturnValue);
+      });
+
+      it('should determine maker qtys for a desired quote trade qty that does not match order book liquidity (buy)', () => {
+        const {
+          market,
+          positionInAnotherMarket,
+          heldCollateral,
+          quoteBalance,
+        } = setUpStandardTestAccount();
+
+        expect(
+          orderbook.calculateBuySellPanelEstimate({
+            formInputs: {
+              isReduceOnly: false,
+              limitPrice: decimalToPip('0.011'),
+              takerSide: 'buy',
+              desiredTradeQuoteQuantity: decimalToPip('12.1'),
+            },
+            initialMarginFractionOverride: null,
+            leverageParameters: market,
+            makerSideOrders: standardTestOrderBookSellSide,
+            market,
+            wallet: {
+              heldCollateral,
+              positions: [positionInAnotherMarket],
+              quoteBalance,
+            },
+          }),
+        ).to.eql({
+          // Only the first maker order is matched (limited by price)
+          takerBaseQuantity: decimalToPip('1000'),
+          takerQuoteQuantity: decimalToPip('11'),
+          /*
+           * 12.1 desired quote trade qty - 11 order book match = 1.1 quote can
+           * be put towards a maker order. 1.1 / 0.011 limit price = 100 base
+           */
+          makerBaseQuantity: decimalToPip('100'),
+          makerQuoteQuantity: decimalToPip('1.1'),
+
+          // Cost is not covered by this test
+          cost: decimalToPip('1.333'),
+        } satisfies ReturnValue);
+      });
+
+      it('should determine maker qtys for a desired quote trade qty that does not match order book liquidity (sell)', () => {
+        const {
+          market,
+          positionInAnotherMarket,
+          heldCollateral,
+          quoteBalance,
+        } = setUpStandardTestAccount();
+
+        expect(
+          orderbook.calculateBuySellPanelEstimate({
+            formInputs: {
+              isReduceOnly: false,
+              limitPrice: decimalToPip('0.009'),
+              takerSide: 'sell',
+              desiredTradeQuoteQuantity: decimalToPip('12.6'),
+            },
+            initialMarginFractionOverride: null,
+            leverageParameters: market,
+            makerSideOrders: standardTestOrderBookBuySide,
+            market,
+            wallet: {
+              heldCollateral,
+              positions: [positionInAnotherMarket],
+              quoteBalance,
+            },
+          }),
+        ).to.eql({
+          // Only the first maker order is matched (limited by price)
+          takerBaseQuantity: decimalToPip('1000'),
+          takerQuoteQuantity: decimalToPip('9'),
+          /*
+           * 12.6 desired quote trade qty - 9 order book match = 3.6 quote can
+           * be put towards a maker order. 3.6 / 0.009 limit price = 400 base
+           */
+          makerBaseQuantity: decimalToPip('400'),
+          makerQuoteQuantity: decimalToPip('3.6'),
+
+          // Cost is not covered by this test
+          cost: decimalToPip('1.408'),
+        } satisfies ReturnValue);
+      });
+
+      const runEmptyOrderBookScenario = (takerSide: 'buy' | 'sell') => {
+        const {
+          market,
+          positionInAnotherMarket,
+          heldCollateral,
+          quoteBalance,
+        } = setUpStandardTestAccount();
+
+        expect(
+          orderbook.calculateBuySellPanelEstimate({
+            formInputs: {
+              isReduceOnly: false,
+              limitPrice: decimalToPip('0.01'),
+              takerSide,
+              sliderFactor: 1, // Use all 10 available collateral
+            },
+            initialMarginFractionOverride: null,
+            leverageParameters: market,
+            makerSideOrders: [],
+            market,
+            wallet: {
+              heldCollateral,
+              positions: [positionInAnotherMarket],
+              quoteBalance,
+            },
+          }),
+        ).to.eql({
+          /*
+           * - 20k base requires 0.04 IMF (0.3 for 1st 10k + 0.1 for 2nd 20k)
+           * - 20k base * 0.01 limit price = 200 quote
+           * - 200 quote * 0.04 IMF = 8 cost
+           * Any amount above 20k would increase the IMF to 0.05 =>
+           * 200.00000001 quote * 0.05 = 10.0000000005 cost, which is above the
+           * wallet's 10 available collateral. Thus, the 0.04 IMF level and its
+           * maximum qty of 20k base should be selected.
+           */
+          makerBaseQuantity: decimalToPip('20000'),
+          makerQuoteQuantity: decimalToPip('200'),
+
+          takerBaseQuantity: BigInt(0),
+          takerQuoteQuantity: BigInt(0),
+
+          cost: decimalToPip('8'),
+        } satisfies ReturnValue);
+      };
+
+      it('should determine maker qtys for an empty order book (buy)', () =>
+        runEmptyOrderBookScenario('buy'));
+
+      it('should determine maker qtys for an empty order book (sell)', () =>
+        runEmptyOrderBookScenario('sell'));
+
+      const runDesiredBaseQtyEmptyOrderBookScenario = (
+        takerSide: 'buy' | 'sell',
+      ) => {
+        const {
+          market,
+          positionInAnotherMarket,
+          heldCollateral,
+          quoteBalance,
+        } = setUpStandardTestAccount();
+
+        expect(
+          orderbook.calculateBuySellPanelEstimate({
+            formInputs: {
+              isReduceOnly: false,
+              limitPrice: decimalToPip('0.01'),
+              takerSide,
+              desiredTradeBaseQuantity: decimalToPip('1000'),
+            },
+            initialMarginFractionOverride: null,
+            leverageParameters: market,
+            makerSideOrders: [],
+            market,
+            wallet: {
+              heldCollateral,
+              positions: [positionInAnotherMarket],
+              quoteBalance,
+            },
+          }),
+        ).to.eql({
+          makerBaseQuantity: decimalToPip('1000'),
+          makerQuoteQuantity: decimalToPip('10'),
+
+          takerBaseQuantity: BigInt(0),
+          takerQuoteQuantity: BigInt(0),
+
+          cost: decimalToPip('0.3'), // 10 quote * 0.03 IMF
+        } satisfies ReturnValue);
+      };
+
+      it('should determine maker qtys for a desired base trade qty and an empty order book (buy)', () =>
+        runDesiredBaseQtyEmptyOrderBookScenario('buy'));
+
+      it('should determine maker qtys for a desired base trade qty and an empty order book (sell)', () =>
+        runDesiredBaseQtyEmptyOrderBookScenario('sell'));
+
+      const runDesiredQuoteQtyEmptyOrderBookScenario = (
+        takerSide: 'buy' | 'sell',
+      ) => {
+        const {
+          market,
+          positionInAnotherMarket,
+          heldCollateral,
+          quoteBalance,
+        } = setUpStandardTestAccount();
+
+        expect(
+          orderbook.calculateBuySellPanelEstimate({
+            formInputs: {
+              isReduceOnly: false,
+              limitPrice: decimalToPip('0.01'),
+              takerSide,
+              desiredTradeQuoteQuantity: decimalToPip('10'),
+            },
+            initialMarginFractionOverride: null,
+            leverageParameters: market,
+            makerSideOrders: [],
+            market,
+            wallet: {
+              heldCollateral,
+              positions: [positionInAnotherMarket],
+              quoteBalance,
+            },
+          }),
+        ).to.eql({
+          makerBaseQuantity: decimalToPip('1000'),
+          makerQuoteQuantity: decimalToPip('10'),
+
+          takerBaseQuantity: BigInt(0),
+          takerQuoteQuantity: BigInt(0),
+
+          cost: decimalToPip('0.3'), // 10 quote * 0.03 IMF
+        } satisfies ReturnValue);
+      };
+
+      it('should determine maker qtys for a desired quote trade qty and an empty order book (buy)', () =>
+        runDesiredQuoteQtyEmptyOrderBookScenario('buy'));
+
+      it('should determine maker qtys for a desired quote trade qty and an empty order book (sell)', () =>
+        runDesiredQuoteQtyEmptyOrderBookScenario('sell'));
     });
 
     const runOrderBookLiquidityExceededScenario = (
