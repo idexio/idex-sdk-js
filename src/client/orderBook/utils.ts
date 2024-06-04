@@ -35,6 +35,8 @@ export function updateL2Levels(
   book.asks = updateL2Side(true, book.asks, updatedLevels.asks);
   book.bids = updateL2Side(false, book.bids, updatedLevels.bids);
   book.indexPrice = updatedLevels.indexPrice;
+  book.lastPrice = updatedLevels.lastPrice;
+  book.markPrice = updatedLevels.markPrice;
   /* eslint-enable no-param-reassign */
 }
 
