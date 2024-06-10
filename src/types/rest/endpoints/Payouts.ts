@@ -157,6 +157,14 @@ export interface IDEXPayoutProgram {
    * - **Format:** Asset Units
    */
   quantityOwed: string;
+  /**
+   * Indicates whether there is likely to be a pending earnings distribution tx that has not been mined yet.
+   *
+   * - This is for internal use and may change without notice.
+   *
+   * @internal
+   */
+  hasPendingEarnings?: boolean;
 }
 
 /**
