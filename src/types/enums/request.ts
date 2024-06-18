@@ -54,7 +54,7 @@ export const CandleInterval = Object.freeze({
   /**
    * - Receives candles at an interval of 6 hours.
    */
-  SIX_HOURS: '6h',
+  FOUR_HOURS: '4h',
   /**
    * - Receives candles at an interval of 1 day.
    */
