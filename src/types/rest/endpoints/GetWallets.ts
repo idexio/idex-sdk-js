@@ -94,18 +94,6 @@ export interface IDEXWallet {
    */
   takerFeeRate: string;
   /**
-   * Total trailing 30-day maker volume
-   */
-  makerVolume30d: string;
-  /**
-   * Total trailing 30-day taker volume
-   */
-  takerVolume30d: string;
-  /**
-   * Total trailing 30-day fees paid or earned
-   */
-  fees30d: string;
-  /**
    * Positions will be included if the request indicated it was interested in them
    *
    * - Only present if {@link RestRequestGetWallets.includePositions} was not set to `false`
