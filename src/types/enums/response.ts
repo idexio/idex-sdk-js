@@ -105,18 +105,30 @@ export type FillAction = (typeof FillAction)[keyof typeof FillAction];
  */
 export const OrderStatus = Object.freeze({
   /**
-   * @internal
+   * Stop order exists on the order book
    */
-  new: 'new',
+  active: 'active',
+  /**
+   * Limit order was canceled prior to execution completion but may be partially filled
+   */
+  canceled: 'canceled',
   expired: 'expired',
+  /**
+   * Limit order is completely filled and is no longer on the book; market order was filled
+   */
+  filled: 'filled',
   /**
    * Conditional and trailing stop orders that have not yet entered the active state
    */
   inactive: 'inactive',
   /**
-   * Stop order exists on the order book
+   * @internal
    */
-  active: 'active',
+  new: 'new',
+  /*
+   * Order ID to cancel was not found
+   */
+  notFound: 'notFound',
   /**
    * Limit order exists on the order book
    */
@@ -125,14 +137,6 @@ export const OrderStatus = Object.freeze({
    * Limit order has completed fills but has remaining open quantity
    */
   partiallyFilled: 'partiallyFilled',
-  /**
-   * Limit order is completely filled and is no longer on the book; market order was filled
-   */
-  filled: 'filled',
-  /**
-   * Limit order was canceled prior to execution completion but may be partially filled
-   */
-  canceled: 'canceled',
   /**
    * Order was rejected by the trading engine
    */

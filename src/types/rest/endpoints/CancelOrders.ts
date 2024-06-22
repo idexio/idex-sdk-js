@@ -125,6 +125,12 @@ export interface IDEXCanceledOrder {
    * within the cancel object when cancelled by any of your requests.
    */
   readonly clientOrderId?: string;
+  /**
+   * Current order status, either canceled or notFound if provided ID was not on the books
+   *
+   * @see enum {@link OrderStatus}
+   */
+  status: Extract<idex.OrderStatus, 'canceled' | 'notFound'>;
 }
 
 /**
