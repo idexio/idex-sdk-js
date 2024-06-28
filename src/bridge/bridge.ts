@@ -24,31 +24,14 @@ export const StargateV2MainnetLayerZeroEndpointIds = Object.values(
   return value.layerZeroEndpointId;
 });
 
-export const StargateV2TestnetLayerZeroEndpointIds = Object.values(
-  StargateV2ConfigByLayerZeroEndpointId.testnet,
-).map((value) => {
-  return value.layerZeroEndpointId;
-});
-
 export type StargateV2LayerZeroEndpointIdsMainnet =
   (typeof StargateV2MainnetLayerZeroEndpointIds)[number];
-
-export type StargateV2LayerZeroEndpointIdsTestnet =
-  (typeof StargateV2TestnetLayerZeroEndpointIds)[number];
 
 export function isStargateV2MainnetLayerZeroEndpointId(
   layerZeroEndpointId: number,
 ): layerZeroEndpointId is StargateV2LayerZeroEndpointIdsMainnet {
   return StargateV2MainnetLayerZeroEndpointIds.includes(
     layerZeroEndpointId as StargateV2LayerZeroEndpointIdsMainnet,
-  );
-}
-
-export function isStargateV2TestnetLayerZeroEndpointId(
-  layerZeroEndpointId: number,
-): layerZeroEndpointId is StargateV2LayerZeroEndpointIdsTestnet {
-  return StargateV2TestnetLayerZeroEndpointIds.includes(
-    layerZeroEndpointId as StargateV2LayerZeroEndpointIdsTestnet,
   );
 }
 
@@ -65,31 +48,28 @@ export function getStargateV2TargetConfig<
   T extends StargateV2Target,
   S extends true | false,
 >(stargateTarget: T, sandbox: S) {
-  const targetConfig =
-    sandbox ?
-      StargateV2Config.testnet[stargateTarget]
-    : StargateV2Config.mainnet[stargateTarget];
-
-  if (!targetConfig) {
-    throw new Error(
-      `No config found for ${stargateTarget} (testnet/sandbox? ${String(sandbox)})`,
-    );
+  if (sandbox) {
+    throw new Error('Testnet not supported');
   }
 
-  return targetConfig as S extends true ? (typeof StargateV2Config.testnet)[T]
-  : (typeof StargateV2Config.mainnet)[T];
+  const targetConfig = StargateV2Config.mainnet[stargateTarget];
+  if (!targetConfig) {
+    throw new Error(`No config found for ${stargateTarget}`);
+  }
+
+  return targetConfig;
 }
 
 export function stargateV2TargetForLayerZeroEndpointId(
   layerZeroEndpointId: number,
   sandbox: boolean,
 ) {
-  if (!sandbox && isStargateV2MainnetLayerZeroEndpointId(layerZeroEndpointId)) {
-    return StargateV2ConfigByLayerZeroEndpointId.mainnet[layerZeroEndpointId]
-      .target;
+  if (sandbox) {
+    throw new Error('Testnet not supported');
   }
-  if (sandbox && isStargateV2TestnetLayerZeroEndpointId(layerZeroEndpointId)) {
-    return StargateV2ConfigByLayerZeroEndpointId.testnet[layerZeroEndpointId]
+
+  if (isStargateV2MainnetLayerZeroEndpointId(layerZeroEndpointId)) {
+    return StargateV2ConfigByLayerZeroEndpointId.mainnet[layerZeroEndpointId]
       .target;
   }
 
@@ -129,10 +109,11 @@ export function getEncodedWithdrawalPayloadForBridgeTarget(
   bridgeTarget: BridgeTarget,
   sandbox = false,
 ): EncodedStargateV2Payload {
-  const targetConfig =
-    sandbox ?
-      StargateV2Config.testnet[bridgeTarget]
-    : StargateV2Config.mainnet[bridgeTarget];
+  if (sandbox) {
+    throw new Error('Testnet not supported');
+  }
+
+  const targetConfig = StargateV2Config.mainnet[bridgeTarget];
 
   if (!targetConfig || !targetConfig.isSupported) {
     throw new Error(
@@ -232,16 +213,12 @@ async function getStargateV2DepositSendParamAndSourceConfig(
   },
   sandbox: boolean,
 ) {
-  const sourceConfig =
-    sandbox ?
-      StargateV2Config.testnet[sourceStargateTarget]
-    : StargateV2Config.mainnet[sourceStargateTarget];
+  if (sandbox) {
+    throw new Error('Testnet not supported');
+  }
 
-  // TODO StargateV2 is not deployed to XChain so use BNB instead
-  const targetConfig =
-    sandbox ?
-      StargateV2Config.testnet[StargateV2Target.STARGATE_BNB]
-    : StargateV2Config.mainnet[StargateV2Target.STARGATE_BNB];
+  const sourceConfig = StargateV2Config.mainnet[sourceStargateTarget];
+  const targetConfig = StargateV2Config.mainnet[StargateV2Target.XCHAIN_XCHAIN];
 
   if (!sourceConfig || !sourceConfig.isSupported || !targetConfig.isSupported) {
     throw new Error(
