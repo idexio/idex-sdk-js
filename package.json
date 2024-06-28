@@ -1,6 +1,6 @@
 {
   "name": "@idexio/idex-sdk",
-  "version": "4.0.0-beta.20",
+  "version": "4.0.0-alpha.19",
   "description": "IDEX SDK for Javascript in the browser and Node.js",
   "repository": "git@github.com:idexio/idex-sdk-js.git",
   "license": "MIT",
@@ -103,6 +103,8 @@
     "lint": "eslint --cache 'src/**/*.ts'",
     "lint:fix": "eslint --cache 'src/**/*.ts' --fix",
     "lint:fix:staged": "lint-staged",
+    "lint:fix:staged-and-modified": "eslint --cache --fix $(git diff --name-only HEAD | grep -E '\\.(ts|tsx)$' | xargs) && yarn lint:prettier:staged-and-modified",
+    "lint:prettier:staged-and-modified": "prettier --write $(git diff --name-only HEAD | grep -E '\\.(ts|tsx)$' | xargs)",
     "lint:types": "yarn exec tsc --noEmit",
     "on:commit": "npm-run-all build test --parallel lint:fix:staged lint:types --",
     "orderbook:demo": "yarn node dist/orderbook/demo.js",
