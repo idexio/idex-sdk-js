@@ -118,13 +118,22 @@ export type RestRequestCancelOrders =
  * @category IDEX - Cancel Order
  */
 export interface IDEXCanceledOrder {
-  /** Exchange-assigned order identifier */
-  readonly orderId: string;
+  /**
+   * Exchange-assigned order identifier. Will not be present for client order IDs
+   * that were not found on the books and were not filled
+   */
+  readonly orderId?: string;
   /**
    * If the order was created with a `clientOrderId`, it will be included
    * within the cancel object when cancelled by any of your requests.
    */
   readonly clientOrderId?: string;
+  /**
+   * Current order status, either canceled or notFound if provided ID was not on the books
+   *
+   * @see enum {@link OrderStatus}
+   */
+  status: Extract<idex.OrderStatus, 'canceled' | 'notFound'>;
 }
 
 /**

@@ -54,7 +54,7 @@ export const CandleInterval = Object.freeze({
   /**
    * - Receives candles at an interval of 6 hours.
    */
-  SIX_HOURS: '6h',
+  FOUR_HOURS: '4h',
   /**
    * - Receives candles at an interval of 1 day.
    */
@@ -564,8 +564,10 @@ export type PayoutProgram = (typeof PayoutProgram)[keyof typeof PayoutProgram];
  */
 export const BridgeTarget = {
   XCHAIN_XCHAIN: 'xchain.xchain',
-  STARGATE_BNB: 'stargate.bnb',
-  STARGATE_AVALANCHE: 'stargate.avalanche',
+  STARGATE_ARBITRUM: 'stargate.arbitrum',
+  STARGATE_ETHEREUM: 'stargate.ethereum',
+  STARGATE_OPTIMISM: 'stargate.optimism',
+  STARGATE_POLYGON: 'stargate.polygon',
 } as const;
 
 export type BridgeTarget = (typeof BridgeTarget)[keyof typeof BridgeTarget];
