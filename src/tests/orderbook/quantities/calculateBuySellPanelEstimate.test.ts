@@ -1419,5 +1419,109 @@ describe('orderbook/quantities', () => {
 
     it('should allow trades that increase available collateral (taker sell)', () =>
       runTradeIncreasesAvailableCollateralSellScenario(false));
+
+    describe('Reduction of positions', () => {
+      const runBasicScenario = (args: {
+        takerSide: 'buy' | 'sell';
+        positionQuantity: string;
+        orderQuantity: string;
+        expectedBaseQty: string;
+        expectedCost: string;
+      }) => {
+        const indexPrice = decimalToPip('1000');
+        const market = makeAMarket(indexPrice, 'FOO');
+
+        const position = makeAPosition({
+          market,
+          quantity: decimalToPip(args.positionQuantity),
+          initialMarginRequirement: multiplyPips(
+            indexPrice,
+            decimalToPip(market.initialMarginFraction),
+          ),
+        });
+
+        expect(
+          orderbook.calculateBuySellPanelEstimate({
+            formInputs: {
+              isReduceOnly: false,
+              takerSide: args.takerSide,
+              desiredTradeBaseQuantity: decimalToPip(args.orderQuantity),
+            },
+            initialMarginFractionOverride: null,
+            leverageParameters: market,
+            makerSideOrders: [
+              {
+                price: indexPrice,
+                size: decimalToPip('10'), // Large enough to fill the taker
+              },
+            ],
+            market,
+            wallet: {
+              heldCollateral: BigInt(0),
+              positions: [position],
+              quoteBalance: decimalToPip('10000'), // Large enough to cover a short position + IMR
+            },
+          }),
+        ).to.eql({
+          makerBaseQuantity: BigInt(0),
+          makerQuoteQuantity: BigInt(0),
+          takerBaseQuantity: decimalToPip(args.expectedBaseQty),
+          takerQuoteQuantity: multiplyPips(
+            decimalToPip(args.expectedBaseQty),
+            indexPrice,
+          ),
+          cost: decimalToPip(args.expectedCost),
+        } satisfies ReturnValue);
+      };
+
+      const runPositionChangesSideScenario = (takerSide: 'buy' | 'sell') => {
+        // Open a new position
+        runBasicScenario({
+          takerSide,
+          positionQuantity: '0',
+          orderQuantity: '1',
+          expectedBaseQty: '1',
+          expectedCost: '30', // IMR
+        });
+        // Close a position
+        runBasicScenario({
+          takerSide,
+          positionQuantity: takerSide === 'buy' ? '-1' : '1',
+          orderQuantity: '1',
+          expectedBaseQty: '1',
+          expectedCost: '0', // Get back IMR
+        });
+        // Close a position and open one on other side (same size)
+        runBasicScenario({
+          takerSide,
+          positionQuantity: takerSide === 'buy' ? '-1' : '1',
+          orderQuantity: '2',
+          expectedBaseQty: '2',
+          expectedCost: '0', // IMRs on both sides (return and reserve) cancel out
+        });
+        // Close a position and open one on other side (double the size)
+        runBasicScenario({
+          takerSide,
+          positionQuantity: takerSide === 'buy' ? '-1' : '1',
+          orderQuantity: '3',
+          expectedBaseQty: '3',
+          expectedCost: '30', // Same as previous + IMR for position qty > 1
+        });
+        // Close a position and open one on other side (triple the size)
+        runBasicScenario({
+          takerSide,
+          positionQuantity: takerSide === 'buy' ? '-1' : '1',
+          orderQuantity: '4',
+          expectedBaseQty: '4',
+          expectedCost: '60',
+        });
+      };
+
+      it('should succeed for a trade that closes a long position and/or opens a short one on the other side (taker sell)', () =>
+        runPositionChangesSideScenario('sell'));
+
+      it('should succeed for a trade that closes a short position and/or opens a long one on the other side (taker buy)', () =>
+        runPositionChangesSideScenario('buy'));
+    });
   });
 });
