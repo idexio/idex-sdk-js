@@ -45,7 +45,7 @@ export const StargateV2Config = {
     },
     [StargateV2Target.STARGATE_AURORA]: {
       target: StargateV2Target.STARGATE_AURORA,
-      isSupported: false,
+      isSupported: true,
       get isBridgeTarget() {
         return isValidBridgeTarget(this.target);
       },
@@ -57,7 +57,7 @@ export const StargateV2Config = {
     },
     [StargateV2Target.STARGATE_AVALANCHE]: {
       target: StargateV2Target.STARGATE_AVALANCHE,
-      isSupported: false,
+      isSupported: true,
       get isBridgeTarget() {
         return isValidBridgeTarget(this.target);
       },
@@ -69,7 +69,7 @@ export const StargateV2Config = {
     },
     [StargateV2Target.STARGATE_BASE]: {
       target: StargateV2Target.STARGATE_BASE,
-      isSupported: false,
+      isSupported: true,
       get isBridgeTarget() {
         return isValidBridgeTarget(this.target);
       },
@@ -93,7 +93,7 @@ export const StargateV2Config = {
     },
     [StargateV2Target.STARGATE_IOTA]: {
       target: StargateV2Target.STARGATE_IOTA,
-      isSupported: false,
+      isSupported: true,
       get isBridgeTarget() {
         return isValidBridgeTarget(this.target);
       },
@@ -105,7 +105,7 @@ export const StargateV2Config = {
     },
     [StargateV2Target.STARGATE_KLAYTN]: {
       target: StargateV2Target.STARGATE_KLAYTN,
-      isSupported: false,
+      isSupported: true,
       get isBridgeTarget() {
         return isValidBridgeTarget(this.target);
       },
@@ -117,7 +117,7 @@ export const StargateV2Config = {
     },
     [StargateV2Target.STARGATE_MANTLE]: {
       target: StargateV2Target.STARGATE_MANTLE,
-      isSupported: false,
+      isSupported: true,
       get isBridgeTarget() {
         return isValidBridgeTarget(this.target);
       },
@@ -153,7 +153,7 @@ export const StargateV2Config = {
     },
     [StargateV2Target.STARGATE_RARI]: {
       target: StargateV2Target.STARGATE_RARI,
-      isSupported: false,
+      isSupported: true,
       get isBridgeTarget() {
         return isValidBridgeTarget(this.target);
       },
@@ -165,7 +165,7 @@ export const StargateV2Config = {
     },
     [StargateV2Target.STARGATE_SCROLL]: {
       target: StargateV2Target.STARGATE_SCROLL,
-      isSupported: false,
+      isSupported: true,
       get isBridgeTarget() {
         return isValidBridgeTarget(this.target);
       },
@@ -177,7 +177,7 @@ export const StargateV2Config = {
     },
     [StargateV2Target.STARGATE_TAIKO]: {
       target: StargateV2Target.STARGATE_TAIKO,
-      isSupported: false,
+      isSupported: true,
       get isBridgeTarget() {
         return isValidBridgeTarget(this.target);
       },
