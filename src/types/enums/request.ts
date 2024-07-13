@@ -565,9 +565,18 @@ export type PayoutProgram = (typeof PayoutProgram)[keyof typeof PayoutProgram];
 export const BridgeTarget = {
   XCHAIN_XCHAIN: 'xchain.xchain',
   STARGATE_ARBITRUM: 'stargate.arbitrum',
+  STARGATE_AURORA: 'stargate.aurora',
+  STARGATE_AVALANCHE: 'stargate.avalanche',
+  STARGATE_BASE: 'stargate.base',
   STARGATE_ETHEREUM: 'stargate.ethereum',
+  STARGATE_IOTA: 'stargate.iota',
+  STARGATE_KLAYTN: 'stargate.klaytn',
+  STARGATE_MANTLE: 'stargate.mantle',
   STARGATE_OPTIMISM: 'stargate.optimism',
   STARGATE_POLYGON: 'stargate.polygon',
+  STARGATE_SCROLL: 'stargate.scroll',
+  STARGATE_RARI: 'stargate.rari',
+  STARGATE_TAIKO: 'stargate.taiko',
 } as const;
 
 export type BridgeTarget = (typeof BridgeTarget)[keyof typeof BridgeTarget];
