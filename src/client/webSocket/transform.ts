@@ -119,6 +119,7 @@ function transformOrderFill(short: idex.WebSocketResponseOrderFillShort) {
     type: short.y,
     fillId: short.i,
     price: short.p,
+    indexPrice: short.ip,
     quantity: short.q,
     quoteQuantity: short.Q,
     realizedPnL: short.rn,

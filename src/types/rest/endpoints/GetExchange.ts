@@ -39,13 +39,9 @@ export interface IDEXExchange {
    */
   chainId: number;
   /**
-   * Address of the quote asset (USDC) on Ethereum
-   */
-  quoteTokenAddressL1: string;
-  /**
    * Address of the quote asset (USDC) on [XCHAIN](https://xchain.io/)
    */
-  quoteTokenAddressL2: string;
+  quoteTokenAddress: string;
   /** Total open interest across all markets in USD */
   totalOpenInterest: string;
   /** Total exchange trading volume for the trailing 24 hours in USD */

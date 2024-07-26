@@ -67,6 +67,10 @@ export interface IDEXFill {
    */
   price: string;
   /**
+   * Index price of fill market at time of execution
+   */
+  indexPrice: string;
+  /**
    * Executed quantity of fill in base terms
    */
   quantity: string;
