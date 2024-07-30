@@ -609,20 +609,14 @@ function calculateBuySellPanelMaxMakerOrderSize(args: {
   const newPositionBalance =
     (currentPosition?.quantity ?? BigInt(0)) + additionalPositionQty;
 
-  // Signed
-  const quoteValueOfPosition = multiplyPips(newPositionBalance, indexPrice);
-
-  const initialMarginFraction = calculateInitialMarginFractionWithOverride({
-    baseQuantity: newPositionBalance,
-    initialMarginFractionOverride,
-    leverageParameters,
-  });
-
   // Unsigned
-  const initialMarginRequirementOfPosition = multiplyPips(
-    absBigInt(quoteValueOfPosition),
-    initialMarginFraction,
-  );
+  const initialMarginRequirementOfPosition =
+    calculateInitialMarginRequirementOfPosition({
+      indexPrice,
+      initialMarginFractionOverride,
+      leverageParameters,
+      positionBalance: newPositionBalance,
+    });
 
   const availableCollateral = calculateAvailableCollateral({
     heldCollateral,
@@ -660,7 +654,7 @@ function calculateBuySellPanelMaxMakerOrderSize(args: {
  */
 function calculateInitialMarginFraction(
   leverageParameters: LeverageParametersBigInt,
-  baseQuantity: bigint,
+  baseQuantity: bigint, // Signed
 ): bigint {
   const absPositionBalance = absBigInt(baseQuantity);
   if (absPositionBalance <= leverageParameters.basePositionSize) {
@@ -678,9 +672,13 @@ function calculateInitialMarginFraction(
 }
 
 /**
- * @private
+ * Returns the initial margin fraction for a position or an order.
+ *
+ * Use {@link convertToLeverageParametersBigInt} to convert a {@link IDEXMarket}
+ * or {@link LeverageParameters} object to {@link LeverageParametersBigInt}.
  */
-function calculateInitialMarginFractionWithOverride(args: {
+export function calculateInitialMarginFractionWithOverride(args: {
+  /** Signed */
   baseQuantity: bigint;
   initialMarginFractionOverride: bigint | null;
   leverageParameters: LeverageParametersBigInt;
@@ -692,6 +690,37 @@ function calculateInitialMarginFractionWithOverride(args: {
     calculateInitialMarginFraction(leverageParameters, baseQuantity),
     initialMarginFractionOverride ?? BigInt(0),
   );
+}
+
+/**
+ * Returns the initial margin requirement of a position.
+ * The returned value is unsigned.
+ *
+ * @private
+ */
+function calculateInitialMarginRequirementOfPosition(args: {
+  indexPrice: bigint;
+  initialMarginFractionOverride: bigint | null;
+  leverageParameters: LeverageParametersBigInt;
+  /** Signed */
+  positionBalance: bigint;
+}): bigint {
+  const {
+    indexPrice,
+    initialMarginFractionOverride,
+    leverageParameters,
+    positionBalance,
+  } = args;
+
+  // Signed
+  const quoteValueOfPosition = multiplyPips(positionBalance, indexPrice);
+
+  const initialMarginFraction = calculateInitialMarginFractionWithOverride({
+    baseQuantity: positionBalance,
+    initialMarginFractionOverride,
+    leverageParameters,
+  });
+  return multiplyPips(absBigInt(quoteValueOfPosition), initialMarginFraction);
 }
 
 /**
@@ -978,10 +1007,7 @@ export function convertToActiveStandingOrderBigInt(
   };
 }
 
-/**
- * @private
- */
-function convertToLeverageParametersBigInt(
+export function convertToLeverageParametersBigInt(
   leverageParameters: LeverageParameters,
 ): LeverageParametersBigInt {
   return {
