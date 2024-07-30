@@ -673,6 +673,9 @@ function calculateInitialMarginFraction(
 
 /**
  * Returns the initial margin fraction for a position or an order.
+ *
+ * Use {@link convertToLeverageParametersBigInt} to convert a {@link IDEXMarket}
+ * or {@link LeverageParameters} object to {@link LeverageParametersBigInt}.
  */
 export function calculateInitialMarginFractionWithOverride(args: {
   /** Signed */
@@ -1004,10 +1007,7 @@ export function convertToActiveStandingOrderBigInt(
   };
 }
 
-/**
- * @private
- */
-function convertToLeverageParametersBigInt(
+export function convertToLeverageParametersBigInt(
   leverageParameters: LeverageParameters,
 ): LeverageParametersBigInt {
   return {
