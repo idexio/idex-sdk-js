@@ -80,10 +80,6 @@ export interface WebSocketResponseOrderFillShortBase {
    */
   p: IDEXOrderFillEventDataGeneral['price'];
   /**
-   * @see inflated {@link IDEXOrderFillEventData.indexPrice}
-   */
-  ip: IDEXOrderFillEventDataGeneral['indexPrice'];
-  /**
    * @see inflated {@link IDEXOrderFillEventData.quantity}
    */
   q: IDEXOrderFillEventDataGeneral['quantity'];
