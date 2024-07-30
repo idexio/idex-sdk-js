@@ -67,10 +67,6 @@ export interface IDEXFill {
    */
   price: string;
   /**
-   * Index price of fill market at time of execution
-   */
-  indexPrice: string;
-  /**
    * Executed quantity of fill in base terms
    */
   quantity: string;
@@ -121,6 +117,10 @@ export interface IDEXFill {
    * @see enum {@link idex.PositionSide PositionSide}
    */
   position: idex.PositionSide;
+  /**
+   * Index price of the market at transaction time, for internal use
+   */
+  indexPrice?: string;
   /**
    * Whether the fill is the maker or taker in the trade from the perspective of the requesting API account,
    * `maker` or `taker`
