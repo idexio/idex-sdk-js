@@ -10,6 +10,8 @@ import {
 
 import * as orderbook from '#orderbook/index';
 
+import { OrderSide } from '../../../types/enums/request';
+
 import type { IDEXMarket, IDEXPosition } from '#types/rest/endpoints/index';
 
 type ReturnValue = ReturnType<typeof orderbook.calculateBuySellPanelEstimate>;
@@ -157,7 +159,6 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
-            isReduceOnly: false,
             takerSide: 'buy',
             sliderFactor: 0.97,
           },
@@ -169,6 +170,7 @@ describe('orderbook/quantities', () => {
             heldCollateral,
             positions: [positionInAnotherMarket],
             quoteBalance,
+            standingOrders: [],
           },
         }),
       ).to.eql({
@@ -189,7 +191,6 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
-            isReduceOnly: false,
             takerSide: 'sell',
             sliderFactor: 0.97,
           },
@@ -201,6 +202,7 @@ describe('orderbook/quantities', () => {
             heldCollateral,
             positions: [positionInAnotherMarket],
             quoteBalance,
+            standingOrders: [],
           },
         }),
       ).to.eql({
@@ -221,7 +223,6 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
-            isReduceOnly: false,
             limitPrice: decimalToPip('0.012'),
             takerSide: 'buy',
             sliderFactor: 0.97,
@@ -234,6 +235,7 @@ describe('orderbook/quantities', () => {
             heldCollateral,
             positions: [positionInAnotherMarket],
             quoteBalance,
+            standingOrders: [],
           },
         }),
       ).to.eql({
@@ -255,7 +257,6 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
-            isReduceOnly: false,
             limitPrice: decimalToPip('0.008'),
             takerSide: 'sell',
             sliderFactor: 0.97,
@@ -268,6 +269,7 @@ describe('orderbook/quantities', () => {
             heldCollateral,
             positions: [positionInAnotherMarket],
             quoteBalance,
+            standingOrders: [],
           },
         }),
       ).to.eql({
@@ -301,7 +303,6 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
-            isReduceOnly: false,
             sliderFactor: 0.97,
             takerSide: 'buy',
           },
@@ -313,6 +314,7 @@ describe('orderbook/quantities', () => {
             heldCollateral,
             positions: [positionInAnotherMarket],
             quoteBalance,
+            standingOrders: [],
           },
         }),
       ).to.eql({
@@ -345,7 +347,6 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
-            isReduceOnly: false,
             takerSide: 'sell',
             sliderFactor: 0.97,
           },
@@ -357,6 +358,7 @@ describe('orderbook/quantities', () => {
             heldCollateral,
             positions: [positionInAnotherMarket],
             quoteBalance,
+            standingOrders: [],
           },
         }),
       ).to.eql({
@@ -386,7 +388,6 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
-            isReduceOnly: false,
             takerSide: 'buy',
             ...desiredQtys,
           },
@@ -398,6 +399,7 @@ describe('orderbook/quantities', () => {
             heldCollateral,
             positions: [positionInAnotherMarket],
             quoteBalance,
+            standingOrders: [],
           },
         }),
       ).to.eql(expectedResult);
@@ -481,7 +483,6 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
-            isReduceOnly: false,
             takerSide: 'sell',
             ...desiredQtys,
           },
@@ -493,6 +494,7 @@ describe('orderbook/quantities', () => {
             heldCollateral,
             positions: [positionInAnotherMarket],
             quoteBalance,
+            standingOrders: [],
           },
         }),
       ).to.eql(expectedResult);
@@ -596,7 +598,7 @@ describe('orderbook/quantities', () => {
      * Maker qtys require a limit price
      */
     describe('Maker quantities', () => {
-      const runMakerQtysSliderScenario = (isReduceOnly: boolean) => {
+      const runMakerQtysSliderScenario = () => {
         const {
           market,
           positionInAnotherMarket,
@@ -607,7 +609,6 @@ describe('orderbook/quantities', () => {
         expect(
           orderbook.calculateBuySellPanelEstimate({
             formInputs: {
-              isReduceOnly,
               limitPrice: decimalToPip('0.011'),
               takerSide: 'buy',
               sliderFactor: 0.15,
@@ -620,6 +621,7 @@ describe('orderbook/quantities', () => {
               heldCollateral,
               positions: [positionInAnotherMarket],
               quoteBalance,
+              standingOrders: [],
             },
           }),
         ).to.eql({
@@ -641,11 +643,8 @@ describe('orderbook/quantities', () => {
            * - Wallet has 10 available collateral
            * - Total cost is 1.49999999, matching the 15% slider factor
            * - 6.66... maker quote qty * 0.03 IMF = 0.199... margin requirement
-           * - Reduce-only maker orders don't require margin:
-           *   1.49999999 original cost - 0.199... maker qty margin requirement
-           *   = 1.3
            */
-          cost: decimalToPip(isReduceOnly ? '1.3' : '1.49999999'),
+          cost: decimalToPip('1.49999999'),
         } satisfies ReturnValue);
 
         // Confirm the 8.7 available collateral value stated in the above comment
@@ -660,10 +659,7 @@ describe('orderbook/quantities', () => {
       };
 
       it('should determine maker qtys for available collateral that does not match order book liquidity', () =>
-        runMakerQtysSliderScenario(false));
-
-      it('should determine maker qtys for available collateral that does not match order book liquidity (reduce-only)', () =>
-        runMakerQtysSliderScenario(true));
+        runMakerQtysSliderScenario());
 
       it('should determine maker qtys for a desired base trade qty that does not match order book liquidity (buy)', () => {
         const {
@@ -676,7 +672,6 @@ describe('orderbook/quantities', () => {
         expect(
           orderbook.calculateBuySellPanelEstimate({
             formInputs: {
-              isReduceOnly: false,
               limitPrice: decimalToPip('0.011'),
               takerSide: 'buy',
               desiredTradeBaseQuantity: decimalToPip('1500'),
@@ -689,6 +684,7 @@ describe('orderbook/quantities', () => {
               heldCollateral,
               positions: [positionInAnotherMarket],
               quoteBalance,
+              standingOrders: [],
             },
           }),
         ).to.eql({
@@ -716,7 +712,6 @@ describe('orderbook/quantities', () => {
         expect(
           orderbook.calculateBuySellPanelEstimate({
             formInputs: {
-              isReduceOnly: false,
               limitPrice: decimalToPip('0.009'),
               takerSide: 'sell',
               desiredTradeBaseQuantity: decimalToPip('1500'),
@@ -729,6 +724,7 @@ describe('orderbook/quantities', () => {
               heldCollateral,
               positions: [positionInAnotherMarket],
               quoteBalance,
+              standingOrders: [],
             },
           }),
         ).to.eql({
@@ -756,7 +752,6 @@ describe('orderbook/quantities', () => {
         expect(
           orderbook.calculateBuySellPanelEstimate({
             formInputs: {
-              isReduceOnly: false,
               limitPrice: decimalToPip('0.011'),
               takerSide: 'buy',
               desiredTradeQuoteQuantity: decimalToPip('12.1'),
@@ -769,6 +764,7 @@ describe('orderbook/quantities', () => {
               heldCollateral,
               positions: [positionInAnotherMarket],
               quoteBalance,
+              standingOrders: [],
             },
           }),
         ).to.eql({
@@ -798,7 +794,6 @@ describe('orderbook/quantities', () => {
         expect(
           orderbook.calculateBuySellPanelEstimate({
             formInputs: {
-              isReduceOnly: false,
               limitPrice: decimalToPip('0.009'),
               takerSide: 'sell',
               desiredTradeQuoteQuantity: decimalToPip('12.6'),
@@ -811,6 +806,7 @@ describe('orderbook/quantities', () => {
               heldCollateral,
               positions: [positionInAnotherMarket],
               quoteBalance,
+              standingOrders: [],
             },
           }),
         ).to.eql({
@@ -840,7 +836,6 @@ describe('orderbook/quantities', () => {
         expect(
           orderbook.calculateBuySellPanelEstimate({
             formInputs: {
-              isReduceOnly: false,
               limitPrice: decimalToPip('0.01'),
               takerSide,
               sliderFactor: 1, // Use all 10 available collateral
@@ -853,6 +848,7 @@ describe('orderbook/quantities', () => {
               heldCollateral,
               positions: [positionInAnotherMarket],
               quoteBalance,
+              standingOrders: [],
             },
           }),
         ).to.eql({
@@ -894,7 +890,6 @@ describe('orderbook/quantities', () => {
         expect(
           orderbook.calculateBuySellPanelEstimate({
             formInputs: {
-              isReduceOnly: false,
               limitPrice: decimalToPip('0.01'),
               takerSide,
               desiredTradeBaseQuantity: decimalToPip('1000'),
@@ -907,6 +902,7 @@ describe('orderbook/quantities', () => {
               heldCollateral,
               positions: [positionInAnotherMarket],
               quoteBalance,
+              standingOrders: [],
             },
           }),
         ).to.eql({
@@ -939,7 +935,6 @@ describe('orderbook/quantities', () => {
         expect(
           orderbook.calculateBuySellPanelEstimate({
             formInputs: {
-              isReduceOnly: false,
               limitPrice: decimalToPip('0.01'),
               takerSide,
               desiredTradeQuoteQuantity: decimalToPip('10'),
@@ -952,6 +947,7 @@ describe('orderbook/quantities', () => {
               heldCollateral,
               positions: [positionInAnotherMarket],
               quoteBalance,
+              standingOrders: [],
             },
           }),
         ).to.eql({
@@ -970,6 +966,537 @@ describe('orderbook/quantities', () => {
 
       it('should determine maker qtys for a desired quote trade qty and an empty order book (sell)', () =>
         runDesiredQuoteQtyEmptyOrderBookScenario('sell'));
+
+      describe('Margin requirement for maker quantities', () => {
+        const runBasicMakerQtyImrScenario = (
+          takerSide: 'buy' | 'sell',
+          withOpenPosition?: boolean,
+          withStandingOrders?: boolean,
+        ) => {
+          const market = makeAMarket(decimalToPip('0.01'), 'FOO');
+
+          expect(
+            orderbook.calculateBuySellPanelEstimate({
+              formInputs: {
+                limitPrice: decimalToPip('0.01'),
+                takerSide,
+                desiredTradeBaseQuantity: decimalToPip('100'),
+              },
+              initialMarginFractionOverride: null,
+              leverageParameters: market,
+              makerSideOrders: [],
+              market,
+              wallet: {
+                heldCollateral: BigInt(0),
+                positions:
+                  withOpenPosition ?
+                    [
+                      makeAPosition({
+                        market,
+                        quantity: decimalToPip(
+                          takerSide === 'buy' ? '123' : '-123',
+                        ),
+                        initialMarginRequirement: decimalToPip('0.123'),
+                      }),
+                    ]
+                  : [],
+                quoteBalance: decimalToPip('123'),
+                standingOrders:
+                  withStandingOrders ?
+                    [
+                      {
+                        market: market.market,
+                        side: takerSide,
+                        originalQuantity: '123',
+                        executedQuantity: '0',
+                        price: '0.01',
+                      },
+                    ]
+                  : [],
+              },
+            }),
+          ).to.eql({
+            makerBaseQuantity: decimalToPip('100'),
+            makerQuoteQuantity: decimalToPip('1'),
+
+            takerBaseQuantity: BigInt(0),
+            takerQuoteQuantity: BigInt(0),
+
+            cost: decimalToPip('0.03'),
+          } satisfies ReturnValue);
+        };
+
+        it('should include margin requirement for a maker qty in cost (buy)', () =>
+          runBasicMakerQtyImrScenario('buy', false));
+
+        it('should include margin requirement for a maker qty in cost (sell)', () =>
+          runBasicMakerQtyImrScenario('sell', false));
+
+        it('should include margin requirement for a maker qty in cost (buy) (with open long position)', () =>
+          runBasicMakerQtyImrScenario('buy', true));
+
+        it('should include margin requirement for a maker qty in cost (sell) (with open short position)', () =>
+          runBasicMakerQtyImrScenario('sell', true));
+
+        it('should include margin requirement for a maker qty in cost (buy) (with standing buy orders)', () =>
+          runBasicMakerQtyImrScenario('buy', false, true));
+
+        it('should include margin requirement for a maker qty in cost (sell) (with standing sell orders)', () =>
+          runBasicMakerQtyImrScenario('sell', false, true));
+
+        const runReducingMakerQtyImrScenario = (
+          takerSide: 'buy' | 'sell',
+          isOrderLargerThanPosition: boolean,
+        ) => {
+          const market = makeAMarket(decimalToPip('0.01'), 'FOO');
+
+          const makerBaseQuantity = decimalToPip(
+            isOrderLargerThanPosition ? '200' : '100',
+          );
+          const makerQuoteQuantity = decimalToPip(
+            isOrderLargerThanPosition ? '2' : '1',
+          );
+
+          expect(
+            orderbook.calculateBuySellPanelEstimate({
+              formInputs: {
+                limitPrice: decimalToPip('0.01'),
+                takerSide,
+                desiredTradeBaseQuantity: makerBaseQuantity,
+              },
+              initialMarginFractionOverride: null,
+              leverageParameters: market,
+              makerSideOrders: [],
+              market,
+              wallet: {
+                heldCollateral: BigInt(0),
+                positions: [
+                  makeAPosition({
+                    market,
+                    quantity: decimalToPip(
+                      takerSide === 'buy' ? '-100' : '100',
+                    ),
+                    initialMarginRequirement: decimalToPip('0.123'),
+                  }),
+                ],
+                quoteBalance: decimalToPip('123'),
+                standingOrders: [],
+              },
+            }),
+          ).to.eql({
+            makerBaseQuantity,
+            makerQuoteQuantity,
+
+            takerBaseQuantity: BigInt(0),
+            takerQuoteQuantity: BigInt(0),
+
+            cost:
+              isOrderLargerThanPosition ?
+                decimalToPip('0.03') // Half of the order reduces the position, the other half requires margin
+              : BigInt(0),
+          } satisfies ReturnValue);
+        };
+
+        it('should determine zero margin requirement for a reducing maker qty (buy)', () =>
+          runReducingMakerQtyImrScenario('buy', false));
+
+        it('should determine zero margin requirement for a reducing maker qty (sell)', () =>
+          runReducingMakerQtyImrScenario('sell', false));
+
+        it('should determine zero margin requirement for the reducing part of a maker qty (order larger than position) (buy)', () =>
+          runReducingMakerQtyImrScenario('buy', true));
+
+        it('should determine zero margin requirement for the reducing part of a maker qty (order larger than position) (sell)', () =>
+          runReducingMakerQtyImrScenario('sell', true));
+
+        const runTotalReducingLiquidityLargerThanPositionScenario = (
+          takerSide: 'buy' | 'sell',
+        ) => {
+          const market = makeAMarket(decimalToPip('0.01'), 'FOO');
+
+          expect(
+            orderbook.calculateBuySellPanelEstimate({
+              formInputs: {
+                limitPrice: decimalToPip('0.01'),
+                takerSide,
+                desiredTradeBaseQuantity: decimalToPip('100'),
+              },
+              initialMarginFractionOverride: null,
+              leverageParameters: market,
+              makerSideOrders: [],
+              market,
+              wallet: {
+                heldCollateral: BigInt(0),
+                positions: [
+                  makeAPosition({
+                    market,
+                    quantity: decimalToPip(
+                      takerSide === 'buy' ? '-100' : '100',
+                    ),
+                    initialMarginRequirement: decimalToPip('0.123'),
+                  }),
+                ],
+                quoteBalance: decimalToPip('123'),
+                standingOrders: [
+                  {
+                    market: market.market,
+                    side: takerSide,
+                    originalQuantity: '50',
+                    executedQuantity: '0',
+                    price: '0.01',
+                  },
+                ],
+              },
+            }),
+          ).to.eql({
+            makerBaseQuantity: decimalToPip('100'),
+            makerQuoteQuantity: decimalToPip('1'),
+
+            takerBaseQuantity: BigInt(0),
+            takerQuoteQuantity: BigInt(0),
+            /*
+             * The standing order (50) already reduces the position; Only half
+             * (50) of the new maker qty reduces the position (100) further,
+             * thus the other half requires margin.
+             */
+            cost: decimalToPip('0.015'),
+          } satisfies ReturnValue);
+        };
+
+        it('should determine zero margin requirement for the reducing part of a maker qty (order + standing order larger than position) (buy)', () =>
+          runTotalReducingLiquidityLargerThanPositionScenario('buy'));
+
+        it('should determine zero margin requirement for the reducing part of a maker qty (order + standing order larger than position) (sell)', () =>
+          runTotalReducingLiquidityLargerThanPositionScenario('sell'));
+
+        const runIgnoreUnrelatedStandingOrdersScenario = (
+          takerSide: 'buy' | 'sell',
+        ) => {
+          const market = makeAMarket(decimalToPip('0.01'), 'FOO');
+          const otherMarket = makeAMarket(decimalToPip('1'), 'BAR');
+
+          expect(
+            orderbook.calculateBuySellPanelEstimate({
+              formInputs: {
+                limitPrice: decimalToPip('0.01'),
+                takerSide,
+                desiredTradeBaseQuantity: decimalToPip('100'),
+              },
+              initialMarginFractionOverride: null,
+              leverageParameters: market,
+              makerSideOrders: [],
+              market,
+              wallet: {
+                heldCollateral: BigInt(0),
+                positions: [
+                  makeAPosition({
+                    market,
+                    quantity: decimalToPip(
+                      takerSide === 'buy' ? '-100' : '100',
+                    ),
+                    initialMarginRequirement: decimalToPip('0.123'),
+                  }),
+                ],
+                quoteBalance: decimalToPip('123'),
+                standingOrders: [
+                  {
+                    market: market.market,
+                    // Other side
+                    side: takerSide === 'buy' ? 'sell' : 'buy',
+                    originalQuantity: '100',
+                    executedQuantity: '0',
+                    price: '0.01',
+                  },
+                  {
+                    // Other market
+                    market: otherMarket.market,
+                    side: takerSide,
+                    originalQuantity: '100',
+                    executedQuantity: '0',
+                    price: '0.01',
+                  },
+                ],
+              },
+            }),
+          ).to.eql({
+            makerBaseQuantity: decimalToPip('100'),
+            makerQuoteQuantity: decimalToPip('1'),
+
+            takerBaseQuantity: BigInt(0),
+            takerQuoteQuantity: BigInt(0),
+            /*
+             * The maker qty reduces the position in its entirety; were any of
+             * the standing orders incorrectly included, this value would be
+             * non-zero.
+             */
+            cost: BigInt(0),
+          } satisfies ReturnValue);
+        };
+
+        it('should ignore standing orders on the other side of the book or in other markets (buy)', () =>
+          runIgnoreUnrelatedStandingOrdersScenario('buy'));
+
+        it('should ignore standing orders on the other side of the book or in other markets (sell)', () =>
+          runIgnoreUnrelatedStandingOrdersScenario('sell'));
+
+        /**
+         * Standing order reduces position in its entirety; new maker qty is
+         * priced inside the standing order, becoming the order that fully
+         * reduces the position. As a result, the standing order now requires
+         * margin, while the new maker qty does not. The standing order is
+         * priced outside the new maker qty and requires a different amount of
+         * margin.
+         */
+        const runMakerQtyInsideReducingStandingOrderScenario = (
+          takerSide: 'buy' | 'sell',
+        ) => {
+          const market = makeAMarket(decimalToPip('0.01'), 'FOO');
+
+          expect(
+            orderbook.calculateBuySellPanelEstimate({
+              formInputs: {
+                limitPrice: decimalToPip('0.01'),
+                takerSide,
+                desiredTradeBaseQuantity: decimalToPip('100'),
+              },
+              initialMarginFractionOverride: null,
+              leverageParameters: market,
+              makerSideOrders: [],
+              market,
+              wallet: {
+                heldCollateral: BigInt(0),
+                positions: [
+                  makeAPosition({
+                    market,
+                    quantity: decimalToPip(
+                      takerSide === 'buy' ? '-100' : '100',
+                    ),
+                    initialMarginRequirement: decimalToPip('0.123'),
+                  }),
+                ],
+                quoteBalance: decimalToPip('123'),
+                standingOrders: [
+                  {
+                    market: market.market,
+                    side: takerSide,
+                    originalQuantity: '100',
+                    executedQuantity: '0',
+                    /*
+                     * - Priced outside (worse than) the new maker qty
+                     * - Worth 0.5 quote (buy) or 2 quote (sell)
+                     */
+                    price: takerSide === 'buy' ? '0.005' : '0.02',
+                  },
+                ],
+              },
+            }),
+          ).to.eql({
+            makerBaseQuantity: decimalToPip('100'),
+            makerQuoteQuantity: decimalToPip('1'),
+
+            takerBaseQuantity: BigInt(0),
+            takerQuoteQuantity: BigInt(0),
+            /*
+             * Margin requirement for the standing order, not the new maker qty
+             * (which would be 0.03).
+             */
+            cost: decimalToPip(takerSide === 'buy' ? '0.015' : '0.06'),
+          } satisfies ReturnValue);
+        };
+
+        it('should add margin requirement for a standing order that will not reduce the position anymore (buy)', () =>
+          runMakerQtyInsideReducingStandingOrderScenario('buy'));
+
+        it('should add margin requirement for a standing order that will not reduce the position anymore (sell)', () =>
+          runMakerQtyInsideReducingStandingOrderScenario('sell'));
+
+        const runReducingStandingOrderAndPositionGetsClosedScenario = (
+          takerSide: 'buy' | 'sell',
+        ) => {
+          const market = makeAMarket(decimalToPip('0.01'), 'FOO');
+
+          expect(
+            orderbook.calculateBuySellPanelEstimate({
+              formInputs: {
+                limitPrice: decimalToPip('0.01'),
+                takerSide,
+                // Closes the position
+                desiredTradeBaseQuantity: decimalToPip('100'),
+              },
+              initialMarginFractionOverride: null,
+              leverageParameters: market,
+              makerSideOrders: [
+                { price: decimalToPip('0.01'), size: decimalToPip('100') },
+              ],
+              market,
+              wallet: {
+                heldCollateral: BigInt(0),
+                positions: [
+                  makeAPosition({
+                    market,
+                    quantity: decimalToPip(
+                      takerSide === 'buy' ? '-100' : '100',
+                    ),
+                    initialMarginRequirement: decimalToPip('0.03'),
+                  }),
+                ],
+                quoteBalance: decimalToPip('123'),
+                standingOrders: [
+                  {
+                    // Reduces the old position. Worth 2 quote.
+                    market: market.market,
+                    side: takerSide,
+                    originalQuantity: '100',
+                    executedQuantity: '0',
+                    price: '0.02',
+                  },
+                ],
+              },
+            }),
+          ).to.eql({
+            makerBaseQuantity: BigInt(0),
+            makerQuoteQuantity: BigInt(0),
+
+            takerBaseQuantity: decimalToPip('100'),
+            takerQuoteQuantity: decimalToPip('1'),
+            /*
+             * The position required margin, the reducing standing order did not.
+             * With the position closed (-0.03 margin), the standing order now
+             * requires margin; because the standing order is priced double the
+             * index price, it's worth 2 quote and requires 0.06 margin, a net
+             * difference of +0.03.
+             */
+            cost: decimalToPip('0.03'),
+          } satisfies ReturnValue);
+        };
+
+        it('should add margin requirement for a standing order that will no longer reduce a position that gets closed (buy)', () =>
+          runReducingStandingOrderAndPositionGetsClosedScenario('buy'));
+
+        it('should add margin requirement for a standing order that will no longer reduce a position that gets closed (sell)', () =>
+          runReducingStandingOrderAndPositionGetsClosedScenario('sell'));
+
+        const runReducingStandingOrderAndPositionChangesSidesScenario = (
+          takerSide: 'buy' | 'sell',
+        ) => {
+          const market = makeAMarket(decimalToPip('0.01'), 'FOO');
+
+          expect(
+            orderbook.calculateBuySellPanelEstimate({
+              formInputs: {
+                limitPrice: decimalToPip('0.01'),
+                takerSide,
+                // Closes the position and opens one on the other side of the same size
+                desiredTradeBaseQuantity: decimalToPip('200'),
+              },
+              initialMarginFractionOverride: null,
+              leverageParameters: market,
+              makerSideOrders: [
+                { price: decimalToPip('0.01'), size: decimalToPip('200') },
+              ],
+              market,
+              wallet: {
+                heldCollateral: BigInt(0),
+                positions: [
+                  makeAPosition({
+                    market,
+                    quantity: decimalToPip(
+                      takerSide === 'buy' ? '-100' : '100',
+                    ),
+                    initialMarginRequirement: decimalToPip('0.03'),
+                  }),
+                ],
+                quoteBalance: decimalToPip('123'),
+                standingOrders: [
+                  {
+                    // Reduces the old position but not the new one
+                    market: market.market,
+                    side: takerSide,
+                    originalQuantity: '100',
+                    executedQuantity: '0',
+                    price: '0.01',
+                  },
+                ],
+              },
+            }),
+          ).to.eql({
+            makerBaseQuantity: BigInt(0),
+            makerQuoteQuantity: BigInt(0),
+
+            takerBaseQuantity: decimalToPip('200'),
+            takerQuoteQuantity: decimalToPip('2'),
+            /*
+             * Margin requirement for the open position is the same as before
+             * (same size, opposite side), but the standing order (worth 1 quote)
+             * previously reduced the position but does not anymore, and thus
+             * requires margin.
+             */
+            cost: decimalToPip('0.03'),
+          } satisfies ReturnValue);
+        };
+
+        it('should add margin requirement for a standing order that will no longer reduce a position that switches sides (buy)', () =>
+          runReducingStandingOrderAndPositionChangesSidesScenario('buy'));
+
+        it('should add margin requirement for a standing order that will no longer reduce a position that switches sides (sell)', () =>
+          runReducingStandingOrderAndPositionChangesSidesScenario('sell'));
+
+        const runStandingOrderAndNewPositionOpenedOnOtherSideScenario = (
+          takerSide: 'buy' | 'sell',
+        ) => {
+          const market = makeAMarket(decimalToPip('0.01'), 'FOO');
+
+          expect(
+            orderbook.calculateBuySellPanelEstimate({
+              formInputs: {
+                limitPrice: decimalToPip('0.01'),
+                takerSide,
+                // Opens a position
+                desiredTradeBaseQuantity: decimalToPip('100'),
+              },
+              initialMarginFractionOverride: null,
+              leverageParameters: market,
+              makerSideOrders: [
+                { price: decimalToPip('0.01'), size: decimalToPip('100') },
+              ],
+              market,
+              wallet: {
+                heldCollateral: BigInt(0),
+                positions: [],
+                quoteBalance: decimalToPip('123'),
+                standingOrders: [
+                  {
+                    // Reduces the new position. Worth 0.1 quote.
+                    market: market.market,
+                    side: takerSide === 'buy' ? OrderSide.sell : OrderSide.buy,
+                    originalQuantity: '100',
+                    executedQuantity: '0',
+                    price: '0.001',
+                  },
+                ],
+              },
+            }),
+          ).to.eql({
+            makerBaseQuantity: BigInt(0),
+            makerQuoteQuantity: BigInt(0),
+
+            takerBaseQuantity: decimalToPip('100'),
+            takerQuoteQuantity: decimalToPip('1'),
+            /*
+             * The standing order used to require 0.003 margin but does not
+             * anymore because it reduces the new position. The new position
+             * requires 0.03 margin, a net difference of +0.027.
+             */
+            cost: decimalToPip('0.027'),
+          } satisfies ReturnValue);
+        };
+
+        it('should subtract margin requirement for a standing order that will reduce a newly opened position (buy)', () =>
+          runStandingOrderAndNewPositionOpenedOnOtherSideScenario('buy'));
+
+        it('should subtract margin requirement for a standing order that will reduce a newly opened position (sell)', () =>
+          runStandingOrderAndNewPositionOpenedOnOtherSideScenario('sell'));
+      });
     });
 
     const runOrderBookLiquidityExceededScenario = (
@@ -981,7 +1508,6 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
-            isReduceOnly: false,
             takerSide,
             sliderFactor: 0.97,
           },
@@ -998,6 +1524,7 @@ describe('orderbook/quantities', () => {
             heldCollateral,
             positions: [positionInAnotherMarket],
             quoteBalance,
+            standingOrders: [],
           },
         }),
       ).to.eql({
@@ -1027,7 +1554,6 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
-            isReduceOnly: false,
             takerSide: 'buy',
             sliderFactor: 0.123,
           },
@@ -1044,6 +1570,7 @@ describe('orderbook/quantities', () => {
               availableCollateral === 'negative' ?
                 decimalToPip('-1')
               : BigInt(0),
+            standingOrders: [],
           },
         }),
       ).to.eql({
@@ -1083,6 +1610,7 @@ describe('orderbook/quantities', () => {
             heldCollateral: BigInt(0),
             positions: [],
             quoteBalance: BigInt(0),
+            standingOrders: [],
           },
         }),
       ).to.throw(
@@ -1134,6 +1662,7 @@ describe('orderbook/quantities', () => {
             heldCollateral,
             positions: [positionInAnotherMarket],
             quoteBalance,
+            standingOrders: [],
           },
         }),
       ).to.eql({
@@ -1161,7 +1690,6 @@ describe('orderbook/quantities', () => {
       expect(() =>
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
-            isReduceOnly: false,
             takerSide: 'buy',
             sliderFactor: -0.123,
           },
@@ -1173,6 +1701,7 @@ describe('orderbook/quantities', () => {
             heldCollateral,
             positions: [positionInAnotherMarket],
             quoteBalance,
+            standingOrders: [],
           },
         }),
       ).to.throw(
@@ -1187,7 +1716,6 @@ describe('orderbook/quantities', () => {
       expect(() =>
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
-            isReduceOnly: false,
             takerSide: 'buy',
             sliderFactor: 1.1,
           },
@@ -1199,6 +1727,7 @@ describe('orderbook/quantities', () => {
             heldCollateral,
             positions: [positionInAnotherMarket],
             quoteBalance,
+            standingOrders: [],
           },
         }),
       ).to.throw(
@@ -1287,7 +1816,6 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
-            isReduceOnly: false,
             takerSide: 'buy',
             sliderFactor: 0.123, // Should have no effect
           },
@@ -1304,6 +1832,7 @@ describe('orderbook/quantities', () => {
             heldCollateral,
             positions: [positionInAnotherMarket],
             quoteBalance,
+            standingOrders: [],
           },
         }),
       ).to.eql({
@@ -1374,7 +1903,6 @@ describe('orderbook/quantities', () => {
       expect(
         orderbook.calculateBuySellPanelEstimate({
           formInputs: {
-            isReduceOnly: false,
             takerSide: 'sell',
             sliderFactor: 0.123, // Should have no effect
           },
@@ -1391,6 +1919,7 @@ describe('orderbook/quantities', () => {
             heldCollateral,
             positions: [positionInAnotherMarket],
             quoteBalance,
+            standingOrders: [],
           },
         }),
       ).to.eql({
@@ -1443,7 +1972,6 @@ describe('orderbook/quantities', () => {
         expect(
           orderbook.calculateBuySellPanelEstimate({
             formInputs: {
-              isReduceOnly: false,
               takerSide: args.takerSide,
               desiredTradeBaseQuantity: decimalToPip(args.orderQuantity),
             },
@@ -1460,6 +1988,7 @@ describe('orderbook/quantities', () => {
               heldCollateral: BigInt(0),
               positions: [position],
               quoteBalance: decimalToPip('10000'), // Large enough to cover a short position + IMR
+              standingOrders: [],
             },
           }),
         ).to.eql({
