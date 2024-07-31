@@ -66,9 +66,14 @@ export interface IDEXDeposit {
    */
   time: number;
   /**
-   * Transaction hash
+   * Transaction id of the bridge transaction delivering funds to XCHAIN; also
+   * queryable for bridge details on https://layerzeroscan.com/
    */
-  txId: string;
+  bridgeTxId?: string;
+  /**
+   * Transaction id of the deposit transaction on XCHAIN
+   */
+  xchainTxId: string;
 }
 
 /**

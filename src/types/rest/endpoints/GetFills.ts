@@ -118,6 +118,10 @@ export interface IDEXFill {
    */
   position: idex.PositionSide;
   /**
+   * Index price of the market at transaction time, for internal use
+   */
+  indexPrice?: string;
+  /**
    * Whether the fill is the maker or taker in the trade from the perspective of the requesting API account,
    * `maker` or `taker`
    *
