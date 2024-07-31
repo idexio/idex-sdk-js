@@ -68,14 +68,17 @@ export interface IDEXWithdrawal {
   bridgeTarget: BridgeTarget;
   /** Timestamp of withdrawal API request */
   time: number;
-  /** Blockchain transaction ID, if available */
-  txId: string | null;
   /**
-   * Blockchain transaction status
+   * Transaction id of the withdrawal transaction on XCHAIN or null if not yet
+   * assigned; also queryable for bridge details on https://layerzeroscan.com/
+   */
+  xchainTxId: string | null;
+  /**
+   * Status of the withdrawal transaction on XCHAIN
    *
    * @see enum {@link ChainTransactionStatus}
    */
-  txStatus: ChainTransactionStatus;
+  xchainTxStatus: ChainTransactionStatus;
 }
 
 /**
