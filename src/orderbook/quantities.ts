@@ -59,7 +59,7 @@ export type PriceAndSize = Pick<OrderBookLevelL1, 'price' | 'size'>;
 /**
  * Standing orders
  */
-type StandingOrder = Pick<
+export type StandingOrder = Pick<
   IDEXOrder,
   'market' | 'side' | 'originalQuantity' | 'executedQuantity' | 'price'
 >;
@@ -615,7 +615,7 @@ function calculateBuySellPanelMaxMakerOrderSize(args: {
       indexPrice,
       initialMarginFractionOverride,
       leverageParameters,
-      positionBalance: newPositionBalance,
+      positionQty: newPositionBalance,
     });
 
   const availableCollateral = calculateAvailableCollateral({
@@ -656,14 +656,14 @@ function calculateInitialMarginFraction(
   leverageParameters: LeverageParametersBigInt,
   baseQuantity: bigint, // Signed
 ): bigint {
-  const absPositionBalance = absBigInt(baseQuantity);
-  if (absPositionBalance <= leverageParameters.basePositionSize) {
+  const absPositionQty = absBigInt(baseQuantity);
+  if (absPositionQty <= leverageParameters.basePositionSize) {
     return leverageParameters.initialMarginFraction;
   }
   return (
     leverageParameters.initialMarginFraction +
     divideBigInt(
-      absPositionBalance - leverageParameters.basePositionSize,
+      absPositionQty - leverageParameters.basePositionSize,
       leverageParameters.incrementalPositionSize,
       ROUNDING.RoundUp,
     ) *
@@ -702,21 +702,20 @@ function calculateInitialMarginRequirementOfPosition(args: {
   indexPrice: bigint;
   initialMarginFractionOverride: bigint | null;
   leverageParameters: LeverageParametersBigInt;
-  /** Signed */
-  positionBalance: bigint;
+  positionQty: bigint; // Signed
 }): bigint {
   const {
     indexPrice,
     initialMarginFractionOverride,
     leverageParameters,
-    positionBalance,
+    positionQty,
   } = args;
 
   // Signed
-  const quoteValueOfPosition = multiplyPips(positionBalance, indexPrice);
+  const quoteValueOfPosition = multiplyPips(positionQty, indexPrice);
 
   const initialMarginFraction = calculateInitialMarginFractionWithOverride({
-    baseQuantity: positionBalance,
+    baseQuantity: positionQty,
     initialMarginFractionOverride,
     leverageParameters,
   });
@@ -1178,6 +1177,61 @@ function doOrdersMatch(
       takerOrder.limitPrice >= makerOrder.price) ||
     (takerOrder.side === OrderSide.sell &&
       takerOrder.limitPrice <= makerOrder.price)
+  );
+}
+
+/**
+ * Reduce-only orders may only be on the books if their execution would in fact
+ * result in a reduction of an open position. That is, if any of the wallet's
+ * other standing orders would be matched and executed first and reduce the
+ * position, any reduce-only liquidity newly added to the books may not exceed
+ * the remaining size of the position.
+ *
+ * This function returns the size of the given open position minus the combined
+ * size of all the wallet's standing orders on the other side of the book that
+ * are priced better (higher for buys, lower for sells) or equal to the provided
+ * limit price.
+ */
+export function determineMaximumReduceOnlyQuantityAvailableAtPriceLevel(args: {
+  limitPrice: bigint;
+  position: IDEXPosition;
+  orderSide: OrderSide;
+  walletsStandingOrders: StandingOrder[];
+}): bigint {
+  const { limitPrice, position, orderSide, walletsStandingOrders } = args;
+
+  const positionQty = decimalToPip(position.quantity);
+
+  if (positionQty === BigInt(0)) {
+    return BigInt(0);
+  }
+  if (
+    (orderSide === OrderSide.buy && positionQty > BigInt(0)) ||
+    (orderSide === OrderSide.sell && positionQty < BigInt(0))
+  ) {
+    // Order does not reduce position
+    return BigInt(0);
+  }
+
+  const activeStandingOrdersOnSameSide = walletsStandingOrders
+    .filter(
+      (order) => order.market === position.market && order.side === orderSide,
+    )
+    .filter(isActiveStandingOrder)
+    .map(convertToActiveStandingOrderBigInt);
+
+  let betterPricedActiveQtyOnTheBooks = BigInt(0);
+  for (const order of activeStandingOrdersOnSameSide) {
+    if (
+      (order.side === OrderSide.buy && order.price >= limitPrice) ||
+      (order.side === OrderSide.sell && order.price <= limitPrice)
+    ) {
+      betterPricedActiveQtyOnTheBooks += order.openQuantity;
+    }
+  }
+  return maxBigInt(
+    absBigInt(positionQty) - betterPricedActiveQtyOnTheBooks,
+    BigInt(0),
   );
 }
 
