@@ -26,7 +26,7 @@ import type {
   IDEXPosition,
 } from '#types/rest/endpoints/index';
 
-type LeverageParameters = Pick<
+export type LeverageParameters = Pick<
   IDEXMarket,
   | 'maximumPositionSize'
   | 'initialMarginFraction'
