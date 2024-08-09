@@ -15,7 +15,7 @@ const defaultLeverageParameters: orderbook.LeverageParametersBigInt = {
   maintenanceMarginFraction: decimalToPip('0.01'), // Unused
 };
 
-describe('orderbook/leverage', () => {
+describe('orderbook/quantities', () => {
   describe('calculateInitialMarginFractionWithOverride', () => {
     it('should succeed', () => {
       const runScenario = (baseQuantity: string, expectedImf: string): void => {

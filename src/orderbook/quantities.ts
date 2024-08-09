@@ -1,6 +1,15 @@
 import { BigNumber } from 'bignumber.js';
 
-import * as pipmath from '#pipmath';
+import {
+  ROUNDING,
+  absBigInt,
+  decimalToPip,
+  divideBigInt,
+  maxBigInt,
+  minBigInt,
+  multiplyPips,
+  oneInPips,
+} from '#pipmath';
 
 import { OrderSide } from '#types/enums/request';
 
@@ -9,11 +18,53 @@ import type {
   OrderBookLevelL1,
   OrderBookLevelL2,
 } from '#types/orderBook';
+import type {
+  IDEXMarket,
+  IDEXOrder,
+  IDEXPosition,
+} from '#types/rest/endpoints/index';
+
+export type LeverageParameters = Pick<
+  IDEXMarket,
+  | 'maximumPositionSize'
+  | 'initialMarginFraction'
+  | 'maintenanceMarginFraction'
+  | 'basePositionSize'
+  | 'incrementalPositionSize'
+  | 'incrementalInitialMarginFraction'
+>;
+export type LeverageParametersBigInt = Record<keyof LeverageParameters, bigint>;
+
+type Position = {
+  market: string;
+  quantity: bigint;
+  indexPrice: bigint;
+  marginRequirement: bigint;
+};
 
 /**
  * Price and Size values form the {@link OrderBookLevelL1} type
  */
 export type PriceAndSize = Pick<OrderBookLevelL1, 'price' | 'size'>;
+
+/**
+ * Standing orders
+ */
+export type StandingOrder = Pick<
+  IDEXOrder,
+  'market' | 'side' | 'originalQuantity' | 'executedQuantity' | 'price'
+>;
+type ActiveStandingOrder = StandingOrder & { price: string };
+type ActiveStandingOrderBigInt = Pick<ActiveStandingOrder, 'side'> & {
+  openQuantity: bigint;
+  price: bigint;
+};
+
+export function isActiveStandingOrder(
+  order: StandingOrder,
+): order is ActiveStandingOrder {
+  return typeof order.price !== 'undefined';
+}
 
 export const asksTickRoundingMode = BigNumber.ROUND_UP;
 
@@ -27,35 +78,92 @@ export const nullLevel: OrderBookLevelL2 = {
 };
 
 /**
- * Helper function to convert from quote to base quantities
- * see: {quantitiesAvailableFromPoolAtAskPrice}
+ * @private
  */
-export function calculateGrossBaseValueOfBuyQuantities(
-  baseAssetQuantity: bigint,
-  quoteAssetQuantity: bigint,
-  grossQuoteQuantity: bigint,
+function calculateInitialMarginFraction(
+  leverageParameters: LeverageParametersBigInt,
+  baseQuantity: bigint, // Signed
 ): bigint {
+  const absPositionQty = absBigInt(baseQuantity);
+  if (absPositionQty <= leverageParameters.basePositionSize) {
+    return leverageParameters.initialMarginFraction;
+  }
   return (
-    baseAssetQuantity -
-    (baseAssetQuantity * quoteAssetQuantity) /
-      (quoteAssetQuantity + grossQuoteQuantity)
+    leverageParameters.initialMarginFraction +
+    divideBigInt(
+      absPositionQty - leverageParameters.basePositionSize,
+      leverageParameters.incrementalPositionSize,
+      ROUNDING.RoundUp,
+    ) *
+      leverageParameters.incrementalInitialMarginFraction
   );
 }
 
 /**
- * Helper function to convert from base to quote quantities
- * see: {quantitiesAvailableFromPoolAtBidPrice}
+ * Returns the initial margin fraction for a position or an order.
+ *
+ * Use {@link convertToLeverageParametersBigInt} to convert a {@link IDEXMarket}
+ * or {@link LeverageParameters} object to {@link LeverageParametersBigInt}.
  */
-export function calculateGrossQuoteValueOfSellQuantities(
-  baseAssetQuantity: bigint,
-  quoteAssetQuantity: bigint,
-  grossBaseQuantity: bigint,
-): bigint {
-  return (
-    quoteAssetQuantity -
-    (baseAssetQuantity * quoteAssetQuantity) /
-      (baseAssetQuantity + grossBaseQuantity)
+export function calculateInitialMarginFractionWithOverride(args: {
+  /** Signed */
+  baseQuantity: bigint;
+  initialMarginFractionOverride: bigint | null;
+  leverageParameters: LeverageParametersBigInt;
+}): bigint {
+  const { initialMarginFractionOverride, leverageParameters, baseQuantity } =
+    args;
+
+  return maxBigInt(
+    calculateInitialMarginFraction(leverageParameters, baseQuantity),
+    initialMarginFractionOverride ?? BigInt(0),
   );
+}
+
+export function convertToActiveStandingOrderBigInt(
+  order: ActiveStandingOrder,
+): ActiveStandingOrderBigInt {
+  return {
+    ...order,
+    openQuantity:
+      decimalToPip(order.originalQuantity) -
+      decimalToPip(order.executedQuantity),
+    price: decimalToPip(order.price),
+  };
+}
+
+export function convertToLeverageParametersBigInt(
+  leverageParameters: LeverageParameters,
+): LeverageParametersBigInt {
+  return {
+    maximumPositionSize: decimalToPip(leverageParameters.maximumPositionSize),
+    initialMarginFraction: decimalToPip(
+      leverageParameters.initialMarginFraction,
+    ),
+    maintenanceMarginFraction: decimalToPip(
+      leverageParameters.maintenanceMarginFraction,
+    ),
+    basePositionSize: decimalToPip(leverageParameters.basePositionSize),
+    incrementalPositionSize: decimalToPip(
+      leverageParameters.incrementalPositionSize,
+    ),
+    incrementalInitialMarginFraction: decimalToPip(
+      leverageParameters.incrementalInitialMarginFraction,
+    ),
+  };
+}
+
+/**
+ * Converts a {@link IDEXPosition} object to one used by some functions in this
+ * file.
+ */
+export function convertToPositionBigInt(position: IDEXPosition): Position {
+  return {
+    market: position.market,
+    quantity: decimalToPip(position.quantity),
+    indexPrice: decimalToPip(position.indexPrice),
+    marginRequirement: decimalToPip(position.marginRequirement),
+  };
 }
 
 /**
@@ -93,7 +201,7 @@ export function calculateGrossFillQuantities(
   baseQuantity: bigint;
   quoteQuantity: bigint;
 } {
-  const takerQuantity2p = takerOrder.quantity * pipmath.oneInPips;
+  const takerQuantity2p = takerOrder.quantity * oneInPips;
 
   let filledBaseQty2p = BigInt(0);
   let filledQuoteQty2p = BigInt(0);
@@ -109,8 +217,8 @@ export function calculateGrossFillQuantities(
       };
     }
     return {
-      baseQuantity: filledBaseQty2p / pipmath.oneInPips,
-      quoteQuantity: filledQuoteQty2p / pipmath.oneInPips,
+      baseQuantity: filledBaseQty2p / oneInPips,
+      quoteQuantity: filledQuoteQty2p / oneInPips,
     };
   };
 
@@ -153,15 +261,15 @@ function determineTradeQuantities(
   baseQuantity2p: bigint;
   quoteQuantity2p: bigint;
 } {
-  const makerQuantity2p = makerOrder.size * pipmath.oneInPips;
+  const makerQuantity2p = makerOrder.size * oneInPips;
 
   // Limit by base
   const fillBaseQty2p =
     isMaxTakerQuantityInQuote ? makerQuantity2p : (
-      pipmath.minBigInt(maxTakerQuantity2p, makerQuantity2p)
+      minBigInt(maxTakerQuantity2p, makerQuantity2p)
     );
 
-  const fillQuoteQty2p = pipmath.multiplyPips(fillBaseQty2p, makerOrder.price);
+  const fillQuoteQty2p = multiplyPips(fillBaseQty2p, makerOrder.price);
 
   // Limit by quote
   if (isMaxTakerQuantityInQuote && maxTakerQuantity2p < fillQuoteQty2p) {
@@ -195,6 +303,61 @@ function doOrdersMatch(
       takerOrder.limitPrice >= makerOrder.price) ||
     (takerOrder.side === OrderSide.sell &&
       takerOrder.limitPrice <= makerOrder.price)
+  );
+}
+
+/**
+ * Reduce-only orders may only be on the books if their execution would in fact
+ * result in a reduction of an open position. That is, if any of the wallet's
+ * other standing orders would be matched and executed first and reduce the
+ * position, any reduce-only liquidity newly added to the books may not exceed
+ * the remaining size of the position.
+ *
+ * This function returns the size of the given open position minus the combined
+ * size of all the wallet's standing orders on the other side of the book that
+ * are priced better (higher for buys, lower for sells) or equal to the provided
+ * limit price.
+ */
+export function determineMaximumReduceOnlyQuantityAvailableAtPriceLevel(args: {
+  limitPrice: bigint;
+  position: IDEXPosition;
+  orderSide: OrderSide;
+  walletsStandingOrders: StandingOrder[];
+}): bigint {
+  const { limitPrice, position, orderSide, walletsStandingOrders } = args;
+
+  const positionQty = decimalToPip(position.quantity);
+
+  if (positionQty === BigInt(0)) {
+    return BigInt(0);
+  }
+  if (
+    (orderSide === OrderSide.buy && positionQty > BigInt(0)) ||
+    (orderSide === OrderSide.sell && positionQty < BigInt(0))
+  ) {
+    // Order does not reduce position
+    return BigInt(0);
+  }
+
+  const activeStandingOrdersOnSameSide = walletsStandingOrders
+    .filter(
+      (order) => order.market === position.market && order.side === orderSide,
+    )
+    .filter(isActiveStandingOrder)
+    .map(convertToActiveStandingOrderBigInt);
+
+  let betterPricedActiveQtyOnTheBooks = BigInt(0);
+  for (const order of activeStandingOrdersOnSameSide) {
+    if (
+      (order.side === OrderSide.buy && order.price >= limitPrice) ||
+      (order.side === OrderSide.sell && order.price <= limitPrice)
+    ) {
+      betterPricedActiveQtyOnTheBooks += order.openQuantity;
+    }
+  }
+  return maxBigInt(
+    absBigInt(positionQty) - betterPricedActiveQtyOnTheBooks,
+    BigInt(0),
   );
 }
 
