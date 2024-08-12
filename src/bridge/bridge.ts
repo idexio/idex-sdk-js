@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import { ethers } from 'ethers';
 
 import { assetUnitsToDecimal, decimalToPip, multiplyPips } from '#pipmath';
@@ -154,13 +155,45 @@ export async function depositViaStargateV2(
     from: parameters.wallet,
   });
 
+  let gasLimit: number = StargateV2Config.settings.swapSourceGasLimit;
+
+  try {
+    // Estimate gas
+    const estimatedGasLimit = await stargate.send.estimateGas(
+      sendParam,
+      { nativeFee: messagingFee.nativeFee, lzTokenFee: 0 },
+      parameters.wallet, // Refund address - extra gas (if any) is returned to this address
+      {
+        from: parameters.wallet,
+        value: messagingFee.nativeFee,
+      }, // Native gas to pay for the cross chain message fee
+    );
+    // Add 20% buffer for safety
+    gasLimit = Number(
+      new BigNumber(estimatedGasLimit.toString())
+        .times(new BigNumber(1.2))
+        .toFixed(0),
+    );
+  } catch (error) {
+    // ethers.js will perform the estimation at the block gas limit, which is much higher than the
+    // gas actually needed by the tx. If the wallet does not have the funds to cover the tx at this
+    // high gas limit then the RPC will throw an INSUFFICIENT_FUNDS error; however the wallet may
+    // still have enough funds to successfully bridge at the actual gas limit. In this case simply
+    // fall through and use the configured default gas limit. The wallet software in use should
+    // still show if that limit is insufficient, which is only an issue for blockchains with
+    // variable gas costs such as Arbitrum One
+    if (!error.code && error.code !== 'INSUFFICIENT_FUNDS') {
+      throw error;
+    }
+  }
+
   const response = await stargate.send(
     sendParam,
     { nativeFee: messagingFee.nativeFee, lzTokenFee: 0 },
     parameters.wallet, // Refund address - extra gas (if any) is returned to this address
     {
       from: parameters.wallet,
-      gasLimit: StargateV2Config.settings.swapSourceGasLimit,
+      gasLimit,
       value: messagingFee.nativeFee,
     }, // Native gas to pay for the cross chain message fee
   );
