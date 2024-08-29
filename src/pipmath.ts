@@ -7,6 +7,19 @@ export function absBigInt(a: bigint): bigint {
   return a < BigInt(0) ? -a : a;
 }
 
+/**
+ * Use this as the compare function for sorting arrays of BigInts.
+ */
+function arraySortCompareBigInts(a: bigint, b: bigint): -1 | 0 | 1 {
+  if (a < b) {
+    return -1;
+  }
+  if (a > b) {
+    return 1;
+  }
+  return 0;
+}
+
 export function arraySumBigInt(array: bigint[]): bigint {
   return array.reduce((previous, current) => current + previous, BigInt(0));
 }
@@ -99,6 +112,13 @@ export function multiplyPips(
 
 export function pipToDecimal(pips: bigint): string {
   return assetUnitsToDecimal(pips, exchangeDecimals);
+}
+
+/**
+ * Sorts the given bigint array *in place* and returns it.
+ */
+export function sortBigIntArray(array: bigint[]): bigint[] {
+  return array.sort(arraySortCompareBigInts);
 }
 
 export function squareRootBigInt(value: bigint): bigint {
