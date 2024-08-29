@@ -4,9 +4,11 @@ import { decimalToPip, multiplyPips } from '#pipmath';
 
 import * as orderbook from '#orderbook/index';
 
+import type * as orderbookTypes from '../../../orderbook/types';
+
 const { expect } = chai;
 
-const defaultLeverageParameters: orderbook.LeverageParametersBigInt = {
+const defaultLeverageParameters: orderbookTypes.LeverageParametersBigInt = {
   initialMarginFraction: decimalToPip('0.1'),
   incrementalInitialMarginFraction: decimalToPip('0.02'),
   basePositionSize: decimalToPip('5'),

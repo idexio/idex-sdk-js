@@ -13,12 +13,13 @@ import * as orderbook from '#orderbook/index';
 import { OrderSide } from '../../../types/enums/request';
 
 import type { IDEXMarket, IDEXPosition } from '#types/rest/endpoints/index';
+import type * as orderbookTypes from '../../../orderbook/types';
 
 type ReturnValue = ReturnType<typeof orderbook.calculateBuySellPanelEstimate>;
 
 const { expect } = chai;
 
-const defaultLeverageParameters: orderbook.LeverageParametersBigInt = {
+const defaultLeverageParameters: orderbookTypes.LeverageParametersBigInt = {
   initialMarginFraction: decimalToPip('0.03'),
   incrementalInitialMarginFraction: decimalToPip('0.01'),
   basePositionSize: decimalToPip('10000'),
@@ -30,7 +31,7 @@ const defaultLeverageParameters: orderbook.LeverageParametersBigInt = {
 function makeAMarket(
   indexPrice: bigint,
   baseAssetSymbol = 'FOO',
-  leverageParameters: orderbook.LeverageParametersBigInt = defaultLeverageParameters,
+  leverageParameters: orderbookTypes.LeverageParametersBigInt = defaultLeverageParameters,
 ): IDEXMarket {
   // All empty values are not used by the functions under test
   return {
@@ -136,14 +137,14 @@ function setUpStandardTestAccount(): {
   };
 }
 
-const standardTestOrderBookSellSide: orderbook.PriceAndSize[] = [
+const standardTestOrderBookSellSide: orderbookTypes.PriceAndSize[] = [
   { price: decimalToPip('0.011'), size: decimalToPip('1000') },
   { price: decimalToPip('0.012'), size: decimalToPip('1000') },
   { price: decimalToPip('0.013'), size: decimalToPip('1000') },
   { price: decimalToPip('0.014'), size: decimalToPip('1000') },
 ];
 
-const standardTestOrderBookBuySide: orderbook.PriceAndSize[] = [
+const standardTestOrderBookBuySide: orderbookTypes.PriceAndSize[] = [
   { price: decimalToPip('0.009'), size: decimalToPip('1000') },
   { price: decimalToPip('0.008'), size: decimalToPip('1000') },
   { price: decimalToPip('0.007'), size: decimalToPip('1000') },
@@ -290,7 +291,7 @@ describe('orderbook/quantities', () => {
      * order #5. Asserts that the equation correctly yields zero for order #5.
      */
     it('should stop matching when the taker has no buying power remaining (buy)', () => {
-      const sellSideMakerOrders: orderbook.PriceAndSize[] = [
+      const sellSideMakerOrders: orderbookTypes.PriceAndSize[] = [
         { price: decimalToPip('0.011'), size: decimalToPip('1000') },
         { price: decimalToPip('0.012'), size: decimalToPip('1000') },
         { price: decimalToPip('0.013'), size: decimalToPip('1000') },
@@ -334,7 +335,7 @@ describe('orderbook/quantities', () => {
      * order #5. Asserts that the equation correctly yields zero for order #5.
      */
     it('should stop matching when the taker has no buying power remaining (sell)', () => {
-      const buySideMakerOrders: orderbook.PriceAndSize[] = [
+      const buySideMakerOrders: orderbookTypes.PriceAndSize[] = [
         { price: decimalToPip('0.009'), size: decimalToPip('1000') },
         { price: decimalToPip('0.008'), size: decimalToPip('1000') },
         { price: decimalToPip('0.007'), size: decimalToPip('1000') },
@@ -594,6 +595,339 @@ describe('orderbook/quantities', () => {
         ));
     });
 
+    describe('Slider scenarios', () => {
+      const runSliderScenario = (args: {
+        quoteBalance: string;
+        positionQuantity: string;
+        otherPosition?: {
+          quoteValue: string;
+          imf: string;
+        };
+        reducingStandingOrderPrice?: string;
+        heldCollateral?: string;
+
+        takerSide: OrderSide;
+        sliderFactor: number;
+        makerOrderPrice: string;
+
+        expectedBaseQty: string;
+        expectedCost: string;
+      }) => {
+        const market = makeAMarket(decimalToPip('100'), 'FOO');
+        const position = makeAPosition({
+          market,
+          quantity: decimalToPip(args.positionQuantity),
+          initialMarginRequirement:
+            (absBigInt(decimalToPip(args.positionQuantity)) *
+              decimalToPip(market.indexPrice) *
+              decimalToPip(market.initialMarginFraction)) /
+            oneInPips /
+            oneInPips,
+        });
+
+        const otherMarket = makeAMarket(decimalToPip('1'), 'BAR');
+        otherMarket.initialMarginFraction = args.otherPosition?.imf ?? '0.03';
+        // Index price is 1
+        const otherPositionQuoteValue = decimalToPip(
+          args.otherPosition?.quoteValue ?? '0',
+        );
+        const otherPosition = makeAPosition({
+          market: otherMarket,
+          quantity: otherPositionQuoteValue,
+          initialMarginRequirement: multiplyPips(
+            absBigInt(otherPositionQuoteValue),
+            decimalToPip(otherMarket.initialMarginFraction),
+          ),
+        });
+
+        /*
+        const availableCollateralBefore = calculateAvailableCollateral({
+          heldCollateral: decimalToPip(args.heldCollateral ?? '0'),
+          market,
+          positionInAnotherMarket: otherPosition,
+          positionQuantity: decimalToPip(args.positionQuantity),
+          quoteBalance: decimalToPip(args.quoteBalance),
+        });
+        */
+
+        const result = orderbook.calculateBuySellPanelEstimate({
+          formInputs: {
+            takerSide: args.takerSide,
+            sliderFactor: args.sliderFactor,
+          },
+          initialMarginFractionOverride: null,
+          leverageParameters: market,
+          makerSideOrders: [
+            {
+              price: decimalToPip(args.makerOrderPrice),
+              size: decimalToPip('1000'), // Large enough to fill the taker
+            },
+          ],
+          market,
+          wallet: {
+            heldCollateral: decimalToPip(args.heldCollateral ?? '0'),
+            positions: [position, otherPosition],
+            quoteBalance: decimalToPip(args.quoteBalance),
+            standingOrders:
+              args.reducingStandingOrderPrice ?
+                [
+                  {
+                    market: market.market,
+                    side:
+                      decimalToPip(position.quantity) > BigInt(0) ?
+                        'sell'
+                      : 'buy',
+                    // originalQuantity: position.quantity,
+                    originalQuantity: '100',
+                    executedQuantity: '0',
+                    price: args.reducingStandingOrderPrice,
+                  },
+                ]
+              : [],
+          },
+        });
+
+        /*
+        const availableCollateralAfter = calculateAvailableCollateral({
+          heldCollateral: decimalToPip(args.heldCollateral ?? '0'),
+          market,
+          positionInAnotherMarket: otherPosition,
+          positionQuantity:
+            decimalToPip(args.positionQuantity) +
+            BigInt(args.takerSide === 'buy' ? '1' : '-1') *
+              result.takerBaseQuantity,
+          quoteBalance:
+            decimalToPip(args.quoteBalance) +
+            BigInt(args.takerSide === 'buy' ? '-1' : '1') *
+              result.takerQuoteQuantity,
+        });
+        */
+
+        expect(result).to.eql({
+          makerBaseQuantity: BigInt(0),
+          makerQuoteQuantity: BigInt(0),
+          takerBaseQuantity: decimalToPip(args.expectedBaseQty),
+          takerQuoteQuantity: multiplyPips(
+            decimalToPip(args.expectedBaseQty),
+            decimalToPip(args.makerOrderPrice),
+          ),
+          cost: decimalToPip(args.expectedCost),
+        } satisfies ReturnValue);
+      };
+
+      it('Increasing buy', () =>
+        runSliderScenario({
+          quoteBalance: '50',
+          positionQuantity: '0.1',
+          otherPosition: {
+            quoteValue: '10',
+            imf: '0.2',
+          },
+          reducingStandingOrderPrice: '106',
+          heldCollateral: '35',
+
+          takerSide: 'buy',
+          sliderFactor: 0.75,
+          makerOrderPrice: '103',
+
+          expectedBaseQty: '8.69680851',
+          expectedCost: '24.52499999', // Precision limitation; should be 24.525
+        }));
+
+      it('Increasing sell', () =>
+        runSliderScenario({
+          quoteBalance: '50',
+          positionQuantity: '-0.1',
+          otherPosition: {
+            quoteValue: '10',
+            imf: '0.2',
+          },
+          reducingStandingOrderPrice: '94',
+          heldCollateral: '35',
+
+          takerSide: 'sell',
+          sliderFactor: 0.75,
+          makerOrderPrice: '97',
+
+          expectedBaseQty: '2.995283019',
+          expectedCost: '9.52499997', // Precision limitation; should be 9.525
+        }));
+
+      it('Decreasing buy (no standing order)', () =>
+        runSliderScenario({
+          quoteBalance: '105',
+          positionQuantity: '-1',
+
+          takerSide: 'buy',
+          sliderFactor: 0.75,
+          makerOrderPrice: '105',
+
+          expectedBaseQty: '0.75',
+          expectedCost: '1.5',
+        }));
+
+      it('Decreasing sell (no standing order) (1)', () =>
+        runSliderScenario({
+          quoteBalance: '-95',
+          positionQuantity: '1',
+
+          takerSide: 'sell',
+          sliderFactor: 0.75,
+          makerOrderPrice: '96',
+
+          expectedBaseQty: '1.07142857',
+          expectedCost: '1.49999999', // Precision limitation; should be 1.5
+        }));
+
+      it('Decreasing sell (no standing order) (2)', () =>
+        runSliderScenario({
+          quoteBalance: '-95',
+          positionQuantity: '1',
+
+          takerSide: 'sell',
+          sliderFactor: 0.75,
+          /*
+           * This price causes a division by zero in the calculations, which
+           * implies available collateral increases. The matching loop should
+           * apply the whole maker qty and continue with the next iteration.
+           */
+          makerOrderPrice: '97',
+
+          expectedBaseQty: '1.25',
+          expectedCost: '1.5',
+        }));
+
+      it('Decreasing buy', () =>
+        runSliderScenario({
+          quoteBalance: '105',
+          positionQuantity: '-1',
+          reducingStandingOrderPrice: '95',
+
+          takerSide: 'buy',
+          sliderFactor: 0.75,
+          makerOrderPrice: '105',
+
+          expectedBaseQty: '0.30927835',
+          expectedCost: '1.49999999', // Precision limitation; should be 1.5
+        }));
+
+      it('Decreasing sell', () =>
+        runSliderScenario({
+          quoteBalance: '-95',
+          positionQuantity: '1',
+          reducingStandingOrderPrice: '105',
+
+          takerSide: 'sell',
+          sliderFactor: 0.75,
+          makerOrderPrice: '95',
+
+          expectedBaseQty: '0.29126213',
+          expectedCost: '1.49999996', // Precision limitation; should be 1.5
+        }));
+    });
+
+    const runIncrementalImfScenario = (
+      takerSide: OrderSide,
+      /**
+       * Enables testing IMF rollover into the next incremental bracket while
+       * matching a single maker order vs. at the boundary to the next one.
+       */
+      doesMakerSizeMatchBaselineImfThreshold: boolean,
+    ) => {
+      const market = makeAMarket(decimalToPip('1'), 'FOO', {
+        ...defaultLeverageParameters,
+        initialMarginFraction: decimalToPip('0.03'),
+        incrementalInitialMarginFraction: decimalToPip('0.01'),
+        basePositionSize: decimalToPip('100'),
+        incrementalPositionSize: decimalToPip('10'),
+      });
+      /*
+       * - Position size up to 100 requires 3 margin
+       * - Position size up to 110 requires 4 margin
+       * - Position size up to 120 requires 5 margin
+       *
+       * => 4.5 collateral can afford only 110, which requires 4.4 margin and
+       *    leaves 0.1 collateral available
+       */
+      const quoteBalance = decimalToPip('4.5');
+
+      const result = orderbook.calculateBuySellPanelEstimate({
+        formInputs: {
+          takerSide,
+          desiredTradeBaseQuantity: decimalToPip('1000'),
+        },
+        initialMarginFractionOverride: null,
+        leverageParameters: market,
+        makerSideOrders:
+          doesMakerSizeMatchBaselineImfThreshold ?
+            [
+              {
+                price: decimalToPip(market.indexPrice),
+                size: decimalToPip('100'),
+              },
+              {
+                price: decimalToPip(market.indexPrice),
+                size: decimalToPip('1000'),
+              },
+            ]
+          : [
+              {
+                price: decimalToPip(market.indexPrice),
+                size: decimalToPip('1000'), // Large enough to fill the taker
+              },
+            ],
+        market,
+        wallet: {
+          heldCollateral: BigInt(0),
+          positions: [],
+          quoteBalance,
+          standingOrders: [],
+        },
+      });
+
+      expect(result).to.eql({
+        makerBaseQuantity: BigInt(0),
+        makerQuoteQuantity: BigInt(0),
+        takerBaseQuantity: decimalToPip('110'),
+        takerQuoteQuantity: decimalToPip('110'),
+        cost: decimalToPip('4.4'),
+      } satisfies ReturnValue);
+
+      const newQuoteBalance =
+        takerSide === 'buy' ?
+          quoteBalance - result.takerQuoteQuantity
+        : quoteBalance + result.takerQuoteQuantity;
+
+      const accountValue =
+        takerSide === 'buy' ?
+          // Index price is 1
+          newQuoteBalance + result.takerBaseQuantity
+        : newQuoteBalance - result.takerBaseQuantity;
+
+      const imr = orderbook.calculateInitialMarginRequirementOfPosition({
+        indexPrice: decimalToPip('1'),
+        initialMarginFractionOverride: null,
+        leverageParameters: orderbook.convertToLeverageParametersBigInt(market),
+        positionQty: result.takerBaseQuantity,
+      });
+      expect(imr).to.eql(decimalToPip('4.4'));
+
+      const availableCollateral = accountValue - imr;
+      expect(availableCollateral).to.eql(decimalToPip('0.1'));
+    };
+
+    it('should traverse incremental IMF thresholds (buy)', () =>
+      runIncrementalImfScenario('buy', false));
+
+    it('should succeed if incremental IMF thresholds line up with maker orders (buy)', () =>
+      runIncrementalImfScenario('buy', true));
+
+    it('should traverse incremental IMF thresholds (sell)', () =>
+      runIncrementalImfScenario('sell', false));
+
+    it('should succeed if incremental IMF thresholds line up with maker orders (sell)', () =>
+      runIncrementalImfScenario('sell', true));
+
     /**
      * Maker qtys require a limit price
      */
@@ -825,7 +1159,7 @@ describe('orderbook/quantities', () => {
         } satisfies ReturnValue);
       });
 
-      const runEmptyOrderBookScenario = (takerSide: 'buy' | 'sell') => {
+      const runEmptyOrderBookScenario = (takerSide: OrderSide) => {
         const {
           market,
           positionInAnotherMarket,
@@ -878,7 +1212,7 @@ describe('orderbook/quantities', () => {
         runEmptyOrderBookScenario('sell'));
 
       const runDesiredBaseQtyEmptyOrderBookScenario = (
-        takerSide: 'buy' | 'sell',
+        takerSide: OrderSide,
       ) => {
         const {
           market,
@@ -923,7 +1257,7 @@ describe('orderbook/quantities', () => {
         runDesiredBaseQtyEmptyOrderBookScenario('sell'));
 
       const runDesiredQuoteQtyEmptyOrderBookScenario = (
-        takerSide: 'buy' | 'sell',
+        takerSide: OrderSide,
       ) => {
         const {
           market,
@@ -969,7 +1303,7 @@ describe('orderbook/quantities', () => {
 
       describe('Margin requirement for maker quantities', () => {
         const runBasicMakerQtyImrScenario = (
-          takerSide: 'buy' | 'sell',
+          takerSide: OrderSide,
           withOpenPosition?: boolean,
           withStandingOrders?: boolean,
         ) => {
@@ -1045,7 +1379,7 @@ describe('orderbook/quantities', () => {
           runBasicMakerQtyImrScenario('sell', false, true));
 
         const runReducingMakerQtyImrScenario = (
-          takerSide: 'buy' | 'sell',
+          takerSide: OrderSide,
           isOrderLargerThanPosition: boolean,
         ) => {
           const market = makeAMarket(decimalToPip('0.01'), 'FOO');
@@ -1110,7 +1444,7 @@ describe('orderbook/quantities', () => {
           runReducingMakerQtyImrScenario('sell', true));
 
         const runTotalReducingLiquidityLargerThanPositionScenario = (
-          takerSide: 'buy' | 'sell',
+          takerSide: OrderSide,
         ) => {
           const market = makeAMarket(decimalToPip('0.01'), 'FOO');
 
@@ -1170,7 +1504,7 @@ describe('orderbook/quantities', () => {
           runTotalReducingLiquidityLargerThanPositionScenario('sell'));
 
         const runIgnoreUnrelatedStandingOrdersScenario = (
-          takerSide: 'buy' | 'sell',
+          takerSide: OrderSide,
         ) => {
           const market = makeAMarket(decimalToPip('0.01'), 'FOO');
           const otherMarket = makeAMarket(decimalToPip('1'), 'BAR');
@@ -1248,7 +1582,7 @@ describe('orderbook/quantities', () => {
          * margin.
          */
         const runMakerQtyInsideReducingStandingOrderScenario = (
-          takerSide: 'buy' | 'sell',
+          takerSide: OrderSide,
         ) => {
           const market = makeAMarket(decimalToPip('0.01'), 'FOO');
 
@@ -1311,7 +1645,7 @@ describe('orderbook/quantities', () => {
           runMakerQtyInsideReducingStandingOrderScenario('sell'));
 
         const runReducingStandingOrderAndPositionGetsClosedScenario = (
-          takerSide: 'buy' | 'sell',
+          takerSide: OrderSide,
         ) => {
           const market = makeAMarket(decimalToPip('0.01'), 'FOO');
 
@@ -1377,7 +1711,7 @@ describe('orderbook/quantities', () => {
           runReducingStandingOrderAndPositionGetsClosedScenario('sell'));
 
         const runReducingStandingOrderAndPositionChangesSidesScenario = (
-          takerSide: 'buy' | 'sell',
+          takerSide: OrderSide,
         ) => {
           const market = makeAMarket(decimalToPip('0.01'), 'FOO');
 
@@ -1442,7 +1776,7 @@ describe('orderbook/quantities', () => {
           runReducingStandingOrderAndPositionChangesSidesScenario('sell'));
 
         const runStandingOrderAndNewPositionOpenedOnOtherSideScenario = (
-          takerSide: 'buy' | 'sell',
+          takerSide: OrderSide,
         ) => {
           const market = makeAMarket(decimalToPip('0.01'), 'FOO');
 
@@ -1499,9 +1833,7 @@ describe('orderbook/quantities', () => {
       });
     });
 
-    const runOrderBookLiquidityExceededScenario = (
-      takerSide: 'buy' | 'sell',
-    ) => {
+    const runOrderBookLiquidityExceededScenario = (takerSide: OrderSide) => {
       const { market, positionInAnotherMarket, heldCollateral, quoteBalance } =
         setUpStandardTestAccount();
 
@@ -1738,7 +2070,7 @@ describe('orderbook/quantities', () => {
     function calculateAvailableCollateral(args: {
       heldCollateral: bigint;
       market: IDEXMarket;
-      positionInAnotherMarket: IDEXPosition;
+      positionInAnotherMarket?: IDEXPosition;
       positionQuantity: bigint;
       quoteBalance: bigint;
     }): bigint {
@@ -1765,12 +2097,12 @@ describe('orderbook/quantities', () => {
         quoteBalance +
         quoteValueOfPosition +
         // Other position has index price 1; see `setUpStandardTestAccount`
-        decimalToPip(positionInAnotherMarket.quantity);
+        decimalToPip(positionInAnotherMarket?.quantity ?? '0');
 
       return (
         accountValue -
         initialMarginRequirement -
-        decimalToPip(positionInAnotherMarket.marginRequirement) -
+        decimalToPip(positionInAnotherMarket?.marginRequirement ?? '0') -
         heldCollateral
       );
     }
@@ -1951,7 +2283,7 @@ describe('orderbook/quantities', () => {
 
     describe('Reduction of positions', () => {
       const runBasicScenario = (args: {
-        takerSide: 'buy' | 'sell';
+        takerSide: OrderSide;
         positionQuantity: string;
         orderQuantity: string;
         expectedBaseQty: string;
@@ -1963,10 +2295,12 @@ describe('orderbook/quantities', () => {
         const position = makeAPosition({
           market,
           quantity: decimalToPip(args.positionQuantity),
-          initialMarginRequirement: multiplyPips(
-            indexPrice,
-            decimalToPip(market.initialMarginFraction),
-          ),
+          initialMarginRequirement:
+            (absBigInt(decimalToPip(args.positionQuantity)) *
+              indexPrice *
+              decimalToPip(market.initialMarginFraction)) /
+            oneInPips /
+            oneInPips,
         });
 
         expect(
@@ -2003,7 +2337,7 @@ describe('orderbook/quantities', () => {
         } satisfies ReturnValue);
       };
 
-      const runPositionChangesSideScenario = (takerSide: 'buy' | 'sell') => {
+      const runPositionChangesSideScenario = (takerSide: OrderSide) => {
         // Open a new position
         runBasicScenario({
           takerSide,
