@@ -1,10 +1,18 @@
 /* eslint-disable no-continue */
 /* eslint-disable no-labels */
 
-import { absBigInt, sortBigIntArray } from '#pipmath';
+import {
+  absBigInt,
+  decimalToPip,
+  maxBigInt,
+  multiplyPips,
+  oneInPips,
+  sortBigIntArray,
+} from '#pipmath';
 
 import { OrderSide } from '#types/enums/request';
 
+import * as leverage from './leverage';
 import {
   isActiveStandingOrder,
   convertToActiveStandingOrderBigInt,
@@ -13,6 +21,7 @@ import {
 import type { IDEXMarket } from '#types/rest/endpoints/index';
 import type {
   LeverageParametersBigInt,
+  MakerAndTakerQuantities,
   Position,
   PriceAndSize,
   StandingOrder,
@@ -394,4 +403,287 @@ function sortOrdersByBestPriceCompareFunction(
     return orderA.side === OrderSide.sell ? -1 : 1; // Lower sell price = better price
   }
   return 0; // Same price
+}
+
+/**
+ * @private
+ */
+export function calculateMaxMakerOrderSize(args: {
+  additionalPositionQty: bigint; // Signed
+  additionalPositionCostBasis: bigint; // Signed
+  desiredRemainingAvailableCollateral: bigint;
+  initialMarginFractionOverride: bigint | null;
+  leverageParameters: LeverageParametersBigInt;
+  limitPrice: bigint;
+  market: Pick<IDEXMarket, 'market' | 'indexPrice'>;
+  wallet: {
+    heldCollateral: bigint;
+    positions: Position[];
+    quoteBalance: bigint;
+  };
+}): {
+  baseQuantity: bigint;
+  quoteQuantity: bigint;
+  initialMarginFraction: bigint;
+  initialMarginRequirement: bigint;
+} {
+  const {
+    additionalPositionQty,
+    additionalPositionCostBasis,
+    desiredRemainingAvailableCollateral,
+    initialMarginFractionOverride,
+    leverageParameters,
+    limitPrice,
+    market,
+  } = args;
+  const { heldCollateral, positions, quoteBalance } = args.wallet;
+
+  const indexPrice = decimalToPip(market.indexPrice);
+
+  const currentPosition = positions.find(
+    (position) => position.market === market.market,
+  );
+  const otherPositions = positions.filter(
+    (position) => position.market !== market.market,
+  );
+
+  // Signed
+  const newPositionBalance =
+    (currentPosition?.quantity ?? BigInt(0)) + additionalPositionQty;
+
+  // Unsigned
+  const initialMarginRequirementOfPosition =
+    leverage.calculateInitialMarginRequirementOfPosition({
+      indexPrice,
+      initialMarginFractionOverride,
+      leverageParameters,
+      positionQty: newPositionBalance,
+    });
+
+  const availableCollateral = leverage.calculateAvailableCollateral({
+    heldCollateral,
+    positions: [
+      ...otherPositions,
+      {
+        market: market.market,
+        indexPrice,
+        quantity: newPositionBalance,
+        marginRequirement: initialMarginRequirementOfPosition,
+      },
+    ],
+    quoteBalance: quoteBalance - additionalPositionCostBasis,
+  });
+  if (availableCollateral <= desiredRemainingAvailableCollateral) {
+    return {
+      baseQuantity: BigInt(0),
+      quoteQuantity: BigInt(0),
+      initialMarginFraction: BigInt(0),
+      initialMarginRequirement: BigInt(0),
+    };
+  }
+
+  return leverage.calculateMaximumMakerOrderSizeForAvailableCollateral({
+    availableCollateral:
+      availableCollateral - desiredRemainingAvailableCollateral,
+    limitPrice,
+    initialMarginFractionOverride,
+    leverageParameters,
+  });
+}
+
+/**
+ * Returns the estimated decrease in available collateral.
+ * The returned value is unsigned.
+ *
+ * @private
+ */
+export function calculateCost(args: {
+  currentPosition?: Position;
+  indexPrice: bigint;
+  initialMarginFractionOverride: bigint | null;
+  leverageParameters: LeverageParametersBigInt;
+  limitPrice?: bigint;
+  makerAndTakerQuantities: MakerAndTakerQuantities;
+  market: Pick<IDEXMarket, 'market'>;
+  orderSide: OrderSide;
+  walletsStandingOrders: StandingOrder[];
+}): bigint {
+  const {
+    currentPosition,
+    indexPrice,
+    initialMarginFractionOverride,
+    leverageParameters,
+    limitPrice,
+    market,
+    orderSide,
+    walletsStandingOrders,
+  } = args;
+
+  const { makerBaseQuantity, takerBaseQuantity, takerQuoteQuantity } =
+    args.makerAndTakerQuantities;
+
+  if (makerBaseQuantity === BigInt(0) && takerBaseQuantity === BigInt(0)) {
+    return BigInt(0);
+  }
+
+  const imf = (baseQuantity: bigint) =>
+    leverage.calculateInitialMarginFractionWithOverride({
+      baseQuantity,
+      initialMarginFractionOverride,
+      leverageParameters,
+    });
+
+  const currentPositionQty = currentPosition?.quantity ?? BigInt(0);
+  const newPositionQty = currentPositionQty + takerBaseQuantity;
+
+  const deltaStandingOrdersImr =
+    calculateChangeInMarginRequirementForStandingOrdersInMarket({
+      initialMarginFractionOverride,
+      leverageParameters,
+      market,
+      newMakerOrder:
+        limitPrice && makerBaseQuantity !== BigInt(0) ?
+          {
+            side: orderSide,
+            quantity: absBigInt(makerBaseQuantity),
+            limitPrice,
+          }
+        : null,
+      positionQtyBefore: currentPositionQty,
+      positionQtyAfter: newPositionQty,
+      walletsStandingOrders,
+    });
+
+  const deltaPositionImr3p =
+    imf(newPositionQty) * absBigInt(newPositionQty) * indexPrice -
+    imf(currentPositionQty) * absBigInt(currentPositionQty) * indexPrice;
+
+  const deltaPositionImr = deltaPositionImr3p / oneInPips / oneInPips;
+
+  const deltaEquity =
+    -takerQuoteQuantity + multiplyPips(indexPrice, takerBaseQuantity);
+
+  return maxBigInt(
+    deltaStandingOrdersImr + deltaPositionImr - deltaEquity,
+    BigInt(0),
+  );
+}
+
+/**
+ * Returns the estimated change in margin requirement for standing orders in the
+ * given market.
+ * The returned value is signed.
+ *
+ * @private
+ */
+function calculateChangeInMarginRequirementForStandingOrdersInMarket(args: {
+  initialMarginFractionOverride: bigint | null;
+  leverageParameters: LeverageParametersBigInt;
+  market: Pick<IDEXMarket, 'market'>;
+  newMakerOrder: {
+    side: OrderSide;
+    quantity: bigint;
+    limitPrice: bigint;
+  } | null;
+  positionQtyBefore: bigint; // Signed
+  positionQtyAfter: bigint; // Signed
+  walletsStandingOrders: StandingOrder[];
+}): bigint {
+  const {
+    initialMarginFractionOverride,
+    leverageParameters,
+    market,
+    newMakerOrder,
+    positionQtyBefore,
+    positionQtyAfter,
+    walletsStandingOrders,
+  } = args;
+
+  const activeStandingOrders = walletsStandingOrders
+    .filter((order) => order.market === market.market)
+    .filter(isActiveStandingOrder)
+    .map(convertToActiveStandingOrderBigInt);
+
+  const imrBefore = calculateMarginRequirementForStandingOrdersInMarket({
+    initialMarginFractionOverride,
+    leverageParameters,
+    orders: activeStandingOrders,
+    positionQty: positionQtyBefore,
+  });
+
+  if (newMakerOrder) {
+    activeStandingOrders.push({
+      side: newMakerOrder.side,
+      openQuantity: newMakerOrder.quantity,
+      price: newMakerOrder.limitPrice,
+    });
+  }
+  const imrAfter = calculateMarginRequirementForStandingOrdersInMarket({
+    initialMarginFractionOverride,
+    leverageParameters,
+    orders: activeStandingOrders,
+    positionQty: positionQtyAfter,
+  });
+
+  return imrAfter - imrBefore;
+}
+
+/**
+ * @private
+ */
+function calculateMarginRequirementForStandingOrdersInMarket(args: {
+  initialMarginFractionOverride: bigint | null;
+  leverageParameters: LeverageParametersBigInt;
+  orders: ActiveStandingOrderBigInt[];
+  positionQty: bigint; // Signed
+}): bigint {
+  const {
+    initialMarginFractionOverride,
+    leverageParameters,
+    orders,
+    positionQty,
+  } = args;
+
+  if (orders.length === 0) {
+    return BigInt(0);
+  }
+  sortOrdersByBestPrice(orders);
+
+  let offsetPositionQty = positionQty;
+
+  let marginRequirement = BigInt(0);
+  for (const order of orders) {
+    let orderOpenBaseQty = order.openQuantity;
+
+    if (
+      (offsetPositionQty > BigInt(0) && order.side === OrderSide.sell) ||
+      (offsetPositionQty < BigInt(0) && order.side === OrderSide.buy)
+    ) {
+      if (orderOpenBaseQty > absBigInt(offsetPositionQty)) {
+        // Order offsets (remaining) position qty
+        orderOpenBaseQty -= absBigInt(offsetPositionQty);
+        offsetPositionQty = BigInt(0);
+      } else {
+        // Order qty is lower than (remaining) position qty
+        if (offsetPositionQty > BigInt(0)) {
+          offsetPositionQty -= orderOpenBaseQty;
+        } else {
+          offsetPositionQty += orderOpenBaseQty;
+        }
+        orderOpenBaseQty = BigInt(0);
+      }
+    }
+
+    if (orderOpenBaseQty > BigInt(0)) {
+      marginRequirement += multiplyPips(
+        multiplyPips(orderOpenBaseQty, order.price),
+        leverage.calculateInitialMarginFractionWithOverride({
+          baseQuantity: orderOpenBaseQty,
+          initialMarginFractionOverride,
+          leverageParameters,
+        }),
+      );
+    }
+  }
+  return marginRequirement;
 }

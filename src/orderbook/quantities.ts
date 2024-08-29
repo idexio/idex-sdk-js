@@ -1,11 +1,9 @@
 import { BigNumber } from 'bignumber.js';
 
 import {
-  ROUNDING,
   absBigInt,
   arraySumBigInt,
   decimalToPip,
-  divideBigInt,
   dividePips,
   maxBigInt,
   minBigInt,
@@ -15,25 +13,22 @@ import {
 
 import { OrderSide } from '#types/enums/request';
 
-import {
-  stepThroughMatchingLoopQuantities,
-  sortOrdersByBestPrice,
-} from './buySellPanelEstimateUtils';
+import * as buySellPanelEstimateUtils from './buySellPanelEstimateUtils';
+import * as leverage from './leverage';
 import {
   isActiveStandingOrder,
   convertToActiveStandingOrderBigInt,
+  convertToLeverageParametersBigInt,
+  convertToPositionBigInt,
 } from './types';
 
 import type { L2OrderBook, OrderBookLevelL2 } from '#types/orderBook';
 import type { IDEXMarket, IDEXPosition } from '#types/rest/endpoints/index';
 import type {
   LeverageParameters,
-  LeverageParametersBigInt,
   MakerAndTakerQuantities,
-  Position,
   PriceAndSize,
   StandingOrder,
-  ActiveStandingOrderBigInt,
 } from './types';
 
 export const asksTickRoundingMode = BigNumber.ROUND_UP;
@@ -46,29 +41,6 @@ export const nullLevel: OrderBookLevelL2 = {
   numOrders: 0,
   type: 'limit',
 };
-
-export function calculateAvailableCollateral(wallet: {
-  /** Free collateral committed to open limit orders (unsigned) */
-  heldCollateral: bigint;
-  /** All the wallet's open positions */
-  positions: Position[];
-  /** Quote token balance (USDC) (signed) */
-  quoteBalance: bigint;
-}): bigint {
-  const {
-    heldCollateral,
-    positions: allWalletPositions,
-    quoteBalance,
-  } = wallet;
-
-  const accountValue =
-    quoteBalance + calculateNotionalQuoteValueOfPositions(allWalletPositions);
-
-  const initialMarginRequirementOfAllPositions = arraySumBigInt(
-    allWalletPositions.map((position) => position.marginRequirement),
-  );
-  return accountValue - initialMarginRequirementOfAllPositions - heldCollateral;
-}
 
 export type CalculateBuySellPanelEstimateArgs = {
   formInputs: {
@@ -189,7 +161,7 @@ export function calculateBuySellPanelEstimate(
 
   const allWalletPositions = args.wallet.positions.map(convertToPositionBigInt);
 
-  const initialAvailableCollateral = calculateAvailableCollateral({
+  const initialAvailableCollateral = leverage.calculateAvailableCollateral({
     ...args.wallet,
     positions: allWalletPositions,
   });
@@ -240,7 +212,7 @@ export function calculateBuySellPanelEstimate(
   );
 
   const quoteValueOfOtherPositions =
-    calculateNotionalQuoteValueOfPositions(otherPositions);
+    leverage.calculateNotionalQuoteValueOfPositions(otherPositions);
   const quoteValueOfOtherPositions2p = quoteValueOfOtherPositions * oneInPips;
 
   const initialMarginRequirementOfOtherPositions = arraySumBigInt(
@@ -285,7 +257,7 @@ export function calculateBuySellPanelEstimate(
         makerQuoteQuantity: remainingQuoteQty,
       };
     }
-    const maxOrderSize = calculateBuySellPanelMaxMakerOrderSize({
+    const maxOrderSize = buySellPanelEstimateUtils.calculateMaxMakerOrderSize({
       additionalPositionQty,
       additionalPositionCostBasis,
       desiredRemainingAvailableCollateral:
@@ -312,7 +284,7 @@ export function calculateBuySellPanelEstimate(
       makerQuoteQuantity: absBigInt(makerAndTakerQtys.makerQuoteQuantity),
       takerBaseQuantity: absBigInt(makerAndTakerQtys.takerBaseQuantity),
       takerQuoteQuantity: absBigInt(makerAndTakerQtys.takerQuoteQuantity),
-      cost: calculateBuySellPanelCost({
+      cost: buySellPanelEstimateUtils.calculateCost({
         currentPosition,
         indexPrice,
         initialMarginFractionOverride,
@@ -326,14 +298,16 @@ export function calculateBuySellPanelEstimate(
     };
   };
 
-  for (const match of stepThroughMatchingLoopQuantities({
-    currentPosition,
-    leverageParameters: leverageParametersBigInt,
-    makerSideOrders,
-    market,
-    takerSide,
-    walletsStandingOrders: wallet.standingOrders,
-  })) {
+  for (const match of buySellPanelEstimateUtils.stepThroughMatchingLoopQuantities(
+    {
+      currentPosition,
+      leverageParameters: leverageParametersBigInt,
+      makerSideOrders,
+      market,
+      takerSide,
+      walletsStandingOrders: wallet.standingOrders,
+    },
+  )) {
     if (
       !doOrdersMatch(
         { price: match.makerOrderPrice },
@@ -360,11 +334,12 @@ export function calculateBuySellPanelEstimate(
     // Signed
     const quoteValueOfPosition2p = runningPositionBalance * indexPrice;
 
-    const initialMarginFraction = calculateInitialMarginFractionWithOverride({
-      baseQuantity: runningPositionBalance + matchQtySigned,
-      initialMarginFractionOverride,
-      leverageParameters: leverageParametersBigInt,
-    });
+    const initialMarginFraction =
+      leverage.calculateInitialMarginFractionWithOverride({
+        baseQuantity: runningPositionBalance + matchQtySigned,
+        initialMarginFractionOverride,
+        leverageParameters: leverageParametersBigInt,
+      });
 
     // Unsigned
     const initialMarginRequirementOfPosition2p = multiplyPips(
@@ -418,7 +393,7 @@ export function calculateBuySellPanelEstimate(
         const tradeBaseQty = matchQtySigned;
         const tradeQuoteQty = multiplyPips(tradeBaseQty, match.makerOrderPrice);
 
-        const cost = calculateBuySellPanelCost({
+        const cost = buySellPanelEstimateUtils.calculateCost({
           currentPosition,
           indexPrice,
           initialMarginFractionOverride,
@@ -521,547 +496,6 @@ export function calculateBuySellPanelEstimate(
     takerBaseQuantity: additionalPositionQty,
     takerQuoteQuantity: additionalPositionCostBasis,
   });
-}
-
-/**
- * Returns the estimated decrease in available collateral.
- * The returned value is unsigned.
- *
- * @private
- */
-function calculateBuySellPanelCost(args: {
-  currentPosition?: Position;
-  indexPrice: bigint;
-  initialMarginFractionOverride: bigint | null;
-  leverageParameters: LeverageParametersBigInt;
-  limitPrice?: bigint;
-  makerAndTakerQuantities: MakerAndTakerQuantities;
-  market: Pick<IDEXMarket, 'market'>;
-  orderSide: OrderSide;
-  walletsStandingOrders: StandingOrder[];
-}): bigint {
-  const {
-    currentPosition,
-    indexPrice,
-    initialMarginFractionOverride,
-    leverageParameters,
-    limitPrice,
-    market,
-    orderSide,
-    walletsStandingOrders,
-  } = args;
-
-  const { makerBaseQuantity, takerBaseQuantity, takerQuoteQuantity } =
-    args.makerAndTakerQuantities;
-
-  if (makerBaseQuantity === BigInt(0) && takerBaseQuantity === BigInt(0)) {
-    return BigInt(0);
-  }
-
-  const imf = (baseQuantity: bigint) =>
-    calculateInitialMarginFractionWithOverride({
-      baseQuantity,
-      initialMarginFractionOverride,
-      leverageParameters,
-    });
-
-  const currentPositionQty = currentPosition?.quantity ?? BigInt(0);
-  const newPositionQty = currentPositionQty + takerBaseQuantity;
-
-  const deltaStandingOrdersImr =
-    calculateChangeInMarginRequirementForStandingOrdersInMarket({
-      initialMarginFractionOverride,
-      leverageParameters,
-      market,
-      newMakerOrder:
-        limitPrice && makerBaseQuantity !== BigInt(0) ?
-          {
-            side: orderSide,
-            quantity: absBigInt(makerBaseQuantity),
-            limitPrice,
-          }
-        : null,
-      positionQtyBefore: currentPositionQty,
-      positionQtyAfter: newPositionQty,
-      walletsStandingOrders,
-    });
-
-  const deltaPositionImr3p =
-    imf(newPositionQty) * absBigInt(newPositionQty) * indexPrice -
-    imf(currentPositionQty) * absBigInt(currentPositionQty) * indexPrice;
-
-  const deltaPositionImr = deltaPositionImr3p / oneInPips / oneInPips;
-
-  const deltaEquity =
-    -takerQuoteQuantity + multiplyPips(indexPrice, takerBaseQuantity);
-
-  return maxBigInt(
-    deltaStandingOrdersImr + deltaPositionImr - deltaEquity,
-    BigInt(0),
-  );
-}
-
-/**
- * @private
- */
-function calculateBuySellPanelMaxMakerOrderSize(args: {
-  additionalPositionQty: bigint; // Signed
-  additionalPositionCostBasis: bigint; // Signed
-  desiredRemainingAvailableCollateral: bigint;
-  initialMarginFractionOverride: bigint | null;
-  leverageParameters: LeverageParametersBigInt;
-  limitPrice: bigint;
-  market: Pick<IDEXMarket, 'market' | 'indexPrice'>;
-  wallet: {
-    heldCollateral: bigint;
-    positions: Position[];
-    quoteBalance: bigint;
-  };
-}): {
-  baseQuantity: bigint;
-  quoteQuantity: bigint;
-  initialMarginFraction: bigint;
-  initialMarginRequirement: bigint;
-} {
-  const {
-    additionalPositionQty,
-    additionalPositionCostBasis,
-    desiredRemainingAvailableCollateral,
-    initialMarginFractionOverride,
-    leverageParameters,
-    limitPrice,
-    market,
-  } = args;
-  const { heldCollateral, positions, quoteBalance } = args.wallet;
-
-  const indexPrice = decimalToPip(market.indexPrice);
-
-  const currentPosition = positions.find(
-    (position) => position.market === market.market,
-  );
-  const otherPositions = positions.filter(
-    (position) => position.market !== market.market,
-  );
-
-  // Signed
-  const newPositionBalance =
-    (currentPosition?.quantity ?? BigInt(0)) + additionalPositionQty;
-
-  // Unsigned
-  const initialMarginRequirementOfPosition =
-    calculateInitialMarginRequirementOfPosition({
-      indexPrice,
-      initialMarginFractionOverride,
-      leverageParameters,
-      positionQty: newPositionBalance,
-    });
-
-  const availableCollateral = calculateAvailableCollateral({
-    heldCollateral,
-    positions: [
-      ...otherPositions,
-      {
-        market: market.market,
-        indexPrice,
-        quantity: newPositionBalance,
-        marginRequirement: initialMarginRequirementOfPosition,
-      },
-    ],
-    quoteBalance: quoteBalance - additionalPositionCostBasis,
-  });
-  if (availableCollateral <= desiredRemainingAvailableCollateral) {
-    return {
-      baseQuantity: BigInt(0),
-      quoteQuantity: BigInt(0),
-      initialMarginFraction: BigInt(0),
-      initialMarginRequirement: BigInt(0),
-    };
-  }
-
-  return calculateMaximumMakerOrderSizeForAvailableCollateral({
-    availableCollateral:
-      availableCollateral - desiredRemainingAvailableCollateral,
-    limitPrice,
-    initialMarginFractionOverride,
-    leverageParameters,
-  });
-}
-
-/**
- * @private
- */
-function calculateInitialMarginFraction(
-  leverageParameters: LeverageParametersBigInt,
-  baseQuantity: bigint, // Signed
-): bigint {
-  const positionSize = absBigInt(baseQuantity);
-  if (positionSize <= leverageParameters.basePositionSize) {
-    return leverageParameters.initialMarginFraction;
-  }
-  return (
-    leverageParameters.initialMarginFraction +
-    divideBigInt(
-      positionSize - leverageParameters.basePositionSize,
-      leverageParameters.incrementalPositionSize,
-      ROUNDING.RoundUp,
-    ) *
-      leverageParameters.incrementalInitialMarginFraction
-  );
-}
-
-/**
- * Returns the initial margin fraction for a position or an order.
- *
- * Use {@link convertToLeverageParametersBigInt} to convert a {@link IDEXMarket}
- * or {@link LeverageParameters} object to {@link LeverageParametersBigInt}.
- */
-export function calculateInitialMarginFractionWithOverride(args: {
-  /** Signed */
-  baseQuantity: bigint;
-  initialMarginFractionOverride: bigint | null;
-  leverageParameters: LeverageParametersBigInt;
-}): bigint {
-  const { initialMarginFractionOverride, leverageParameters, baseQuantity } =
-    args;
-
-  return maxBigInt(
-    calculateInitialMarginFraction(leverageParameters, baseQuantity),
-    initialMarginFractionOverride ?? BigInt(0),
-  );
-}
-
-/**
- * Returns the initial margin requirement of a position.
- * The returned value is unsigned.
- *
- * @private
- */
-export function calculateInitialMarginRequirementOfPosition(args: {
-  indexPrice: bigint;
-  initialMarginFractionOverride: bigint | null;
-  leverageParameters: LeverageParametersBigInt;
-  positionQty: bigint; // Signed
-}): bigint {
-  const {
-    indexPrice,
-    initialMarginFractionOverride,
-    leverageParameters,
-    positionQty,
-  } = args;
-
-  // Signed
-  const quoteValueOfPosition = multiplyPips(positionQty, indexPrice);
-
-  const initialMarginFraction = calculateInitialMarginFractionWithOverride({
-    baseQuantity: positionQty,
-    initialMarginFractionOverride,
-    leverageParameters,
-  });
-  return multiplyPips(absBigInt(quoteValueOfPosition), initialMarginFraction);
-}
-
-/**
- * Returns the estimated change in margin requirement for standing orders in the
- * given market.
- * The returned value is signed.
- *
- * @private
- */
-function calculateChangeInMarginRequirementForStandingOrdersInMarket(args: {
-  initialMarginFractionOverride: bigint | null;
-  leverageParameters: LeverageParametersBigInt;
-  market: Pick<IDEXMarket, 'market'>;
-  newMakerOrder: {
-    side: OrderSide;
-    quantity: bigint;
-    limitPrice: bigint;
-  } | null;
-  positionQtyBefore: bigint; // Signed
-  positionQtyAfter: bigint; // Signed
-  walletsStandingOrders: StandingOrder[];
-}): bigint {
-  const {
-    initialMarginFractionOverride,
-    leverageParameters,
-    market,
-    newMakerOrder,
-    positionQtyBefore,
-    positionQtyAfter,
-    walletsStandingOrders,
-  } = args;
-
-  const activeStandingOrders = walletsStandingOrders
-    .filter((order) => order.market === market.market)
-    .filter(isActiveStandingOrder)
-    .map(convertToActiveStandingOrderBigInt);
-
-  const imrBefore = calculateMarginRequirementForStandingOrdersInMarket({
-    initialMarginFractionOverride,
-    leverageParameters,
-    orders: activeStandingOrders,
-    positionQty: positionQtyBefore,
-  });
-
-  if (newMakerOrder) {
-    activeStandingOrders.push({
-      side: newMakerOrder.side,
-      openQuantity: newMakerOrder.quantity,
-      price: newMakerOrder.limitPrice,
-    });
-  }
-  const imrAfter = calculateMarginRequirementForStandingOrdersInMarket({
-    initialMarginFractionOverride,
-    leverageParameters,
-    orders: activeStandingOrders,
-    positionQty: positionQtyAfter,
-  });
-
-  return imrAfter - imrBefore;
-}
-
-/**
- * @private
- */
-function calculateMarginRequirementForStandingOrdersInMarket(args: {
-  initialMarginFractionOverride: bigint | null;
-  leverageParameters: LeverageParametersBigInt;
-  orders: ActiveStandingOrderBigInt[];
-  positionQty: bigint; // Signed
-}): bigint {
-  const {
-    initialMarginFractionOverride,
-    leverageParameters,
-    orders,
-    positionQty,
-  } = args;
-
-  if (orders.length === 0) {
-    return BigInt(0);
-  }
-  sortOrdersByBestPrice(orders);
-
-  let offsetPositionQty = positionQty;
-
-  let marginRequirement = BigInt(0);
-  for (const order of orders) {
-    let orderOpenBaseQty = order.openQuantity;
-
-    if (
-      (offsetPositionQty > BigInt(0) && order.side === OrderSide.sell) ||
-      (offsetPositionQty < BigInt(0) && order.side === OrderSide.buy)
-    ) {
-      if (orderOpenBaseQty > absBigInt(offsetPositionQty)) {
-        // Order offsets (remaining) position qty
-        orderOpenBaseQty -= absBigInt(offsetPositionQty);
-        offsetPositionQty = BigInt(0);
-      } else {
-        // Order qty is lower than (remaining) position qty
-        if (offsetPositionQty > BigInt(0)) {
-          offsetPositionQty -= orderOpenBaseQty;
-        } else {
-          offsetPositionQty += orderOpenBaseQty;
-        }
-        orderOpenBaseQty = BigInt(0);
-      }
-    }
-
-    if (orderOpenBaseQty > BigInt(0)) {
-      marginRequirement += multiplyPips(
-        multiplyPips(orderOpenBaseQty, order.price),
-        calculateInitialMarginFractionWithOverride({
-          baseQuantity: orderOpenBaseQty,
-          initialMarginFractionOverride,
-          leverageParameters,
-        }),
-      );
-    }
-  }
-  return marginRequirement;
-}
-
-/**
- * Determines the maximum maker order size that can be supported by the given
- * available collateral, taking into account the (incremental) margin
- * requirement for that order size. Returns both values in addition to the
- * initial margin fraction (margin requirement / order size).
- */
-export function calculateMaximumMakerOrderSizeForAvailableCollateral(args: {
-  availableCollateral: bigint;
-  initialMarginFractionOverride: bigint | null;
-  leverageParameters: LeverageParametersBigInt;
-  limitPrice: bigint;
-}): {
-  baseQuantity: bigint;
-  quoteQuantity: bigint;
-  initialMarginFraction: bigint;
-  initialMarginRequirement: bigint;
-} {
-  const {
-    availableCollateral,
-    initialMarginFractionOverride,
-    leverageParameters,
-    limitPrice,
-  } = args;
-
-  if (availableCollateral === BigInt(0)) {
-    return {
-      baseQuantity: BigInt(0),
-      quoteQuantity: BigInt(0),
-      initialMarginFraction: BigInt(0),
-      initialMarginRequirement: BigInt(0),
-    };
-  }
-
-  const baselineImf = maxBigInt(
-    leverageParameters.initialMarginFraction,
-    initialMarginFractionOverride ?? BigInt(0),
-  );
-  const baselineMaxPositionSizeMarginRequirement =
-    (leverageParameters.basePositionSize * limitPrice * baselineImf) /
-    oneInPips /
-    oneInPips;
-
-  if (availableCollateral <= baselineMaxPositionSizeMarginRequirement) {
-    const baseQuantity =
-      (leverageParameters.basePositionSize * availableCollateral) /
-      baselineMaxPositionSizeMarginRequirement;
-
-    return {
-      baseQuantity,
-      quoteQuantity: multiplyPips(baseQuantity, limitPrice),
-      initialMarginFraction: baselineImf,
-      initialMarginRequirement: availableCollateral,
-    };
-  }
-
-  let currentMaxima: {
-    baseQuantity: bigint;
-    quoteQuantity: bigint;
-    initialMarginFraction: bigint;
-    initialMarginRequirement: bigint;
-  } = {
-    baseQuantity: leverageParameters.basePositionSize,
-    quoteQuantity: multiplyPips(
-      leverageParameters.basePositionSize,
-      limitPrice,
-    ),
-    initialMarginFraction: baselineImf,
-    initialMarginRequirement: baselineMaxPositionSizeMarginRequirement,
-  };
-
-  /*
-   * Iterate through incremental position sizes and correlated incremental IMFs,
-   * calculate the range of margin required for the min and max position sizes
-   * at each level, and determine where the given amount of available collateral
-   * falls.
-   */
-  for (
-    let i = 1;
-    leverageParameters.basePositionSize +
-      leverageParameters.incrementalPositionSize * BigInt(i) <=
-    leverageParameters.maximumPositionSize;
-    i += 1
-  ) {
-    const currentImfLevel = maxBigInt(
-      leverageParameters.initialMarginFraction +
-        leverageParameters.incrementalInitialMarginFraction * BigInt(i),
-      initialMarginFractionOverride ?? BigInt(0),
-    );
-    const fromOrderSize =
-      leverageParameters.basePositionSize +
-      leverageParameters.incrementalPositionSize * BigInt(i - 1) +
-      BigInt(1);
-
-    const toOrderSize =
-      leverageParameters.basePositionSize +
-      leverageParameters.incrementalPositionSize * BigInt(i);
-
-    const fromMarginRequirement =
-      (fromOrderSize * limitPrice * currentImfLevel) / oneInPips / oneInPips;
-
-    const toMarginRequirement =
-      (toOrderSize * limitPrice * currentImfLevel) / oneInPips / oneInPips;
-
-    if (availableCollateral < fromMarginRequirement) {
-      /*
-       * The starting position size at the current IMF level exceeds the maximum
-       * position size that the given available collateral can support; the
-       * given available collateral can support only up to the maximum position
-       * size of the previous IMF level.
-       */
-      return currentMaxima;
-    }
-
-    if (
-      fromMarginRequirement <= availableCollateral &&
-      availableCollateral <= toMarginRequirement
-    ) {
-      const baseQuantity =
-        (toOrderSize * availableCollateral) / toMarginRequirement;
-
-      return {
-        baseQuantity,
-        quoteQuantity: multiplyPips(baseQuantity, limitPrice),
-        initialMarginFraction: currentImfLevel,
-        initialMarginRequirement: availableCollateral,
-      };
-    }
-    currentMaxima = {
-      baseQuantity: toOrderSize,
-      quoteQuantity: multiplyPips(toOrderSize, limitPrice),
-      initialMarginFraction: currentImfLevel,
-      initialMarginRequirement: toMarginRequirement,
-    };
-  }
-  return currentMaxima;
-}
-
-/**
- * @private
- */
-function calculateNotionalQuoteValueOfPosition(position: Position): bigint {
-  return multiplyPips(position.quantity, position.indexPrice);
-}
-
-/**
- * @private
- */
-function calculateNotionalQuoteValueOfPositions(positions: Position[]): bigint {
-  return arraySumBigInt(positions.map(calculateNotionalQuoteValueOfPosition));
-}
-
-export function convertToLeverageParametersBigInt(
-  leverageParameters: LeverageParameters,
-): LeverageParametersBigInt {
-  return {
-    maximumPositionSize: decimalToPip(leverageParameters.maximumPositionSize),
-    initialMarginFraction: decimalToPip(
-      leverageParameters.initialMarginFraction,
-    ),
-    maintenanceMarginFraction: decimalToPip(
-      leverageParameters.maintenanceMarginFraction,
-    ),
-    basePositionSize: decimalToPip(leverageParameters.basePositionSize),
-    incrementalPositionSize: decimalToPip(
-      leverageParameters.incrementalPositionSize,
-    ),
-    incrementalInitialMarginFraction: decimalToPip(
-      leverageParameters.incrementalInitialMarginFraction,
-    ),
-  };
-}
-
-/**
- * Converts a {@link IDEXPosition} object to one used by some functions in this
- * file.
- */
-export function convertToPositionBigInt(position: IDEXPosition): Position {
-  return {
-    market: position.market,
-    quantity: decimalToPip(position.quantity),
-    indexPrice: decimalToPip(position.indexPrice),
-    marginRequirement: decimalToPip(position.marginRequirement),
-  };
 }
 
 /**
