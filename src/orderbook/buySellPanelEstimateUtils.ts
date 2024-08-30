@@ -278,6 +278,16 @@ function splitMakerQtyIfPositionSwitchesSides(
 }
 
 /**
+ * Based on the current position balance, specific ones of the wallet's standing
+ * orders reduce the current position.
+ * As {@link stepThroughMakerAndReducingStandingOrderQuantities} simulates
+ * trades against maker orders, those conditions change: More orders may become
+ * reducing ones as the position size increases (and vice versa). If a position
+ * is decreased far enough that it is closed and reopened on the other side,
+ * standing orders on the other side become reducing.
+ * This function returns a list of all those orders that are or become reducing
+ * as the matching loop simulates trades against maker orders.
+ *
  * @private
  */
 function determineReducingStandingOrders(args: {
@@ -288,92 +298,118 @@ function determineReducingStandingOrders(args: {
 }): { price: bigint; quantity: bigint }[] {
   const { currentPosition, market, takerSide, walletsStandingOrders } = args;
 
-  const standingOrderAmountsThatReduceCurrentPosition =
-    determineStandingOrderAmountsThatReduceCurrentPosition({
+  const pickAndSortOrders = (side: OrderSide): ActiveStandingOrderBigInt[] => {
+    const orders = walletsStandingOrders
+      .filter((order) => order.market === market.market && order.side === side)
+      .filter(isActiveStandingOrder)
+      .map(convertToActiveStandingOrderBigInt);
+
+    sortOrdersByBestPrice(orders);
+
+    return orders;
+  };
+
+  const ordersOnOtherSideOfNewlyOpenedPosition = pickAndSortOrders(
+    takerSide === OrderSide.buy ? OrderSide.sell : OrderSide.buy,
+  ).map((order) => ({
+    price: order.price,
+    quantity: order.openQuantity,
+  }));
+
+  if (!currentPosition || currentPosition.quantity === BigInt(0)) {
+    return ordersOnOtherSideOfNewlyOpenedPosition;
+  }
+
+  const ordersOnOtherSideOfCurrentPosition = pickAndSortOrders(
+    currentPosition.quantity > BigInt(0) ? OrderSide.sell : OrderSide.buy,
+  );
+
+  const isReducingCurrentPosition =
+    (currentPosition.quantity > BigInt(0) && takerSide === 'sell') ||
+    (currentPosition.quantity < BigInt(0) && takerSide === 'buy');
+
+  if (isReducingCurrentPosition) {
+    const ordersThatReduceCurrentPosition = pickOrdersUpToPositionSize(
+      ordersOnOtherSideOfCurrentPosition,
       currentPosition,
-      takerSide,
-      walletsStandingOrders,
-    });
-
-  // On the other side of a newly acquired/opened position
-  const standingOrdersThatReduceNewPosition = walletsStandingOrders
-    .filter(
-      (order) =>
-        order.market === market.market &&
-        order.side ===
-          (takerSide === OrderSide.buy ? OrderSide.sell : OrderSide.buy),
-    )
-    .filter(isActiveStandingOrder)
-    .map(convertToActiveStandingOrderBigInt);
-
-  sortOrdersByBestPrice(standingOrdersThatReduceNewPosition);
-
-  return [
-    ...standingOrderAmountsThatReduceCurrentPosition,
-    ...standingOrdersThatReduceNewPosition.map((order) => ({
-      price: order.price,
-      quantity: order.openQuantity,
-    })),
-  ];
+    );
+    return [
+      ...ordersThatReduceCurrentPosition,
+      ...ordersOnOtherSideOfNewlyOpenedPosition,
+    ];
+  }
+  return pickOrdersAbovePositionSize(
+    ordersOnOtherSideOfCurrentPosition,
+    currentPosition,
+  );
 }
 
 /**
  * @private
  */
-export function determineStandingOrderAmountsThatReduceCurrentPosition(args: {
-  currentPosition?: Position;
-  takerSide: OrderSide;
-  walletsStandingOrders: StandingOrder[];
-}): { price: bigint; quantity: bigint }[] {
-  const { currentPosition: position, takerSide, walletsStandingOrders } = args;
-
-  if (!position || position.quantity === BigInt(0)) {
+function pickOrdersUpToPositionSize(
+  /** Must be sorted by best price */
+  activeStandingOrders: ActiveStandingOrderBigInt[],
+  position: Position,
+): { price: bigint; quantity: bigint }[] {
+  if (position.quantity === BigInt(0)) {
     return [];
   }
-
-  const isTradeReducingPosition =
-    (position.quantity > BigInt(0) && takerSide === 'sell') ||
-    (position.quantity < BigInt(0) && takerSide === 'buy');
-
-  if (!isTradeReducingPosition) {
-    return [];
-  }
-
-  // On the other side of the position
-  const activeStandingOrdersOnOtherSide = walletsStandingOrders
-    .filter(
-      (order) =>
-        order.market === position.market &&
-        order.side ===
-          (position.quantity > BigInt(0) ? OrderSide.sell : OrderSide.buy),
-    )
-    .filter(isActiveStandingOrder)
-    .map(convertToActiveStandingOrderBigInt);
-
-  sortOrdersByBestPrice(activeStandingOrdersOnOtherSide);
-
-  if (activeStandingOrdersOnOtherSide.length === 0) {
-    return [];
-  }
-
   let remainingPositionSize = absBigInt(position.quantity);
-  const reducingStandingOrders: { price: bigint; quantity: bigint }[] = [];
+  const orders: { price: bigint; quantity: bigint }[] = [];
 
-  for (const order of activeStandingOrdersOnOtherSide) {
+  for (const order of activeStandingOrders) {
     if (order.openQuantity >= remainingPositionSize) {
-      reducingStandingOrders.push({
+      orders.push({
         price: order.price,
         quantity: remainingPositionSize,
       });
-      return reducingStandingOrders;
+      return orders;
     }
-    reducingStandingOrders.push({
+    orders.push({
       price: order.price,
       quantity: order.openQuantity,
     });
     remainingPositionSize -= order.openQuantity;
   }
-  return reducingStandingOrders;
+  return orders;
+}
+
+/**
+ * @private
+ */
+function pickOrdersAbovePositionSize(
+  /** Must be sorted by best price */
+  activeStandingOrders: ActiveStandingOrderBigInt[],
+  position: Position,
+): { price: bigint; quantity: bigint }[] {
+  if (position.quantity === BigInt(0)) {
+    return activeStandingOrders.map((order) => ({
+      price: order.price,
+      quantity: order.openQuantity,
+    }));
+  }
+  const positionSize = absBigInt(position.quantity);
+  let runningTotalBelowPositionSize = BigInt(0);
+
+  for (const [index, order] of activeStandingOrders.entries()) {
+    if (runningTotalBelowPositionSize + order.openQuantity > positionSize) {
+      const orderQtyAbovePositionSize =
+        runningTotalBelowPositionSize + order.openQuantity - positionSize;
+      return [
+        {
+          price: order.price,
+          quantity: orderQtyAbovePositionSize,
+        },
+        ...activeStandingOrders.slice(index + 1).map((_order) => ({
+          price: _order.price,
+          quantity: _order.openQuantity,
+        })),
+      ];
+    }
+    runningTotalBelowPositionSize += order.openQuantity;
+  }
+  return [];
 }
 
 /**
