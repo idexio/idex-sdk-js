@@ -2284,8 +2284,8 @@ describe('orderbook/quantities', () => {
     describe('Reduction of positions', () => {
       const runBasicScenario = (args: {
         takerSide: OrderSide;
-        positionQuantity: string;
-        orderQuantity: string;
+        positionQty: string;
+        orderQty: string;
         expectedBaseQty: string;
         expectedCost: string;
       }) => {
@@ -2294,9 +2294,9 @@ describe('orderbook/quantities', () => {
 
         const position = makeAPosition({
           market,
-          quantity: decimalToPip(args.positionQuantity),
+          quantity: decimalToPip(args.positionQty),
           initialMarginRequirement:
-            (absBigInt(decimalToPip(args.positionQuantity)) *
+            (absBigInt(decimalToPip(args.positionQty)) *
               indexPrice *
               decimalToPip(market.initialMarginFraction)) /
             oneInPips /
@@ -2307,7 +2307,7 @@ describe('orderbook/quantities', () => {
           orderbook.calculateBuySellPanelEstimate({
             formInputs: {
               takerSide: args.takerSide,
-              desiredTradeBaseQuantity: decimalToPip(args.orderQuantity),
+              desiredTradeBaseQuantity: decimalToPip(args.orderQty),
             },
             initialMarginFractionOverride: null,
             leverageParameters: market,
@@ -2341,40 +2341,40 @@ describe('orderbook/quantities', () => {
         // Open a new position
         runBasicScenario({
           takerSide,
-          positionQuantity: '0',
-          orderQuantity: '1',
+          positionQty: '0',
+          orderQty: '1',
           expectedBaseQty: '1',
           expectedCost: '30', // IMR
         });
         // Close a position
         runBasicScenario({
           takerSide,
-          positionQuantity: takerSide === 'buy' ? '-1' : '1',
-          orderQuantity: '1',
+          positionQty: takerSide === 'buy' ? '-1' : '1',
+          orderQty: '1',
           expectedBaseQty: '1',
           expectedCost: '0', // Get back IMR
         });
         // Close a position and open one on other side (same size)
         runBasicScenario({
           takerSide,
-          positionQuantity: takerSide === 'buy' ? '-1' : '1',
-          orderQuantity: '2',
+          positionQty: takerSide === 'buy' ? '-1' : '1',
+          orderQty: '2',
           expectedBaseQty: '2',
           expectedCost: '0', // IMRs on both sides (return and reserve) cancel out
         });
         // Close a position and open one on other side (double the size)
         runBasicScenario({
           takerSide,
-          positionQuantity: takerSide === 'buy' ? '-1' : '1',
-          orderQuantity: '3',
+          positionQty: takerSide === 'buy' ? '-1' : '1',
+          orderQty: '3',
           expectedBaseQty: '3',
           expectedCost: '30', // Same as previous + IMR for position qty > 1
         });
         // Close a position and open one on other side (triple the size)
         runBasicScenario({
           takerSide,
-          positionQuantity: takerSide === 'buy' ? '-1' : '1',
-          orderQuantity: '4',
+          positionQty: takerSide === 'buy' ? '-1' : '1',
+          orderQty: '4',
           expectedBaseQty: '4',
           expectedCost: '60',
         });
@@ -2385,6 +2385,280 @@ describe('orderbook/quantities', () => {
 
       it('should succeed for a trade that closes a short position and/or opens a long one on the other side (taker buy)', () =>
         runPositionChangesSideScenario('buy'));
+    });
+
+    describe('Reducing standing orders', () => {
+      const runFooScenario = (args: {
+        positionQty: string;
+        walletsStandingOrders: {
+          side: OrderSide;
+          size: string;
+          price?: string; // Defaults to index price (1)
+        }[];
+        takerSide: OrderSide;
+        desiredTradeBaseQty: string;
+
+        expectedBaseQty: string;
+        expectedCost: string;
+      }) => {
+        const market = makeAMarket(decimalToPip('1'), 'FOO');
+
+        const positionQuantity = decimalToPip(args.positionQty);
+        const position = makeAPosition({
+          market,
+          quantity: positionQuantity,
+          initialMarginRequirement:
+            // Index price is 1
+            (absBigInt(positionQuantity) *
+              decimalToPip(market.initialMarginFraction)) /
+            oneInPips /
+            oneInPips,
+        });
+
+        const result = orderbook.calculateBuySellPanelEstimate({
+          formInputs: {
+            takerSide: args.takerSide,
+            limitPrice: decimalToPip('1'),
+            desiredTradeBaseQuantity: decimalToPip(args.desiredTradeBaseQty),
+          },
+          initialMarginFractionOverride: null,
+          leverageParameters: market,
+          makerSideOrders: [
+            {
+              price: decimalToPip('1'),
+              size: decimalToPip('1000'),
+            },
+          ],
+          market,
+          wallet: {
+            heldCollateral: BigInt(0),
+            positions: [position],
+            quoteBalance: decimalToPip('10000'),
+            standingOrders: args.walletsStandingOrders.map((order) => ({
+              market: market.market,
+              side: order.side,
+              originalQuantity: order.size,
+              executedQuantity: '0',
+              price: order.price ?? '1',
+            })),
+          },
+        });
+
+        expect(result).to.eql({
+          makerBaseQuantity: BigInt(0),
+          makerQuoteQuantity: BigInt(0),
+          takerBaseQuantity: decimalToPip(args.expectedBaseQty),
+          // Index price is 1
+          takerQuoteQuantity: decimalToPip(args.expectedBaseQty),
+          cost: decimalToPip(args.expectedCost),
+        } satisfies ReturnValue);
+      };
+
+      const runIncreasingScenario = (takerSide: OrderSide) => {
+        const positionQty = takerSide === 'buy' ? '100' : '-100';
+
+        const reducingOrderSide: OrderSide =
+          takerSide === 'buy' ? 'sell' : 'buy';
+
+        runFooScenario({
+          positionQty,
+          walletsStandingOrders: [],
+          takerSide,
+          desiredTradeBaseQty: '100',
+
+          expectedBaseQty: '100',
+          expectedCost: '3',
+        });
+        runFooScenario({
+          positionQty,
+          walletsStandingOrders: [{ side: reducingOrderSide, size: '100' }],
+          takerSide,
+          desiredTradeBaseQty: '100',
+
+          expectedBaseQty: '100',
+          expectedCost: '3',
+        });
+        runFooScenario({
+          positionQty,
+          // 50 of this order becomes reducing
+          walletsStandingOrders: [{ side: reducingOrderSide, size: '150' }],
+          takerSide,
+          desiredTradeBaseQty: '100',
+
+          expectedBaseQty: '100',
+          expectedCost: '1.5',
+        });
+        runFooScenario({
+          positionQty,
+          // Same as before, but several orders
+          walletsStandingOrders: [
+            { side: reducingOrderSide, size: '75' },
+            { side: reducingOrderSide, size: '75' },
+          ],
+          takerSide,
+          desiredTradeBaseQty: '100',
+
+          expectedBaseQty: '100',
+          expectedCost: '1.5',
+        });
+        runFooScenario({
+          positionQty,
+          // All of this order becomes reducing
+          walletsStandingOrders: [{ side: reducingOrderSide, size: '200' }],
+          takerSide,
+          desiredTradeBaseQty: '100',
+
+          expectedBaseQty: '100',
+          expectedCost: '0',
+        });
+        runFooScenario({
+          positionQty,
+          // Same as before but on the other side (should be ignored)
+          walletsStandingOrders: [{ side: takerSide, size: '200' }],
+          takerSide,
+          desiredTradeBaseQty: '100',
+
+          expectedBaseQty: '100',
+          expectedCost: '3',
+        });
+      };
+
+      it('should succeed for an increasing buy', () =>
+        runIncreasingScenario('buy'));
+
+      it('should succeed for an increasing sell', () =>
+        runIncreasingScenario('sell'));
+
+      const runDecreasingScenario = (takerSide: OrderSide) => {
+        const positionQty = takerSide === 'buy' ? '-100' : '100';
+
+        const decreasingCurrentPositionOrderSide = takerSide;
+
+        // The order side that decreases a position that switched sides
+        const decreasingNewlyOpenedPositionOrderSide =
+          takerSide === 'buy' ? 'sell' : 'buy';
+
+        runFooScenario({
+          positionQty,
+          walletsStandingOrders: [],
+          takerSide,
+          // Close the position
+          desiredTradeBaseQty: '100',
+
+          expectedBaseQty: '100',
+          expectedCost: '0',
+        });
+        runFooScenario({
+          positionQty,
+          walletsStandingOrders: [
+            {
+              /*
+               * This order used to be reducing, but now requires 6 margin:
+               * -3 IMR freed up from closing the position
+               * +6 for this order
+               * = 3 cost
+               */
+              side: decreasingCurrentPositionOrderSide,
+              size: '100',
+              price: '2',
+            },
+          ],
+          takerSide,
+          // Close the position
+          desiredTradeBaseQty: '100',
+
+          expectedBaseQty: '100',
+          expectedCost: '3',
+        });
+
+        runFooScenario({
+          positionQty,
+          walletsStandingOrders: [],
+          takerSide,
+          // Close the position and open one double the size on the other side
+          desiredTradeBaseQty: '300',
+
+          expectedBaseQty: '300',
+          expectedCost: '3',
+        });
+        runFooScenario({
+          positionQty,
+          walletsStandingOrders: [
+            {
+              /*
+               * This order used to require 3 margin, but is now reducing:
+               * +3 IMR new margin requirement for the new position
+               * -3 for this order
+               * = 0 cost
+               */
+              side: decreasingNewlyOpenedPositionOrderSide,
+              size: '100',
+              price: '1',
+            },
+          ],
+          takerSide,
+          // Close the position and open one double the size on the other side
+          desiredTradeBaseQty: '300',
+
+          expectedBaseQty: '300',
+          expectedCost: '0',
+        });
+        runFooScenario({
+          positionQty,
+          walletsStandingOrders: [
+            {
+              /*
+               * Same as before but 1/4 the order size:
+               *  This order used to require 3/4=0.75 margin, but is now reducing:
+               * +3 IMR new margin requirement for the new position
+               * -0.75 for this order
+               * = 2.25 cost
+               */
+              side: decreasingNewlyOpenedPositionOrderSide,
+              size: '25',
+              price: '1',
+            },
+          ],
+          takerSide,
+          // Close the position and open one double the size on the other side
+          desiredTradeBaseQty: '300',
+
+          expectedBaseQty: '300',
+          expectedCost: '2.25',
+        });
+
+        runFooScenario({
+          positionQty,
+          walletsStandingOrders: [
+            {
+              side: decreasingCurrentPositionOrderSide,
+              size: '100',
+              price: '1',
+            },
+            {
+              /*
+               * These two orders cancel each other out (one is reducing before,
+               * the other one after).
+               */
+              side: decreasingNewlyOpenedPositionOrderSide,
+              size: '100',
+              price: '1',
+            },
+          ],
+          takerSide,
+          // Close the position and open one double the size on the other side
+          desiredTradeBaseQty: '300',
+
+          expectedBaseQty: '300',
+          expectedCost: '3',
+        });
+      };
+
+      it('should succeed for a decreasing buy', () =>
+        runDecreasingScenario('buy'));
+
+      it('should succeed for a decreasing sell', () =>
+        runDecreasingScenario('sell'));
     });
   });
 });

@@ -9,6 +9,7 @@ import {
   minBigInt,
   multiplyPips,
   oneInPips,
+  pipToDecimal,
 } from '#pipmath';
 
 import { OrderSide } from '#types/enums/request';
@@ -320,6 +321,7 @@ export function calculateBuySellPanelEstimate(
         takerQuoteQuantity: additionalPositionCostBasis,
       });
     }
+    // console.log('match', match);
     // Signed
     const matchQtySigned =
       match.quantity * BigInt(takerSide === 'buy' ? 1 : -1);
@@ -358,6 +360,9 @@ export function calculateBuySellPanelEstimate(
          */
       : runningPositionBalance + matchQtySigned > BigInt(0);
 
+    // console.log('isTradeOnLongSide',isTradeOnLongSide);
+    // const isTradeOnLongSide = false;
+
     try {
       // Signed
       const maxTakerBaseQty =
@@ -377,6 +382,8 @@ export function calculateBuySellPanelEstimate(
           BigInt(isTradeOnLongSide ? -1 : 1) *
             initialMarginFraction *
             indexPrice);
+
+      // console.log(pipToDecimal(maxTakerBaseQty), 'maxTakerBaseQty');
 
       if (
         (takerSide === 'buy' && maxTakerBaseQty >= BigInt(0)) ||
@@ -409,6 +416,8 @@ export function calculateBuySellPanelEstimate(
           orderSide: takerSide,
           walletsStandingOrders: wallet.standingOrders,
         });
+
+        // console.log(pipToDecimal(cost), 'cost');
 
         if (cost > BigInt(0)) {
           return makeReturnValue({
