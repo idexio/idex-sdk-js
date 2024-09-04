@@ -195,15 +195,42 @@ export const StargateV2ConfigByLayerZeroEndpointId = {
     [StargateV2Config.mainnet[StargateV2Target.STARGATE_ARBITRUM]
       .layerZeroEndpointId]:
       StargateV2Config.mainnet[StargateV2Target.STARGATE_ARBITRUM],
+    [StargateV2Config.mainnet[StargateV2Target.STARGATE_AURORA]
+      .layerZeroEndpointId]:
+      StargateV2Config.mainnet[StargateV2Target.STARGATE_AURORA],
+    [StargateV2Config.mainnet[StargateV2Target.STARGATE_AVALANCHE]
+      .layerZeroEndpointId]:
+      StargateV2Config.mainnet[StargateV2Target.STARGATE_AVALANCHE],
+    [StargateV2Config.mainnet[StargateV2Target.STARGATE_BASE]
+      .layerZeroEndpointId]:
+      StargateV2Config.mainnet[StargateV2Target.STARGATE_BASE],
     [StargateV2Config.mainnet[StargateV2Target.STARGATE_ETHEREUM]
       .layerZeroEndpointId]:
       StargateV2Config.mainnet[StargateV2Target.STARGATE_ETHEREUM],
+    [StargateV2Config.mainnet[StargateV2Target.STARGATE_IOTA]
+      .layerZeroEndpointId]:
+      StargateV2Config.mainnet[StargateV2Target.STARGATE_IOTA],
+    [StargateV2Config.mainnet[StargateV2Target.STARGATE_KLAYTN]
+      .layerZeroEndpointId]:
+      StargateV2Config.mainnet[StargateV2Target.STARGATE_KLAYTN],
+    [StargateV2Config.mainnet[StargateV2Target.STARGATE_MANTLE]
+      .layerZeroEndpointId]:
+      StargateV2Config.mainnet[StargateV2Target.STARGATE_MANTLE],
     [StargateV2Config.mainnet[StargateV2Target.STARGATE_OPTIMISM]
       .layerZeroEndpointId]:
       StargateV2Config.mainnet[StargateV2Target.STARGATE_OPTIMISM],
     [StargateV2Config.mainnet[StargateV2Target.STARGATE_POLYGON]
       .layerZeroEndpointId]:
       StargateV2Config.mainnet[StargateV2Target.STARGATE_POLYGON],
+    [StargateV2Config.mainnet[StargateV2Target.STARGATE_RARI]
+      .layerZeroEndpointId]:
+      StargateV2Config.mainnet[StargateV2Target.STARGATE_RARI],
+    [StargateV2Config.mainnet[StargateV2Target.STARGATE_SCROLL]
+      .layerZeroEndpointId]:
+      StargateV2Config.mainnet[StargateV2Target.STARGATE_SCROLL],
+    [StargateV2Config.mainnet[StargateV2Target.STARGATE_TAIKO]
+      .layerZeroEndpointId]:
+      StargateV2Config.mainnet[StargateV2Target.STARGATE_TAIKO],
   },
 };
 
