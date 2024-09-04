@@ -60,7 +60,7 @@ export interface IDEXDeposit {
    *
    * @see enum {@link idex.BridgeTarget BridgeTarget}
    */
-  bridgeSource: idex.BridgeTarget;
+  bridgeSource: idex.DepositSource;
   /**
    * Timestamp of crediting the deposited funds on the exchange
    */

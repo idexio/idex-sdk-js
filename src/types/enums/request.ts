@@ -584,9 +584,21 @@ export type BridgeTarget = (typeof BridgeTarget)[keyof typeof BridgeTarget];
 /**
  * @internal
  *
- * All supported Stargate V2 targets for the deposit source.
+ * All possible values for deposit bridgeSource.
  *
- * - This includes some targets which are invalid when making withdrawals.
+ * @enum
+ */
+export const DepositSource = {
+  ...BridgeTarget,
+  XCHAIN_REFERRAL_REWARD: 'xchain.referralReward',
+} as const;
+
+export type DepositSource = (typeof DepositSource)[keyof typeof DepositSource];
+
+/**
+ * @internal
+ *
+ * All supported Stargate V2 targets for withdrawal.
  *
  * @enum
  */

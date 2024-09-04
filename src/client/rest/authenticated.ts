@@ -231,6 +231,7 @@ export class RestAuthenticatedClient {
   readonly public: idex.RestPublicClient;
 
   #exchange: null | idex.IDEXExchange = null;
+  #exchangeProm: null | Promise<idex.IDEXExchange> = null;
 
   readonly #signer: undefined | idex.SignTypedData = undefined;
 
@@ -531,6 +532,7 @@ export class RestAuthenticatedClient {
 
     const { chainId, exchangeContractAddress } =
       await this.getContractAndChainId();
+
     return this.post<idex.RestResponseAssociateWallet>('/wallets', {
       parameters: params,
       signature: await signer(
@@ -1406,7 +1408,13 @@ export class RestAuthenticatedClient {
       !exchangeContractAddress ||
       !stargateBridgeAdapterContractAddress
     ) {
-      this.#exchange = await this.public.getExchange();
+      if (this.#exchangeProm) {
+        // if we already requested the exchange details, wait for the promise to resolve
+        return this.#exchangeProm;
+      }
+
+      this.#exchangeProm = this.public.getExchange();
+      this.#exchange = await this.#exchangeProm;
 
       if (
         this.#exchange.chainId &&
