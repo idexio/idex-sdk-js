@@ -4,9 +4,8 @@ import { decimalToPip, pipToDecimal } from '#pipmath';
 
 import * as orderbook from '#orderbook/index';
 
+import type { OrderSide } from '#types/enums/request';
 import type { IDEXPosition } from '#types/rest/endpoints/index';
-import type * as orderbookTypes from '../../../orderbook/types';
-import type { OrderSide } from '../../../types/enums/request';
 
 const { expect } = chai;
 
@@ -41,7 +40,7 @@ function makeAStandingOrder(args: {
   side: OrderSide;
   quantity: string;
   price: string;
-}): orderbookTypes.StandingOrder {
+}): orderbook.StandingOrder {
   return {
     market: args.marketSymbol,
     side: args.side,

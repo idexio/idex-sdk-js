@@ -5,14 +5,12 @@ import { decimalToPip } from '#pipmath';
 import * as orderbook from '#orderbook/index';
 import { OrderSide } from '#types/enums/request';
 
-import type * as orderbookTypes from '../../../orderbook/types';
-
 const { expect } = chai;
 
 describe('orderbook/quantities', () => {
   describe('calculateGrossFillQuantities', () => {
     const runScenario = (args: {
-      makerSideOrders: orderbookTypes.PriceAndSize[];
+      makerSideOrders: orderbook.PriceAndSize[];
       takerOrder: {
         side: OrderSide;
         quantity: string;
@@ -43,7 +41,7 @@ describe('orderbook/quantities', () => {
     };
 
     it('should succeed', () => {
-      const sellSideMakerOrders: orderbookTypes.PriceAndSize[] = [
+      const sellSideMakerOrders: orderbook.PriceAndSize[] = [
         { price: decimalToPip('1'), size: decimalToPip('1') }, // 1 quote
         { price: decimalToPip('2'), size: decimalToPip('10') }, // 20 quote
         { price: decimalToPip('3'), size: decimalToPip('100') }, // 300 quote
@@ -111,7 +109,7 @@ describe('orderbook/quantities', () => {
     });
 
     it('should succeed for a taker quantity specified in quote', () => {
-      const sellSideMakerOrders: orderbookTypes.PriceAndSize[] = [
+      const sellSideMakerOrders: orderbook.PriceAndSize[] = [
         { price: decimalToPip('1'), size: decimalToPip('1') }, // 1 quote
         { price: decimalToPip('2'), size: decimalToPip('10') }, // 20 quote
         { price: decimalToPip('3'), size: decimalToPip('100') }, // 300 quote
@@ -179,7 +177,7 @@ describe('orderbook/quantities', () => {
     });
 
     it('should support multiple orders per price level', () => {
-      const sellSideMakerOrders: orderbookTypes.PriceAndSize[] = [
+      const sellSideMakerOrders: orderbook.PriceAndSize[] = [
         { price: decimalToPip('1'), size: decimalToPip('1') },
         { price: decimalToPip('1'), size: decimalToPip('1') },
         { price: decimalToPip('2'), size: decimalToPip('1') },
@@ -228,7 +226,7 @@ describe('orderbook/quantities', () => {
     });
 
     it('should limit by price (buy)', () => {
-      const sellSideMakerOrders: orderbookTypes.PriceAndSize[] = [
+      const sellSideMakerOrders: orderbook.PriceAndSize[] = [
         { price: decimalToPip('1'), size: decimalToPip('1') }, // 1 quote
         { price: decimalToPip('2'), size: decimalToPip('1') }, // 2 quote
         { price: decimalToPip('3'), size: decimalToPip('1') }, // 3 quote
@@ -247,7 +245,7 @@ describe('orderbook/quantities', () => {
     });
 
     it('should limit by price (sell)', () => {
-      const buySideMakerOrders: orderbookTypes.PriceAndSize[] = [
+      const buySideMakerOrders: orderbook.PriceAndSize[] = [
         { price: decimalToPip('3'), size: decimalToPip('1') }, // 3 quote
         { price: decimalToPip('2'), size: decimalToPip('1') }, // 2 quote
         { price: decimalToPip('1'), size: decimalToPip('1') }, // 1 quote
@@ -266,7 +264,7 @@ describe('orderbook/quantities', () => {
     });
 
     it('should return zero if the limit price does not cross the spread (buy)', () => {
-      const sellSideMakerOrders: orderbookTypes.PriceAndSize[] = [
+      const sellSideMakerOrders: orderbook.PriceAndSize[] = [
         { price: decimalToPip('1'), size: decimalToPip('1') },
       ];
       runScenario({
@@ -283,7 +281,7 @@ describe('orderbook/quantities', () => {
     });
 
     it('should return zero if the limit price does not cross the spread (sell)', () => {
-      const buySideMakerOrders: orderbookTypes.PriceAndSize[] = [
+      const buySideMakerOrders: orderbook.PriceAndSize[] = [
         { price: decimalToPip('1'), size: decimalToPip('1') },
       ];
       runScenario({
@@ -300,7 +298,7 @@ describe('orderbook/quantities', () => {
     });
 
     it('should support double-pip precision', () => {
-      const makerSideOrders: orderbookTypes.PriceAndSize[] = [
+      const makerSideOrders: orderbook.PriceAndSize[] = [
         { price: decimalToPip('3'), size: decimalToPip('1') },
       ];
 
@@ -334,7 +332,7 @@ describe('orderbook/quantities', () => {
     });
 
     it('should support double-pip precision (taker quantity specified in quote)', () => {
-      const makerSideOrders: orderbookTypes.PriceAndSize[] = [
+      const makerSideOrders: orderbook.PriceAndSize[] = [
         { price: decimalToPip('3'), size: decimalToPip('1') },
       ];
 

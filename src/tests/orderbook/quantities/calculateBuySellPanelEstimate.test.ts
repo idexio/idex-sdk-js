@@ -8,18 +8,17 @@ import {
   pipToDecimal,
 } from '#pipmath';
 
+import { calculateMarginRequirementForStandingOrdersInMarket } from '#orderbook/buySellPanelEstimateUtils';
 import * as orderbook from '#orderbook/index';
-
-import { OrderSide } from '../../../types/enums/request';
+import { OrderSide } from '#types/enums/request';
 
 import type { IDEXMarket, IDEXPosition } from '#types/rest/endpoints/index';
-import type * as orderbookTypes from '../../../orderbook/types';
 
 type ReturnValue = ReturnType<typeof orderbook.calculateBuySellPanelEstimate>;
 
 const { expect } = chai;
 
-const defaultLeverageParameters: orderbookTypes.LeverageParametersBigInt = {
+const defaultLeverageParameters: orderbook.LeverageParametersBigInt = {
   initialMarginFraction: decimalToPip('0.03'),
   incrementalInitialMarginFraction: decimalToPip('0.01'),
   basePositionSize: decimalToPip('10000'),
@@ -31,7 +30,7 @@ const defaultLeverageParameters: orderbookTypes.LeverageParametersBigInt = {
 function makeAMarket(
   indexPrice: bigint,
   baseAssetSymbol = 'FOO',
-  leverageParameters: orderbookTypes.LeverageParametersBigInt = defaultLeverageParameters,
+  leverageParameters: orderbook.LeverageParametersBigInt = defaultLeverageParameters,
 ): IDEXMarket {
   // All empty values are not used by the functions under test
   return {
@@ -137,14 +136,14 @@ function setUpStandardTestAccount(): {
   };
 }
 
-const standardTestOrderBookSellSide: orderbookTypes.PriceAndSize[] = [
+const standardTestOrderBookSellSide: orderbook.PriceAndSize[] = [
   { price: decimalToPip('0.011'), size: decimalToPip('1000') },
   { price: decimalToPip('0.012'), size: decimalToPip('1000') },
   { price: decimalToPip('0.013'), size: decimalToPip('1000') },
   { price: decimalToPip('0.014'), size: decimalToPip('1000') },
 ];
 
-const standardTestOrderBookBuySide: orderbookTypes.PriceAndSize[] = [
+const standardTestOrderBookBuySide: orderbook.PriceAndSize[] = [
   { price: decimalToPip('0.009'), size: decimalToPip('1000') },
   { price: decimalToPip('0.008'), size: decimalToPip('1000') },
   { price: decimalToPip('0.007'), size: decimalToPip('1000') },
@@ -291,7 +290,7 @@ describe('orderbook/quantities', () => {
      * order #5. Asserts that the equation correctly yields zero for order #5.
      */
     it('should stop matching when the taker has no buying power remaining (buy)', () => {
-      const sellSideMakerOrders: orderbookTypes.PriceAndSize[] = [
+      const sellSideMakerOrders: orderbook.PriceAndSize[] = [
         { price: decimalToPip('0.011'), size: decimalToPip('1000') },
         { price: decimalToPip('0.012'), size: decimalToPip('1000') },
         { price: decimalToPip('0.013'), size: decimalToPip('1000') },
@@ -335,7 +334,7 @@ describe('orderbook/quantities', () => {
      * order #5. Asserts that the equation correctly yields zero for order #5.
      */
     it('should stop matching when the taker has no buying power remaining (sell)', () => {
-      const buySideMakerOrders: orderbookTypes.PriceAndSize[] = [
+      const buySideMakerOrders: orderbook.PriceAndSize[] = [
         { price: decimalToPip('0.009'), size: decimalToPip('1000') },
         { price: decimalToPip('0.008'), size: decimalToPip('1000') },
         { price: decimalToPip('0.007'), size: decimalToPip('1000') },
@@ -2388,7 +2387,7 @@ describe('orderbook/quantities', () => {
     });
 
     describe('Reducing standing orders', () => {
-      const runFooScenario = (args: {
+      const runScenario = (args: {
         positionQty: string;
         walletsStandingOrders: {
           side: OrderSide;
@@ -2448,7 +2447,7 @@ describe('orderbook/quantities', () => {
           makerBaseQuantity: BigInt(0),
           makerQuoteQuantity: BigInt(0),
           takerBaseQuantity: decimalToPip(args.expectedBaseQty),
-          // Index price is 1
+          // Trade price is 1
           takerQuoteQuantity: decimalToPip(args.expectedBaseQty),
           cost: decimalToPip(args.expectedCost),
         } satisfies ReturnValue);
@@ -2460,7 +2459,7 @@ describe('orderbook/quantities', () => {
         const reducingOrderSide: OrderSide =
           takerSide === 'buy' ? 'sell' : 'buy';
 
-        runFooScenario({
+        runScenario({
           positionQty,
           walletsStandingOrders: [],
           takerSide,
@@ -2469,7 +2468,7 @@ describe('orderbook/quantities', () => {
           expectedBaseQty: '100',
           expectedCost: '3',
         });
-        runFooScenario({
+        runScenario({
           positionQty,
           walletsStandingOrders: [{ side: reducingOrderSide, size: '100' }],
           takerSide,
@@ -2478,7 +2477,7 @@ describe('orderbook/quantities', () => {
           expectedBaseQty: '100',
           expectedCost: '3',
         });
-        runFooScenario({
+        runScenario({
           positionQty,
           // 50 of this order becomes reducing
           walletsStandingOrders: [{ side: reducingOrderSide, size: '150' }],
@@ -2488,7 +2487,7 @@ describe('orderbook/quantities', () => {
           expectedBaseQty: '100',
           expectedCost: '1.5',
         });
-        runFooScenario({
+        runScenario({
           positionQty,
           // Same as before, but several orders
           walletsStandingOrders: [
@@ -2501,7 +2500,7 @@ describe('orderbook/quantities', () => {
           expectedBaseQty: '100',
           expectedCost: '1.5',
         });
-        runFooScenario({
+        runScenario({
           positionQty,
           // All of this order becomes reducing
           walletsStandingOrders: [{ side: reducingOrderSide, size: '200' }],
@@ -2511,7 +2510,7 @@ describe('orderbook/quantities', () => {
           expectedBaseQty: '100',
           expectedCost: '0',
         });
-        runFooScenario({
+        runScenario({
           positionQty,
           // Same as before but on the other side (should be ignored)
           walletsStandingOrders: [{ side: takerSide, size: '200' }],
@@ -2538,7 +2537,7 @@ describe('orderbook/quantities', () => {
         const decreasingNewlyOpenedPositionOrderSide =
           takerSide === 'buy' ? 'sell' : 'buy';
 
-        runFooScenario({
+        runScenario({
           positionQty,
           walletsStandingOrders: [],
           takerSide,
@@ -2548,7 +2547,7 @@ describe('orderbook/quantities', () => {
           expectedBaseQty: '100',
           expectedCost: '0',
         });
-        runFooScenario({
+        runScenario({
           positionQty,
           walletsStandingOrders: [
             {
@@ -2571,7 +2570,7 @@ describe('orderbook/quantities', () => {
           expectedCost: '3',
         });
 
-        runFooScenario({
+        runScenario({
           positionQty,
           walletsStandingOrders: [],
           takerSide,
@@ -2581,7 +2580,7 @@ describe('orderbook/quantities', () => {
           expectedBaseQty: '300',
           expectedCost: '3',
         });
-        runFooScenario({
+        runScenario({
           positionQty,
           walletsStandingOrders: [
             {
@@ -2603,7 +2602,7 @@ describe('orderbook/quantities', () => {
           expectedBaseQty: '300',
           expectedCost: '0',
         });
-        runFooScenario({
+        runScenario({
           positionQty,
           walletsStandingOrders: [
             {
@@ -2627,7 +2626,7 @@ describe('orderbook/quantities', () => {
           expectedCost: '2.25',
         });
 
-        runFooScenario({
+        runScenario({
           positionQty,
           walletsStandingOrders: [
             {
@@ -2659,6 +2658,351 @@ describe('orderbook/quantities', () => {
 
       it('should succeed for a decreasing sell', () =>
         runDecreasingScenario('sell'));
+
+      const runLimitedCollateralScenario = (args: {
+        positionQty: string;
+        quoteBalance: string;
+        walletsStandingOrders: {
+          side: OrderSide;
+          size: string;
+          price: string;
+        }[];
+        takerSide: OrderSide;
+        desiredTradeBaseQty: string;
+
+        makerPrice: string;
+
+        expectedBaseQty: string;
+        expectedQuoteQty: string;
+        expectedCost: string;
+
+        expectedHeldFundsBefore: string;
+        expectedHeldFundsAfter: string;
+        expectedAccountValueBefore: string;
+        expectedAccountValueAfter: string;
+        expectedFreeCollateralBefore: string;
+        expectedFreeCollateralAfter: string;
+      }) => {
+        const market = makeAMarket(decimalToPip('1'), 'FOO', {
+          ...defaultLeverageParameters,
+          initialMarginFraction: decimalToPip('0.01'),
+          incrementalInitialMarginFraction: decimalToPip('0.01'),
+          basePositionSize: decimalToPip('20000'),
+          incrementalPositionSize: decimalToPip('1000'),
+        });
+
+        const quoteBalance = decimalToPip(args.quoteBalance);
+
+        const positionQuantity = decimalToPip(args.positionQty);
+        const position = makeAPosition({
+          market,
+          quantity: positionQuantity,
+          initialMarginRequirement:
+            // Index price is 1
+            (absBigInt(positionQuantity) *
+              decimalToPip(market.initialMarginFraction)) /
+            oneInPips /
+            oneInPips,
+        });
+
+        const standingOrders: orderbook.ActiveStandingOrder[] =
+          args.walletsStandingOrders.map((order) => ({
+            market: market.market,
+            side: order.side,
+            originalQuantity: order.size,
+            executedQuantity: '0',
+            price: order.price,
+          }));
+
+        const result = orderbook.calculateBuySellPanelEstimate({
+          formInputs: {
+            takerSide: args.takerSide,
+            limitPrice: decimalToPip(args.makerPrice),
+            desiredTradeBaseQuantity: decimalToPip(args.desiredTradeBaseQty),
+          },
+          initialMarginFractionOverride: null,
+          leverageParameters: market,
+          makerSideOrders: [
+            {
+              price: decimalToPip(args.makerPrice),
+              size: decimalToPip(args.desiredTradeBaseQty),
+            },
+          ],
+          market,
+          wallet: {
+            heldCollateral: BigInt(0),
+            positions: [position],
+            quoteBalance,
+            standingOrders,
+          },
+        });
+
+        const positionQtyAfter =
+          args.takerSide === 'buy' ?
+            positionQuantity + result.takerBaseQuantity
+          : positionQuantity - result.takerBaseQuantity;
+
+        const quoteBalanceAfter =
+          args.takerSide === 'buy' ?
+            quoteBalance - result.takerQuoteQuantity
+          : quoteBalance + result.takerQuoteQuantity;
+
+        const positionImrBefore =
+          orderbook.calculateInitialMarginRequirementOfPosition({
+            indexPrice: decimalToPip(market.indexPrice),
+            initialMarginFractionOverride: null,
+            leverageParameters:
+              orderbook.convertToLeverageParametersBigInt(market),
+            positionQty: positionQuantity,
+          });
+
+        const positionImrAfter =
+          orderbook.calculateInitialMarginRequirementOfPosition({
+            indexPrice: decimalToPip(market.indexPrice),
+            initialMarginFractionOverride: null,
+            leverageParameters:
+              orderbook.convertToLeverageParametersBigInt(market),
+            positionQty: positionQtyAfter,
+          });
+
+        const heldFundsBefore =
+          calculateMarginRequirementForStandingOrdersInMarket({
+            initialMarginFractionOverride: null,
+            leverageParameters:
+              orderbook.convertToLeverageParametersBigInt(market),
+            orders: standingOrders.map(
+              orderbook.convertToActiveStandingOrderBigInt,
+            ),
+            positionQty: positionQuantity,
+          });
+        expect(heldFundsBefore).to.eql(
+          decimalToPip(args.expectedHeldFundsBefore),
+        );
+
+        const heldFundsAfter =
+          calculateMarginRequirementForStandingOrdersInMarket({
+            initialMarginFractionOverride: null,
+            leverageParameters:
+              orderbook.convertToLeverageParametersBigInt(market),
+            orders: standingOrders.map(
+              orderbook.convertToActiveStandingOrderBigInt,
+            ),
+            positionQty: positionQtyAfter,
+          });
+        expect(heldFundsAfter).to.eql(
+          decimalToPip(args.expectedHeldFundsAfter),
+        );
+
+        const accountValueBefore = quoteBalance + positionQuantity; // Index price is 1
+        expect(accountValueBefore).to.eql(
+          decimalToPip(args.expectedAccountValueBefore),
+        );
+
+        const accountValueAfter = quoteBalanceAfter + positionQtyAfter;
+        expect(accountValueAfter).to.eql(
+          decimalToPip(args.expectedAccountValueAfter),
+        );
+
+        const freeCollateralBefore =
+          accountValueBefore - positionImrBefore - heldFundsBefore;
+        expect(freeCollateralBefore).to.eql(
+          decimalToPip(args.expectedFreeCollateralBefore),
+        );
+
+        const freeCollateralAfter =
+          accountValueAfter - positionImrAfter - heldFundsAfter;
+        expect(freeCollateralAfter).to.eql(
+          decimalToPip(args.expectedFreeCollateralAfter),
+        );
+
+        expect(result).to.eql({
+          makerBaseQuantity: BigInt(0),
+          makerQuoteQuantity: BigInt(0),
+          takerBaseQuantity: decimalToPip(args.expectedBaseQty),
+          takerQuoteQuantity: decimalToPip(args.expectedQuoteQty),
+          cost: decimalToPip(args.expectedCost),
+        } satisfies ReturnValue);
+      };
+
+      it('should stop reducing a long position when free collateral is exhausted (with a smaller, reducing standing order)', () =>
+        runLimitedCollateralScenario({
+          positionQty: '100',
+          quoteBalance: '-80',
+          walletsStandingOrders: [
+            {
+              /*
+               * Before trade:
+               *   Order reduces position and is smaller than it => No IMR
+               * After trade:
+               *   As the position falls below 50, some of the order requires
+               *   margin and at a higher price than index => the order's IMR
+               *   increases faster than the position's IMR falls; in addition,
+               *   the trade price is below index, which results in collateral
+               *   to be exhausted before the position is closed.
+               */
+              side: 'sell',
+              size: '50',
+              price: '1.5',
+            },
+          ],
+          takerSide: 'sell',
+          desiredTradeBaseQty: '100',
+
+          makerPrice: '0.7',
+
+          expectedBaseQty: '64.75409836',
+          expectedQuoteQty: '45.32786885',
+          expectedCost: '19',
+
+          expectedHeldFundsBefore: '0',
+          expectedHeldFundsAfter: '0.22131147',
+
+          expectedAccountValueBefore: '20',
+          expectedAccountValueAfter: '0.57377049',
+
+          expectedFreeCollateralBefore: '19',
+          expectedFreeCollateralAfter: '0.00000001',
+        }));
+
+      it('should stop reducing a long position when free collateral is exhausted (with two smaller, reducing standing orders)', () =>
+        runLimitedCollateralScenario({
+          positionQty: '100',
+          quoteBalance: '-80',
+          walletsStandingOrders: [
+            /*
+             * Same as the previous test but with two reducing orders that
+             * cover the entire position.
+             */
+            {
+              side: 'sell',
+              size: '50',
+              price: '1.5',
+            },
+            {
+              side: 'sell',
+              size: '50',
+              price: '1.5',
+            },
+          ],
+          takerSide: 'sell',
+          desiredTradeBaseQty: '100',
+
+          makerPrice: '0.7',
+
+          expectedBaseQty: '62.29508196',
+          expectedQuoteQty: '43.60655737',
+          expectedCost: '19',
+
+          expectedHeldFundsBefore: '0',
+          expectedHeldFundsAfter: '0.93442622',
+
+          expectedAccountValueBefore: '20',
+          expectedAccountValueAfter: '1.31147541',
+
+          expectedFreeCollateralBefore: '19',
+          expectedFreeCollateralAfter: '0.00000001',
+        }));
+
+      it('should stop reducing a short position when free collateral is exhausted (with a smaller, reducing standing order)', () =>
+        runLimitedCollateralScenario({
+          positionQty: '-100',
+          quoteBalance: '120',
+          walletsStandingOrders: [
+            {
+              // Same mechanics as in the previous test; see comment above.
+              side: 'buy',
+              size: '50',
+              price: '1.5',
+            },
+          ],
+          takerSide: 'buy',
+          desiredTradeBaseQty: '100',
+
+          makerPrice: '1.3',
+
+          expectedBaseQty: '64.75409836',
+          expectedQuoteQty: '84.18032786',
+          expectedCost: '18.99999999',
+
+          expectedHeldFundsBefore: '0',
+          expectedHeldFundsAfter: '0.22131147',
+
+          expectedAccountValueBefore: '20',
+          expectedAccountValueAfter: '0.57377050',
+
+          expectedFreeCollateralBefore: '19',
+          expectedFreeCollateralAfter: '0.00000002',
+        }));
+
+      it('should stop reducing a long position when free collateral is exhausted (with a smaller, reducing standing order) (trading at bankruptcy price)', () =>
+        runLimitedCollateralScenario({
+          positionQty: '100',
+          quoteBalance: '-80',
+          walletsStandingOrders: [
+            {
+              /*
+               * Before trade:
+               *   Order reduces position and is smaller than it => No IMR
+               * After trade:
+               *   The position is reduced at bankruptcy pricing; if it were
+               *   closed, the quote balance would be zero. However, this order
+               *   now requires margin, and the position cannot be closed
+               *   entirely.
+               */
+              side: 'sell',
+              size: '50',
+              price: '0.5',
+            },
+          ],
+          takerSide: 'sell',
+          desiredTradeBaseQty: '100',
+
+          makerPrice: '0.8',
+
+          expectedBaseQty: '98.71794871',
+          expectedQuoteQty: '78.97435896',
+          expectedCost: '19.00000001',
+
+          expectedHeldFundsBefore: '0',
+          expectedHeldFundsAfter: '0.24358974',
+
+          expectedAccountValueBefore: '20',
+          expectedAccountValueAfter: '0.25641025',
+
+          expectedFreeCollateralBefore: '19',
+          expectedFreeCollateralAfter: '0',
+        }));
+
+      it('should stop reducing a short position when free collateral is exhausted (with a smaller, reducing standing order) (trading at bankruptcy price)', () =>
+        runLimitedCollateralScenario({
+          positionQty: '-100',
+          quoteBalance: '120',
+          walletsStandingOrders: [
+            {
+              // Same mechanics as in the previous test; see comment above.
+              side: 'buy',
+              size: '50',
+              price: '0.5',
+            },
+          ],
+          takerSide: 'buy',
+          desiredTradeBaseQty: '100',
+
+          makerPrice: '1.2',
+
+          expectedBaseQty: '98.71794871',
+          expectedQuoteQty: '118.46153845',
+          expectedCost: '19',
+
+          expectedHeldFundsBefore: '0',
+          expectedHeldFundsAfter: '0.24358974',
+
+          expectedAccountValueBefore: '20',
+          expectedAccountValueAfter: '0.25641026',
+
+          expectedFreeCollateralBefore: '19',
+          expectedFreeCollateralAfter: '0.00000001',
+        }));
     });
   });
 });

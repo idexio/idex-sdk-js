@@ -2,15 +2,15 @@ import * as chai from 'chai';
 
 import { decimalToPip } from '#pipmath';
 
-import { stepThroughMatchingLoopQuantities } from '../../../orderbook/buySellPanelEstimateUtils';
+import { stepThroughMatchingLoopQuantities } from '#orderbook/buySellPanelEstimateUtils';
 
+import type { MakerAndReducingStandingOrderQuantityAndPrices } from '#orderbook/buySellPanelEstimateUtils';
+import type * as orderbook from '#orderbook/index';
 import type { OrderSide } from '#types/enums/request';
-import type { MakerAndReducingStandingOrderQuantityAndPrices } from '../../../orderbook/buySellPanelEstimateUtils';
-import type * as orderbookTypes from '../../../orderbook/types';
 
 const { expect } = chai;
 
-const defaultLeverageParameters: orderbookTypes.LeverageParametersBigInt = {
+const defaultLeverageParameters: orderbook.LeverageParametersBigInt = {
   initialMarginFraction: decimalToPip('0.03'),
   incrementalInitialMarginFraction: decimalToPip('0.01'),
 
@@ -23,7 +23,7 @@ const defaultLeverageParameters: orderbookTypes.LeverageParametersBigInt = {
 
 const fooMarketSymbol = 'FOO-USD';
 
-function makeAPosition(quantity: string): orderbookTypes.Position {
+function makeAPosition(quantity: string): orderbook.Position {
   return {
     market: fooMarketSymbol,
     quantity: decimalToPip(quantity),
