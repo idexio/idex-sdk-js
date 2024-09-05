@@ -9,7 +9,6 @@ import {
   minBigInt,
   multiplyPips,
   oneInPips,
-  pipToDecimal,
 } from '#pipmath';
 
 import { OrderSide } from '#types/enums/request';
@@ -321,7 +320,6 @@ export function calculateBuySellPanelEstimate(
         takerQuoteQuantity: additionalPositionCostBasis,
       });
     }
-    // console.log('match', match);
     // Signed
     const matchQtySigned =
       match.quantity * BigInt(takerSide === 'buy' ? 1 : -1);
@@ -349,6 +347,21 @@ export function calculateBuySellPanelEstimate(
       initialMarginFraction,
     );
 
+    // Signed
+    const additionalHeldCollateral =
+      buySellPanelEstimateUtils.calculateChangeInMarginRequirementForStandingOrdersInMarket(
+        {
+          initialMarginFractionOverride,
+          leverageParameters: leverageParametersBigInt,
+          market,
+          newMakerOrder: null,
+          positionQtyBefore: currentPosition?.quantity ?? BigInt(0),
+          positionQtyAfter: runningPositionBalance,
+          walletsStandingOrders: wallet.standingOrders,
+        },
+      );
+    const additionalHeldCollateral2p = additionalHeldCollateral * oneInPips;
+
     const isTradeOnLongSide =
       runningPositionBalance + matchQtySigned === BigInt(0) ?
         takerSide === 'sell' // True when closing a long position
@@ -360,9 +373,6 @@ export function calculateBuySellPanelEstimate(
          */
       : runningPositionBalance + matchQtySigned > BigInt(0);
 
-    // console.log('isTradeOnLongSide',isTradeOnLongSide);
-    // const isTradeOnLongSide = false;
-
     try {
       // Signed
       const maxTakerBaseQty =
@@ -370,6 +380,7 @@ export function calculateBuySellPanelEstimate(
           quoteValueOfPosition2p -
           quoteValueOfOtherPositions2p +
           heldCollateral2p +
+          additionalHeldCollateral2p +
           desiredRemainingAvailableCollateral2p +
           initialMarginRequirementOfPosition2p +
           initialMarginRequirementOfOtherPositions2p) *
@@ -382,8 +393,6 @@ export function calculateBuySellPanelEstimate(
           BigInt(isTradeOnLongSide ? -1 : 1) *
             initialMarginFraction *
             indexPrice);
-
-      // console.log(pipToDecimal(maxTakerBaseQty), 'maxTakerBaseQty');
 
       if (
         (takerSide === 'buy' && maxTakerBaseQty >= BigInt(0)) ||
@@ -416,9 +425,6 @@ export function calculateBuySellPanelEstimate(
           orderSide: takerSide,
           walletsStandingOrders: wallet.standingOrders,
         });
-
-        // console.log(pipToDecimal(cost), 'cost');
-
         if (cost > BigInt(0)) {
           return makeReturnValue({
             ...calculateMakerQtys(),

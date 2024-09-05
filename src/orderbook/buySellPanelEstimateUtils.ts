@@ -169,7 +169,7 @@ export function* stepThroughMakerAndReducingStandingOrderQuantities(args: {
   });
 
   let currentReducingStandingOrder: {
-    price: bigint;
+    price: bigint | null;
     quantity: bigint;
   } | null = null;
 
@@ -285,8 +285,15 @@ function splitMakerQtyIfPositionSwitchesSides(
  * reducing ones as the position size increases (and vice versa). If a position
  * is decreased far enough that it is closed and reopened on the other side,
  * standing orders on the other side become reducing.
+ *
  * This function returns a list of all those orders that are or become reducing
  * as the matching loop simulates trades against maker orders.
+ *
+ * When reducing a position and the total size of reducing standing orders is
+ * smaller than the position, a placeholder is included that matches the
+ * difference in size, and which facilitates the starting point during traversal
+ * at which the reducing standing orders need to be taken into account. This
+ * placeholder is represented by an entry with a quantity but no price.
  *
  * @private
  */
@@ -295,7 +302,7 @@ function determineReducingStandingOrders(args: {
   market: Pick<IDEXMarket, 'market'>;
   takerSide: OrderSide;
   walletsStandingOrders: StandingOrder[];
-}): { price: bigint; quantity: bigint }[] {
+}): { price: bigint | null; quantity: bigint }[] {
   const { currentPosition, market, takerSide, walletsStandingOrders } = args;
 
   const pickAndSortOrders = (side: OrderSide): ActiveStandingOrderBigInt[] => {
@@ -332,7 +339,8 @@ function determineReducingStandingOrders(args: {
     const ordersThatReduceCurrentPosition = pickOrdersUpToPositionSize(
       ordersOnOtherSideOfCurrentPosition,
       currentPosition,
-    );
+    ).reverse();
+
     return [
       ...ordersThatReduceCurrentPosition,
       ...ordersOnOtherSideOfNewlyOpenedPosition,
@@ -345,18 +353,23 @@ function determineReducingStandingOrders(args: {
 }
 
 /**
+ * If the total size of the orders is smaller than the position, a placeholder
+ * is included that matches the difference in size (represented by an entry with
+ * a quantity but no price). See {@link determineReducingStandingOrders} for
+ * more details.
+ *
  * @private
  */
 function pickOrdersUpToPositionSize(
   /** Must be sorted by best price */
   activeStandingOrders: ActiveStandingOrderBigInt[],
   position: Position,
-): { price: bigint; quantity: bigint }[] {
+): { price: bigint | null; quantity: bigint }[] {
   if (position.quantity === BigInt(0)) {
     return [];
   }
   let remainingPositionSize = absBigInt(position.quantity);
-  const orders: { price: bigint; quantity: bigint }[] = [];
+  const orders: { price: bigint | null; quantity: bigint }[] = [];
 
   for (const order of activeStandingOrders) {
     if (order.openQuantity >= remainingPositionSize) {
@@ -371,6 +384,9 @@ function pickOrdersUpToPositionSize(
       quantity: order.openQuantity,
     });
     remainingPositionSize -= order.openQuantity;
+  }
+  if (remainingPositionSize > BigInt(0)) {
+    orders.push({ price: null, quantity: remainingPositionSize });
   }
   return orders;
 }
@@ -612,7 +628,7 @@ export function calculateCost(args: {
  *
  * @private
  */
-function calculateChangeInMarginRequirementForStandingOrdersInMarket(args: {
+export function calculateChangeInMarginRequirementForStandingOrdersInMarket(args: {
   initialMarginFractionOverride: bigint | null;
   leverageParameters: LeverageParametersBigInt;
   market: Pick<IDEXMarket, 'market'>;
@@ -667,7 +683,7 @@ function calculateChangeInMarginRequirementForStandingOrdersInMarket(args: {
 /**
  * @private
  */
-function calculateMarginRequirementForStandingOrdersInMarket(args: {
+export function calculateMarginRequirementForStandingOrdersInMarket(args: {
   initialMarginFractionOverride: bigint | null;
   leverageParameters: LeverageParametersBigInt;
   orders: ActiveStandingOrderBigInt[];
