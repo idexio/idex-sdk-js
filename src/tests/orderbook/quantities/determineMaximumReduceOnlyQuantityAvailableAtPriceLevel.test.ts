@@ -4,8 +4,8 @@ import { decimalToPip, pipToDecimal } from '#pipmath';
 
 import * as orderbook from '#orderbook/index';
 
+import type { OrderSide } from '#types/enums/request';
 import type { IDEXPosition } from '#types/rest/endpoints/index';
-import type { OrderSide } from '../../../types/enums/request';
 
 const { expect } = chai;
 

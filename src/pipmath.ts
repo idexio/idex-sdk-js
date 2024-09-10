@@ -2,21 +2,37 @@ import { BigNumber } from 'bignumber.js';
 
 export const exchangeDecimals = 8;
 export const oneInPips = BigInt(10 ** exchangeDecimals);
-export const MAX_64_BIT_INT = BigInt('18446744073709551615');
 
 export function absBigInt(a: bigint): bigint {
   return a < BigInt(0) ? -a : a;
 }
 
-export const assetUnitsToDecimal = function assetUnitsToDecimal(
+/**
+ * Use this as the compare function for sorting arrays of BigInts.
+ */
+function arraySortCompareBigInts(a: bigint, b: bigint): -1 | 0 | 1 {
+  if (a < b) {
+    return -1;
+  }
+  if (a > b) {
+    return 1;
+  }
+  return 0;
+}
+
+export function arraySumBigInt(array: bigint[]): bigint {
+  return array.reduce((previous, current) => current + previous, BigInt(0));
+}
+
+export function assetUnitsToDecimal(
   assetUnits: bigint,
   decimals: number,
 ): string {
   const bn = new BigNumber(assetUnits.toString());
   return bn.shiftedBy(decimals * -1).toFixed(exchangeDecimals);
-};
+}
 
-export const decimalToPip = function decimalToPip(decimal: string): bigint {
+export function decimalToPip(decimal: string): bigint {
   const bn = new BigNumber(decimal);
   return BigInt(
     bn
@@ -24,7 +40,7 @@ export const decimalToPip = function decimalToPip(decimal: string): bigint {
       .integerValue(BigNumber.ROUND_DOWN)
       .toString(),
   );
-};
+}
 
 export enum ROUNDING {
   Truncate = 0,
@@ -61,31 +77,28 @@ export function divideBigInt(
   return result;
 }
 
-export const dividePips = function dividePips(
-  valueInPips: bigint,
-  divisorInPips: bigint,
-): bigint {
+export function dividePips(valueInPips: bigint, divisorInPips: bigint): bigint {
   if (divisorInPips <= BigInt(0)) {
     return BigInt(0);
   }
   return (valueInPips * oneInPips) / divisorInPips;
-};
+}
 
-export const maxBigInt = function maxBigInt(a: bigint, b: bigint): bigint {
+export function maxBigInt(a: bigint, b: bigint): bigint {
   if (a >= b) {
     return a;
   }
   return b;
-};
+}
 
-export const minBigInt = function minBigInt(a: bigint, b: bigint): bigint {
+export function minBigInt(a: bigint, b: bigint): bigint {
   if (a <= b) {
     return a;
   }
   return b;
-};
+}
 
-export const multiplyPips = function multiplyPips(
+export function multiplyPips(
   pipValue1: bigint,
   pipValue2: bigint,
   roundUp = false,
@@ -95,11 +108,18 @@ export const multiplyPips = function multiplyPips(
     return BigInt(1) + pipValuesProduct / oneInPips;
   }
   return pipValuesProduct / oneInPips;
-};
+}
 
-export const pipToDecimal = function pipToDecimal(pips: bigint): string {
+export function pipToDecimal(pips: bigint): string {
   return assetUnitsToDecimal(pips, exchangeDecimals);
-};
+}
+
+/**
+ * Sorts the given bigint array *in place* and returns it.
+ */
+export function sortBigIntArray(array: bigint[]): bigint[] {
+  return array.sort(arraySortCompareBigInts);
+}
 
 export function squareRootBigInt(value: bigint): bigint {
   if (value < BigInt(0)) {
