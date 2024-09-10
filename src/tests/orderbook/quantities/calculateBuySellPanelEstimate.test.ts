@@ -2408,10 +2408,10 @@ describe('orderbook/quantities', () => {
           quantity: positionQuantity,
           initialMarginRequirement:
             // Index price is 1
-            (absBigInt(positionQuantity) *
-              decimalToPip(market.initialMarginFraction)) /
-            oneInPips /
-            oneInPips,
+            multiplyPips(
+              absBigInt(positionQuantity),
+              decimalToPip(market.initialMarginFraction),
+            ),
         });
 
         const result = orderbook.calculateBuySellPanelEstimate({
@@ -2699,10 +2699,10 @@ describe('orderbook/quantities', () => {
           quantity: positionQuantity,
           initialMarginRequirement:
             // Index price is 1
-            (absBigInt(positionQuantity) *
-              decimalToPip(market.initialMarginFraction)) /
-            oneInPips /
-            oneInPips,
+            multiplyPips(
+              absBigInt(positionQuantity),
+              decimalToPip(market.initialMarginFraction),
+            ),
         });
 
         const standingOrders: orderbook.ActiveStandingOrder[] =
@@ -3003,6 +3003,136 @@ describe('orderbook/quantities', () => {
           expectedFreeCollateralBefore: '19',
           expectedFreeCollateralAfter: '0.00000001',
         }));
+
+      /**
+       * In this scenario, the taker qty has an additional IMR (cost) below
+       * the desired amount of free collateral to be spent ($100) because the
+       * position would require too much IMR if it increased above 20k (IMF
+       * increases from 0.01 to 0.02 above 20k). The calculations could generate
+       * maker qtys that use up the remaining collateral; however, the specified
+       * price still crosses the spread (matching stops before the second maker
+       * order due to the position's incremental IMR limitation), and as such no
+       * liquidity can be added to the book at that price.
+       */
+      const runNoMakerQtyIfCrossesSpreadScenario = (takerSide: OrderSide) => {
+        const market = makeAMarket(decimalToPip('1'), 'FOO', {
+          ...defaultLeverageParameters,
+          initialMarginFraction: decimalToPip('0.01'),
+          incrementalInitialMarginFraction: decimalToPip('0.01'),
+          basePositionSize: decimalToPip('20000'),
+          incrementalPositionSize: decimalToPip('1000'),
+        });
+
+        const quoteBalance =
+          decimalToPip(takerSide === 'buy' ? '-15000' : '15000') +
+          // 250 initial deposit. 150 IMR for position => 100 free collateral
+          decimalToPip('250');
+
+        const positionQuantity = decimalToPip(
+          takerSide === 'buy' ? '15000' : '-15000',
+        );
+        const position = makeAPosition({
+          market,
+          quantity: positionQuantity,
+          initialMarginRequirement:
+            // Index price is 1
+            multiplyPips(
+              absBigInt(positionQuantity),
+              decimalToPip(market.initialMarginFraction),
+            ),
+        });
+
+        const takerPrice = decimalToPip(takerSide === 'buy' ? '1.01' : '0.99');
+
+        const result = orderbook.calculateBuySellPanelEstimate({
+          formInputs: {
+            takerSide,
+            sliderFactor: 1,
+            limitPrice: takerPrice,
+          },
+          initialMarginFractionOverride: null,
+          leverageParameters: market,
+          makerSideOrders: [
+            {
+              price: decimalToPip('1'),
+              size: decimalToPip('5000'),
+            },
+            {
+              /*
+               * The taker price matches this order, but the position's IMR
+               * after matching the first order (increased IMF) exceeds the
+               * taker's free collateral. That leaves this order on the books,
+               * and the wallet's remaining collateral that was requested to be
+               * spent (slider setting 1) cannot be converted into a maker qty
+               * because it would match this order (i.e. cross the spread).
+               */
+              price: decimalToPip(takerSide === 'buy' ? '1.01' : '0.99'),
+              size: decimalToPip('5000'),
+            },
+          ],
+          market,
+          wallet: {
+            heldCollateral: BigInt(0),
+            positions: [position],
+            quoteBalance,
+            standingOrders: [],
+          },
+        });
+
+        expect(result).to.eql({
+          makerBaseQuantity: BigInt(0),
+          makerQuoteQuantity: BigInt(0),
+
+          takerBaseQuantity: decimalToPip('5000'),
+          takerQuoteQuantity: decimalToPip('5000'),
+
+          cost: decimalToPip('50'),
+        } satisfies ReturnValue);
+
+        const positionQtyAfter =
+          takerSide === 'buy' ?
+            positionQuantity + result.takerBaseQuantity
+          : positionQuantity - result.takerBaseQuantity;
+
+        const quoteBalanceAfter =
+          takerSide === 'buy' ?
+            quoteBalance - result.takerQuoteQuantity
+          : quoteBalance + result.takerQuoteQuantity;
+
+        const positionImrBefore =
+          orderbook.calculateInitialMarginRequirementOfPosition({
+            indexPrice: decimalToPip(market.indexPrice),
+            initialMarginFractionOverride: null,
+            leverageParameters:
+              orderbook.convertToLeverageParametersBigInt(market),
+            positionQty: positionQuantity,
+          });
+
+        const positionImrAfter =
+          orderbook.calculateInitialMarginRequirementOfPosition({
+            indexPrice: decimalToPip(market.indexPrice),
+            initialMarginFractionOverride: null,
+            leverageParameters:
+              orderbook.convertToLeverageParametersBigInt(market),
+            positionQty: positionQtyAfter,
+          });
+
+        const accountValueBefore = quoteBalance + positionQuantity; // Index price is 1
+        const accountValueAfter = quoteBalanceAfter + positionQtyAfter;
+
+        const freeCollateralBefore = accountValueBefore - positionImrBefore;
+        const freeCollateralAfter = accountValueAfter - positionImrAfter;
+
+        expect(freeCollateralBefore).to.eql(decimalToPip('100'));
+        expect(freeCollateralAfter).to.eql(decimalToPip('50'));
+        // $50 collateral remains even though the slider is set to 1
+      };
+
+      it('should not return a maker qty if it crosses the spread (buy)', () =>
+        runNoMakerQtyIfCrossesSpreadScenario('buy'));
+
+      it('should not return a maker qty if it crosses the spread (sell)', () =>
+        runNoMakerQtyIfCrossesSpreadScenario('sell'));
     });
   });
 });
