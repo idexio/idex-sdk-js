@@ -427,7 +427,8 @@ export function calculateBuySellPanelEstimate(
         });
         if (cost > BigInt(0)) {
           return makeReturnValue({
-            ...calculateMakerQtys(),
+            makerBaseQuantity: BigInt(0),
+            makerQuoteQuantity: BigInt(0),
             takerBaseQuantity: additionalPositionQty,
             takerQuoteQuantity: additionalPositionCostBasis,
           });
@@ -499,7 +500,8 @@ export function calculateBuySellPanelEstimate(
         desiredTradeQuoteQuantity === absBigInt(additionalPositionCostBasis))
     ) {
       return makeReturnValue({
-        ...calculateMakerQtys(),
+        makerBaseQuantity: BigInt(0),
+        makerQuoteQuantity: BigInt(0),
         takerBaseQuantity: additionalPositionQty,
         takerQuoteQuantity: additionalPositionCostBasis,
       });
