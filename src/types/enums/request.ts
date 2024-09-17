@@ -591,6 +591,7 @@ export type BridgeTarget = (typeof BridgeTarget)[keyof typeof BridgeTarget];
 export const DepositSource = {
   ...BridgeTarget,
   XCHAIN_REFERRAL_REWARD: 'xchain.referralReward',
+  XCHAIN_WALLET_BANKROLL: 'xchain.walletBankroll',
 } as const;
 
 export type DepositSource = (typeof DepositSource)[keyof typeof DepositSource];
