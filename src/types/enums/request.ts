@@ -548,11 +548,13 @@ export const PayoutProgram = Object.freeze({
    */
   marketMakerRewards: 'marketMakerRewards',
   /**
-   * Currently inactive
-   *
-   * @internal
+   * The rewards program for referrals.
    */
   referralRewards: 'referralRewards',
+  /**
+   * The rewards programs for points.
+   */
+  pointsRewards: 'pointsRewards',
 } as const);
 
 export type PayoutProgram = (typeof PayoutProgram)[keyof typeof PayoutProgram];
