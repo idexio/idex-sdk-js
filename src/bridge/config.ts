@@ -79,6 +79,18 @@ export const StargateV2Config = {
       // https://stargateprotocol.gitbook.io/stargate/v/v2-developer-docs/technical-reference/mainnet-contracts#base
       stargateOFTAddress: '0x27a16dc786820B16E5c9028b75B99F6f604b5d26',
     },
+    [StargateV2Target.STARGATE_BNB]: {
+      target: StargateV2Target.STARGATE_BNB,
+      isSupported: true,
+      get isBridgeTarget() {
+        return isValidBridgeTarget(this.target);
+      },
+      evmChainId: 56,
+      // https://stargateprotocol.gitbook.io/stargate/v/v2-developer-docs/technical-reference/mainnet-contracts#bnb-chain
+      layerZeroEndpointId: 30102,
+      // https://stargateprotocol.gitbook.io/stargate/v/v2-developer-docs/technical-reference/mainnet-contracts#bnb-chain
+      stargateOFTAddress: '0x962Bd449E630b0d928f308Ce63f1A21F02576057',
+    },
     [StargateV2Target.STARGATE_ETHEREUM]: {
       target: StargateV2Target.STARGATE_ETHEREUM,
       isSupported: true,
@@ -204,6 +216,9 @@ export const StargateV2ConfigByLayerZeroEndpointId = {
     [StargateV2Config.mainnet[StargateV2Target.STARGATE_BASE]
       .layerZeroEndpointId]:
       StargateV2Config.mainnet[StargateV2Target.STARGATE_BASE],
+    [StargateV2Config.mainnet[StargateV2Target.STARGATE_BNB]
+      .layerZeroEndpointId]:
+      StargateV2Config.mainnet[StargateV2Target.STARGATE_BNB],
     [StargateV2Config.mainnet[StargateV2Target.STARGATE_ETHEREUM]
       .layerZeroEndpointId]:
       StargateV2Config.mainnet[StargateV2Target.STARGATE_ETHEREUM],

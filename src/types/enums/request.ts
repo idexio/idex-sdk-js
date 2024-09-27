@@ -570,6 +570,7 @@ export const BridgeTarget = {
   STARGATE_AURORA: 'stargate.aurora',
   STARGATE_AVALANCHE: 'stargate.avalanche',
   STARGATE_BASE: 'stargate.base',
+  STARGATE_BNB: 'stargate.bnb',
   STARGATE_ETHEREUM: 'stargate.ethereum',
   STARGATE_IOTA: 'stargate.iota',
   STARGATE_KLAYTN: 'stargate.klaytn',
