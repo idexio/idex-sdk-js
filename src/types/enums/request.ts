@@ -540,9 +540,9 @@ export type SelfTradePrevention =
  */
 export const PayoutProgram = Object.freeze({
   /**
-   * The IDEX Trading Rewards program.
+   * The rewards programs for points.
    */
-  tradingRewardsV2: 'tradingRewardsV2',
+  pointsRewards: 'pointsRewards',
   /**
    * The rewards program for qualified Market Makers.
    */
@@ -552,9 +552,13 @@ export const PayoutProgram = Object.freeze({
    */
   referralRewards: 'referralRewards',
   /**
-   * The rewards programs for points.
+   * The trading competition program.
    */
-  pointsRewards: 'pointsRewards',
+  tradingCompetitions: 'tradingCompetitions',
+  /**
+   * The IDEX Trading Rewards program.
+   */
+  tradingRewardsV2: 'tradingRewardsV2',
 } as const);
 
 export type PayoutProgram = (typeof PayoutProgram)[keyof typeof PayoutProgram];
