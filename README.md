@@ -1,29 +1,50 @@
 <!-- markdownlint-disable MD033 -->
-# <img src="assets/logo.png" alt="IDEX" height="37px" valign="top"> JavaScript SDK
+
+<div align="center">
+  <p align="center">
+    <img src="assets/hero.jpeg" width="50%" title="eslint-plus-action">
+  </p>
+  <h1>
+      IDEX v4 Typescript/Javascript SDK
+  </h1>
+  <p>
+   The official Typescript/Javascript SDK for <a href="https://idex.io">IDEX v4</a> REST and WebSocket APIs.
+  </p>
+</div>
 
 ![Discord](https://img.shields.io/discord/455246457465733130?label=Discord&style=flat-square)
 ![GitHub](https://img.shields.io/github/license/idexio/idex-sdk-js?style=flat-square)
 ![npm](https://img.shields.io/npm/v/@idexio/idex-sdk?style=flat-square)
 ![GitHub issues](https://img.shields.io/github/issues/idexio/idex-sdk-js?style=flat-square)
-
-
 ![Twitter Follow](https://img.shields.io/twitter/follow/idexio?style=social)
 
+---
 
-The official library for [IDEX v3's](https://idex.io) REST and WebSocket APIs.
+## Testnet Release
 
-- Written in TypeScript with full typings for all requests and responses
-- Supports both Node.js and browser environments
-- Implements a real time order book including support for [hybrid liquidity](https://api-docs-v3.idex.io/#hybrid-liquidity)
+> **IDEX v4 is currently available as a pre-launch testnet sandbox with mainnet launching soon.**
 
-Complete documentation for the IDEX v3 API is available at https://api-docs-v3.idex.io.
+---
+
+## Summary
+
+- 🔥 **Built with TypeScript** - Provides a TypeScript/JavaScript SDK for the [IDEX v4 REST and WebSocket APIs](https://api-docs-v4.idex.io).
+- ⭐ **Powerful Documentation** - Provides complete inline IDE documentation and matching 📖 [typedoc-generated reference documentation](https://sdk-js-docs-v4.idex.io).
+- 🦺 **End-to-End type safety** - the sdk types are used by IDEX servers and clients so enumerations and types are always up-to-date and accurate.
+- 🌐 **Universal Compatibility** - Optimized to work in both Node.js and browser environments for maximum compatibility.
+
+## Links & Resource
+
+- 🏠 [IDEX Homepage](https://idex.io)
+- 📈 [IDEX v4 Exchange Sandbox](https://exchange-sandbox.idex.io)
+- 📖 [IDEX v4 Typescript SDK Reference Documentation](https://sdk-js-docs-v4.idex.io)
+- 📖 [IDEX v4 API Documentation](https://api-docs-v4.idex.io)
+- 🔗 [IDEX v4 SDK GitHub](https://github.com/idexio/idex-sdk-js)
 
 ## Installation
 
 ```bash
-yarn add @idexio/idex-sdk@beta
-// or
-npm install --save @idexio/idex-sdk@beta
+npm install @idexio/idex-sdk@beta
 ```
 
 ## Getting Started
@@ -31,22 +52,54 @@ npm install --save @idexio/idex-sdk@beta
 ```typescript
 import * as idex from '@idexio/idex-sdk';
 
-const publicClient = new idex.RestPublicClient();
+// const publicClient = new idex.RestPublicClient();
+// or, for sandbox API:
+const publicClient = new idex.RestPublicClient({
+  // no params required for production api client
+  sandbox: true,
+});
 
-console.log(await publicClient.getServerTime());
+const authenticatedClient = new RestAuthenticatedClient({
+  sandbox: false,
+
+  // fill these in with your own walletPrivateKey/apiKey/apiSecret
+  walletPrivateKey: '0x...',
+  apiKey: '1e7c4f52-4af7-4e1b-aa94-94fac8d931aa',
+  apiSecret: 'ufuh3ywgg854aq7m73oy6gnnpj5ar9a67szuw5lclbz77zqu0j',
+});
+
+const markets = await publicClient.getMarkets();
+
+const wallets = await authenticatedClient.getWallets();
 ```
 
-IDEX v3 [API keys](https://exchange.idex.io/login) provide access to private data and increased rate limits.
+- Start with **sandbox** testing by getting [IDEX v4 sandbox API keys](https://api-docs-v4.idex.io/#sandbox).
 
-In-depth usage documentation by endpoint is [available here](API.md).
+## Node Versions
 
-## Contract ABIs
+Minimum supported version is Node v16 with support for import/export map resolution.
 
-Included in the `contracts/` directory contains the ABIs necessary for interacting with IDEX v3's smart contracts.
+> The sdk should work with any JavaScript environment that supports [import maps](https://nodejs.org/dist/latest-v20.x/docs/api/packages.html#imports) & [export maps](https://nodejs.org/dist/latest-v20.x/docs/api/packages.html#exports).
 
-- The [Exchange ABI](contracts/Exchange.abi.json) can be used to query contract state, [deposit funds](https://api-docs-v3.idex.io/#deposit-funds), [add liquidity](https://api-docs-v3.idex.io/#add-liquidity-via-smart-contract-function-call), [remove liquidity](https://api-docs-v3.idex.io/#remove-liquidity-via-smart-contract-function-call) or [exit wallets](https://api-docs-v3.idex.io/#exit-wallet).
-- The [FaucetToken ABI](contracts/FaucetToken.abi.json) is implemented by the [API sandbox](https://api-docs-v3.idex.io/#sandbox) testnet tokens and features a [faucet](https://api-docs-v3.idex.io/#faucets)
-function for dispensing tokens.
+## Typescript Support
+
+Your tsconfig/jsconfig must be setup to ensure TypeScript handles import/export map resolution. This is generally done by setting `module` and `moduleResolution` to `Node16` or `NodeNext`.
+
+> See [resolvePackageJsonExports](https://www.typescriptlang.org/tsconfig#resolvePackageJsonExports) and [resolvePacakageJsonImports](https://www.typescriptlang.org/tsconfig#resolvePackageJsonImports) configuration reference for additional details.
+
+## JavaScript
+
+JavaScript is fully supported, however, it is recommended to add `// @ts-check` at the top of your files so your IDE will inform you of any
+type-related errors in your code!
+
+## Typechain
+
+Typechain types and factories for contracts are available by importing them from `/typechain` export directly, they are not
+exported from the main export.
+
+```typescript
+import * as typechain from '@idexio/idex-sdk/typechain';
+```
 
 ## License
 

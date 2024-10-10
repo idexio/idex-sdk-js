@@ -1,2 +1,2 @@
-export * from './public';
-export * from './authenticated';
+export * from '#client/rest/public';
+export * from '#client/rest/authenticated';

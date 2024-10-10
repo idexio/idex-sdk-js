@@ -1,15 +1,19 @@
-import BigNumber from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 
 export const exchangeDecimals = 8;
 export const oneInPips = BigInt(10 ** exchangeDecimals);
 export const MAX_64_BIT_INT = BigInt('18446744073709551615');
+
+export function absBigInt(a: bigint): bigint {
+  return a < BigInt(0) ? -a : a;
+}
 
 export const assetUnitsToDecimal = function assetUnitsToDecimal(
   assetUnits: bigint,
   decimals: number,
 ): string {
   const bn = new BigNumber(assetUnits.toString());
-  return bn.shiftedBy(decimals * -1).toFixed(decimals);
+  return bn.shiftedBy(decimals * -1).toFixed(exchangeDecimals);
 };
 
 export const decimalToPip = function decimalToPip(decimal: string): bigint {
@@ -21,6 +25,41 @@ export const decimalToPip = function decimalToPip(decimal: string): bigint {
       .toString(),
   );
 };
+
+export enum ROUNDING {
+  Truncate = 0,
+  RoundUp = 1,
+  RoundDown = 2,
+}
+
+export function divideBigInt(
+  dividend: bigint,
+  divisor: bigint,
+  rounding: ROUNDING = ROUNDING.Truncate,
+): bigint {
+  if (divisor < BigInt(0)) {
+    throw new Error(
+      `Division by negative numbers is not supported (got ${dividend.toString()}/${divisor.toString()})`,
+    );
+  }
+  const result = dividend / divisor;
+
+  if (
+    rounding === ROUNDING.RoundUp &&
+    dividend > BigInt(0) && // Truncation is the same as rounding up in negative numbers
+    result * divisor !== dividend
+  ) {
+    return result + BigInt(1);
+  }
+  if (
+    rounding === ROUNDING.RoundDown &&
+    dividend < BigInt(0) && // Truncation is the same as rounding down in positive numbers
+    result * divisor !== dividend
+  ) {
+    return result - BigInt(1);
+  }
+  return result;
+}
 
 export const dividePips = function dividePips(
   valueInPips: bigint,

@@ -1,179 +1,308 @@
-import * as types from '../../types';
+import { UnreachableCaseError } from '#utils';
+
+import { FillType, MessageEventType } from '#types/enums/response';
+
+import type * as idex from '#types/index';
+import type { AnyObj } from '#types/utils';
+
+function removeUndefinedFromObj<O extends AnyObj>(obj: O): O {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([_, v]) => v !== undefined),
+  ) as O;
+}
 
 const transformTickersMessage = (
-  ticker: types.WebSocketResponseTickerShort,
-): types.RestResponseTicker => ({
-  market: ticker.m,
-  time: ticker.t,
-  open: ticker.o,
-  high: ticker.h,
-  low: ticker.l,
-  close: ticker.c,
-  closeQuantity: ticker.Q,
-  baseVolume: ticker.v,
-  quoteVolume: ticker.q,
-  percentChange: ticker.P,
-  numTrades: ticker.n,
-  ask: ticker.a,
-  bid: ticker.b,
-  sequence: ticker.u,
-});
+  short: idex.WebSocketResponseTickerShort,
+): idex.IDEXTickerEventData =>
+  removeUndefinedFromObj({
+    market: short.m,
+    time: short.t,
+    open: short.o,
+    high: short.h,
+    low: short.l,
+    close: short.c,
+    closeQuantity: short.Q,
+    baseVolume: short.v,
+    quoteVolume: short.q,
+    percentChange: short.P,
+    trades: short.n,
+    ask: short.a,
+    bid: short.b,
+    markPrice: short.mp,
+    indexPrice: short.ip,
+    indexPrice24h: short.id,
+    indexPricePercentChange: short.iP,
+    lastFundingRate: short.lf,
+    currentFundingRate: short.nf,
+    nextFundingTime: short.ft,
+    openInterest: short.oi,
+    sequence: short.u,
+  });
 
 const transformTradesMessage = (
-  trade: types.WebSocketResponseTradeShort,
-): types.WebSocketResponseTradeLong => ({
-  type: trade.y,
-  market: trade.m,
-  fillId: trade.i,
-  price: trade.p,
-  quantity: trade.q,
-  quoteQuantity: trade.Q,
-  time: trade.t,
-  makerSide: trade.s,
-  sequence: trade.u,
-});
+  short: idex.WebSocketResponseTradeShort,
+): idex.IDEXTradeEventData =>
+  removeUndefinedFromObj({
+    market: short.m,
+    fillId: short.i,
+    price: short.p,
+    quantity: short.q,
+    quoteQuantity: short.Q,
+    time: short.t,
+    makerSide: short.s,
+    sequence: short.u,
+  });
+
+const transformLiquidationsMessage = (
+  short: idex.WebSocketResponseLiquidationsShort,
+): idex.IDEXLiquidationEventData =>
+  removeUndefinedFromObj({
+    market: short.m,
+    fillId: short.i,
+    price: short.p,
+    quantity: short.q,
+    quoteQuantity: short.Q,
+    time: short.t,
+    liquidationSide: short.s,
+  });
 
 const transformCandlesMessage = (
-  candle: types.WebSocketResponseCandleShort,
-): types.WebSocketResponseCandleLong => ({
-  market: candle.m,
-  time: candle.t,
-  interval: candle.i,
-  start: candle.s,
-  end: candle.e,
-  open: candle.o,
-  high: candle.h,
-  low: candle.l,
-  close: candle.c,
-  volume: candle.v,
-  numTrades: candle.n,
-  sequence: candle.u,
-});
+  short: idex.WebSocketResponseCandleShort,
+): idex.IDEXCandleEventData =>
+  removeUndefinedFromObj({
+    market: short.m,
+    time: short.t,
+    interval: short.i,
+    start: short.s,
+    end: short.e,
+    open: short.o,
+    high: short.h,
+    low: short.l,
+    close: short.c,
+    baseVolume: short.v,
+    quoteVolume: short.q,
+    trades: short.n,
+    sequence: short.u,
+  });
 
-const transformL1orderbooksMessage = (
-  l1orderbook: types.WebSocketResponseL1OrderBookShort,
-): types.WebSocketResponseL1OrderBookLong => ({
-  market: l1orderbook.m,
-  time: l1orderbook.t,
-  bidPrice: l1orderbook.b,
-  bidQuantity: l1orderbook.B,
-  askPrice: l1orderbook.a,
-  askQuantity: l1orderbook.A,
-  pool: l1orderbook.p && {
-    baseReserveQuantity: l1orderbook.p.q,
-    quoteReserveQuantity: l1orderbook.p.Q,
-  },
-});
+const transformL1orderbookMessage = (
+  short: idex.WebSocketResponseL1OrderBookShort,
+): idex.IDEXOrderBookLevel1EventData =>
+  removeUndefinedFromObj({
+    market: short.m,
+    time: short.t,
+    bidPrice: short.b,
+    bidQuantity: short.B,
+    askPrice: short.a,
+    askQuantity: short.A,
+    lastPrice: short.lp,
+    markPrice: short.mp,
+    indexPrice: short.ip,
+  });
 
-const transformL2orderbooksMessage = (
-  l2orderbook: types.WebSocketResponseL2OrderBookShort,
-): types.WebSocketResponseL2OrderBookLong => ({
-  market: l2orderbook.m,
-  time: l2orderbook.t,
-  sequence: l2orderbook.u,
-  ...(l2orderbook.b && { bids: l2orderbook.b }),
-  ...(l2orderbook.a && { asks: l2orderbook.a }),
-  pool: l2orderbook.p && {
-    baseReserveQuantity: l2orderbook.p.q,
-    quoteReserveQuantity: l2orderbook.p.Q,
-  },
-});
+const transformL2orderbookMessage = (
+  short: idex.WebSocketResponseL2OrderBookShort,
+): idex.IDEXOrderBookLevel2EventData =>
+  removeUndefinedFromObj({
+    market: short.m,
+    time: short.t,
+    sequence: short.u,
+    ...(short.b && { bids: short.b }),
+    ...(short.a && { asks: short.a }),
+    lastPrice: short.lp,
+    markPrice: short.mp,
+    indexPrice: short.ip,
+  });
 
-const transformBalancesMessage = (
-  balance: types.WebSocketResponseBalanceShort,
-): types.WebSocketResponseBalanceLong => ({
-  wallet: balance.w,
-  asset: balance.a,
-  quantity: balance.q,
-  availableForTrade: balance.f,
-  locked: balance.l,
-  usdValue: balance.d,
-});
+function transformOrderFill(short: idex.WebSocketResponseOrderFillShort) {
+  return removeUndefinedFromObj({
+    type: short.y,
+    fillId: short.i,
+    price: short.p,
+    quantity: short.q,
+    quoteQuantity: short.Q,
+    realizedPnL: short.rn,
+    time: short.t,
+    ...(isWebSocketResponseOrderFillShortGeneral(short) ?
+      {
+        makerSide: short.s,
+        sequence: short.u,
+      }
+    : {}),
+    fee: short.f,
+    ...(isWebSocketResponseOrderFillShortGeneral(short) ?
+      {
+        liquidity: short.l,
+      }
+    : {}),
+    action: short.a,
+    position: short.P,
+    txId: short.T,
+    txStatus: short.S,
+  });
+}
 
-const transformOrderFill = (
-  fill: types.WebSocketResponseOrderFillShort,
-): types.RestResponseOrderFill => ({
-  type: fill.y,
-  fillId: fill.i,
-  price: fill.p,
-  quantity: fill.q,
-  quoteQuantity: fill.Q,
-  orderBookQuantity: fill.oq,
-  orderBookQuoteQuantity: fill.oQ,
-  poolQuantity: fill.pq,
-  poolQuoteQuantity: fill.pQ,
-  time: fill.t,
-  makerSide: fill.s,
-  sequence: fill.u,
-  fee: fill.f,
-  feeAsset: fill.a,
-  ...(fill.g && { gas: fill.g }),
-  liquidity: fill.l,
-  txId: fill.T,
-  txStatus: fill.S,
-});
+function transformOrdersMessage(
+  short: idex.WebSocketResponseOrderShort,
+): idex.IDEXOrderEventData {
+  if (!short.o) {
+    return removeUndefinedFromObj({
+      market: short.m,
+      wallet: short.w,
+      executionTime: short.t,
+      side: short.s,
+      // should only include a single fill but we map for future compat
+      fills: short.F.map(transformOrderFill),
+    } satisfies idex.IDEXOrderEventDataSystemFill);
+  }
 
-const transformOrdersMessage = (
-  order: types.WebSocketResponseOrderShort,
-): types.WebSocketResponseOrderLong => ({
-  market: order.m,
-  orderId: order.i,
-  ...(order.c && { clientOrderId: order.c }),
-  wallet: order.w,
-  executionTime: order.t,
-  time: order.T,
-  update: order.x,
-  status: order.X,
-  ...(order.u && { sequence: order.u }),
-  type: order.o,
-  side: order.S,
-  ...(order.q && { originalQuantity: order.q }),
-  ...(order.Q && { originalQuoteQuantity: order.Q }),
-  executedQuantity: order.z,
-  ...(order.Z && { cumulativeQuoteQuantity: order.Z }),
-  ...(order.v && { avgExecutionPrice: order.v }),
-  ...(order.p && { price: order.p }),
-  ...(order.P && { stopOrderPrice: order.P }),
-  ...(order.f && { timeInForce: order.f }),
-  selfTradePrevention: order.V,
-  ...(order.F && { fills: order.F.map(transformOrderFill) }),
-});
+  return removeUndefinedFromObj({
+    market: short.m,
+    orderId: short.i,
+    clientOrderId: short.c,
+    wallet: short.w,
+    executionTime: short.t,
+    time: short.T,
+    update: short.x,
+    status: short.X,
+    sequence: short.u,
+    errorCode: short.ec,
+    errorMessage: short.em,
+    type: short.o,
+    side: short.s,
+    originalQuantity: short.q,
+    executedQuantity: short.z,
+    cumulativeQuoteQuantity: short.Z,
+    avgExecutionPrice: short.v,
+    price: short.p,
+    triggerPrice: short.P,
+    triggerType: short.tt,
+    // callbackRate: short.cr,
+    // conditionalOrderId: short.ci,
+    reduceOnly: short.r,
+    timeInForce: short.f,
+    selfTradePrevention: short.V,
+    delegatedKey: short.dk,
+    isLiquidationAcquisitionOnly: short.la,
+    ...(short.F && { fills: short.F.map(transformOrderFill) }),
+  } satisfies idex.IDEXOrderEventDataGeneral);
+}
 
-const transformTokenPriceMessage = (
-  message: types.WebSocketResponseTokenPriceShort,
-): types.WebSocketResponseTokenPriceLong => ({
-  token: message.t,
-  price: message.p,
-});
+const transformDepositsMessage = (
+  short: idex.WebSocketResponseDepositsShort,
+): idex.IDEXDepositEventData =>
+  removeUndefinedFromObj({
+    wallet: short.w,
+    depositId: short.i,
+    asset: short.a,
+    quantity: short.q,
+    quoteBalance: short.qb,
+    time: short.t,
+  });
+
+const transformWithdrawalsMessage = (
+  short: idex.WebSocketResponseWithdrawalsShort,
+): idex.IDEXWithdrawalEventData =>
+  removeUndefinedFromObj({
+    wallet: short.w,
+    withdrawalId: short.i,
+    asset: short.a,
+    quantity: short.q,
+    gas: short.g,
+    quoteBalance: short.qb,
+    time: short.t,
+  });
+
+const transformPositionsMessage = (
+  short: idex.WebSocketResponsePositionsShort,
+): idex.IDEXPositionEventData =>
+  removeUndefinedFromObj({
+    wallet: short.w,
+    market: short.m,
+    status: short.X,
+    quantity: short.q,
+    maximumQuantity: short.mq,
+    entryPrice: short.np,
+    exitPrice: short.xp,
+    realizedPnL: short.rn,
+    totalFunding: short.f,
+    totalOpen: short.to,
+    totalClose: short.tc,
+    openedByFillId: short.of,
+    lastFillId: short.lf,
+    quoteBalance: short.qb,
+    time: short.t,
+  });
+
+const transformFundingPaymentsMessage = (
+  short: idex.WebSocketResponseFundingPaymentsShort,
+): idex.IDEXFundingPaymentEventData =>
+  removeUndefinedFromObj({
+    wallet: short.w,
+    market: short.m,
+    paymentQuantity: short.Q,
+    positionQuantity: short.q,
+    fundingRate: short.f,
+    indexPrice: short.ip,
+    time: short.t,
+  });
 
 export const transformWebsocketShortResponseMessage = (
   message:
-    | types.WebSocketResponseError
-    | types.WebSocketResponseSubscriptions
-    | types.WebSocketResponseSubscriptionMessageShort,
-): types.WebSocketResponse => {
-  if (message.type === 'error' || message.type === 'subscriptions') {
+    | idex.IDEXErrorEvent
+    | idex.IDEXSubscriptionsListEvent
+    | idex.WebSocketResponseSubscriptionMessageShort,
+): idex.IDEXMessageEvent => {
+  if (
+    message.type === MessageEventType.error ||
+    message.type === MessageEventType.subscriptions
+  ) {
     return message;
   }
-  switch (message.type) {
-    case 'candles':
-      return { ...message, data: transformCandlesMessage(message.data) };
-    case 'tickers':
-      return { ...message, data: transformTickersMessage(message.data) };
-    case 'l1orderbook':
-      return { ...message, data: transformL1orderbooksMessage(message.data) };
-    case 'l2orderbook':
-      return { ...message, data: transformL2orderbooksMessage(message.data) };
-    case 'trades':
-      return { ...message, data: transformTradesMessage(message.data) };
-    case 'balances':
-      return { ...message, data: transformBalancesMessage(message.data) };
-    case 'orders':
-      return { ...message, data: transformOrdersMessage(message.data) };
-    case 'tokenprice':
-      return { ...message, data: transformTokenPriceMessage(message.data) };
 
-    default:
+  const { type } = message;
+
+  switch (type) {
+    case MessageEventType.tickers:
+      return { ...message, data: transformTickersMessage(message.data) };
+    case MessageEventType.trades:
+      return { ...message, data: transformTradesMessage(message.data) };
+    case MessageEventType.liquidations:
+      return { ...message, data: transformLiquidationsMessage(message.data) };
+    case MessageEventType.candles:
+      return { ...message, data: transformCandlesMessage(message.data) };
+    case MessageEventType.l1orderbook:
+      return { ...message, data: transformL1orderbookMessage(message.data) };
+    case MessageEventType.l2orderbook:
+      return { ...message, data: transformL2orderbookMessage(message.data) };
+    case MessageEventType.orders:
+      return { ...message, data: transformOrdersMessage(message.data) };
+    case MessageEventType.deposits:
+      return { ...message, data: transformDepositsMessage(message.data) };
+    case MessageEventType.withdrawals:
+      return { ...message, data: transformWithdrawalsMessage(message.data) };
+    case MessageEventType.positions:
+      return { ...message, data: transformPositionsMessage(message.data) };
+    case MessageEventType.fundingPayments:
+      return {
+        ...message,
+        data: transformFundingPaymentsMessage(message.data),
+      };
+    // due to their dynamic and internal nature, webclient events
+    // are not transformed like other messages
+    case MessageEventType.webclient:
       return message;
+    default:
+      throw new UnreachableCaseError(
+        type,
+        'transformWebsocketShortResponseMessage',
+      );
   }
 };
+
+const isWebSocketResponseOrderFillShortGeneral = (
+  short: idex.WebSocketResponseOrderFillShort,
+): short is idex.WebSocketResponseOrderFillShortGeneral =>
+  short.y !== FillType.closure &&
+  short.y !== FillType.liquidation &&
+  short.y !== FillType.deleverage;

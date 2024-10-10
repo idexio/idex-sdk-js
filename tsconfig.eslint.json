@@ -2,9 +2,13 @@
   "extends": "./tsconfig.json",
   "include": [
     "src/**/*.ts",
-    ".eslintrc.js",
-    ".prettierrc.js",
-    "release.config.js",
-    "test/**/*.ts"
+    "eslint.config.cjs",
+    ".prettierrc.cjs",
+    "release.config.cjs",
+    "debug/**/*.ts",
+    "commitlint.config.ts",
+    ".config/**/*.d.ts",
+    ".config/**/*.cjs",
+    "dev/custom-plugins/**/*"
   ]
 }

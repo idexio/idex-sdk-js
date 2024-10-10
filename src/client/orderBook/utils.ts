@@ -1,7 +1,11 @@
-import type { L1OrderBook, L2OrderBook, OrderBookLevelL2 } from '../../types';
+import type {
+  L1OrderBook,
+  L2OrderBook,
+  OrderBookLevelL2,
+} from '#types/orderBook';
 
 /**
- * Determine whether two level 1 order books are equal, including pool reserves
+ * Determine whether two level 1 order books are equal
  */
 export function L1Equal(beforeL1: L1OrderBook, afterL1: L1OrderBook): boolean {
   return (
@@ -10,20 +14,17 @@ export function L1Equal(beforeL1: L1OrderBook, afterL1: L1OrderBook): boolean {
     beforeL1.asks.size === afterL1.asks.size &&
     beforeL1.bids.size === afterL1.bids.size &&
     beforeL1.asks.numOrders === afterL1.asks.numOrders &&
-    beforeL1.bids.numOrders === afterL1.bids.numOrders &&
-    beforeL1.pool?.baseReserveQuantity === afterL1.pool?.baseReserveQuantity &&
-    beforeL1.pool?.quoteReserveQuantity === afterL1.pool?.quoteReserveQuantity
+    beforeL1.bids.numOrders === afterL1.bids.numOrders
   );
 }
 
 /**
  * Updates a level 2 orderbook using a partial "diff" received over websockets
  *
- * @param {L2OrderBook} book
- * @param {L2OrderBook} updatedLevels
+ * @param updatedLevels
  * - level 2 orderbook containing only limit order price levels that have changed
  *
- * @returns {void} - orderbook is updated in-place
+ * @returns orderbook is updated in-place
  */
 export function updateL2Levels(
   book: L2OrderBook,
@@ -33,18 +34,28 @@ export function updateL2Levels(
   book.sequence = updatedLevels.sequence;
   book.asks = updateL2Side(true, book.asks, updatedLevels.asks);
   book.bids = updateL2Side(false, book.bids, updatedLevels.bids);
-  book.pool = updatedLevels.pool;
   /* eslint-enable no-param-reassign */
+}
+
+function isBeforeOrEqual(
+  isAscending: boolean,
+  a: OrderBookLevelL2,
+  b: OrderBookLevelL2,
+): boolean {
+  if (isAscending && a.price <= b.price) {
+    return true;
+  }
+  if (!isAscending && a.price >= b.price) {
+    return true;
+  }
+  return false;
 }
 
 /**
  * Applies a changeset to a single side of the orderbook
  *
- * @param {boolean} isAscending - true for asks, false for bids (ordering of price levels)
- * @param {OrderBookLevelL2[]} side
- * @param {OrderBookLevelL2[]} updates
- *
- * @returns {OrderBookLevelL2[]}
+ * @param {boolean} isAscending
+ *   `true` for asks, `false` for bids (ordering of price levels)
  */
 function updateL2Side(
   isAscending: boolean,
@@ -56,26 +67,13 @@ function updateL2Side(
     return side;
   }
 
-  const isBeforeOrEqual = function isBeforeOrEqual(
-    a: OrderBookLevelL2,
-    b: OrderBookLevelL2,
-  ): boolean {
-    if (isAscending && a.price <= b.price) {
-      return true;
-    }
-    if (!isAscending && a.price >= b.price) {
-      return true;
-    }
-    return false;
-  };
-
   let lastPriceUpdated = BigInt(0);
   const newLevels: OrderBookLevelL2[] = [];
 
   for (const level of side) {
     // push all updated price levels prior to the existing level
     // skip any with no size, and no orders
-    while (nextUpdate && isBeforeOrEqual(nextUpdate, level)) {
+    while (nextUpdate && isBeforeOrEqual(isAscending, nextUpdate, level)) {
       if (nextUpdate.size > BigInt(0) && nextUpdate.numOrders > BigInt(0)) {
         newLevels.push(nextUpdate);
       }

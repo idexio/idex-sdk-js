@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@idexio/idex-sdk-ikon": ["./src/index.ts"],
+      "#*": ["./src/*"]
+    }
+  }
+}
