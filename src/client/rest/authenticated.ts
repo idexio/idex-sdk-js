@@ -615,7 +615,7 @@ export class RestAuthenticatedClient {
    * **Endpoint Parameters**
    *
    * > - **HTTP Request:**         `POST /v4/orders`
-   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityUserData)
+   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityTrade)
    * > - **API Key Scope:**        [Trade](https://api-docs-v4.idex.io/#api-keys)
    * > - **Pagination:**           `None`
    * ---
@@ -1296,6 +1296,56 @@ export class RestAuthenticatedClient {
     params: idex.RestRequestGetFundingPayments,
   ) {
     return this.get<R>('/fundingPayments', params);
+  }
+
+  /**
+   * Set maximum leverage for wallet for a market
+   *
+   * ---
+   * **Endpoint Parameters**
+   *
+   * > - **HTTP Request:**         `POST /v4/leverage`
+   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityTrade)
+   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **Pagination:**
+   * ---
+   *
+   * @returns
+   * - Returns an {@link idex.IDEXLeverage IDEXLeverage} object providing the details of the
+   *   new leverage setting.
+
+   *
+   * @category Wallets & Positions
+   */
+  public async setLeverage<R = idex.RestResponseSetLeverage>(
+    params: idex.RestRequestSetLeverage,
+  ) {
+    return this.post<R>('/leverage', params);
+  }
+
+  /**
+   * Get maximum leverage for wallet for a market
+   *
+   * ---
+   * **Endpoint Parameters**
+   *
+   * > - **HTTP Request:**         `GET /v4/leverage`
+   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityTrade)
+   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **Pagination:**
+   * ---
+   *
+   * @returns
+   * - Returns an {@link idex.IDEXLeverage IDEXLeverage} object providing the details of the
+   *   leverage setting.
+
+   *
+   * @category Wallets & Positions
+   */
+  public async getLeverage<R = idex.RestResponseGetLeverage>(
+    params: idex.RestRequestGetLeverage,
+  ) {
+    return this.get<R>('/leverage', params);
   }
 
   /**
