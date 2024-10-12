@@ -13,6 +13,7 @@ import {
   getOrderSignatureTypedData,
   getWalletAssociationSignatureTypedData,
   getWithdrawalSignatureTypedData,
+  getLeverageSettingsSignatureTypedData,
 } from '#signatures';
 import {
   deriveBaseURL,
@@ -1319,8 +1320,24 @@ export class RestAuthenticatedClient {
    */
   public async setLeverage<R = idex.RestResponseSetLeverage>(
     params: idex.RestRequestSetLeverage,
+    signer: idex.SignTypedData | undefined = this.#signer,
   ) {
-    return this.post<R>('/leverage', params);
+    ensureSigner(signer);
+
+    const { chainId, exchangeContractAddress } =
+      await this.getContractAndChainId();
+
+    return this.post<R>('/leverage', {
+      parameters: params,
+      signature: await signer(
+        ...getLeverageSettingsSignatureTypedData(
+          params,
+          exchangeContractAddress,
+          chainId,
+          this.#config.sandbox,
+        ),
+      ),
+    });
   }
 
   /**
