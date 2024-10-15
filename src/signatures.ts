@@ -358,8 +358,8 @@ export function getWithdrawalSignatureTypedData(
   ];
 }
 
-export function getLeverageSettingsSignatureTypedData(
-  data: types.RestRequestSetLeverage,
+export function getInitialMarginFractionOverrideSettingsSignatureTypedData(
+  data: types.RestRequestSetInitialMarginFractionOverride,
   contractAddress: string,
   chainId: number,
   sandbox: boolean,
@@ -369,18 +369,18 @@ export function getLeverageSettingsSignatureTypedData(
   return [
     getDomainSeparator(contractAddress, chainId, sandbox),
     {
-      LeverageSettings: [
+      InitialMarginFractionOverrideSettings: [
         { name: 'nonce', type: 'uint128' },
         { name: 'wallet', type: 'address' },
         { name: 'marketSymbol', type: 'string' },
-        { name: 'leverage', type: 'string' },
+        { name: 'initialMarginFractionOverride', type: 'string' },
       ],
     },
     {
       nonce: uuidToUint128(data.nonce),
       wallet: data.wallet,
       marketSymbol: data.market,
-      leverage: data.leverage ?? '', // Leverage override value, blank if removing override
+      initialMarginFractionOverride: data.initialMarginFractionOverride ?? '', // Initial Margin Fraction override value, blank if removing override
     },
   ];
 }
