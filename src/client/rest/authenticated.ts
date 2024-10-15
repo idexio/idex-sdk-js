@@ -13,7 +13,7 @@ import {
   getOrderSignatureTypedData,
   getWalletAssociationSignatureTypedData,
   getWithdrawalSignatureTypedData,
-  getLeverageSettingsSignatureTypedData,
+  getInitialMarginFractionOverrideSettingsSignatureTypedData,
 } from '#signatures';
 import {
   deriveBaseURL,
@@ -1300,26 +1300,28 @@ export class RestAuthenticatedClient {
   }
 
   /**
-   * Set maximum leverage for wallet for a market
+   * Override minimum Initial Margin Fraction for wallet for a market
    *
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `POST /v4/leverage`
+   * > - **HTTP Request:**         `POST /v4/initialMarginFractionOverride`
    * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityTrade)
    * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
    * > - **Pagination:**
    * ---
    *
    * @returns
-   * - Returns an {@link idex.IDEXLeverage IDEXLeverage} object providing the details of the
-   *   new leverage setting.
+   * - Returns an {@link idex.IDEXInitialMarginFractionOverride IDEXInitialMarginFractionOverride}
+   *   object providing the details of the new  setting.
 
    *
    * @category Wallets & Positions
    */
-  public async setLeverage<R = idex.RestResponseSetLeverage>(
-    params: idex.RestRequestSetLeverage,
+  public async setInitialMarginFractionOverride<
+    R = idex.RestResponseSetInitialMarginFractionOverride,
+  >(
+    params: idex.RestRequestSetInitialMarginFractionOverride,
     signer: idex.SignTypedData | undefined = this.#signer,
   ) {
     ensureSigner(signer);
@@ -1327,10 +1329,10 @@ export class RestAuthenticatedClient {
     const { chainId, exchangeContractAddress } =
       await this.getContractAndChainId();
 
-    return this.post<R>('/leverage', {
+    return this.post<R>('/initialMarginFractionOverride', {
       parameters: params,
       signature: await signer(
-        ...getLeverageSettingsSignatureTypedData(
+        ...getInitialMarginFractionOverrideSettingsSignatureTypedData(
           params,
           exchangeContractAddress,
           chainId,
@@ -1341,28 +1343,28 @@ export class RestAuthenticatedClient {
   }
 
   /**
-   * Get maximum leverage for wallet for a market
+   * Get Initial Margin Fraction overrides for wallet for a market or all markets
    *
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `GET /v4/leverage`
+   * > - **HTTP Request:**         `GET /v4/initialMarginFractionOverride`
    * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityTrade)
    * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
    * > - **Pagination:**
    * ---
    *
    * @returns
-   * - Returns an {@link idex.IDEXLeverage IDEXLeverage} object providing the details of the
-   *   leverage setting.
+   * - Returns an {@link idex.IDEXInitialMarginFractionOverride IDEXInitialMarginFractionOverride}
+   *   object providing the details of the setting.
 
    *
    * @category Wallets & Positions
    */
-  public async getLeverage<R = idex.RestResponseGetLeverage>(
-    params: idex.RestRequestGetLeverage,
-  ) {
-    return this.get<R>('/leverage', params);
+  public async getInitialMarginFractionOverride<
+    R = idex.RestResponseGetInitialMarginFractionOverride,
+  >(params: idex.RestRequestGetInitialMarginFractionOverride) {
+    return this.get<R>('/initialMarginFractionOverride', params);
   }
 
   /**
