@@ -1,5 +1,6 @@
 import type { RestRequestByMarket, RestRequestByWallet } from '#index';
 import type { RestRequestWithSignature } from '#types/utils';
+import type { DelegatedKeyParams } from '../../delegatedKeys';
 
 /**
  * - Rest Request: `POST /v4/initialMarginFractionOverride`
@@ -18,6 +19,7 @@ import type { RestRequestWithSignature } from '#types/utils';
  */
 export interface RestRequestSetInitialMarginFractionOverride
   extends Required<RestRequestByWallet>,
+    DelegatedKeyParams,
     RestRequestByMarket {
   /**
    * Initial margin fraction override value between `1` and default `initialMarginFraction`
