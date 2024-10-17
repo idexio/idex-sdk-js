@@ -13,6 +13,7 @@ import {
   getOrderSignatureTypedData,
   getWalletAssociationSignatureTypedData,
   getWithdrawalSignatureTypedData,
+  getInitialMarginFractionOverrideSettingsSignatureTypedData,
 } from '#signatures';
 import {
   deriveBaseURL,
@@ -615,7 +616,7 @@ export class RestAuthenticatedClient {
    * **Endpoint Parameters**
    *
    * > - **HTTP Request:**         `POST /v4/orders`
-   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityUserData)
+   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityTrade)
    * > - **API Key Scope:**        [Trade](https://api-docs-v4.idex.io/#api-keys)
    * > - **Pagination:**           `None`
    * ---
@@ -1296,6 +1297,74 @@ export class RestAuthenticatedClient {
     params: idex.RestRequestGetFundingPayments,
   ) {
     return this.get<R>('/fundingPayments', params);
+  }
+
+  /**
+   * Override minimum Initial Margin Fraction for wallet for a market
+   *
+   * ---
+   * **Endpoint Parameters**
+   *
+   * > - **HTTP Request:**         `POST /v4/initialMarginFractionOverride`
+   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityTrade)
+   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **Pagination:**
+   * ---
+   *
+   * @returns
+   * - Returns an {@link idex.IDEXInitialMarginFractionOverride IDEXInitialMarginFractionOverride}
+   *   object providing the details of the new  setting.
+
+   *
+   * @category Wallets & Positions
+   */
+  public async setInitialMarginFractionOverride<
+    R = idex.RestResponseSetInitialMarginFractionOverride,
+  >(
+    params: idex.RestRequestSetInitialMarginFractionOverride,
+    signer: idex.SignTypedData | undefined = this.#signer,
+  ) {
+    ensureSigner(signer);
+
+    const { chainId, exchangeContractAddress } =
+      await this.getContractAndChainId();
+
+    return this.post<R>('/initialMarginFractionOverride', {
+      parameters: params,
+      signature: await signer(
+        ...getInitialMarginFractionOverrideSettingsSignatureTypedData(
+          params,
+          exchangeContractAddress,
+          chainId,
+          this.#config.sandbox,
+        ),
+      ),
+    });
+  }
+
+  /**
+   * Get Initial Margin Fraction overrides for wallet for a market or all markets
+   *
+   * ---
+   * **Endpoint Parameters**
+   *
+   * > - **HTTP Request:**         `GET /v4/initialMarginFractionOverride`
+   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityTrade)
+   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **Pagination:**
+   * ---
+   *
+   * @returns
+   * - Returns an {@link idex.IDEXInitialMarginFractionOverride IDEXInitialMarginFractionOverride}
+   *   object providing the details of the setting.
+
+   *
+   * @category Wallets & Positions
+   */
+  public async getInitialMarginFractionOverride<
+    R = idex.RestResponseGetInitialMarginFractionOverride,
+  >(params: idex.RestRequestGetInitialMarginFractionOverride) {
+    return this.get<R>('/initialMarginFractionOverride', params);
   }
 
   /**
