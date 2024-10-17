@@ -374,6 +374,7 @@ export function getInitialMarginFractionOverrideSettingsSignatureTypedData(
         { name: 'wallet', type: 'address' },
         { name: 'marketSymbol', type: 'string' },
         { name: 'initialMarginFractionOverride', type: 'string' },
+        { name: 'delegatedPublicKey', type: 'address' },
       ],
     },
     {
@@ -381,6 +382,7 @@ export function getInitialMarginFractionOverrideSettingsSignatureTypedData(
       wallet: data.wallet,
       marketSymbol: data.market,
       initialMarginFractionOverride: data.initialMarginFractionOverride ?? '', // Initial Margin Fraction override value, blank if removing override
+      delegatedPublicKey: data.delegatedKey || ethers.ZeroAddress,
     },
   ];
 }
