@@ -103,6 +103,8 @@
     "lint": "eslint --cache 'src/**/*.ts'",
     "lint:fix": "eslint --cache 'src/**/*.ts' --fix",
     "lint:fix:staged": "lint-staged",
+    "lint:fix:staged-and-modified": "eslint --cache --fix $(git diff --name-only HEAD | grep -E '\\.(ts|tsx)$' | xargs) && yarn lint:prettier:staged-and-modified",
+    "lint:prettier:staged-and-modified": "prettier --write $(git diff --name-only HEAD | grep -E '\\.(ts|tsx)$' | xargs)",
     "lint:types": "yarn exec tsc --noEmit",
     "on:commit": "npm-run-all build test --parallel lint:fix:staged lint:types --",
     "orderbook:demo": "yarn node dist/orderbook/demo.js",
