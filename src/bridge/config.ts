@@ -214,6 +214,20 @@ export const StargateV2Config = {
       // https://stargateprotocol.gitbook.io/stargate/v2-developer-docs/technical-reference/v2-supported-networks-and-assets#scroll
       tokenDecimals: 6,
     },
+    [StargateV2Target.STARGATE_SEI]: {
+      target: StargateV2Target.STARGATE_SEI,
+      isSupported: true,
+      get isBridgeTarget() {
+        return isValidBridgeTarget(this.target);
+      },
+      evmChainId: 1329,
+      // https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#sei
+      layerZeroEndpointId: 30280,
+      // https://stargateprotocol.gitbook.io/stargate/v/v2-developer-docs/technical-reference/mainnet-contracts#sei
+      stargateOFTAddress: '0x45d417612e177672958dC0537C45a8f8d754Ac2E',
+      // https://stargateprotocol.gitbook.io/stargate/v2-developer-docs/technical-reference/v2-supported-networks-and-assets#sei
+      tokenDecimals: 6,
+    },
     [StargateV2Target.STARGATE_TAIKO]: {
       target: StargateV2Target.STARGATE_TAIKO,
       isSupported: true,
@@ -272,6 +286,9 @@ export const StargateV2ConfigByLayerZeroEndpointId = {
     [StargateV2Config.mainnet[StargateV2Target.STARGATE_SCROLL]
       .layerZeroEndpointId]:
       StargateV2Config.mainnet[StargateV2Target.STARGATE_SCROLL],
+    [StargateV2Config.mainnet[StargateV2Target.STARGATE_SEI]
+      .layerZeroEndpointId]:
+      StargateV2Config.mainnet[StargateV2Target.STARGATE_SEI],
     [StargateV2Config.mainnet[StargateV2Target.STARGATE_TAIKO]
       .layerZeroEndpointId]:
       StargateV2Config.mainnet[StargateV2Target.STARGATE_TAIKO],
