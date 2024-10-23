@@ -6,7 +6,10 @@
     "declaration": true,
     "declarationMap": true,
     "importHelpers": true,
-    "lib": ["dom", "esnext"],
+    "lib": [
+      "dom",
+      "esnext"
+    ],
     "resolvePackageJsonImports": true,
     "resolvePackageJsonExports": true,
     "outDir": "dist",
@@ -16,10 +19,21 @@
     "useUnknownInCatchVariables": false,
     // does not cut off type hints as early
     "noErrorTruncation": true,
-    "verbatimModuleSyntax": false
+    "verbatimModuleSyntax": false,
     // needed to trick yarn run:quick to work as tsx
     // otherwise doesnt understand import/export maps
+    "plugins": [
+      {
+        "transform": "typia/lib/transform"
+      }
+    ],
+    "strictNullChecks": true,
+    "strict": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

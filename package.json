@@ -81,6 +81,13 @@
         "./src/types/index.ts"
       ],
       "default": "./dist/types/index.js"
+    },
+    "./validate": {
+      "types": [
+        "./dist/typia/validate.d.ts",
+        "./src/typia/validate.ts"
+      ],
+      "default": "./dist/typia/validate.js"
     }
   },
   "main": "dist/index.js",
@@ -109,6 +116,7 @@
     "on:commit": "npm-run-all build test --parallel lint:fix:staged lint:types --",
     "orderbook:demo": "yarn node dist/orderbook/demo.js",
     "postinstall": "git config --local core.hooksPath .githooks || echo 'Not a git repository, did not set up git hooks'",
+    "prepare": "ts-patch install && typia patch",
     "prettier:fix": "yarn exec prettier --cache --write 'src/**/*.ts'",
     "prettier:fix:staged": "yarn exec pretty-quick --staged",
     "start:path": "yarn exec tsx --tsconfig tsconfig.tsx.json --",
@@ -130,6 +138,7 @@
     "ethers": "6.9.0",
     "isomorphic-ws": "^5.0.0",
     "tslib": "^2.6.2",
+    "typia": "^6.5.3",
     "uuid": "^9.0.1",
     "ws": "8.17.0"
   },
@@ -178,6 +187,7 @@
     "semantic-release": "^23.1.1",
     "semantic-release-slack-bot": "^4.0.2",
     "slackify-markdown": "^4.4.0",
+    "ts-patch": "^3.2.1",
     "tsx": "^4.10.2",
     "typedoc": "0.25.13",
     "typedoc-plugin-extras": "^3.0.0",
@@ -185,7 +195,7 @@
     "typedoc-plugin-merge-modules": "^5.1.0",
     "typedoc-plugin-missing-exports": "^2.2.0",
     "typedoc-theme-category-nav": "^0.0.3",
-    "typescript": "5.4.5",
+    "typescript": "5.5.2",
     "typescript-eslint": "^7.9.0"
   },
   "optionalDependencies": {
