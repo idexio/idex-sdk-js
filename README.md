@@ -20,12 +20,6 @@
 
 ---
 
-## Testnet Release
-
-> **IDEX v4 is currently available as a pre-launch testnet sandbox with mainnet launching soon.**
-
----
-
 ## Summary
 
 - 🔥 **Built with TypeScript** - Provides a TypeScript/JavaScript SDK for the [IDEX v4 REST and WebSocket APIs](https://api-docs-v4.idex.io).
