@@ -1465,20 +1465,20 @@ export class RestAuthenticatedClient {
     placeOrderWithConditionalTpSlOrders: async <T extends idex.OrderType>(
       params: {
         order: idex.RestRequestOrder & { type: T };
-        conditionalTakeProfitOrder: idex.RestRequestOrder & {
+        conditionalTakeProfitOrder?: idex.RestRequestOrder & {
           type: typeof idex.OrderType.takeProfitMarket;
         };
-        conditionalStopLossOrder: idex.RestRequestOrder & {
+        conditionalStopLossOrder?: idex.RestRequestOrder & {
           type: typeof idex.OrderType.stopLossMarket;
         };
       },
       signer: undefined | idex.SignTypedData = this.#signer,
     ): Promise<{
       order: idex.RestResponseGetOrder & { type: T };
-      conditionalTakeProfitOrder: idex.RestResponseGetOrder & {
+      conditionalTakeProfitOrder?: idex.RestResponseGetOrder & {
         type: typeof idex.OrderType.takeProfitMarket;
       };
-      conditionalStopLossOrder: idex.RestResponseGetOrder & {
+      conditionalStopLossOrder?: idex.RestResponseGetOrder & {
         type: typeof idex.OrderType.stopLossMarket;
       };
     }> => {
@@ -1487,47 +1487,47 @@ export class RestAuthenticatedClient {
       const { chainId, exchangeContractAddress } =
         await this.getContractAndChainId();
 
-      const [orderSignature, tpSignature, slSignature] = await Promise.all(
-        [
-          params.order,
-          params.conditionalTakeProfitOrder,
-          params.conditionalStopLossOrder,
-        ].map((order) =>
-          signer(
-            ...getOrderSignatureTypedData(
-              order,
-              exchangeContractAddress,
-              chainId,
-              this.#config.sandbox,
-            ),
+      const signOrder = (order: idex.RestRequestOrder): Promise<string> =>
+        signer(
+          ...getOrderSignatureTypedData(
+            order,
+            exchangeContractAddress,
+            chainId,
+            this.#config.sandbox,
           ),
-        ),
-      );
+        );
+
       return this.post<{
         order: idex.RestResponseGetOrder & { type: T };
-        conditionalTakeProfitOrder: idex.RestResponseGetOrder & {
+        conditionalTakeProfitOrder?: idex.RestResponseGetOrder & {
           type: typeof idex.OrderType.takeProfitMarket;
         };
-        conditionalStopLossOrder: idex.RestResponseGetOrder & {
+        conditionalStopLossOrder?: idex.RestResponseGetOrder & {
           type: typeof idex.OrderType.stopLossMarket;
         };
       }>('/internal/orders/orderWithConditionalTpSlOrders', {
         order: {
           parameters: params.order,
-          signature: orderSignature,
+          signature: await signOrder(params.order),
         },
-        conditionalTakeProfitOrder: {
-          parameters: params.conditionalTakeProfitOrder,
-          signature: tpSignature,
-        },
-        conditionalStopLossOrder: {
-          parameters: params.conditionalStopLossOrder,
-          signature: slSignature,
-        },
+        conditionalTakeProfitOrder:
+          params.conditionalTakeProfitOrder ?
+            {
+              parameters: params.conditionalTakeProfitOrder,
+              signature: await signOrder(params.conditionalTakeProfitOrder),
+            }
+          : undefined,
+        conditionalStopLossOrder:
+          params.conditionalStopLossOrder ?
+            {
+              parameters: params.conditionalStopLossOrder,
+              signature: await signOrder(params.conditionalStopLossOrder),
+            }
+          : undefined,
       } satisfies {
         order: idex.RestRequestCreateOrderSigned;
-        conditionalTakeProfitOrder: idex.RestRequestCreateOrderSigned;
-        conditionalStopLossOrder: idex.RestRequestCreateOrderSigned;
+        conditionalTakeProfitOrder?: idex.RestRequestCreateOrderSigned;
+        conditionalStopLossOrder?: idex.RestRequestCreateOrderSigned;
       });
     },
 
