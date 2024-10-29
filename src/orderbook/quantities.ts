@@ -9,6 +9,8 @@ import {
   minBigInt,
   multiplyPips,
   oneInPips,
+  dividePips,
+  pipToDecimal,
 } from '#pipmath';
 
 import { OrderSide } from '#types/enums/request';
@@ -22,6 +24,7 @@ import type {
   IDEXMarket,
   IDEXOrder,
   IDEXPosition,
+  IDEXWallet,
 } from '#types/rest/endpoints/index';
 
 export type LeverageParameters = Pick<
@@ -117,6 +120,37 @@ export function calculateInitialMarginFractionWithOverride(args: {
   return maxBigInt(
     calculateInitialMarginFraction(leverageParameters, baseQuantity),
     initialMarginFractionOverride ?? BigInt(0),
+  );
+}
+
+export function calculateMaximumInitialMarginFractionOverride(
+  market: IDEXMarket,
+  wallet: IDEXWallet,
+) {
+  const positionForMarket =
+    wallet.positions &&
+    wallet.positions.find((p) => p.market === market.market);
+  if (!positionForMarket) {
+    return pipToDecimal(oneInPips);
+  }
+
+  const position = convertToPositionBigInt(positionForMarket);
+  const positionNotionalValue = multiplyPips(
+    position.quantity,
+    position.indexPrice,
+  );
+  const initialMarginRequirement = multiplyPips(
+    positionNotionalValue,
+    decimalToPip(market.initialMarginFraction),
+  );
+  const availableCollateralForLeverage =
+    initialMarginRequirement + decimalToPip(wallet.availableCollateral);
+
+  return pipToDecimal(
+    minBigInt(
+      oneInPips,
+      dividePips(availableCollateralForLeverage, positionNotionalValue),
+    ),
   );
 }
 
