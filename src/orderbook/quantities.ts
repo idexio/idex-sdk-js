@@ -136,7 +136,7 @@ export function calculateMaximumInitialMarginFractionOverride(
 
   const position = convertToPositionBigInt(positionForMarket);
   const positionNotionalValue = multiplyPips(
-    position.quantity,
+    absBigInt(position.quantity),
     position.indexPrice,
   );
   const initialMarginRequirement = multiplyPips(

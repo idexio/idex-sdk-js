@@ -2,7 +2,7 @@ import * as chai from 'chai';
 
 import { calculateMaximumInitialMarginFractionOverride } from '#orderbook/quantities';
 
-import type { IDEXMarket, IDEXWallet } from '#types/index';
+import type { IDEXMarket } from '#types/index';
 
 const { expect } = chai;
 
@@ -39,7 +39,7 @@ const market: IDEXMarket = {
   default: true,
 };
 
-const wallet: IDEXWallet = {
+const wallet = {
   wallet: '0x36915BE02C6E9B3A7FFa342Cfb81C080DC48e0Ab',
   equity: '100.00000000',
   freeCollateral: '40.00000000',
@@ -83,6 +83,15 @@ describe('orderbook/quantities', () => {
     it('should succeed', () => {
       expect(
         calculateMaximumInitialMarginFractionOverride(market, wallet),
+      ).to.eql('0.35000000');
+
+      const walletWithShortPosition = { ...wallet };
+      walletWithShortPosition.positions[0].quantity = '-2.00000000';
+      expect(
+        calculateMaximumInitialMarginFractionOverride(
+          market,
+          walletWithShortPosition,
+        ),
       ).to.eql('0.35000000');
 
       const walletWithoutPositions = { ...wallet, positions: undefined };
