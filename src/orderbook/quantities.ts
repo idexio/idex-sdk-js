@@ -21,6 +21,7 @@ import type {
   OrderBookLevelL2,
 } from '#types/orderBook';
 import type {
+  IDEXInitialMarginFractionOverride,
   IDEXMarket,
   IDEXOrder,
   IDEXPosition,
@@ -124,8 +125,9 @@ export function calculateInitialMarginFractionWithOverride(args: {
 }
 
 export function calculateMaximumInitialMarginFractionOverride(
-  market: IDEXMarket,
-  wallet: IDEXWallet,
+  market: Pick<IDEXMarket, 'market' | 'initialMarginFraction'>,
+  wallet: Pick<IDEXWallet, 'positions' | 'availableCollateral'>,
+  walletInitialMarginFractionOverrides: IDEXInitialMarginFractionOverride[],
 ) {
   const positionForMarket =
     wallet.positions &&
@@ -139,10 +141,16 @@ export function calculateMaximumInitialMarginFractionOverride(
     absBigInt(position.quantity),
     position.indexPrice,
   );
+
+  const effectiveInitialMarginFraction =
+    walletInitialMarginFractionOverrides.find(
+      (imfo) => imfo.market === market.market,
+    )?.initialMarginFractionOverride || market.initialMarginFraction;
   const initialMarginRequirement = multiplyPips(
     positionNotionalValue,
-    decimalToPip(market.initialMarginFraction),
+    decimalToPip(effectiveInitialMarginFraction),
   );
+
   const availableCollateralForLeverage =
     initialMarginRequirement + decimalToPip(wallet.availableCollateral);
 

@@ -26,7 +26,7 @@ const market: IDEXMarket = {
   limitOrderExecutionPriceLimit: '0.40000000',
   minimumPositionSize: '0.00070000',
   maximumPositionSize: '10.00000000',
-  initialMarginFraction: '0.20000000',
+  initialMarginFraction: '0.10000000',
   maintenanceMarginFraction: '0.03000000',
   basePositionSize: '1.00000000',
   incrementalPositionSize: '0.10000000',
@@ -82,7 +82,25 @@ describe('orderbook/quantities', () => {
   describe('calculateInitialMarginFractionWithOverride', () => {
     it('should succeed', () => {
       expect(
-        calculateMaximumInitialMarginFractionOverride(market, wallet),
+        calculateMaximumInitialMarginFractionOverride(market, wallet, []),
+      ).to.eql('0.25000000');
+      expect(
+        calculateMaximumInitialMarginFractionOverride(market, wallet, [
+          {
+            wallet: wallet.wallet,
+            market: market.market,
+            initialMarginFractionOverride: null,
+          },
+        ]),
+      ).to.eql('0.25000000');
+      expect(
+        calculateMaximumInitialMarginFractionOverride(market, wallet, [
+          {
+            wallet: wallet.wallet,
+            market: market.market,
+            initialMarginFractionOverride: '0.20000000',
+          },
+        ]),
       ).to.eql('0.35000000');
 
       const walletWithShortPosition = { ...wallet };
@@ -91,6 +109,13 @@ describe('orderbook/quantities', () => {
         calculateMaximumInitialMarginFractionOverride(
           market,
           walletWithShortPosition,
+          [
+            {
+              wallet: wallet.wallet,
+              market: market.market,
+              initialMarginFractionOverride: '0.20000000',
+            },
+          ],
         ),
       ).to.eql('0.35000000');
 
@@ -99,6 +124,7 @@ describe('orderbook/quantities', () => {
         calculateMaximumInitialMarginFractionOverride(
           market,
           walletWithoutPositions,
+          [],
         ),
       ).to.eql('1.00000000');
     });
