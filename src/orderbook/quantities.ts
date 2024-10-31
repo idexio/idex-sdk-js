@@ -126,38 +126,45 @@ export function calculateInitialMarginFractionWithOverride(args: {
 
 export function calculateMaximumInitialMarginFractionOverride(
   market: Pick<IDEXMarket, 'market' | 'initialMarginFraction'>,
-  wallet: Pick<IDEXWallet, 'positions' | 'availableCollateral'>,
+  wallet: Pick<IDEXWallet, 'positions' | 'freeCollateral' | 'heldCollateral'>,
   walletInitialMarginFractionOverrides: IDEXInitialMarginFractionOverride[],
 ) {
   const positionForMarket =
     wallet.positions &&
     wallet.positions.find((p) => p.market === market.market);
-  if (!positionForMarket) {
-    return pipToDecimal(oneInPips);
+
+  let positionNotionalValue = 0n;
+  if (positionForMarket) {
+    const position = convertToPositionBigInt(positionForMarket);
+    positionNotionalValue = multiplyPips(
+      absBigInt(position.quantity),
+      position.indexPrice,
+    );
   }
 
-  const position = convertToPositionBigInt(positionForMarket);
-  const positionNotionalValue = multiplyPips(
-    absBigInt(position.quantity),
-    position.indexPrice,
-  );
-
-  const effectiveInitialMarginFraction =
+  const effectiveInitialMarginFraction = decimalToPip(
     walletInitialMarginFractionOverrides.find(
       (imfo) => imfo.market === market.market,
-    )?.initialMarginFractionOverride || market.initialMarginFraction;
+    )?.initialMarginFractionOverride || market.initialMarginFraction,
+  );
   const initialMarginRequirement = multiplyPips(
     positionNotionalValue,
-    decimalToPip(effectiveInitialMarginFraction),
+    effectiveInitialMarginFraction,
   );
 
+  const potentialHeldOrderValue = dividePips(
+    decimalToPip(wallet.heldCollateral),
+    effectiveInitialMarginFraction,
+  );
+  const potentialLeveragedValue =
+    positionNotionalValue + potentialHeldOrderValue;
   const availableCollateralForLeverage =
-    initialMarginRequirement + decimalToPip(wallet.availableCollateral);
+    initialMarginRequirement + decimalToPip(wallet.freeCollateral);
 
   return pipToDecimal(
     minBigInt(
       oneInPips,
-      dividePips(availableCollateralForLeverage, positionNotionalValue),
+      dividePips(availableCollateralForLeverage, potentialLeveragedValue),
     ),
   );
 }

@@ -83,7 +83,7 @@ describe('orderbook/quantities', () => {
     it('should succeed', () => {
       expect(
         calculateMaximumInitialMarginFractionOverride(market, wallet, []),
-      ).to.eql('0.25000000');
+      ).to.eql('0.20000000');
       expect(
         calculateMaximumInitialMarginFractionOverride(market, wallet, [
           {
@@ -92,7 +92,7 @@ describe('orderbook/quantities', () => {
             initialMarginFractionOverride: null,
           },
         ]),
-      ).to.eql('0.25000000');
+      ).to.eql('0.20000000');
       expect(
         calculateMaximumInitialMarginFractionOverride(market, wallet, [
           {
@@ -101,7 +101,7 @@ describe('orderbook/quantities', () => {
             initialMarginFractionOverride: '0.20000000',
           },
         ]),
-      ).to.eql('0.35000000');
+      ).to.eql('0.32000000');
 
       const walletWithShortPosition = { ...wallet };
       walletWithShortPosition.positions[0].quantity = '-2.00000000';
@@ -117,7 +117,7 @@ describe('orderbook/quantities', () => {
             },
           ],
         ),
-      ).to.eql('0.35000000');
+      ).to.eql('0.32000000');
 
       const walletWithoutPositions = { ...wallet, positions: undefined };
       expect(
@@ -126,7 +126,20 @@ describe('orderbook/quantities', () => {
           walletWithoutPositions,
           [],
         ),
-      ).to.eql('1.00000000');
+      ).to.eql('0.40000000');
+      expect(
+        calculateMaximumInitialMarginFractionOverride(
+          market,
+          walletWithoutPositions,
+          [
+            {
+              wallet: wallet.wallet,
+              market: market.market,
+              initialMarginFractionOverride: '0.20000000',
+            },
+          ],
+        ),
+      ).to.eql('0.80000000');
     });
   });
 });
