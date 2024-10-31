@@ -162,9 +162,11 @@ export function calculateMaximumInitialMarginFractionOverride(
     initialMarginRequirement + decimalToPip(wallet.freeCollateral);
 
   return pipToDecimal(
-    minBigInt(
-      oneInPips,
-      dividePips(availableCollateralForLeverage, potentialLeveragedValue),
+    potentialLeveragedValue === 0n ? oneInPips : (
+      minBigInt(
+        oneInPips,
+        dividePips(availableCollateralForLeverage, potentialLeveragedValue),
+      )
     ),
   );
 }
