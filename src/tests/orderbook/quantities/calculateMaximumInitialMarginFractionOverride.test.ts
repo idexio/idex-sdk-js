@@ -141,5 +141,19 @@ describe('orderbook/quantities', () => {
         ),
       ).to.eql('0.80000000');
     });
+
+    const walletWithoutPositionsOrHeldCollateral = {
+      ...wallet,
+      freeCollateral: '100.00000000',
+      heldCollateral: '0.00000000',
+      positions: undefined,
+    };
+    expect(
+      calculateMaximumInitialMarginFractionOverride(
+        market,
+        walletWithoutPositionsOrHeldCollateral,
+        [],
+      ),
+    ).to.eql('1.00000000');
   });
 });
