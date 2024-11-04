@@ -13,6 +13,7 @@ import {
   getOrderSignatureTypedData,
   getWalletAssociationSignatureTypedData,
   getWithdrawalSignatureTypedData,
+  getInitialMarginFractionOverrideSettingsSignatureTypedData,
 } from '#signatures';
 import {
   deriveBaseURL,
@@ -615,7 +616,7 @@ export class RestAuthenticatedClient {
    * **Endpoint Parameters**
    *
    * > - **HTTP Request:**         `POST /v4/orders`
-   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityUserData)
+   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityTrade)
    * > - **API Key Scope:**        [Trade](https://api-docs-v4.idex.io/#api-keys)
    * > - **Pagination:**           `None`
    * ---
@@ -1299,6 +1300,74 @@ export class RestAuthenticatedClient {
   }
 
   /**
+   * Override minimum Initial Margin Fraction for wallet for a market
+   *
+   * ---
+   * **Endpoint Parameters**
+   *
+   * > - **HTTP Request:**         `POST /v4/initialMarginFractionOverride`
+   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityTrade)
+   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **Pagination:**
+   * ---
+   *
+   * @returns
+   * - Returns an {@link idex.IDEXInitialMarginFractionOverride IDEXInitialMarginFractionOverride}
+   *   object providing the details of the new  setting.
+
+   *
+   * @category Wallets & Positions
+   */
+  public async setInitialMarginFractionOverride<
+    R = idex.RestResponseSetInitialMarginFractionOverride,
+  >(
+    params: idex.RestRequestSetInitialMarginFractionOverride,
+    signer: idex.SignTypedData | undefined = this.#signer,
+  ) {
+    ensureSigner(signer);
+
+    const { chainId, exchangeContractAddress } =
+      await this.getContractAndChainId();
+
+    return this.post<R>('/initialMarginFractionOverride', {
+      parameters: params,
+      signature: await signer(
+        ...getInitialMarginFractionOverrideSettingsSignatureTypedData(
+          params,
+          exchangeContractAddress,
+          chainId,
+          this.#config.sandbox,
+        ),
+      ),
+    });
+  }
+
+  /**
+   * Get Initial Margin Fraction overrides for wallet for a market or all markets
+   *
+   * ---
+   * **Endpoint Parameters**
+   *
+   * > - **HTTP Request:**         `GET /v4/initialMarginFractionOverride`
+   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityTrade)
+   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **Pagination:**
+   * ---
+   *
+   * @returns
+   * - Returns an {@link idex.IDEXInitialMarginFractionOverride IDEXInitialMarginFractionOverride}
+   *   object providing the details of the setting.
+
+   *
+   * @category Wallets & Positions
+   */
+  public async getInitialMarginFractionOverride<
+    R = idex.RestResponseGetInitialMarginFractionOverride,
+  >(params: idex.RestRequestGetInitialMarginFractionOverride) {
+    return this.get<R>('/initialMarginFractionOverride', params);
+  }
+
+  /**
    * Get Historical PnL for the wallet / market matching {@link idex.IDEXHistoricalProfitLoss IDEXHistoricalProfitLoss}
    *
    * ---
@@ -1391,6 +1460,109 @@ export class RestAuthenticatedClient {
       );
 
       return result;
+    },
+
+    placeOrderWithConditionalTpSlOrders: async <T extends idex.OrderType>(
+      params: {
+        order: idex.RestRequestOrder & { type: T };
+        conditionalTakeProfitOrder?: idex.RestRequestOrder & {
+          type: typeof idex.OrderType.takeProfitMarket;
+        };
+        conditionalStopLossOrder?: idex.RestRequestOrder & {
+          type: typeof idex.OrderType.stopLossMarket;
+        };
+      },
+      signer: undefined | idex.SignTypedData = this.#signer,
+    ): Promise<{
+      order: idex.RestResponseGetOrder & { type: T };
+      conditionalTakeProfitOrder?: idex.RestResponseGetOrder & {
+        type: typeof idex.OrderType.takeProfitMarket;
+      };
+      conditionalStopLossOrder?: idex.RestResponseGetOrder & {
+        type: typeof idex.OrderType.stopLossMarket;
+      };
+    }> => {
+      ensureSigner(signer);
+
+      const { chainId, exchangeContractAddress } =
+        await this.getContractAndChainId();
+
+      const signOrder = (order: idex.RestRequestOrder): Promise<string> =>
+        signer(
+          ...getOrderSignatureTypedData(
+            order,
+            exchangeContractAddress,
+            chainId,
+            this.#config.sandbox,
+          ),
+        );
+
+      return this.post<{
+        order: idex.RestResponseGetOrder & { type: T };
+        conditionalTakeProfitOrder?: idex.RestResponseGetOrder & {
+          type: typeof idex.OrderType.takeProfitMarket;
+        };
+        conditionalStopLossOrder?: idex.RestResponseGetOrder & {
+          type: typeof idex.OrderType.stopLossMarket;
+        };
+      }>('/internal/orders/orderWithConditionalTpSlOrders', {
+        order: {
+          parameters: params.order,
+          signature: await signOrder(params.order),
+        },
+        conditionalTakeProfitOrder:
+          params.conditionalTakeProfitOrder ?
+            {
+              parameters: params.conditionalTakeProfitOrder,
+              signature: await signOrder(params.conditionalTakeProfitOrder),
+            }
+          : undefined,
+        conditionalStopLossOrder:
+          params.conditionalStopLossOrder ?
+            {
+              parameters: params.conditionalStopLossOrder,
+              signature: await signOrder(params.conditionalStopLossOrder),
+            }
+          : undefined,
+      } satisfies {
+        order: idex.RestRequestCreateOrderSigned;
+        conditionalTakeProfitOrder?: idex.RestRequestCreateOrderSigned;
+        conditionalStopLossOrder?: idex.RestRequestCreateOrderSigned;
+      });
+    },
+
+    replaceConditionalTpSlOrder: async <
+      T extends
+        | typeof idex.OrderType.takeProfitMarket
+        | typeof idex.OrderType.stopLossMarket,
+    >(
+      takeProfitOrStopLossOrder: idex.RestRequestOrder & { type: T },
+      conditionalParentOrderId: string,
+      signer: undefined | idex.SignTypedData = this.#signer,
+    ): Promise<idex.RestResponseGetOrder & { type: T }> => {
+      ensureSigner(signer);
+
+      const { chainId, exchangeContractAddress } =
+        await this.getContractAndChainId();
+
+      return this.post<idex.RestResponseGetOrder & { type: T }>(
+        '/internal/orders/replaceConditionalTpSlOrder',
+        {
+          parameters: takeProfitOrStopLossOrder,
+          signature: await signer(
+            ...getOrderSignatureTypedData(
+              takeProfitOrStopLossOrder,
+              exchangeContractAddress,
+              chainId,
+              this.#config.sandbox,
+            ),
+          ),
+        },
+        {
+          // Query string parameters
+          params: { conditionalParentOrderPublicId: conditionalParentOrderId },
+        },
+      );
     },
   } as const);
 

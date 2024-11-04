@@ -583,6 +583,7 @@ export const BridgeTarget = {
   STARGATE_POLYGON: 'stargate.polygon',
   STARGATE_SCROLL: 'stargate.scroll',
   STARGATE_RARI: 'stargate.rari',
+  STARGATE_SEI: 'stargate.sei',
   STARGATE_TAIKO: 'stargate.taiko',
 } as const;
 

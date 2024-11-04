@@ -9,6 +9,8 @@ import {
   minBigInt,
   multiplyPips,
   oneInPips,
+  dividePips,
+  pipToDecimal,
 } from '#pipmath';
 
 import { OrderSide } from '#types/enums/request';
@@ -19,9 +21,11 @@ import type {
   OrderBookLevelL2,
 } from '#types/orderBook';
 import type {
+  IDEXInitialMarginFractionOverride,
   IDEXMarket,
   IDEXOrder,
   IDEXPosition,
+  IDEXWallet,
 } from '#types/rest/endpoints/index';
 
 export type LeverageParameters = Pick<
@@ -117,6 +121,53 @@ export function calculateInitialMarginFractionWithOverride(args: {
   return maxBigInt(
     calculateInitialMarginFraction(leverageParameters, baseQuantity),
     initialMarginFractionOverride ?? BigInt(0),
+  );
+}
+
+export function calculateMaximumInitialMarginFractionOverride(
+  market: Pick<IDEXMarket, 'market' | 'initialMarginFraction'>,
+  wallet: Pick<IDEXWallet, 'positions' | 'freeCollateral' | 'heldCollateral'>,
+  walletInitialMarginFractionOverrides: IDEXInitialMarginFractionOverride[],
+) {
+  const positionForMarket =
+    wallet.positions &&
+    wallet.positions.find((p) => p.market === market.market);
+
+  let positionNotionalValue = 0n;
+  if (positionForMarket) {
+    const position = convertToPositionBigInt(positionForMarket);
+    positionNotionalValue = multiplyPips(
+      absBigInt(position.quantity),
+      position.indexPrice,
+    );
+  }
+
+  const effectiveInitialMarginFraction = decimalToPip(
+    walletInitialMarginFractionOverrides.find(
+      (imfo) => imfo.market === market.market,
+    )?.initialMarginFractionOverride || market.initialMarginFraction,
+  );
+  const initialMarginRequirement = multiplyPips(
+    positionNotionalValue,
+    effectiveInitialMarginFraction,
+  );
+
+  const potentialHeldOrderValue = dividePips(
+    decimalToPip(wallet.heldCollateral),
+    effectiveInitialMarginFraction,
+  );
+  const potentialLeveragedValue =
+    positionNotionalValue + potentialHeldOrderValue;
+  const availableCollateralForLeverage =
+    initialMarginRequirement + decimalToPip(wallet.freeCollateral);
+
+  return pipToDecimal(
+    potentialLeveragedValue === 0n ? oneInPips : (
+      minBigInt(
+        oneInPips,
+        dividePips(availableCollateralForLeverage, potentialLeveragedValue),
+      )
+    ),
   );
 }
 
