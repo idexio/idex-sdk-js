@@ -185,14 +185,23 @@ export interface IDEXOrder {
   isLiquidationAcquisitionOnly?: true | undefined;
 }
 
-/**
- * @see type {@link IDEXOrder}
- * @category IDEX - Get Orders
- */
-export type RestResponseGetOrder = IDEXOrder;
+type ConditionalOrdersMixin = {
+  conditionalTakeProfitOrder?: IDEXOrder & {
+    type: typeof OrderType.takeProfitMarket;
+  };
+  conditionalStopLossOrder?: IDEXOrder & {
+    type: typeof OrderType.stopLossMarket;
+  };
+};
 
 /**
  * @see type {@link IDEXOrder}
  * @category IDEX - Get Orders
  */
-export type RestResponseGetOrders = IDEXOrder[];
+export type RestResponseGetOrder = IDEXOrder & ConditionalOrdersMixin;
+
+/**
+ * @see type {@link IDEXOrder}
+ * @category IDEX - Get Orders
+ */
+export type RestResponseGetOrders = (IDEXOrder & ConditionalOrdersMixin)[];
