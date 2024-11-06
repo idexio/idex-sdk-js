@@ -1548,19 +1548,21 @@ export class RestAuthenticatedClient {
       return this.post<idex.RestResponseGetOrder & { type: T }>(
         '/internal/orders/replaceConditionalTpSlOrder',
         {
-          parameters: takeProfitOrStopLossOrder,
-          signature: await signer(
-            ...getOrderSignatureTypedData(
-              takeProfitOrStopLossOrder,
-              exchangeContractAddress,
-              chainId,
-              this.#config.sandbox,
+          order: {
+            parameters: takeProfitOrStopLossOrder,
+            signature: await signer(
+              ...getOrderSignatureTypedData(
+                takeProfitOrStopLossOrder,
+                exchangeContractAddress,
+                chainId,
+                this.#config.sandbox,
+              ),
             ),
-          ),
-        },
-        {
-          // Query string parameters
-          params: { conditionalParentOrderPublicId: conditionalParentOrderId },
+          },
+          conditionalParentOrderPublicId: conditionalParentOrderId,
+        } satisfies {
+          order: idex.RestRequestCreateOrderSigned;
+          conditionalParentOrderPublicId: string;
         },
       );
     },
