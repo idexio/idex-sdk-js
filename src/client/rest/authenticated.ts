@@ -729,20 +729,12 @@ export class RestAuthenticatedClient {
     params: idex.RestRequestCancelOrders,
     signer: idex.SignTypedData | undefined = this.#signer,
   ) {
-    return this.makeCancelOrdersRequest('/orders', params, signer);
-  }
-
-  private async makeCancelOrdersRequest(
-    endpoint: string,
-    params: idex.RestRequestCancelOrders,
-    signer: idex.SignTypedData | undefined = this.#signer,
-  ) {
     ensureSigner(signer);
 
     const { chainId, exchangeContractAddress } =
       await this.getContractAndChainId();
 
-    return this.delete<idex.RestResponseCancelOrders>(endpoint, {
+    return this.delete<idex.RestResponseCancelOrders>('/orders', {
       parameters: params,
       signature: await signer(
         ...getOrderCancellationSignatureTypedData(
@@ -1452,36 +1444,6 @@ export class RestAuthenticatedClient {
    * @internal
    */
   public readonly [INTERNAL_SYMBOL] = Object.freeze({
-    /**
-     * Requires the public IDs (`orderIds`) of the stop loss orders' parent
-     * orders. Do not provide the public IDs of the stop loss orders themselves.
-     */
-    cancelConditionalStopLossOrders: async (
-      params: idex.RestRequestCancelOrders,
-      signer: idex.SignTypedData | undefined = this.#signer,
-    ) => {
-      return this.makeCancelOrdersRequest(
-        '/internal/orders/conditionalStopLossOrders',
-        params,
-        signer,
-      );
-    },
-
-    /**
-     * Requires the public IDs (`orderIds`) of the take profit orders' parent
-     * orders. Do not provide the public IDs of the take profit orders themselves.
-     */
-    cancelConditionalTakeProfitOrders: async (
-      params: idex.RestRequestCancelOrders,
-      signer: idex.SignTypedData | undefined = this.#signer,
-    ) => {
-      return this.makeCancelOrdersRequest(
-        '/internal/orders/conditionalTakeProfitOrders',
-        params,
-        signer,
-      );
-    },
-
     getFundingPayments: async (
       ...[params, ...args]: Parameters<
         RestAuthenticatedClient['getFundingPayments']
@@ -1498,42 +1460,6 @@ export class RestAuthenticatedClient {
       );
 
       return result;
-    },
-
-    placeConditionalTpSlOrder: async <
-      T extends
-        | typeof idex.OrderType.takeProfitMarket
-        | typeof idex.OrderType.stopLossMarket,
-    >(
-      takeProfitOrStopLossOrder: idex.RestRequestOrder & { type: T },
-      conditionalParentOrderId: string,
-      signer: undefined | idex.SignTypedData = this.#signer,
-    ): Promise<idex.RestResponseGetOrder & { type: T }> => {
-      ensureSigner(signer);
-
-      const { chainId, exchangeContractAddress } =
-        await this.getContractAndChainId();
-
-      return this.post<idex.RestResponseGetOrder & { type: T }>(
-        '/internal/orders/conditionalTpSlOrders',
-        {
-          order: {
-            parameters: takeProfitOrStopLossOrder,
-            signature: await signer(
-              ...getOrderSignatureTypedData(
-                takeProfitOrStopLossOrder,
-                exchangeContractAddress,
-                chainId,
-                this.#config.sandbox,
-              ),
-            ),
-          },
-          conditionalParentOrderPublicId: conditionalParentOrderId,
-        } satisfies {
-          order: idex.RestRequestCreateOrderSigned;
-          conditionalParentOrderPublicId: string;
-        },
-      );
     },
 
     placeOrderWithConditionalTpSlOrders: async <T extends idex.OrderType>(
@@ -1603,6 +1529,42 @@ export class RestAuthenticatedClient {
         conditionalTakeProfitOrder?: idex.RestRequestCreateOrderSigned;
         conditionalStopLossOrder?: idex.RestRequestCreateOrderSigned;
       });
+    },
+
+    replaceConditionalTpSlOrder: async <
+      T extends
+        | typeof idex.OrderType.takeProfitMarket
+        | typeof idex.OrderType.stopLossMarket,
+    >(
+      takeProfitOrStopLossOrder: idex.RestRequestOrder & { type: T },
+      conditionalParentOrderId: string,
+      signer: undefined | idex.SignTypedData = this.#signer,
+    ): Promise<idex.RestResponseGetOrder & { type: T }> => {
+      ensureSigner(signer);
+
+      const { chainId, exchangeContractAddress } =
+        await this.getContractAndChainId();
+
+      return this.post<idex.RestResponseGetOrder & { type: T }>(
+        '/internal/orders/replaceConditionalTpSlOrder',
+        {
+          order: {
+            parameters: takeProfitOrStopLossOrder,
+            signature: await signer(
+              ...getOrderSignatureTypedData(
+                takeProfitOrStopLossOrder,
+                exchangeContractAddress,
+                chainId,
+                this.#config.sandbox,
+              ),
+            ),
+          },
+          conditionalParentOrderPublicId: conditionalParentOrderId,
+        } satisfies {
+          order: idex.RestRequestCreateOrderSigned;
+          conditionalParentOrderPublicId: string;
+        },
+      );
     },
   } as const);
 
