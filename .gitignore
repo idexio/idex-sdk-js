@@ -11,6 +11,7 @@ yarn-error.log
 src/tests/quick.ts
 test/quick.ts
 debug/quick.ts
+src/tests/quick/
 # this will be built and updated by the release bot
 # ./API.md
 
