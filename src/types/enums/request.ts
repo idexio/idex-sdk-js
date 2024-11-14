@@ -464,6 +464,16 @@ export const OrderType = Object.freeze({
    *    to provide inline IDE completion and documentation.
    */
   trailingStopMarket: 'trailingStopMarket',
+
+  /**
+   * @internal
+   */
+  conditionalStopLossMarket: 'conditionalStopLossMarket',
+
+  /**
+   * @internal
+   */
+  conditionalTakeProfitMarket: 'conditionalTakeProfitMarket',
 } as const);
 
 export type OrderType = (typeof OrderType)[keyof typeof OrderType];
