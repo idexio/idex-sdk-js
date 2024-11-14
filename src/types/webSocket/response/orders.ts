@@ -1,5 +1,9 @@
 import type * as idex from '#index';
-import type { MessageEventType, OrderType } from '#types/enums/index';
+import type {
+  MessageEventType,
+  OrderSubType,
+  OrderType,
+} from '#types/enums/index';
 import type { OrderStateChange } from '#types/enums/response';
 import type { IDEXOrder } from '#types/rest/endpoints/GetOrders';
 import type { IDEXSubscriptionEventBase } from '#types/webSocket/base';
@@ -102,6 +106,10 @@ export interface IDEXOrderEventDataGeneral
    */
   readonly type: OrderType;
   /**
+   * @internal
+   */
+  readonly subType?: OrderSubType;
+  /**
    * Type of order update
    *
    * @see enum {@link OrderStateChange}
@@ -181,7 +189,6 @@ export interface WebSocketResponseOrderShortBase {
    * @see inflated {@link IDEXOrderEventDataGeneral.wallet}
    */
   w: IDEXOrderEventDataBase['wallet'];
-  // t: IDEXOrder['execut'];
   /**
    * @see inflated {@link IDEXOrderEventDataGeneral.executionTime}
    */
@@ -229,6 +236,10 @@ export interface WebSocketResponseOrderShortGeneral
    * @inheritDoc
    */
   o: IDEXOrderEventDataGeneral['type'];
+  /**
+   * @internal
+   */
+  O?: IDEXOrderEventDataGeneral['subType'];
   /**
    * @see related {@link IDEXOrder.orderId}
    * @see inflated {@link IDEXOrderEventDataGeneral.orderId}
@@ -314,7 +325,7 @@ export interface WebSocketResponseOrderShortGeneral
   /**
    * @see inflated {@link IDEXOrderEventDataGeneral.conditionalOrderId}
    */
-  ci?: string;
+  ci?: IDEXOrderEventDataGeneral['conditionalOrderId'];
   /**
    * @see related {@link IDEXOrder.reduceOnly}
    * @see inflated {@link IDEXOrderEventDataGeneral.reduceOnly}

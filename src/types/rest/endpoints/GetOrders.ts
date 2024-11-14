@@ -141,6 +141,7 @@ export interface IDEXOrder {
    * - Only applicable to stop {@link OrderType order types}:
    *   - {@link OrderType.stopLossMarket stopLossMarket}
    *   - {@link OrderType.stopLossLimit stopLossLimit}
+   *   - {@link OrderType.takeProfitMarket takeProfitMarket}
    *   - {@link OrderType.trailingStopMarket trailingStopMarket}
    * - Indicates an {@link orderId} of an open {@link OrderType.limit limit} order
    *   by the same wallet in the same market that must be filled before the stop becomes active.
