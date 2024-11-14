@@ -464,19 +464,21 @@ export const OrderType = Object.freeze({
    *    to provide inline IDE completion and documentation.
    */
   trailingStopMarket: 'trailingStopMarket',
-
-  /**
-   * @internal
-   */
-  conditionalStopLossMarket: 'conditionalStopLossMarket',
-
-  /**
-   * @internal
-   */
-  conditionalTakeProfitMarket: 'conditionalTakeProfitMarket',
 } as const);
 
 export type OrderType = (typeof OrderType)[keyof typeof OrderType];
+
+/**
+ * @internal
+ */
+export const OrderSubType = Object.freeze({
+  conditional: 'conditional',
+});
+
+/**
+ * @internal
+ */
+export type OrderSubType = (typeof OrderSubType)[keyof typeof OrderSubType];
 
 /**
  * @see request {@link _types.RestRequestOrderBase.side RestRequestOrder.side}
