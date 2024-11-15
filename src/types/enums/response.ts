@@ -112,7 +112,6 @@ export const OrderStatus = Object.freeze({
    * Limit order was canceled prior to execution completion but may be partially filled
    */
   canceled: 'canceled',
-  expired: 'expired',
   /**
    * Limit order is completely filled and is no longer on the book; market order was filled
    */
@@ -122,10 +121,6 @@ export const OrderStatus = Object.freeze({
    */
   inactive: 'inactive',
   /**
-   * @internal
-   */
-  new: 'new',
-  /*
    * Order ID to cancel was not found
    */
   notFound: 'notFound',
@@ -137,10 +132,6 @@ export const OrderStatus = Object.freeze({
    * Limit order has completed fills but has remaining open quantity
    */
   partiallyFilled: 'partiallyFilled',
-  /**
-   * Order was rejected by the trading engine
-   */
-  rejected: 'rejected',
 } as const);
 
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus];
@@ -156,10 +147,18 @@ export const OrderStateChange = Object.freeze({
    */
   new: 'new',
   /**
-   * A stop order has accepted into the trading engine, once triggered,
-   * will go through other normal events starting with new
+   * A stop order has been accepted into the trading engine. Once triggered, it
+   * will go through other normal events starting with "new".
    */
   activated: 'activated',
+  /**
+   * A conditional or trailing stop order has been accepted into the trading
+   * engine, but has not yet entered the active state. Once activated, it
+   * will go through other stop order events starting with "activated".
+   *
+   * @internal
+   */
+  accepted: 'accepted',
   /**
    * An order has generated a fill, both on maker and taker sides.
    * Will be the first change event sent if an order matches on execution.
