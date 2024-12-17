@@ -630,19 +630,28 @@ export class RestAuthenticatedClient {
    * ```typescript
    * import { OrderType, OrderSide } from '@idexio/idex-sdk';
    *
-   * const order = await client.createOrder({
-   *   // always use the enum and define it first so that
-   *   // the type of this params object change to the
-   *   // appropriate interface with completion hints in IDE!
-   *   type: OrderType.market,
-   *   // this object is now narrowed to
-   *   // interface: RestRequestOrderTypeMarket
-   *   side: OrderSide.buy,
-   *   nonce: uuidv1(),
-   *   wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
-   *   market: 'ETH-USD',
-   *   quantity: '10.00000000'
-   * });
+   * try {
+   *   const order = await client.createOrder({
+   *     // always use the enum and define it first so that
+   *     // the type of this params object change to the
+   *     // appropriate interface with completion hints in IDE!
+   *     type: OrderType.market,
+   *     // this object is now narrowed to
+   *     // interface: RestRequestOrderTypeMarket
+   *     side: OrderSide.buy,
+   *     nonce: uuidv1(),
+   *     wallet: '0xA71C4aeeAabBBB8D2910F41C2ca3964b81F7310d',
+   *     market: 'ETH-USD',
+   *     quantity: '10.00000000'
+   *   });
+   * } catch(e) {
+   *   // order placement failed with an unexpected error
+   *   // you may use isAxiosError(e) for stronger typing here if desired
+   *   if (e.response?.data?.code === 'INSUFFICIENT_FUNDS') {
+   *      // handle insufficient funds errors
+   *      console.log('Insufficient funds to create order');
+   *   }
+   * }
    * ```
    *
    * <br />
