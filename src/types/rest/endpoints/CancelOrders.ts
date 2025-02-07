@@ -1,5 +1,5 @@
 import type { RestRequestWithSignature } from '#types/utils';
-import type * as idex from '@idexio/idex-sdk/types';
+import type * as idex from '@idexio/idex-sdk-bera/types';
 
 /**
  * [[include:unexported.md]]
