@@ -36,6 +36,23 @@ export function isStargateV2MainnetLayerZeroEndpointId(
   );
 }
 
+export const StargateV2TestnetLayerZeroEndpointIds = Object.values(
+  StargateV2ConfigByLayerZeroEndpointId.testnet,
+).map((value) => {
+  return value.layerZeroEndpointId;
+});
+
+export type StargateV2LayerZeroEndpointIdsTestnet =
+  (typeof StargateV2TestnetLayerZeroEndpointIds)[number];
+
+export function isStargateV2TestnetLayerZeroEndpointId(
+  layerZeroEndpointId: number,
+): layerZeroEndpointId is StargateV2LayerZeroEndpointIdsTestnet {
+  return StargateV2TestnetLayerZeroEndpointIds.includes(
+    layerZeroEndpointId as StargateV2LayerZeroEndpointIdsTestnet,
+  );
+}
+
 /**
  * Get a stargate config with strict typing to allow narrowing on the
  * `config.supported` boolean
@@ -49,13 +66,14 @@ export function getStargateV2TargetConfig<
   T extends StargateV2Target,
   S extends true | false,
 >(stargateTarget: T, sandbox: S) {
-  if (sandbox) {
-    throw new Error('Testnet not supported');
-  }
-
-  const targetConfig = StargateV2Config.mainnet[stargateTarget];
+  const targetConfig =
+    sandbox ?
+      StargateV2Config.testnet[stargateTarget]
+    : StargateV2Config.mainnet[stargateTarget];
   if (!targetConfig) {
-    throw new Error(`No config found for ${stargateTarget}`);
+    throw new Error(
+      `No config found for ${stargateTarget} ${sandbox ? 'testnet' : 'mainnet'}`,
+    );
   }
 
   return targetConfig;
@@ -65,11 +83,11 @@ export function stargateV2TargetForLayerZeroEndpointId(
   layerZeroEndpointId: number,
   sandbox: boolean,
 ) {
-  if (sandbox) {
-    throw new Error('Testnet not supported');
+  if (sandbox && isStargateV2TestnetLayerZeroEndpointId(layerZeroEndpointId)) {
+    return StargateV2ConfigByLayerZeroEndpointId.testnet[layerZeroEndpointId]
+      .target;
   }
-
-  if (isStargateV2MainnetLayerZeroEndpointId(layerZeroEndpointId)) {
+  if (!sandbox && isStargateV2MainnetLayerZeroEndpointId(layerZeroEndpointId)) {
     return StargateV2ConfigByLayerZeroEndpointId.mainnet[layerZeroEndpointId]
       .target;
   }
@@ -110,15 +128,14 @@ export function getEncodedWithdrawalPayloadForBridgeTarget(
   bridgeTarget: BridgeTarget,
   sandbox = false,
 ): EncodedStargateV2Payload {
-  if (sandbox) {
-    throw new Error('Testnet not supported');
-  }
-
-  const targetConfig = StargateV2Config.mainnet[bridgeTarget];
+  const targetConfig =
+    sandbox ?
+      StargateV2Config.testnet[bridgeTarget]
+    : StargateV2Config.mainnet[bridgeTarget];
 
   if (!targetConfig || !targetConfig.isSupported) {
     throw new Error(
-      `Stargate withdrawals not supported to chain ${targetConfig.target} (Chain ID: ${String(targetConfig.evmChainId)})`,
+      `Stargate withdrawals not supported to chain ${targetConfig.target} ${sandbox ? 'testnet' : 'mainnet'} (Chain ID: ${String(targetConfig.evmChainId)})`,
     );
   }
 
@@ -246,16 +263,18 @@ async function getStargateV2DepositSendParamAndSourceConfig(
   },
   sandbox: boolean,
 ) {
-  if (sandbox) {
-    throw new Error('Testnet not supported');
-  }
-
-  const sourceConfig = StargateV2Config.mainnet[sourceStargateTarget];
-  const targetConfig = StargateV2Config.mainnet[StargateV2Target.XCHAIN_XCHAIN];
+  const sourceConfig =
+    sandbox ?
+      StargateV2Config.testnet[sourceStargateTarget]
+    : StargateV2Config.mainnet[sourceStargateTarget];
+  const targetConfig =
+    sandbox ?
+      StargateV2Config.testnet[StargateV2Target.XCHAIN_XCHAIN]
+    : StargateV2Config.mainnet[StargateV2Target.XCHAIN_XCHAIN];
 
   if (!sourceConfig || !sourceConfig.isSupported || !targetConfig.isSupported) {
     throw new Error(
-      `Stargate deposits not supported from chain ${sourceConfig.target} (Chain ID: ${String(sourceConfig.evmChainId)}) to chain ${targetConfig.target} (Chain ID: ${String(targetConfig.evmChainId)})`,
+      `Stargate deposits not supported from chain ${sourceConfig.target} ${sandbox ? 'testnet' : 'mainnet'} (Chain ID: ${String(sourceConfig.evmChainId)}) to chain ${targetConfig.target} (Chain ID: ${String(targetConfig.evmChainId)})`,
     );
   }
 
