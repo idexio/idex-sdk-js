@@ -58,7 +58,7 @@ export const StargateV2Config = {
       // https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#xchain-testnet
       layerZeroEndpointId: 40282,
       // TODO Not a Stargate contract
-      stargateOFTAddress: '0xb1487b8C46e68e15ed3B01cC5AA4A1E6aFEfd6d4',
+      stargateOFTAddress: '0x54a04EfABCBd81A0488E4a9Ad22264E04A48329B',
       tokenDecimals: 6,
     },
     [StargateV2Target.STARGATE_BERACHAIN]: {
@@ -71,7 +71,7 @@ export const StargateV2Config = {
       // TODO Not yet in LZ docs
       layerZeroEndpointId: 40346,
       // TODO Not a Stargate contract
-      stargateOFTAddress: '0x54a04EfABCBd81A0488E4a9Ad22264E04A48329B',
+      stargateOFTAddress: '0xb1487b8C46e68e15ed3B01cC5AA4A1E6aFEfd6d4',
       // TODO Not yet in LZ docs
       tokenDecimals: 6,
     },
