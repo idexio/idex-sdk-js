@@ -1013,7 +1013,7 @@ export class WebSocketClient {
         this.#options.baseWebSocketURL,
         isNode ?
           {
-            headers: { 'User-Agent': 'idex-sdk-js' },
+            headers: { 'User-Agent': 'kuma-sdk-js' },
           }
         : undefined,
       );

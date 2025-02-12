@@ -1,19 +1,14 @@
-import { ethers } from 'ethers';
+export const REST_API_KEY_HEADER = 'bera-api-key';
+export const REST_HMAC_SIGNATURE_HEADER = 'bera-hmac-signature';
 
-export const REST_API_KEY_HEADER = 'idex-api-key';
-export const REST_HMAC_SIGNATURE_HEADER = 'idex-hmac-signature';
-
-export const ORDER_BOOK_MAX_L2_LEVELS = 500;
-
-export const ORDER_BOOK_FIRST_LEVEL_MULTIPLIER_IN_PIPS = BigInt(110000000); // 1.1x
-
+// TODO Update to BERA
 export const EIP_712_DOMAIN_NAME = 'IDEX';
 
+// TODO Reset to 1.0.0
 export const EIP_712_DOMAIN_VERSION = '4.0.0';
 
+// TODO Reset to 1.0.0-sandbox
 export const EIP_712_DOMAIN_VERSION_SANDBOX = '4.0.0-sandbox';
-
-export const EMPTY_UINT8_ARRAY = ethers.getBytes('0x');
 
 // sdk-js-docs-v4.idex.io
 // api-docs-v4.idex.io

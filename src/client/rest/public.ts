@@ -568,8 +568,8 @@ export class RestPublicClient {
       url: endpoint,
     } satisfies AxiosRequestConfig;
 
-    if (this.#realtime && !request.headers['IDEX-Web-Client']) {
-      request.headers['IDEX-Web-Client'] = 'realtime-sdk';
+    if (this.#realtime && !request.headers['KUMA-Web-Client']) {
+      request.headers['KUMA-Web-Client'] = 'realtime-sdk';
     }
 
     return this.axios<R>(request);
