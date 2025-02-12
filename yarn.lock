@@ -573,9 +573,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@idexio/idex-sdk@workspace:.":
+"@idexio/idex-sdk-bera@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@idexio/idex-sdk@workspace:."
+  resolution: "@idexio/idex-sdk-bera@workspace:."
   dependencies:
     "@commitlint/config-conventional": "npm:^19.1.0"
     "@commitlint/types": "npm:^19.0.3"

@@ -1,4 +1,4 @@
-import type { BridgeTarget } from '@idexio/idex-sdk/types';
+import type { BridgeTarget } from '@idexio/idex-sdk-bera/types';
 
 /**
  * Estimated gas fees by bridge and target chain
