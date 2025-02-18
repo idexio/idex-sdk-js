@@ -88,6 +88,20 @@ export const StargateV2Config = {
       // https://stargateprotocol.gitbook.io/stargate/v2-developer-docs/technical-reference/v2-supported-networks-and-assets#base
       tokenDecimals: 6,
     },
+    [StargateV2Target.STARGATE_BERACHAIN]: {
+      target: StargateV2Target.STARGATE_BERACHAIN,
+      isSupported: true,
+      get isBridgeTarget() {
+        return isValidBridgeTarget(this.target);
+      },
+      evmChainId: 80094,
+      // https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#bera
+      layerZeroEndpointId: 30362,
+      // https://stargateprotocol.gitbook.io/stargate/v/v2-developer-docs/technical-reference/mainnet-contracts#berachain
+      stargateOFTAddress: '0xAF54BE5B6eEc24d6BFACf1cce4eaF680A8239398',
+      // https://stargateprotocol.gitbook.io/stargate/v2-developer-docs/technical-reference/v2-supported-networks-and-assets#berachain
+      tokenDecimals: 6,
+    },
     [StargateV2Target.STARGATE_BNB]: {
       target: StargateV2Target.STARGATE_BNB,
       isSupported: true,
@@ -259,6 +273,9 @@ export const StargateV2ConfigByLayerZeroEndpointId = {
     [StargateV2Config.mainnet[StargateV2Target.STARGATE_BASE]
       .layerZeroEndpointId]:
       StargateV2Config.mainnet[StargateV2Target.STARGATE_BASE],
+    [StargateV2Config.mainnet[StargateV2Target.STARGATE_BERACHAIN]
+      .layerZeroEndpointId]:
+      StargateV2Config.mainnet[StargateV2Target.STARGATE_BERACHAIN],
     [StargateV2Config.mainnet[StargateV2Target.STARGATE_BNB]
       .layerZeroEndpointId]:
       StargateV2Config.mainnet[StargateV2Target.STARGATE_BNB],
