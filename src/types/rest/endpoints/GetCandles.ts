@@ -1,4 +1,4 @@
-import type * as idex from '@idexio/idex-sdk-bera/types';
+import type * as idex from '@idexio/idex-sdk/types';
 
 /**
  * - Rest Request: `GET /candles`
