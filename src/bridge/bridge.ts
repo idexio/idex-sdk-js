@@ -288,6 +288,26 @@ async function getStargateV2DepositSendParamAndSourceConfig(
       ]
     : await getExchangeAddressAndChainFromApi();
 
+  // Configure the gas limit for the composed call on the destination chain. Encode as a tuple of
+  // (index, gasLimit) where index is 0 as there is only one call executed on the destination chain
+  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/oapp/contracts/oapp/libs/OptionsBuilder.sol#L92
+  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/protocol/contracts/messagelib/libs/ExecutorOptions.sol#L82
+  const gasLimitOption = ethers.solidityPacked(
+    ['uint16', 'uint128'],
+    [0, StargateV2Config.settings.swapDestinationGasLimit],
+  );
+  // Build a new options container and add the gas limit option built above. Encode as a tuple of
+  // (optionsType, workerId, gasLimitOption.length+1, optionType, gasLimitOption) where optionsType
+  // is the constant 3, workerId is the constant 1, gasLimitOption.length is the packed byte width
+  // of the gas limit option, and optionType is the constant 3 indicating lzCompose
+  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/oapp/contracts/oapp/libs/OptionsBuilder.sol#L133
+  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/protocol/contracts/messagelib/libs/ExecutorOptions.sol#L10
+  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/protocol/contracts/messagelib/libs/ExecutorOptions.sol#L14
+  const extraOptions = ethers.solidityPacked(
+    ['uint16', 'uint8', 'uint16', 'uint8', 'bytes'],
+    [3, 1, 2 + 16 + 1, 3, gasLimitOption],
+  );
+
   const sendParam = {
     dstEid: targetConfig.layerZeroEndpointId, // Destination endpoint ID
     to: ethers.zeroPadValue(stargateBridgeAdapterContractAddress, 32), // Recipient address
@@ -296,7 +316,7 @@ async function getStargateV2DepositSendParamAndSourceConfig(
       parameters.quantityInAssetUnits,
       parameters.minimumWithdrawQuantityMultiplierInPips,
     ), // Minimum amount to send in local decimals
-    extraOptions: '0x',
+    extraOptions,
     composeMsg: ethers.AbiCoder.defaultAbiCoder().encode(
       ['address'],
       [parameters.wallet],
