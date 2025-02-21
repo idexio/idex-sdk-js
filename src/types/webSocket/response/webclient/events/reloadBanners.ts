@@ -1,10 +1,10 @@
 import type { WebClientEvent } from '#types/enums/index';
-import type { IDEXWebClientEventDataBase } from '../base.js';
+import type { KumaWebClientEventDataBase } from '../base.js';
 
 type NoticeArea = 'notification' | 'banner';
 
-export interface IDEXWebClientEventDataReloadBanners
-  extends IDEXWebClientEventDataBase {
+export interface KumaWebClientEventDataReloadBanners
+  extends KumaWebClientEventDataBase {
   readonly event: typeof WebClientEvent.reload_banners;
   readonly action: NoticeArea;
   wallet?: undefined;

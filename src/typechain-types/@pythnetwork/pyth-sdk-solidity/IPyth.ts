@@ -66,6 +66,7 @@ export interface IPythInterface extends Interface {
       | 'getUpdateFee'
       | 'getValidTimePeriod'
       | 'parsePriceFeedUpdates'
+      | 'parsePriceFeedUpdatesUnique'
       | 'updatePriceFeeds'
       | 'updatePriceFeedsIfNecessary',
   ): FunctionFragment;
@@ -108,6 +109,10 @@ export interface IPythInterface extends Interface {
     values: [BytesLike[], BytesLike[], BigNumberish, BigNumberish],
   ): string;
   encodeFunctionData(
+    functionFragment: 'parsePriceFeedUpdatesUnique',
+    values: [BytesLike[], BytesLike[], BigNumberish, BigNumberish],
+  ): string;
+  encodeFunctionData(
     functionFragment: 'updatePriceFeeds',
     values: [BytesLike[]],
   ): string;
@@ -147,6 +152,10 @@ export interface IPythInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: 'parsePriceFeedUpdates',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'parsePriceFeedUpdatesUnique',
     data: BytesLike,
   ): Result;
   decodeFunctionResult(
@@ -298,6 +307,17 @@ export interface IPyth extends BaseContract {
     'payable'
   >;
 
+  parsePriceFeedUpdatesUnique: TypedContractMethod<
+    [
+      updateData: BytesLike[],
+      priceIds: BytesLike[],
+      minPublishTime: BigNumberish,
+      maxPublishTime: BigNumberish,
+    ],
+    [PythStructs.PriceFeedStructOutput[]],
+    'payable'
+  >;
+
   updatePriceFeeds: TypedContractMethod<
     [updateData: BytesLike[]],
     [void],
@@ -368,6 +388,18 @@ export interface IPyth extends BaseContract {
   ): TypedContractMethod<[], [bigint], 'view'>;
   getFunction(
     nameOrSignature: 'parsePriceFeedUpdates',
+  ): TypedContractMethod<
+    [
+      updateData: BytesLike[],
+      priceIds: BytesLike[],
+      minPublishTime: BigNumberish,
+      maxPublishTime: BigNumberish,
+    ],
+    [PythStructs.PriceFeedStructOutput[]],
+    'payable'
+  >;
+  getFunction(
+    nameOrSignature: 'parsePriceFeedUpdatesUnique',
   ): TypedContractMethod<
     [
       updateData: BytesLike[],

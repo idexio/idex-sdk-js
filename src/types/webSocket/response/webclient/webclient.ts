@@ -1,23 +1,23 @@
 import type { MessageEventType } from '#types/enums/index';
-import type { IDEXSubscriptionEventBase } from '#types/webSocket/base';
+import type { KumaSubscriptionEventBase } from '#types/webSocket/base';
 import type {
-  IDEXWebClientEventDataReloadBanners,
-  IDEXWebClientEventDataExchangeStatus,
-  IDEXWebClientEventDataTxSettled,
+  KumaWebClientEventDataReloadBanners,
+  KumaWebClientEventDataExchangeStatus,
+  KumaWebClientEventDataTxSettled,
 } from './events/index.js';
 
-export type IDEXWebClientEventData =
-  | IDEXWebClientEventDataReloadBanners
-  | IDEXWebClientEventDataExchangeStatus
-  | IDEXWebClientEventDataTxSettled;
+export type KumaWebClientEventData =
+  | KumaWebClientEventDataReloadBanners
+  | KumaWebClientEventDataExchangeStatus
+  | KumaWebClientEventDataTxSettled;
 
-export interface IDEXWebClientEvent extends IDEXSubscriptionEventBase {
+export interface KumaWebClientEvent extends KumaSubscriptionEventBase {
   /**
    * @inheritDoc
    */
   readonly type: typeof MessageEventType.webclient;
-  readonly data: IDEXWebClientEventData;
+  readonly data: KumaWebClientEventData;
 }
 
 export type WebSocketResponseSubscriptionMessageShortWebClient =
-  IDEXWebClientEvent;
+  KumaWebClientEvent;

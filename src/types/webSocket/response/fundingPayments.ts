@@ -1,40 +1,40 @@
 import type { MessageEventType } from '#types/enums/index';
-import type { IDEXFundingPayment } from '#types/rest/endpoints/GetFundingPayments';
+import type { KumaFundingPayment } from '#types/rest/endpoints/GetFundingPayments';
 import type { Expand } from '#types/utils';
-import type { IDEXSubscriptionEventBase } from '#types/webSocket/base';
+import type { KumaSubscriptionEventBase } from '#types/webSocket/base';
 
 /**
  * - `fundingPayments` updates provided to the message handler when subscribed.
  *
- * @inheritDoc IDEXSubscriptionEventBase
+ * @inheritDoc KumaSubscriptionEventBase
  *
  * @category WebSocket - Message Types
- * @category IDEX - Get Funding Payments
+ * @category Kuma - Get Funding Payments
  *
- * @see data {@link IDEXFundingPaymentEventData}
+ * @see data {@link KumaFundingPaymentEventData}
  */
-export interface IDEXFundingPaymentEvent extends IDEXSubscriptionEventBase {
+export interface KumaFundingPaymentEvent extends KumaSubscriptionEventBase {
   /**
    * @inheritDoc
    */
   type: typeof MessageEventType.fundingPayments;
   /**
-   * - Includes all {@link IDEXFundingPayment} properties as well as a `wallet` property.
+   * - Includes all {@link KumaFundingPayment} properties as well as a `wallet` property.
    *
-   * @see type {@link IDEXFundingPaymentEventData}
+   * @see type {@link KumaFundingPaymentEventData}
    */
-  data: Expand<IDEXFundingPaymentEventData>;
+  data: Expand<KumaFundingPaymentEventData>;
 }
 
 /**
  * WebSocket position messages are identical to the REST API response
  * except they also include the `wallet` property.
  *
- * @see parent  {@link IDEXFundingPaymentEvent}
+ * @see parent  {@link KumaFundingPaymentEvent}
  *
  * @category WebSocket - Message Types
  */
-export interface IDEXFundingPaymentEventData extends IDEXFundingPayment {
+export interface KumaFundingPaymentEventData extends KumaFundingPayment {
   /**
    * Wallet address
    */
@@ -42,7 +42,7 @@ export interface IDEXFundingPaymentEventData extends IDEXFundingPayment {
 }
 
 export interface WebSocketResponseSubscriptionMessageShortFundingPayments
-  extends IDEXSubscriptionEventBase {
+  extends KumaSubscriptionEventBase {
   type: typeof MessageEventType.fundingPayments;
   data: WebSocketResponseFundingPaymentsShort;
 }
@@ -52,31 +52,31 @@ export interface WebSocketResponseSubscriptionMessageShortFundingPayments
  */
 export interface WebSocketResponseFundingPaymentsShort {
   /**
-   * @see inflated {@link IDEXFundingPaymentEventData.wallet}
+   * @see inflated {@link KumaFundingPaymentEventData.wallet}
    */
-  w: IDEXFundingPaymentEventData['wallet'];
+  w: KumaFundingPaymentEventData['wallet'];
   /**
-   * @see inflated {@link IDEXFundingPaymentEventData.market}
+   * @see inflated {@link KumaFundingPaymentEventData.market}
    */
-  m: IDEXFundingPaymentEventData['market'];
+  m: KumaFundingPaymentEventData['market'];
   /**
-   * @see inflated {@link IDEXFundingPaymentEventData.paymentQuantity}
+   * @see inflated {@link KumaFundingPaymentEventData.paymentQuantity}
    */
-  Q: IDEXFundingPaymentEventData['paymentQuantity'];
+  Q: KumaFundingPaymentEventData['paymentQuantity'];
   /**
-   * @see inflated {@link IDEXFundingPaymentEventData.positionQuantity}
+   * @see inflated {@link KumaFundingPaymentEventData.positionQuantity}
    */
-  q: IDEXFundingPaymentEventData['positionQuantity'];
+  q: KumaFundingPaymentEventData['positionQuantity'];
   /**
-   * @see inflated {@link IDEXFundingPaymentEventData.fundingRate}
+   * @see inflated {@link KumaFundingPaymentEventData.fundingRate}
    */
-  f: IDEXFundingPaymentEventData['fundingRate'];
+  f: KumaFundingPaymentEventData['fundingRate'];
   /**
-   * @see inflated {@link IDEXFundingPaymentEventData.indexPrice}
+   * @see inflated {@link KumaFundingPaymentEventData.indexPrice}
    */
-  ip: IDEXFundingPaymentEventData['indexPrice'];
+  ip: KumaFundingPaymentEventData['indexPrice'];
   /**
-   * @see inflated {@link IDEXFundingPaymentEventData.time}
+   * @see inflated {@link KumaFundingPaymentEventData.time}
    */
-  t: IDEXFundingPaymentEventData['time'];
+  t: KumaFundingPaymentEventData['time'];
 }

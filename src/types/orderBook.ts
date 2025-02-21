@@ -33,7 +33,7 @@ export type BestAvailablePriceLevels = {
 /**
  * Level-1 order book data is limited to the best bid and ask for a market, including hybrid liquidity synthetic price levels.
  *
- * @see {@link https://api-docs-v4.idex.io/#get-order-books API Documentation}
+ * @see {@link https://api-docs-v1.kuma.bid/#get-order-books API Documentation}
  */
 export interface L1OrderBook extends OrderBookBase {
   asks: OrderBookLevelL1;
@@ -43,7 +43,7 @@ export interface L1OrderBook extends OrderBookBase {
 /**
  * Level-2 order book data includes price and quantity information for all price levels in the order book.
  *
- * @see {@link https://api-docs-v4.idex.io/#get-order-books API Documentation}
+ * @see {@link https://api-docs-v1.kuma.bid/#get-order-books API Documentation}
  */
 export interface L2OrderBook extends OrderBookBase {
   asks: OrderBookLevelL2[];

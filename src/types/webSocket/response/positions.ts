@@ -1,41 +1,41 @@
 import type { MessageEventType, PositionEventStatus } from '#types/enums/index';
-import type { IDEXPosition } from '#types/rest/endpoints/GetPositions';
-import type { IDEXSubscriptionEventBase } from '#types/webSocket/base';
+import type { KumaPosition } from '#types/rest/endpoints/GetPositions';
+import type { KumaSubscriptionEventBase } from '#types/webSocket/base';
 
 /**
  * When the `positions` subscription provides an update
  *
  * @category WebSocket - Message Types
- * @category IDEX - Get Positions
+ * @category Kuma - Get Positions
  */
-export interface IDEXPositionEvent extends IDEXSubscriptionEventBase {
+export interface KumaPositionEvent extends KumaSubscriptionEventBase {
   /**
    * @inheritDoc
    */
   type: typeof MessageEventType.positions;
   /**
-   * @inheritDoc IDEXPositionEventData
+   * @inheritDoc KumaPositionEventData
    *
-   * @see data {@link IDEXPositionEventData}
+   * @see data {@link KumaPositionEventData}
    */
-  data: IDEXPositionEventData;
+  data: KumaPositionEventData;
 }
 
 /**
- * - Includes most properties from the REST API's {@link IDEXPosition} type.
+ * - Includes most properties from the REST API's {@link KumaPosition} type.
  * - Also includes
- *   {@link IDEXPositionEventData.wallet wallet},
- *   {@link IDEXPositionEventData.status status},
- *   and {@link IDEXPositionEventData.quoteBalance quoteBalance} properties.
+ *   {@link KumaPositionEventData.wallet wallet},
+ *   {@link KumaPositionEventData.status status},
+ *   and {@link KumaPositionEventData.quoteBalance quoteBalance} properties.
  *
- * @see parent {@link IDEXPositionEvent}
+ * @see parent {@link KumaPositionEvent}
  *
  * @category WebSocket - Message Types
- * @category IDEX - Get Positions
+ * @category Kuma - Get Positions
  */
-export interface IDEXPositionEventData
+export interface KumaPositionEventData
   extends Pick<
-    IDEXPosition,
+    KumaPosition,
     | 'market'
     | 'time'
     | 'quantity'
@@ -67,7 +67,7 @@ export interface IDEXPositionEventData
 }
 
 export interface WebSocketResponseSubscriptionMessageShortPositions
-  extends IDEXSubscriptionEventBase {
+  extends KumaSubscriptionEventBase {
   type: typeof MessageEventType.positions;
   data: WebSocketResponsePositionsShort;
 }
@@ -77,63 +77,63 @@ export interface WebSocketResponseSubscriptionMessageShortPositions
  */
 export interface WebSocketResponsePositionsShort {
   /**
-   * @see inflated {@link IDEXPositionEventData.wallet}
+   * @see inflated {@link KumaPositionEventData.wallet}
    */
-  w: IDEXPositionEventData['wallet'];
+  w: KumaPositionEventData['wallet'];
   /**
-   * @see inflated {@link IDEXPositionEventData.market}
+   * @see inflated {@link KumaPositionEventData.market}
    */
-  m: IDEXPositionEventData['market'];
+  m: KumaPositionEventData['market'];
   /**
-   * @see inflated {@link IDEXPositionEventData.status}
+   * @see inflated {@link KumaPositionEventData.status}
    */
-  X: IDEXPositionEventData['status'];
+  X: KumaPositionEventData['status'];
   /**
-   * @see inflated {@link IDEXPositionEventData.quantity}
+   * @see inflated {@link KumaPositionEventData.quantity}
    */
-  q: IDEXPositionEventData['quantity'];
+  q: KumaPositionEventData['quantity'];
   /**
-   * @see inflated {@link IDEXPositionEventData.maximumQuantity}
+   * @see inflated {@link KumaPositionEventData.maximumQuantity}
    */
-  mq: IDEXPositionEventData['maximumQuantity'];
+  mq: KumaPositionEventData['maximumQuantity'];
   /**
-   * @see inflated {@link IDEXPositionEventData.entryPrice}
+   * @see inflated {@link KumaPositionEventData.entryPrice}
    */
-  np: IDEXPositionEventData['entryPrice'];
+  np: KumaPositionEventData['entryPrice'];
   /**
-   * @see inflated {@link IDEXPositionEventData.exitPrice}
+   * @see inflated {@link KumaPositionEventData.exitPrice}
    */
-  xp: IDEXPositionEventData['exitPrice'];
+  xp: KumaPositionEventData['exitPrice'];
   /**
-   * @see inflated {@link IDEXPositionEventData.realizedPnL}
+   * @see inflated {@link KumaPositionEventData.realizedPnL}
    */
-  rn: IDEXPositionEventData['realizedPnL'];
+  rn: KumaPositionEventData['realizedPnL'];
   /**
-   * @see inflated {@link IDEXPositionEventData.totalFunding}
+   * @see inflated {@link KumaPositionEventData.totalFunding}
    */
-  f: IDEXPositionEventData['totalFunding'];
+  f: KumaPositionEventData['totalFunding'];
   /**
-   * @see inflated {@link IDEXPositionEventData.totalOpen}
+   * @see inflated {@link KumaPositionEventData.totalOpen}
    */
-  to: IDEXPositionEventData['totalOpen'];
+  to: KumaPositionEventData['totalOpen'];
   /**
-   * @see inflated {@link IDEXPositionEventData.totalClose}
+   * @see inflated {@link KumaPositionEventData.totalClose}
    */
-  tc: IDEXPositionEventData['totalClose'];
+  tc: KumaPositionEventData['totalClose'];
   /**
-   * @see inflated {@link IDEXPositionEventData.openedByFillId}
+   * @see inflated {@link KumaPositionEventData.openedByFillId}
    */
-  of: IDEXPositionEventData['openedByFillId'];
+  of: KumaPositionEventData['openedByFillId'];
   /**
-   * @see inflated {@link IDEXPositionEventData.lastFillId}
+   * @see inflated {@link KumaPositionEventData.lastFillId}
    */
-  lf: IDEXPositionEventData['lastFillId'];
+  lf: KumaPositionEventData['lastFillId'];
   /**
-   * @see inflated {@link IDEXPositionEventData.quoteBalance}
+   * @see inflated {@link KumaPositionEventData.quoteBalance}
    */
-  qb: IDEXPositionEventData['quoteBalance'];
+  qb: KumaPositionEventData['quoteBalance'];
   /**
-   * @see inflated {@link IDEXPositionEventData.time}
+   * @see inflated {@link KumaPositionEventData.time}
    */
-  t: IDEXPositionEventData['time'];
+  t: KumaPositionEventData['time'];
 }

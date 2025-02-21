@@ -13,7 +13,7 @@ function removeUndefinedFromObj<O extends AnyObj>(obj: O): O {
 
 const transformTickersMessage = (
   short: idex.WebSocketResponseTickerShort,
-): idex.IDEXTickerEventData =>
+): idex.KumaTickerEventData =>
   removeUndefinedFromObj({
     market: short.m,
     time: short.t,
@@ -41,7 +41,7 @@ const transformTickersMessage = (
 
 const transformTradesMessage = (
   short: idex.WebSocketResponseTradeShort,
-): idex.IDEXTradeEventData =>
+): idex.KumaTradeEventData =>
   removeUndefinedFromObj({
     market: short.m,
     fillId: short.i,
@@ -55,7 +55,7 @@ const transformTradesMessage = (
 
 const transformLiquidationsMessage = (
   short: idex.WebSocketResponseLiquidationsShort,
-): idex.IDEXLiquidationEventData =>
+): idex.KumaLiquidationEventData =>
   removeUndefinedFromObj({
     market: short.m,
     fillId: short.i,
@@ -68,7 +68,7 @@ const transformLiquidationsMessage = (
 
 const transformCandlesMessage = (
   short: idex.WebSocketResponseCandleShort,
-): idex.IDEXCandleEventData =>
+): idex.KumaCandleEventData =>
   removeUndefinedFromObj({
     market: short.m,
     time: short.t,
@@ -87,7 +87,7 @@ const transformCandlesMessage = (
 
 const transformL1orderbookMessage = (
   short: idex.WebSocketResponseL1OrderBookShort,
-): idex.IDEXOrderBookLevel1EventData =>
+): idex.KumaOrderBookLevel1EventData =>
   removeUndefinedFromObj({
     market: short.m,
     time: short.t,
@@ -102,7 +102,7 @@ const transformL1orderbookMessage = (
 
 const transformL2orderbookMessage = (
   short: idex.WebSocketResponseL2OrderBookShort,
-): idex.IDEXOrderBookLevel2EventData =>
+): idex.KumaOrderBookLevel2EventData =>
   removeUndefinedFromObj({
     market: short.m,
     time: short.t,
@@ -144,7 +144,7 @@ function transformOrderFill(short: idex.WebSocketResponseOrderFillShort) {
 
 function transformOrdersMessage(
   short: idex.WebSocketResponseOrderShort,
-): idex.IDEXOrderEventData {
+): idex.KumaOrderEventData {
   if (!short.o) {
     return removeUndefinedFromObj({
       market: short.m,
@@ -153,7 +153,7 @@ function transformOrdersMessage(
       side: short.s,
       // should only include a single fill but we map for future compat
       fills: short.F.map(transformOrderFill),
-    } satisfies idex.IDEXOrderEventDataSystemFill);
+    } satisfies idex.KumaOrderEventDataSystemFill);
   }
 
   return removeUndefinedFromObj({
@@ -186,12 +186,12 @@ function transformOrdersMessage(
     delegatedKey: short.dk,
     isLiquidationAcquisitionOnly: short.la,
     ...(short.F && { fills: short.F.map(transformOrderFill) }),
-  } satisfies idex.IDEXOrderEventDataGeneral);
+  } satisfies idex.KumaOrderEventDataGeneral);
 }
 
 const transformDepositsMessage = (
   short: idex.WebSocketResponseDepositsShort,
-): idex.IDEXDepositEventData =>
+): idex.KumaDepositEventData =>
   removeUndefinedFromObj({
     wallet: short.w,
     depositId: short.i,
@@ -203,7 +203,7 @@ const transformDepositsMessage = (
 
 const transformWithdrawalsMessage = (
   short: idex.WebSocketResponseWithdrawalsShort,
-): idex.IDEXWithdrawalEventData =>
+): idex.KumaWithdrawalEventData =>
   removeUndefinedFromObj({
     wallet: short.w,
     withdrawalId: short.i,
@@ -216,7 +216,7 @@ const transformWithdrawalsMessage = (
 
 const transformPositionsMessage = (
   short: idex.WebSocketResponsePositionsShort,
-): idex.IDEXPositionEventData =>
+): idex.KumaPositionEventData =>
   removeUndefinedFromObj({
     wallet: short.w,
     market: short.m,
@@ -237,7 +237,7 @@ const transformPositionsMessage = (
 
 const transformFundingPaymentsMessage = (
   short: idex.WebSocketResponseFundingPaymentsShort,
-): idex.IDEXFundingPaymentEventData =>
+): idex.KumaFundingPaymentEventData =>
   removeUndefinedFromObj({
     wallet: short.w,
     market: short.m,
@@ -250,10 +250,10 @@ const transformFundingPaymentsMessage = (
 
 export const transformWebsocketShortResponseMessage = (
   message:
-    | idex.IDEXErrorEvent
-    | idex.IDEXSubscriptionsListEvent
+    | idex.KumaErrorEvent
+    | idex.KumaSubscriptionsListEvent
     | idex.WebSocketResponseSubscriptionMessageShort,
-): idex.IDEXMessageEvent => {
+): idex.KumaMessageEvent => {
   if (
     message.type === MessageEventType.error ||
     message.type === MessageEventType.subscriptions

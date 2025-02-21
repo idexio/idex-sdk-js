@@ -20,10 +20,10 @@ import type {
   WebSocketClientOptionsWithFetch,
   WebSocketRequest,
   WebSocketRequestUnsubscribeShortNames,
-  IDEXMessageEvent,
-  IDEXSubscribeTypeAuthenticated,
-  IDEXSubscribeTypePublic,
-  IDEXSubscribeType,
+  KumaMessageEvent,
+  KumaSubscribeTypeAuthenticated,
+  KumaSubscribeTypePublic,
+  KumaSubscribeType,
   WebSocketClientOptionsInitialized,
   WebSocketRequestUnsubscribeSubscription,
   WebSocketClientOptionsPublicOnly as _WebSocketClientOptionsPublicOnly,
@@ -70,15 +70,15 @@ export type WebSocketHandlerError = (error: WebSocket.ErrorEvent) => unknown;
 /**
  * WebSocket Client handler for the `onMessage` method
  */
-export type WebSocketHandlerMessage = (message: IDEXMessageEvent) => unknown;
+export type WebSocketHandlerMessage = (message: KumaMessageEvent) => unknown;
 
 /**
  * ### WebSocket API client
  *
  * You must provide constructor options that match either:
  *
- * - If you only need {@link IDEXSubscribeTypePublic public subscriptions}, all options are optional.
- * - If you want to make {@link IDEXSubscribeTypeAuthenticated authenticated subscriptions}:
+ * - If you only need {@link KumaSubscribeTypePublic public subscriptions}, all options are optional.
+ * - If you want to make {@link KumaSubscribeTypeAuthenticated authenticated subscriptions}:
  *   - You must provide a valid {@link WebSocketClientOptions.auth auth}
  *     property in the {@link WebSocketClientOptions constructor options} which includes:
  *     - {@link idex.WebSocketClientAuthOptions.apiKey apiKey}
@@ -154,19 +154,19 @@ export type WebSocketHandlerMessage = (message: IDEXMessageEvent) => unknown;
  *
  * ---
  *
- * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/WebSocketClient.html)
+ * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/WebSocketClient.html)
  *
  * @category API Clients
- * @category IDEX - Get Candles
- * @category IDEX - Get Deposits
- * @category IDEX - Get Funding Payments
- * @category IDEX - Get Liquidations
- * @category IDEX - Get OrderBook
- * @category IDEX - Get Orders
- * @category IDEX - Get Positions
- * @category IDEX - Get Tickers
- * @category IDEX - Get Trades
- * @category IDEX - Get Withdrawals
+ * @category Kuma - Get Candles
+ * @category Kuma - Get Deposits
+ * @category Kuma - Get Funding Payments
+ * @category Kuma - Get Liquidations
+ * @category Kuma - Get OrderBook
+ * @category Kuma - Get Orders
+ * @category Kuma - Get Positions
+ * @category Kuma - Get Tickers
+ * @category Kuma - Get Trades
+ * @category Kuma - Get Withdrawals
  */
 export class WebSocketClient {
   /**
@@ -211,12 +211,12 @@ export class WebSocketClient {
 
   /**
    * If `true`, this client will throw an error if it attempts to subscribe to
-   * an {@link IDEXSubscribeTypeAuthenticated authenticated subscription}.
+   * an {@link KumaSubscribeTypeAuthenticated authenticated subscription}.
    *
    * - This is determined by whether or not the {@link idex.WebSocketClientOptions.auth auth}
    *   property was provided during construction.
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/WebSocketClient.html#isPublicOnly)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/WebSocketClient.html#isPublicOnly)
    *
    * @category Accessors
    */
@@ -244,7 +244,7 @@ export class WebSocketClient {
   /**
    * You can access the current {@link WebSocket}
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/WebSocketClient.html#ws)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/WebSocketClient.html#ws)
    *
    * @category Accessors
    */
@@ -253,9 +253,9 @@ export class WebSocketClient {
   }
 
   /**
-   * A boolean indicating whether the WebSocket client is currently connected to the IDEX WebSocket API.
+   * A boolean indicating whether the WebSocket client is currently connected to the Kuma WebSocket API.
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/WebSocketClient.html#isConnected)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/WebSocketClient.html#isConnected)
    *
    * @category Accessors
    */
@@ -271,8 +271,8 @@ export class WebSocketClient {
    *
    * You must provide constructor options that match either:
    *
-   * - If you only need {@link IDEXSubscribeTypePublic public subscriptions}, all options are optional.
-   * - If you want to make {@link IDEXSubscribeTypeAuthenticated authenticated subscriptions}:
+   * - If you only need {@link KumaSubscribeTypePublic public subscriptions}, all options are optional.
+   * - If you want to make {@link KumaSubscribeTypeAuthenticated authenticated subscriptions}:
    *   - You must provide a valid {@link WebSocketClientOptions.auth auth}
    *     property in the {@link WebSocketClientOptions constructor options} which includes:
    *     - {@link idex.WebSocketClientAuthOptions.apiKey apiKey}
@@ -348,7 +348,7 @@ export class WebSocketClient {
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/WebSocketClient.html)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/WebSocketClient.html)
    */
   constructor(options: idex.WebSocketClientOptions = {}) {
     const sandbox = options.sandbox ?? false;
@@ -414,7 +414,7 @@ export class WebSocketClient {
   }
 
   /**
-   * Connect to the [IDEX WebSocket API](https://api-docs-v4.idex.io/#websocket-api-interaction)
+   * Connect to the [Kuma WebSocket API](https://api-docs-v1.kuma.bid/#websocket-api-interaction)
    *
    * ---
    * @param awaitConnected
@@ -423,7 +423,7 @@ export class WebSocketClient {
    *  - `this` to allow chaining with other methods or requests.
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/WebSocketClient.html#connect)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/WebSocketClient.html#connect)
    *
    * @category Connection Management
    */
@@ -460,7 +460,7 @@ export class WebSocketClient {
    *   cease to work or connect.
    *   - All listeners will be cleared and all methods will throw errors once terminated.
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/WebSocketClient.html#disconnect)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/WebSocketClient.html#disconnect)
    *
    * @category Connection Management
    */
@@ -538,7 +538,7 @@ export class WebSocketClient {
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/WebSocketClient.html#onConnect)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/WebSocketClient.html#onConnect)
    *
    * @category Event Handling
    */
@@ -577,7 +577,7 @@ export class WebSocketClient {
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/WebSocketClient.html#onDisconnect)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/WebSocketClient.html#onDisconnect)
    *
    * @category Event Handling
    */
@@ -599,7 +599,7 @@ export class WebSocketClient {
    *
    * - **Note:** These errors will be coming from the `ws` library itself and provide
    *   its {@link ErrorEvent} errors.
-   * - Errors coming from the IDEX WebSocket client will be present as a {@link idex.IDEXErrorEvent IDEXErrorEvent}
+   * - Errors coming from the Kuma WebSocket client will be present as a {@link idex.KumaErrorEvent KumaErrorEvent}
    *   message to the {@link onMessage} handler.
    *
    * ---
@@ -622,7 +622,7 @@ export class WebSocketClient {
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/WebSocketClient.html#onError)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/WebSocketClient.html#onError)
    *
    * @category Event Handling
    */
@@ -638,7 +638,7 @@ export class WebSocketClient {
   /**
    * Subscribe a handler to all subscription responses.
    *
-   * - Your handler will receive updates when available matching the {@link IDEXMessageEvent}
+   * - Your handler will receive updates when available matching the {@link KumaMessageEvent}
    *   interface.
    * - Use the {@link idex.MessageEventType MessageEventType} enum to get an enum
    *   defining all possible `type` values that can be received on the WebSocket message (see example).
@@ -677,9 +677,9 @@ export class WebSocketClient {
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/WebSocketClient.html#onMessage)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/WebSocketClient.html#onMessage)
    * @see enum     {@link idex.MessageEventType MessageEventType}
-   * @see type     {@link IDEXMessageEvent}
+   * @see type     {@link KumaMessageEvent}
    *
    * @category Event Handling
    */
@@ -696,7 +696,7 @@ export class WebSocketClient {
   }
 
   /**
-   * Creates new {@link IDEXSubscribeTypeAuthenticated authenticated subscriptions} based on the provided parameters.
+   * Creates new {@link KumaSubscribeTypeAuthenticated authenticated subscriptions} based on the provided parameters.
    *
    * - Use the {@link idex.SubscriptionNameAuthenticated SubscriptionNameAuthenticated} enum for IDE
    *   inline documentation and auto completion (see example)
@@ -705,15 +705,15 @@ export class WebSocketClient {
    *
    * **Subscription Update Events:**
    *
-   * - Receives a {@link idex.IDEXSubscriptionsListEvent IDEXSubscriptionsListEvent} WebSocket response via
+   * - Receives a {@link idex.KumaSubscriptionsListEvent KumaSubscriptionsListEvent} WebSocket response via
    *   the {@link idex.WebSocketClient.onMessage WebSocketClient.onMessage} handler listing all active
    *   subscriptions.
-   * - Begins receiving {@link idex.IDEXSubscriptionEvent IDEXSubscriptionEvent}'s for all subscribed
+   * - Begins receiving {@link idex.KumaSubscriptionEvent KumaSubscriptionEvent}'s for all subscribed
    *   subscriptions via the {@link idex.WebSocketClient.onMessage WebSocketClient.onMessage} handler.
    *
    * ---
    * @param subscriptions
-   *  - An array of {@link IDEXSubscribeTypeAuthenticated} subscription objects.
+   *  - An array of {@link KumaSubscribeTypeAuthenticated} subscription objects.
    * @param cid
    *  - Optionally provide a `cid` property which will be returned in the response
    *    so that you can correlate the response to the request.
@@ -756,17 +756,17 @@ export class WebSocketClient {
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/WebSocketClient.html#subscribeAuthenticated)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/WebSocketClient.html#subscribeAuthenticated)
    * @see related  {@link subscribePublic client.subscribePublic}
    *
    * @category Subscription Management
    */
   public subscribeAuthenticated(
     /**
-     * An array of {@link IDEXSubscribeTypeAuthenticated} subscription
+     * An array of {@link KumaSubscribeTypeAuthenticated} subscription
      * objects.
      */
-    subscriptions: IDEXSubscribeTypeAuthenticated[],
+    subscriptions: KumaSubscribeTypeAuthenticated[],
     /**
      * Optionally provide a `cid` property which will be returned in the response
      * so that you can correlate the response to the request.
@@ -786,7 +786,7 @@ export class WebSocketClient {
   }
 
   /**
-   * This method allows subscribing to IDEX's {@link IDEXSubscribeTypePublic public subscriptions}.
+   * This method allows subscribing to Kuma's {@link KumaSubscribeTypePublic public subscriptions}.
    *
    * - Use the {@link idex.SubscriptionNamePublic SubscriptionNamePublic} enum for IDE
    *   inline documentation and auto completion (see example)
@@ -795,21 +795,21 @@ export class WebSocketClient {
    *
    * **Subscription Update Events:**
    *
-   * - Receives a {@link idex.IDEXSubscriptionsListEvent IDEXSubscriptionsListEvent} WebSocket response via
+   * - Receives a {@link idex.KumaSubscriptionsListEvent KumaSubscriptionsListEvent} WebSocket response via
    *   the {@link idex.WebSocketClient.onMessage WebSocketClient.onMessage} handler listing all active
    *   subscriptions.
-   * - Begins receiving {@link idex.IDEXSubscriptionEvent IDEXSubscriptionEvent}'s for all subscribed
+   * - Begins receiving {@link idex.KumaSubscriptionEvent KumaSubscriptionEvent}'s for all subscribed
    *   subscriptions via the {@link idex.WebSocketClient.onMessage WebSocketClient.onMessage} handler.
    *
    * ---
    * @param subscriptions
-   *  - An array of {@link IDEXSubscribeTypePublic} subscription objects.
+   *  - An array of {@link KumaSubscribeTypePublic} subscription objects.
    * @param markets
    *  - Optionally provide top-level markets.
    *    - Any {@link subscriptions} that **require but do not define** their own `markets`
    *    array will inherit this set of markets.
    *    - If a subscription in your {@link subscriptions} array defines its own
-   *    {@link IDEXSubscribeType.markets markets} array, the top-level markets
+   *    {@link KumaSubscribeType.markets markets} array, the top-level markets
    *    **will not be inherited**
    * @param cid
    *  - Optionally provide a `cid` property which will be returned in the response
@@ -845,13 +845,13 @@ export class WebSocketClient {
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/WebSocketClient.html#subscribePublic)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/WebSocketClient.html#subscribePublic)
    * @see related  {@link subscribeAuthenticated client.subscribeAuthenticated}
    *
    * @category Subscription Management
    */
   public subscribePublic(
-    subscriptions: IDEXSubscribeTypePublic[],
+    subscriptions: KumaSubscribeTypePublic[],
     markets?: string[],
     cid?: string,
   ): this {
@@ -867,13 +867,13 @@ export class WebSocketClient {
    *
    * **Subscription Update Events:**
    *
-   * - Receives a {@link idex.IDEXSubscriptionsListEvent IDEXSubscriptionsListEvent} WebSocket response via
+   * - Receives a {@link idex.KumaSubscriptionsListEvent KumaSubscriptionsListEvent} WebSocket response via
    *   the {@link idex.WebSocketClient.onMessage WebSocketClient.onMessage} handler listing all active
    *   subscriptions.
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/WebSocketClient.html#unsubscribe)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/WebSocketClient.html#unsubscribe)
    * @see related {@link WebSocketRequestUnsubscribeSubscription}
    *
    * @category Subscription Management
@@ -902,7 +902,7 @@ export class WebSocketClient {
    *
    * **Subscription Update Events:**
    *
-   * - Receives a {@link idex.IDEXSubscriptionsListEvent IDEXSubscriptionsListEvent} WebSocket response via
+   * - Receives a {@link idex.KumaSubscriptionsListEvent KumaSubscriptionsListEvent} WebSocket response via
    *   the {@link idex.WebSocketClient.onMessage WebSocketClient.onMessage} handler listing all active
    *   subscriptions.
    *
@@ -914,7 +914,7 @@ export class WebSocketClient {
    *  - `this` to allow chaining with other methods or requests.
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/WebSocketClient.html#listSubscriptions)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/WebSocketClient.html#listSubscriptions)
    *
    * @category Subscription Management
    */
@@ -932,7 +932,7 @@ export class WebSocketClient {
    * @internal
    */
   protected subscribe(
-    subscriptions: IDEXSubscribeType[],
+    subscriptions: KumaSubscribeType[],
     markets?: string[],
     cid?: string,
   ): this {
@@ -944,7 +944,7 @@ export class WebSocketClient {
   }
 
   private async subscribeRequest(
-    subscriptions: IDEXSubscribeType[],
+    subscriptions: KumaSubscribeType[],
     markets?: string[],
     cid?: string,
   ): Promise<this> {
@@ -1013,7 +1013,7 @@ export class WebSocketClient {
         this.#options.baseWebSocketURL,
         isNode ?
           {
-            headers: { 'User-Agent': 'idex-sdk-js' },
+            headers: { 'User-Agent': 'kuma-sdk-js' },
           }
         : undefined,
       );

@@ -1,4 +1,4 @@
-import type { RestRequestByWallet, IDEXWithdrawal, BridgeTarget } from '#index';
+import type { RestRequestByWallet, KumaWithdrawal, BridgeTarget } from '#index';
 import type { RestRequestWithSignature } from '#types/utils';
 
 /**
@@ -62,11 +62,11 @@ export interface RestRequestWithdrawFundsBase extends RestRequestByWallet {
  *   {@link RestRequestWithdrawFundsSDK.bridgeTarget bridgeTarget}
  *   parameter.
  *
- * @see docs    [API Documentation](https://api-docs-v4.idex.io/#withdraw-funds)
+ * @see docs    [API Documentation](https://api-docs-v1.kuma.bid/#withdraw-funds)
  * @see enum    {@link BridgeTarget}
  * @see related {@link RestRequestWithdrawFunds}
  *
- * @category IDEX - Withdraw Funds
+ * @category Kuma - Withdraw Funds
  */
 export interface RestRequestWithdrawFundsSDK
   extends RestRequestWithdrawFundsBase {
@@ -103,10 +103,10 @@ export interface RestRequestWithdrawFundsSDK
  *
  * - The SDK utilizes a simplified interface {@link RestRequestWithdrawFundsSDK}
  *
- * @see docs    [API Documentation](https://api-docs-v4.idex.io/#withdraw-funds)
+ * @see docs    [API Documentation](https://api-docs-v1.kuma.bid/#withdraw-funds)
  * @see related {@link RestRequestWithdrawFundsSDK}
  *
- * @category IDEX - Withdraw Funds
+ * @category Kuma - Withdraw Funds
  */
 export interface RestRequestWithdrawFunds extends RestRequestWithdrawFundsBase {
   /**
@@ -129,22 +129,22 @@ export interface RestRequestWithdrawFunds extends RestRequestWithdrawFundsBase {
 }
 
 /**
- * The raw request body for the `POST /v4/withdrawals` endpoint
+ * The raw request body for the `POST /v1/withdrawals` endpoint
  * including `signature` and the body in `parameters`.
  *
  * @see parameters {@link RestRequestWithdrawFunds}
  * @see response   {@link RestResponseWithdrawFunds}
- * @see type       {@link IDEXWithdrawal}
+ * @see type       {@link KumaWithdrawal}
  *
- * @category IDEX - Withdraw Funds
+ * @category Kuma - Withdraw Funds
  */
 export type RestRequestWithdrawFundsSigned =
   RestRequestWithSignature<RestRequestWithdrawFunds>;
 
 /**
- * @see type    {@link IDEXWithdrawal}
+ * @see type    {@link KumaWithdrawal}
  * @see request {@link RestRequestWithdrawFunds}
  *
- * @category IDEX - Withdraw Funds
+ * @category Kuma - Withdraw Funds
  */
-export type RestResponseWithdrawFunds = IDEXWithdrawal;
+export type RestResponseWithdrawFunds = KumaWithdrawal;

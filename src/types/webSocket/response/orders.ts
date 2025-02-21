@@ -5,27 +5,27 @@ import type {
   OrderType,
 } from '#types/enums/index';
 import type { OrderStateChange } from '#types/enums/response';
-import type { IDEXOrder } from '#types/rest/endpoints/GetOrders';
-import type { IDEXSubscriptionEventBase } from '#types/webSocket/base';
-import type { IDEXOrderFillEventData } from './ordersFill.js';
+import type { KumaOrder } from '#types/rest/endpoints/GetOrders';
+import type { KumaSubscriptionEventBase } from '#types/webSocket/base';
+import type { KumaOrderFillEventData } from './ordersFill.js';
 
 /**
  * - `orders` updates provided to the message handler when subscribed.
  *
- * @inheritDoc IDEXSubscriptionEventBase
+ * @inheritDoc KumaSubscriptionEventBase
  *
- * @category IDEX - Get Orders
+ * @category Kuma - Get Orders
  * @category WebSocket - Message Types
  *
- * @see {@link IDEXSubscriptionEventBase}
+ * @see {@link KumaSubscriptionEventBase}
  */
-export interface IDEXOrderEvent extends IDEXSubscriptionEventBase {
+export interface KumaOrderEvent extends KumaSubscriptionEventBase {
   /**
    * @inheritDoc
    */
   readonly type: typeof MessageEventType.orders;
   /**
-   * @inheritDoc IDEXOrderEventData
+   * @inheritDoc KumaOrderEventData
    *
    * @example
    * ```typescript
@@ -39,9 +39,9 @@ export interface IDEXOrderEvent extends IDEXSubscriptionEventBase {
    *    orderEventData.type === OrderEventType.liquidation ||
    *    orderEventData.type === OrderEventType.deleverage
    *  ) {
-   *    // orderEventData is of type IDEXOrderEventDataLiquidation | IDEXOrderEventDataDeleverage
+   *    // orderEventData is of type KumaOrderEventDataLiquidation | KumaOrderEventDataDeleverage
    *  } else {
-   *   // orderEventData is of type IDEXOrderEventDataGeneral
+   *   // orderEventData is of type KumaOrderEventDataGeneral
    *  }
    * ```
    *
@@ -49,9 +49,9 @@ export interface IDEXOrderEvent extends IDEXSubscriptionEventBase {
    *
    * ---
    *
-   * @see type {@link IDEXOrderEventData}
+   * @see type {@link KumaOrderEventData}
    */
-  readonly data: IDEXOrderEventData;
+  readonly data: KumaOrderEventData;
 }
 
 /**
@@ -59,11 +59,11 @@ export interface IDEXOrderEvent extends IDEXSubscriptionEventBase {
  *
  * @category Base Types
  */
-export interface IDEXOrderEventDataBase
-  extends Pick<IDEXOrder, 'market' | 'wallet' | 'side'> {
+export interface KumaOrderEventDataBase
+  extends Pick<KumaOrder, 'market' | 'wallet' | 'side'> {
   /**
    * - When `undefined`, indicates the message is a `liquidation` or `deleverage`
-   *   where `fills` will include a single  {@link IDEXOrderFillEventData.type} of
+   *   where `fills` will include a single  {@link KumaOrderFillEventData.type} of
    *   {@link idex.FillTypeSystem FillTypeSystem}.
    */
   readonly type?: OrderType;
@@ -72,35 +72,35 @@ export interface IDEXOrderEventDataBase
    */
   executionTime: number;
   /**
-   * @inheritDoc IDEXOrderFillEventData
+   * @inheritDoc KumaOrderFillEventData
    *
-   * @see type {@link IDEXOrderFillEventData}
+   * @see type {@link KumaOrderFillEventData}
    */
-  readonly fills?: IDEXOrderFillEventData[];
+  readonly fills?: KumaOrderFillEventData[];
 }
 
 /**
- * {@link idex.IDEXOrderFillEventDataSystem IDEXOrderFillEventDataSystem} updates do not
+ * {@link idex.KumaOrderFillEventDataSystem KumaOrderFillEventDataSystem} updates do not
  * include many of the standard order update properties
  *
- * - Note that these types include a single {@link IDEXOrderFillEventDataSystem}.
+ * - Note that these types include a single {@link KumaOrderFillEventDataSystem}.
  *
- * @category IDEX - Get Orders
+ * @category Kuma - Get Orders
  */
-export interface IDEXOrderEventDataSystemFill extends IDEXOrderEventDataBase {
+export interface KumaOrderEventDataSystemFill extends KumaOrderEventDataBase {
   readonly type?: undefined;
-  readonly fills: IDEXOrderFillEventData[];
+  readonly fills: KumaOrderFillEventData[];
 }
 
 /**
- * All types other than {@link IDEXOrderEventDataSystemFill} include
- * most properties from {@link IDEXOrder}
+ * All types other than {@link KumaOrderEventDataSystemFill} include
+ * most properties from {@link KumaOrder}
  *
- * @category IDEX - Get Orders
+ * @category Kuma - Get Orders
  */
-export interface IDEXOrderEventDataGeneral
-  extends IDEXOrderEventDataBase,
-    Omit<IDEXOrder, 'type' | 'fills' | 'market' | 'wallet' | 'side'> {
+export interface KumaOrderEventDataGeneral
+  extends KumaOrderEventDataBase,
+    Omit<KumaOrder, 'type' | 'fills' | 'market' | 'wallet' | 'side'> {
   /**
    * @inheritDoc
    */
@@ -118,10 +118,10 @@ export interface IDEXOrderEventDataGeneral
   /**
    * order book update sequence number, only included if update type triggers an order book update
    *
-   * @see related {@link idex.IDEXOrderBook.sequence}
+   * @see related {@link idex.KumaOrderBook.sequence}
    */
-  sequence?: idex.IDEXOrderBook['sequence'];
-  readonly fills?: IDEXOrderFillEventData[];
+  sequence?: idex.KumaOrderBook['sequence'];
+  readonly fills?: KumaOrderFillEventData[];
 }
 
 /**
@@ -129,9 +129,9 @@ export interface IDEXOrderEventDataGeneral
  * REST API in several ways.
  *
  * - In addition to the order types received when getting orders from the REST API, WebSocket update events
- *   may also provide the following `undefined` type indicating a {@link IDEXOrderEventDataSystemFill}
+ *   may also provide the following `undefined` type indicating a {@link KumaOrderEventDataSystemFill}
  *   where the `fills` property will include a {@link idex.FillTypeSystem FillTypeSystem} fill matching
- *   {@link idex.IDEXOrderFillEventDataSystem IDEXOrderFillEventDataSystem}
+ *   {@link idex.KumaOrderFillEventDataSystem KumaOrderFillEventDataSystem}
  * - It is best to narrow on the `type` property between these types and all the
  *   others as shown in the example below.
  *   - This is made easiest by using the {@link OrderType} enum as shown.
@@ -141,9 +141,9 @@ export interface IDEXOrderEventDataGeneral
  *  import { OrderType } from '@idexio/idex-sdk';
  *
  *  if (!orderEventData.type) {
- *    // orderLong is of type IIDEXOrderEventDataSystemFill
+ *    // orderLong is of type IKumaOrderEventDataSystemFill
  *  } else {
- *   // orderLong is of type IDEXOrderEventDataGeneral
+ *   // orderLong is of type KumaOrderEventDataGeneral
  *   switch(orderEventData.type) {
  *    case OrderType.fill:
  *      break;
@@ -156,58 +156,58 @@ export interface IDEXOrderEventDataGeneral
  *
  * ---
  *
- * @category IDEX - Get Orders
+ * @category Kuma - Get Orders
  * @category WebSocket - Message Types
  *
- * @see union {@link IDEXOrderEventDataGeneral}
- * @see union {@link IDEXOrderEventDataSystemFill}
- * @see parent {@link IDEXOrderEvent}
+ * @see union {@link KumaOrderEventDataGeneral}
+ * @see union {@link KumaOrderEventDataSystemFill}
+ * @see parent {@link KumaOrderEvent}
  */
-export type IDEXOrderEventData =
-  | IDEXOrderEventDataSystemFill
-  | IDEXOrderEventDataGeneral;
+export type KumaOrderEventData =
+  | KumaOrderEventDataSystemFill
+  | KumaOrderEventDataGeneral;
 
 export interface WebSocketResponseSubscriptionMessageShortOrders
-  extends IDEXSubscriptionEventBase {
+  extends KumaSubscriptionEventBase {
   type: typeof MessageEventType.orders;
   data: WebSocketResponseOrderShort;
 }
 
 export interface WebSocketResponseOrderShortBase {
   /**
-   * @see related {@link IDEXOrder.type}
-   * @see inflated {@link IDEXOrderEventDataGeneral.type}
+   * @see related {@link KumaOrder.type}
+   * @see inflated {@link KumaOrderEventDataGeneral.type}
    */
-  o?: IDEXOrderEventDataGeneral['type'];
+  o?: KumaOrderEventDataGeneral['type'];
   /**
-   * @see related {@link IDEXOrder.market}
-   * @see inflated {@link IDEXOrderEventDataGeneral.market}
+   * @see related {@link KumaOrder.market}
+   * @see inflated {@link KumaOrderEventDataGeneral.market}
    */
-  m: IDEXOrderEventDataBase['market'];
+  m: KumaOrderEventDataBase['market'];
   /**
-   * @see related {@link IDEXOrder.wallet}
-   * @see inflated {@link IDEXOrderEventDataGeneral.wallet}
+   * @see related {@link KumaOrder.wallet}
+   * @see inflated {@link KumaOrderEventDataGeneral.wallet}
    */
-  w: IDEXOrderEventDataBase['wallet'];
+  w: KumaOrderEventDataBase['wallet'];
   /**
-   * @see inflated {@link IDEXOrderEventDataGeneral.executionTime}
+   * @see inflated {@link KumaOrderEventDataGeneral.executionTime}
    */
-  t: IDEXOrderEventDataBase['executionTime'];
+  t: KumaOrderEventDataBase['executionTime'];
   /**
-   * @see related {@link IDEXOrder.side}
-   * @see inflated {@link IDEXOrderEventDataGeneral.side}
+   * @see related {@link KumaOrder.side}
+   * @see inflated {@link KumaOrderEventDataGeneral.side}
    */
-  s: IDEXOrderEventDataBase['side'];
+  s: KumaOrderEventDataBase['side'];
   /**
-   * @see related {@link IDEXOrder.fills}
-   * @see inflated {@link IDEXOrderEventDataGeneral.fills}
+   * @see related {@link KumaOrder.fills}
+   * @see inflated {@link KumaOrderEventDataGeneral.fills}
    */
   F?: idex.WebSocketResponseOrderFillShort[];
   /**
-   * @see related {@link IDEXOrder.delegatedKey}
-   * @see inflated {@link IDEXOrderEventDataGeneral.delegatedKey}
+   * @see related {@link KumaOrder.delegatedKey}
+   * @see inflated {@link KumaOrderEventDataGeneral.delegatedKey}
    */
-  dk?: IDEXOrderEventDataGeneral['delegatedKey'];
+  dk?: KumaOrderEventDataGeneral['delegatedKey'];
 }
 
 /**
@@ -235,118 +235,118 @@ export interface WebSocketResponseOrderShortGeneral
   /**
    * @inheritDoc
    */
-  o: IDEXOrderEventDataGeneral['type'];
+  o: KumaOrderEventDataGeneral['type'];
   /**
    * @internal
    */
-  O?: IDEXOrderEventDataGeneral['subType'];
+  O?: KumaOrderEventDataGeneral['subType'];
   /**
-   * @see related {@link IDEXOrder.orderId}
-   * @see inflated {@link IDEXOrderEventDataGeneral.orderId}
+   * @see related {@link KumaOrder.orderId}
+   * @see inflated {@link KumaOrderEventDataGeneral.orderId}
    */
-  i: IDEXOrderEventDataGeneral['orderId'];
+  i: KumaOrderEventDataGeneral['orderId'];
   /**
-   * @see related {@link IDEXOrder.clientOrderId}
-   * @see inflated {@link IDEXOrderEventDataGeneral.clientOrderId}
+   * @see related {@link KumaOrder.clientOrderId}
+   * @see inflated {@link KumaOrderEventDataGeneral.clientOrderId}
    */
-  c: IDEXOrderEventDataGeneral['clientOrderId'];
+  c: KumaOrderEventDataGeneral['clientOrderId'];
   /**
-   * @see related {@link IDEXOrder.time}
-   * @see inflated {@link IDEXOrderEventDataGeneral.time}
+   * @see related {@link KumaOrder.time}
+   * @see inflated {@link KumaOrderEventDataGeneral.time}
    */
-  T: IDEXOrderEventDataGeneral['time'];
+  T: KumaOrderEventDataGeneral['time'];
   /**
    * @see enum {@link idex.OrderStateChange}
-   * @see inflated {@link IDEXOrderEventDataGeneral.update}
+   * @see inflated {@link KumaOrderEventDataGeneral.update}
    */
-  x: IDEXOrderEventDataGeneral['update'];
+  x: KumaOrderEventDataGeneral['update'];
   /**
-   * @see related {@link IDEXOrder.status}
+   * @see related {@link KumaOrder.status}
    * @see enum {@link idex.OrderStatus}
-   * @see inflated {@link IDEXOrderEventDataGeneral.status}
+   * @see inflated {@link KumaOrderEventDataGeneral.status}
    */
-  X: IDEXOrderEventDataGeneral['status'];
+  X: KumaOrderEventDataGeneral['status'];
   /**
-   * @see related {@link IDEXOrderBook.sequence}
-   * @see inflated {@link IDEXOrderEventDataGeneral.sequence}
+   * @see related {@link KumaOrderBook.sequence}
+   * @see inflated {@link KumaOrderEventDataGeneral.sequence}
    */
-  u?: IDEXOrderEventDataGeneral['sequence'];
+  u?: KumaOrderEventDataGeneral['sequence'];
   /**
-   * @see related {@link IDEXOrder.errorCode}
-   * @see inflated {@link IDEXOrderEventDataGeneral.errorCode}
+   * @see related {@link KumaOrder.errorCode}
+   * @see inflated {@link KumaOrderEventDataGeneral.errorCode}
    */
-  ec?: IDEXOrderEventDataGeneral['errorCode'];
+  ec?: KumaOrderEventDataGeneral['errorCode'];
   /**
-   * @see related {@link IDEXOrder.errorMessage}
-   * @see inflated {@link IDEXOrderEventDataGeneral.errorMessage}
+   * @see related {@link KumaOrder.errorMessage}
+   * @see inflated {@link KumaOrderEventDataGeneral.errorMessage}
    */
-  em?: IDEXOrderEventDataGeneral['errorMessage'];
+  em?: KumaOrderEventDataGeneral['errorMessage'];
   /**
-   * @see related {@link IDEXOrder.originalQuantity}
-   * @see inflated {@link IDEXOrderEventDataGeneral.originalQuantity}
+   * @see related {@link KumaOrder.originalQuantity}
+   * @see inflated {@link KumaOrderEventDataGeneral.originalQuantity}
    */
-  q: IDEXOrderEventDataGeneral['originalQuantity'];
+  q: KumaOrderEventDataGeneral['originalQuantity'];
   /**
-   * @see related {@link IDEXOrder.executedQuantity}
-   * @see inflated {@link IDEXOrderEventDataGeneral.executedQuantity}
+   * @see related {@link KumaOrder.executedQuantity}
+   * @see inflated {@link KumaOrderEventDataGeneral.executedQuantity}
    */
-  z: IDEXOrderEventDataGeneral['executedQuantity'];
+  z: KumaOrderEventDataGeneral['executedQuantity'];
   /**
-   * @see related {@link IDEXOrder.cumulativeQuoteQuantity}
-   * @see inflated {@link IDEXOrderEventDataGeneral.cumulativeQuoteQuantity}
+   * @see related {@link KumaOrder.cumulativeQuoteQuantity}
+   * @see inflated {@link KumaOrderEventDataGeneral.cumulativeQuoteQuantity}
    */
-  Z: IDEXOrderEventDataGeneral['cumulativeQuoteQuantity'];
+  Z: KumaOrderEventDataGeneral['cumulativeQuoteQuantity'];
   /**
-   * @see related {@link IDEXOrder.avgExecutionPrice}
-   * @see inflated {@link IDEXOrderEventDataGeneral.avgExecutionPrice}
+   * @see related {@link KumaOrder.avgExecutionPrice}
+   * @see inflated {@link KumaOrderEventDataGeneral.avgExecutionPrice}
    */
-  v?: IDEXOrderEventDataGeneral['avgExecutionPrice'];
+  v?: KumaOrderEventDataGeneral['avgExecutionPrice'];
   /**
-   * @see related {@link IDEXOrder.price}
-   * @see inflated {@link IDEXOrderEventDataGeneral.price}
+   * @see related {@link KumaOrder.price}
+   * @see inflated {@link KumaOrderEventDataGeneral.price}
    */
-  p?: IDEXOrderEventDataGeneral['price'];
+  p?: KumaOrderEventDataGeneral['price'];
   /**
-   * @see related {@link IDEXOrder.triggerPrice}
-   * @see inflated {@link IDEXOrderEventDataGeneral.triggerPrice}
+   * @see related {@link KumaOrder.triggerPrice}
+   * @see inflated {@link KumaOrderEventDataGeneral.triggerPrice}
    */
-  P?: IDEXOrderEventDataGeneral['triggerPrice'];
+  P?: KumaOrderEventDataGeneral['triggerPrice'];
   /**
-   * @see related {@link IDEXOrder.triggerType}
-   * @see inflated {@link IDEXOrderEventDataGeneral.triggerType}
+   * @see related {@link KumaOrder.triggerType}
+   * @see inflated {@link KumaOrderEventDataGeneral.triggerType}
    */
-  tt?: IDEXOrderEventDataGeneral['triggerType'];
+  tt?: KumaOrderEventDataGeneral['triggerType'];
   /**
    * Only applicable to `trailingStopMarket` orders.
    *
-   * @see inflated {@link IDEXOrderEventDataGeneral.callbackRate}
+   * @see inflated {@link KumaOrderEventDataGeneral.callbackRate}
    */
-  cr?: IDEXOrderEventDataGeneral['callbackRate'];
+  cr?: KumaOrderEventDataGeneral['callbackRate'];
   /**
-   * @see inflated {@link IDEXOrderEventDataGeneral.conditionalOrderId}
+   * @see inflated {@link KumaOrderEventDataGeneral.conditionalOrderId}
    */
-  ci?: IDEXOrderEventDataGeneral['conditionalOrderId'];
+  ci?: KumaOrderEventDataGeneral['conditionalOrderId'];
   /**
-   * @see related {@link IDEXOrder.reduceOnly}
-   * @see inflated {@link IDEXOrderEventDataGeneral.reduceOnly}
+   * @see related {@link KumaOrder.reduceOnly}
+   * @see inflated {@link KumaOrderEventDataGeneral.reduceOnly}
    */
-  r: IDEXOrderEventDataGeneral['reduceOnly'];
+  r: KumaOrderEventDataGeneral['reduceOnly'];
   /**
-   * @see related {@link IDEXOrder.timeInForce}
-   * @see inflated {@link IDEXOrderEventDataGeneral.timeInForce}
+   * @see related {@link KumaOrder.timeInForce}
+   * @see inflated {@link KumaOrderEventDataGeneral.timeInForce}
    */
-  f?: IDEXOrderEventDataGeneral['timeInForce'];
+  f?: KumaOrderEventDataGeneral['timeInForce'];
   /**
-   * @see related {@link IDEXOrder.selfTradePrevention}
-   * @see inflated {@link IDEXOrderEventDataGeneral.selfTradePrevention}
+   * @see related {@link KumaOrder.selfTradePrevention}
+   * @see inflated {@link KumaOrderEventDataGeneral.selfTradePrevention}
    */
-  V: IDEXOrderEventDataGeneral['selfTradePrevention'];
+  V: KumaOrderEventDataGeneral['selfTradePrevention'];
 
   /**
-   * @see related {@link IDEXOrder.isLiquidationAcquisitionOnly}
-   * @see inflated {@link IDEXOrderEventDataGeneral.isLiquidationAcquisitionOnly}
+   * @see related {@link KumaOrder.isLiquidationAcquisitionOnly}
+   * @see inflated {@link KumaOrderEventDataGeneral.isLiquidationAcquisitionOnly}
    */
-  la?: IDEXOrderEventDataGeneral['isLiquidationAcquisitionOnly'];
+  la?: KumaOrderEventDataGeneral['isLiquidationAcquisitionOnly'];
 }
 
 /**
@@ -354,7 +354,7 @@ export interface WebSocketResponseOrderShortGeneral
  *
  * WebSocket Response Order - Short (Deflated)
  *
- * An extended version used by WebSocket of {@link IDEXOrder},
+ * An extended version used by WebSocket of {@link KumaOrder},
  *
  * ## Discriminated Union
  *

@@ -25,12 +25,12 @@ import type {
  * @see enum {@link MessageEventType}
  * @category Base Types
  */
-export interface IDEXEventBase {
+export interface KumaEventBase {
   /**
    * The type property is used to determine the shape of the data property of the update event.
    *
-   * - Subscription update events will match {@link IDEXSubscriptionEventBase} with the subscription
-   *   name as the value for the {@link IDEXSubscriptionEventBase.type type} property.
+   * - Subscription update events will match {@link KumaSubscriptionEventBase} with the subscription
+   *   name as the value for the {@link KumaSubscriptionEventBase.type type} property.
    * - Otherwise the {@link MessageEventType type} will be:
    *   - {@link MessageEventType.subscriptions subscriptions} if you requested a list of all current subscriptions
    *   - {@link MessageEventType.error error} if your request resulted in a server error
@@ -56,7 +56,7 @@ export interface IDEXEventBase {
  * - `subscription` Websocket messages always include a {@link MessageEventType type} property
  *   which dictates the shape of its `data` property.
  *   - `type` will be the name of the subscription that the message correlates to.
- *   - Each `IDEX<name>Event` interface will document its provided `data` shape and properties.
+ *   - Each `Kuma<name>Event` interface will document its provided `data` shape and properties.
  * - {@link MessageEventType.subscriptions subscriptions} type messages will instead have a
  *   `subscriptions` property when dispatched.
  * - **Tip:** Using the enum {@link MessageEventType} will make it easier to narrow the messages.
@@ -74,12 +74,12 @@ export interface IDEXEventBase {
  * @see enum {@link MessageEventType}
  * @category Base Types
  */
-export interface IDEXSubscriptionEventBase extends IDEXEventBase {
+export interface KumaSubscriptionEventBase extends KumaEventBase {
   /**
    * @inheritDoc
    */
   type: Extract<
-    IDEXEventBase['type'],
+    KumaEventBase['type'],
     SubscriptionNamePublic | SubscriptionNameAuthenticated
   >;
   /**

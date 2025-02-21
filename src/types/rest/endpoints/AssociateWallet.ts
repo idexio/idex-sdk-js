@@ -1,13 +1,13 @@
 import type { RestRequestWithSignature } from '#types/utils';
-import type { IDEXWallet, RestRequestByWallet } from '@idexio/idex-sdk/types';
+import type { KumaWallet, RestRequestByWallet } from '@idexio/idex-sdk/types';
 
 /**
  * Associate a wallet with the authenticated account.
  *
- * @category IDEX - Associate Wallet
+ * @category Kuma - Associate Wallet
  *
  * @see response {@link RestResponseAssociateWallet}
- * @see type     {@link IDEXWallet}
+ * @see type     {@link KumaWallet}
  */
 export interface RestRequestAssociateWallet extends RestRequestByWallet {
   /**
@@ -19,7 +19,7 @@ export interface RestRequestAssociateWallet extends RestRequestByWallet {
 }
 
 /**
- * The raw request body for the `POST /v4/wallets` endpoint
+ * The raw request body for the `POST /v1/wallets` endpoint
  * including `signature` and the body in `parameters`.
  *
  * @internal
@@ -30,9 +30,9 @@ export type RestRequestAssociateWalletSigned =
 /**
  * The response to a request to associate a wallet.
  *
- * @category IDEX - Associate Wallet
+ * @category Kuma - Associate Wallet
  *
  * @see request {@link RestRequestAssociateWallet}
- * @see type    {@link IDEXWallet}
+ * @see type    {@link KumaWallet}
  */
-export type RestResponseAssociateWallet = IDEXWallet;
+export type RestResponseAssociateWallet = KumaWallet;

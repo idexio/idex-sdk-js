@@ -4,25 +4,25 @@ import type {
   SubscriptionNamePublic,
   MessageEventType,
 } from '#types/enums/index';
-import type { IDEXEventBase } from '#types/webSocket/base';
+import type { KumaEventBase } from '#types/webSocket/base';
 import type * as ResponseTypes from '#types/webSocket/response/index';
 
 /**
  * All the messages which may result from the corresponding WebSocket subscription.
  */
-export type IDEXSubscriptionEvent =
-  | ResponseTypes.IDEXTickerEvent
-  | ResponseTypes.IDEXTradeEvent
-  | ResponseTypes.IDEXLiquidationEvent
-  | ResponseTypes.IDEXCandleEvent
-  | ResponseTypes.IDEXOrderBookLevel1Event
-  | ResponseTypes.IDEXOrderBookLevel2Event
-  | ResponseTypes.IDEXOrderEvent
-  | ResponseTypes.IDEXDepositEvent
-  | ResponseTypes.IDEXWithdrawalEvent
-  | ResponseTypes.IDEXPositionEvent
-  | ResponseTypes.IDEXFundingPaymentEvent
-  | ResponseTypes.IDEXWebClientEvent;
+export type KumaSubscriptionEvent =
+  | ResponseTypes.KumaTickerEvent
+  | ResponseTypes.KumaTradeEvent
+  | ResponseTypes.KumaLiquidationEvent
+  | ResponseTypes.KumaCandleEvent
+  | ResponseTypes.KumaOrderBookLevel1Event
+  | ResponseTypes.KumaOrderBookLevel2Event
+  | ResponseTypes.KumaOrderEvent
+  | ResponseTypes.KumaDepositEvent
+  | ResponseTypes.KumaWithdrawalEvent
+  | ResponseTypes.KumaPositionEvent
+  | ResponseTypes.KumaFundingPaymentEvent
+  | ResponseTypes.KumaWebClientEvent;
 
 /**
  * @internal
@@ -47,7 +47,7 @@ export type WebSocketResponseSubscriptionMessageShort =
  * When an error occurs during evaluation by the WebSocket Server, this
  * error message will be provided to the message handler.
  */
-export interface IDEXErrorEvent extends IDEXEventBase {
+export interface KumaErrorEvent extends KumaEventBase {
   /**
    * @inheritDoc
    */
@@ -70,7 +70,7 @@ export interface IDEXErrorEvent extends IDEXEventBase {
 /**
  * Subscriptions Response
  */
-export interface IDEXSubscriptionsListEvent extends IDEXEventBase {
+export interface KumaSubscriptionsListEvent extends KumaEventBase {
   /**
    * @inheritDoc
    */
@@ -79,22 +79,22 @@ export interface IDEXSubscriptionsListEvent extends IDEXEventBase {
   /**
    * @inheritDoc
    *
-   * @see type {@link IDEXSubscribeType}
+   * @see type {@link KumaSubscribeType}
    */
-  subscriptions: IDEXSubscribeType[];
+  subscriptions: KumaSubscribeType[];
 }
 
 /**
  * The possible WebSocket messages that should be handled by the WebSocketClient's `onMessage` handler.
  *
- * @see related {@link IDEXErrorEvent}
- * @see related {@link IDEXSubscriptionsListEvent}
- * @see related {@link IDEXSubscriptionEvent}
+ * @see related {@link KumaErrorEvent}
+ * @see related {@link KumaSubscriptionsListEvent}
+ * @see related {@link KumaSubscriptionEvent}
  */
-export type IDEXMessageEvent =
-  | IDEXErrorEvent
-  | IDEXSubscriptionsListEvent
-  | IDEXSubscriptionEvent;
+export type KumaMessageEvent =
+  | KumaErrorEvent
+  | KumaSubscriptionsListEvent
+  | KumaSubscriptionEvent;
 
 /**
  * <div>
@@ -104,11 +104,11 @@ export type IDEXMessageEvent =
  * - All WebSocket subscriptions are based upon this interface, which provides for
  *   appropriate type narrowing based on the subscription being requested.
  *
- * @see docs [WebSocket API Docs](https://api-docs-v4.idex.io/#websocket-api-interaction)
+ * @see docs [WebSocket API Docs](https://api-docs-v1.kuma.bid/#websocket-api-interaction)
  *
  * @category Base Types
  */
-interface IDEXSubscribeBase {
+interface KumaSubscribeBase {
   /**
    * Subscription to subscribe to.
    *
@@ -122,7 +122,7 @@ interface IDEXSubscribeBase {
    *
    * - Overrides the markets array at the top-level subscription object, if provided.
    * - Required if the top-level subscription does not define `markets`
-   *   and the request is a {@link IDEXSubscribeTypePublic public subscription}
+   *   and the request is a {@link KumaSubscribeTypePublic public subscription}
    */
   markets?: string[] | undefined;
   /**
@@ -143,11 +143,11 @@ interface IDEXSubscribeBase {
  * A Base type that all authenticated WebSocket subscriptions extend upon.
  *
  * @see names   {@link SubscriptionNameAuthenticated}
- * @see related {@link IDEXSubscribeTypeAuthenticated}
+ * @see related {@link KumaSubscribeTypeAuthenticated}
  *
  * @category Base Types
  */
-export interface IDEXSubscribeAuthenticatedBase extends IDEXSubscribeBase {
+export interface KumaSubscribeAuthenticatedBase extends KumaSubscribeBase {
   /**
    * @inheritDoc
    */
@@ -164,11 +164,11 @@ export interface IDEXSubscribeAuthenticatedBase extends IDEXSubscribeBase {
  * A Base type that all public WebSocket subscriptions extend upon.
  *
  * @see names   {@link SubscriptionNamePublic}
- * @see related {@link IDEXSubscribeTypePublic}
+ * @see related {@link KumaSubscribeTypePublic}
  *
  * @category Base Types
  */
-export interface IDEXSubscribePublicBase extends IDEXSubscribeBase {
+export interface KumaSubscribePublicBase extends KumaSubscribeBase {
   /**
    * @inheritDoc
    */
@@ -193,15 +193,15 @@ export interface IDEXSubscribePublicBase extends IDEXSubscribeBase {
  * > - **Authentication:**     **None**
  * > - **Update Speed:**       1 second
  * > - **Required Parameters:**
- *   {@link IDEXSubscribePublicBase.markets markets}
+ *   {@link KumaSubscribePublicBase.markets markets}
  * ---
  *
- * @see docs [Tickers Subscription API Documentation](https://api-docs-v4.idex.io/#tickers)
+ * @see docs [Tickers Subscription API Documentation](https://api-docs-v1.kuma.bid/#tickers)
  *
  * @category WebSocket - Subscribe
- * @category IDEX - Get Tickers
+ * @category Kuma - Get Tickers
  */
-export interface IDEXSubscribeTickers extends IDEXSubscribePublicBase {
+export interface KumaSubscribeTickers extends KumaSubscribePublicBase {
   /**
    * @inheritDoc
    */
@@ -219,16 +219,16 @@ export interface IDEXSubscribeTickers extends IDEXSubscribePublicBase {
  * > - **Authentication:**     None
  * > - **Update Speed:**       1 second
  * > - **Required Parameters:**
- *   {@link IDEXSubscribePublicBase.markets markets},
+ *   {@link KumaSubscribePublicBase.markets markets},
  *   {@link CandleInterval interval}
  * ---
  *
- * @see docs [Candles Subscription API Documentation](https://api-docs-v4.idex.io/#candles)
+ * @see docs [Candles Subscription API Documentation](https://api-docs-v1.kuma.bid/#candles)
  *
  * @category WebSocket - Subscribe
- * @category IDEX - Get Candles
+ * @category Kuma - Get Candles
  */
-export interface IDEXSubscribeCandles extends IDEXSubscribePublicBase {
+export interface KumaSubscribeCandles extends KumaSubscribePublicBase {
   /**
    * @inheritDoc
    */
@@ -255,15 +255,15 @@ export interface IDEXSubscribeCandles extends IDEXSubscribePublicBase {
  * > - **Update Speed:**       Real-time
  * >  - updates on new trades
  * > - **Required Parameters:**
- *   {@link IDEXSubscribePublicBase.markets markets}
+ *   {@link KumaSubscribePublicBase.markets markets}
  * ---
  *
- * @see docs [Trades Subscription API Documentation](https://api-docs-v4.idex.io/#trades)
+ * @see docs [Trades Subscription API Documentation](https://api-docs-v1.kuma.bid/#trades)
  *
  * @category WebSocket - Subscribe
- * @category IDEX - Get Trades
+ * @category Kuma - Get Trades
  */
-export interface IDEXSubscribeTrades extends IDEXSubscribePublicBase {
+export interface KumaSubscribeTrades extends KumaSubscribePublicBase {
   /**
    * @inheritDoc
    */
@@ -282,15 +282,15 @@ export interface IDEXSubscribeTrades extends IDEXSubscribePublicBase {
  * > - **Update Speed:**       Real-time
  * >   - updates on new liquidations
  * > - **Required Parameters:**
- *   {@link IDEXSubscribePublicBase.markets markets}
+ *   {@link KumaSubscribePublicBase.markets markets}
  * ---
  *
- * @see docs [Liquidations Subscription API Documentation](https://api-docs-v4.idex.io/#liquidations)
+ * @see docs [Liquidations Subscription API Documentation](https://api-docs-v1.kuma.bid/#liquidations)
  *
  * @category WebSocket - Subscribe
- * @category IDEX - Get Liquidations
+ * @category Kuma - Get Liquidations
  */
-export interface IDEXSubscribeLiquidations extends IDEXSubscribePublicBase {
+export interface KumaSubscribeLiquidations extends KumaSubscribePublicBase {
   /**
    * @inheritDoc
    */
@@ -301,9 +301,9 @@ export interface IDEXSubscribeLiquidations extends IDEXSubscribePublicBase {
 /**
  * Provides real-time **Level-1** order book data for a market.
  *
- * - {@link IDEXSubscribeOrderBookLevel1 Level-1} order book data is limited to the best bid and ask
+ * - {@link KumaSubscribeOrderBookLevel1 Level-1} order book data is limited to the best bid and ask
  *   for a market.
- * - {@link IDEXSubscribeOrderBookLevel2 Level-2} order book data includes `price` and `quantity` information
+ * - {@link KumaSubscribeOrderBookLevel2 Level-2} order book data includes `price` and `quantity` information
  *   for all limit order price levels in the order book.
  *
  * ---
@@ -314,16 +314,16 @@ export interface IDEXSubscribeLiquidations extends IDEXSubscribePublicBase {
  * > - **Update Speed:**       Real-time
  * >   - updates on new best ask, best bid, or related quantities
  * > - **Required Parameters:**
- *   {@link IDEXSubscribePublicBase.markets markets}
+ *   {@link KumaSubscribePublicBase.markets markets}
  * ---
  *
- * @see docs    [OrderBook Level 1 Subscription API Documentation](https://api-docs-v4.idex.io/#l1-order-book)
- * @see related {@link IDEXSubscribeOrderBookLevel2}
+ * @see docs    [OrderBook Level 1 Subscription API Documentation](https://api-docs-v1.kuma.bid/#l1-order-book)
+ * @see related {@link KumaSubscribeOrderBookLevel2}
  *
  * @category WebSocket - Subscribe
- * @category IDEX - Get OrderBook
+ * @category Kuma - Get OrderBook
  */
-export interface IDEXSubscribeOrderBookLevel1 extends IDEXSubscribePublicBase {
+export interface KumaSubscribeOrderBookLevel1 extends KumaSubscribePublicBase {
   /**
    * @inheritDoc
    */
@@ -334,9 +334,9 @@ export interface IDEXSubscribeOrderBookLevel1 extends IDEXSubscribePublicBase {
 /**
  * Provides real-time **Level-2** order book data for a market.
  *
- * - {@link IDEXSubscribeOrderBookLevel1 Level-1} order book data is limited to the best `bid` and `ask`
+ * - {@link KumaSubscribeOrderBookLevel1 Level-1} order book data is limited to the best `bid` and `ask`
  *   for a market.
- * - {@link IDEXSubscribeOrderBookLevel2 Level-2} order book data includes `price` and `quantity` information
+ * - {@link KumaSubscribeOrderBookLevel2 Level-2} order book data includes `price` and `quantity` information
  *   for all limit order price levels in the order book.
  *
  * ---
@@ -347,16 +347,16 @@ export interface IDEXSubscribeOrderBookLevel1 extends IDEXSubscribePublicBase {
  * > - **Update Speed:**       Real-time
  * >   - updates on any order book change
  * > - **Required Parameters:**
- *   {@link IDEXSubscribePublicBase.markets markets}
+ *   {@link KumaSubscribePublicBase.markets markets}
  * ---
  *
- * @see docs    [OrderBook Level 2 Subscription API Documentation](https://api-docs-v4.idex.io/#l2-order-book)
- * @see related {@link IDEXSubscribeOrderBookLevel1}
+ * @see docs    [OrderBook Level 2 Subscription API Documentation](https://api-docs-v1.kuma.bid/#l2-order-book)
+ * @see related {@link KumaSubscribeOrderBookLevel1}
  *
  * @category WebSocket - Subscribe
- * @category IDEX - Get OrderBook
+ * @category Kuma - Get OrderBook
  */
-export interface IDEXSubscribeOrderBookLevel2 extends IDEXSubscribePublicBase {
+export interface KumaSubscribeOrderBookLevel2 extends KumaSubscribePublicBase {
   /**
    * @inheritDoc
    */
@@ -367,7 +367,7 @@ export interface IDEXSubscribeOrderBookLevel2 extends IDEXSubscribePublicBase {
 /**
  * @internal
  */
-export interface IDEXSubscribeWebClient extends IDEXSubscribeAuthenticatedBase {
+export interface KumaSubscribeWebClient extends KumaSubscribeAuthenticatedBase {
   /**
    * @inheritDoc
    */
@@ -396,9 +396,9 @@ export interface IDEXSubscribeWebClient extends IDEXSubscribeAuthenticatedBase {
  * ---
  *
  * @category WebSocket - Subscribe
- * @category IDEX - Get Orders
+ * @category Kuma - Get Orders
  */
-export interface IDEXSubscribeOrders extends IDEXSubscribeAuthenticatedBase {
+export interface KumaSubscribeOrders extends KumaSubscribeAuthenticatedBase {
   /**
    * @inheritDoc
    */
@@ -418,13 +418,13 @@ export interface IDEXSubscribeOrders extends IDEXSubscribeAuthenticatedBase {
  * > - **Request Parameters:** None
  * ---
  *
- * @see related {@link IDEXSubscribePositions}
- * @see related {@link IDEXSubscribeWithdrawals}
+ * @see related {@link KumaSubscribePositions}
+ * @see related {@link KumaSubscribeWithdrawals}
  *
  * @category WebSocket - Subscribe
- * @category IDEX - Get Deposits
+ * @category Kuma - Get Deposits
  */
-export interface IDEXSubscribeDeposits extends IDEXSubscribeAuthenticatedBase {
+export interface KumaSubscribeDeposits extends KumaSubscribeAuthenticatedBase {
   /**
    * @inheritDoc
    */
@@ -444,14 +444,14 @@ export interface IDEXSubscribeDeposits extends IDEXSubscribeAuthenticatedBase {
  * > - **Request Parameters:** None
  * ---
  *
- * @see related {@link IDEXSubscribeDeposits}
- * @see related {@link IDEXSubscribePositions}
+ * @see related {@link KumaSubscribeDeposits}
+ * @see related {@link KumaSubscribePositions}
  *
  * @category WebSocket - Subscribe
- * @category IDEX - Get Withdrawals
+ * @category Kuma - Get Withdrawals
  */
-export interface IDEXSubscribeWithdrawals
-  extends IDEXSubscribeAuthenticatedBase {
+export interface KumaSubscribeWithdrawals
+  extends KumaSubscribeAuthenticatedBase {
   /**
    * @inheritDoc
    */
@@ -471,13 +471,13 @@ export interface IDEXSubscribeWithdrawals
  * > - **Request Parameters:** None
  * ---
  *
- * @see related {@link IDEXSubscribeDeposits}
- * @see related {@link IDEXSubscribeWithdrawals}
+ * @see related {@link KumaSubscribeDeposits}
+ * @see related {@link KumaSubscribeWithdrawals}
  *
  * @category WebSocket - Subscribe
- * @category IDEX - Get Positions
+ * @category Kuma - Get Positions
  */
-export interface IDEXSubscribePositions extends IDEXSubscribeAuthenticatedBase {
+export interface KumaSubscribePositions extends KumaSubscribeAuthenticatedBase {
   /**
    * @inheritDoc
    */
@@ -498,10 +498,10 @@ export interface IDEXSubscribePositions extends IDEXSubscribeAuthenticatedBase {
  * ---
  *
  * @category WebSocket - Subscribe
- * @category IDEX - Get Funding Payments
+ * @category Kuma - Get Funding Payments
  */
-export interface IDEXSubscribeFundingPayments
-  extends IDEXSubscribeAuthenticatedBase {
+export interface KumaSubscribeFundingPayments
+  extends KumaSubscribeAuthenticatedBase {
   /**
    * @inheritDoc
    */
@@ -511,49 +511,49 @@ export interface IDEXSubscribeFundingPayments
 /**
  * All WebSocket Subscribe types as a union.
  *
- * @see related {@link IDEXSubscribeTypeAuthenticated}
- * @see related {@link IDEXSubscribeTypePublic}
+ * @see related {@link KumaSubscribeTypeAuthenticated}
+ * @see related {@link KumaSubscribeTypePublic}
  *
  * @category WebSocket - Subscribe
  */
-export type IDEXSubscribeType =
-  | IDEXSubscribeTypeAuthenticated
-  | IDEXSubscribeTypePublic;
+export type KumaSubscribeType =
+  | KumaSubscribeTypeAuthenticated
+  | KumaSubscribeTypePublic;
 
 /**
  * - Subscribing to these requires the {@link WebSocketClient} to be constructed with the
  *   `auth` object.
  *
- * @see related {@link IDEXSubscribeType}
- * @see related {@link IDEXSubscribeTypePublic}
+ * @see related {@link KumaSubscribeType}
+ * @see related {@link KumaSubscribeTypePublic}
  *
  * @category WebSocket - Subscribe
  */
-export type IDEXSubscribeTypeAuthenticated =
-  | IDEXSubscribeOrders
-  | IDEXSubscribeDeposits
-  | IDEXSubscribeWithdrawals
-  | IDEXSubscribePositions
-  | IDEXSubscribeFundingPayments
-  | IDEXSubscribeWebClient;
+export type KumaSubscribeTypeAuthenticated =
+  | KumaSubscribeOrders
+  | KumaSubscribeDeposits
+  | KumaSubscribeWithdrawals
+  | KumaSubscribePositions
+  | KumaSubscribeFundingPayments
+  | KumaSubscribeWebClient;
 
 /**
  * All WebSocket Subscribe types which are public and do not require
  * authentication to subscribe to.
  *
- * @see related {@link IDEXSubscribeType}
- * @see related {@link IDEXSubscribeTypeAuthenticated}
+ * @see related {@link KumaSubscribeType}
+ * @see related {@link KumaSubscribeTypeAuthenticated}
  *
  * @category WebSocket - Subscribe
  */
-export type IDEXSubscribeTypePublic =
-  | IDEXSubscribeTickers
-  | IDEXSubscribeTrades
-  | IDEXSubscribeLiquidations
-  | IDEXSubscribeOrderBookLevel1
-  | IDEXSubscribeOrderBookLevel2
-  | IDEXSubscribeCandles
-  | IDEXSubscribeWebClient;
+export type KumaSubscribeTypePublic =
+  | KumaSubscribeTickers
+  | KumaSubscribeTrades
+  | KumaSubscribeLiquidations
+  | KumaSubscribeOrderBookLevel1
+  | KumaSubscribeOrderBookLevel2
+  | KumaSubscribeCandles
+  | KumaSubscribeWebClient;
 
 /**
  * @category WebSocket - Unsubscribe
@@ -569,5 +569,5 @@ export type WebSocketRequestUnsubscribeShortNames =
  * @category WebSocket - Unsubscribe
  */
 export type WebSocketRequestUnsubscribeSubscription = Partial<
-  IDEXSubscribeTypePublic | IDEXSubscribeTypeAuthenticated
+  KumaSubscribeTypePublic | KumaSubscribeTypeAuthenticated
 > & { name: WebSocketRequestUnsubscribeShortNames };

@@ -2,5 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as storkIndexAndOraclePriceAdapterSol from './StorkIndexAndOraclePriceAdapter.sol';
-export { IDEXIndexAndOraclePriceAdapter__factory } from './IDEXIndexAndOraclePriceAdapter__factory';
+export { KumaIndexAndOraclePriceAdapter__factory } from './KumaIndexAndOraclePriceAdapter__factory';
 export { PythIndexPriceAdapter__factory } from './PythIndexPriceAdapter__factory';

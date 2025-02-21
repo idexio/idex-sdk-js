@@ -5,10 +5,10 @@
     <img src="assets/hero.jpeg" width="50%" title="eslint-plus-action">
   </p>
   <h1>
-      IDEX v4 Typescript/Javascript SDK
+      Kuma v4 Typescript/Javascript SDK
   </h1>
   <p>
-   The official Typescript/Javascript SDK for <a href="https://idex.io">IDEX v4</a> REST and WebSocket APIs.
+   The official Typescript/Javascript SDK for <a href="https://idex.io">Kuma v4</a> REST and WebSocket APIs.
   </p>
 </div>
 
@@ -22,18 +22,18 @@
 
 ## Summary
 
-- 🔥 **Built with TypeScript** - Provides a TypeScript/JavaScript SDK for the [IDEX v4 REST and WebSocket APIs](https://api-docs-v4.idex.io).
+- 🔥 **Built with TypeScript** - Provides a TypeScript/JavaScript SDK for the [Kuma v4 REST and WebSocket APIs](https://api-docs-v4.idex.io).
 - ⭐ **Powerful Documentation** - Provides complete inline IDE documentation and matching 📖 [typedoc-generated reference documentation](https://sdk-js-docs-v4.idex.io).
-- 🦺 **End-to-End type safety** - the sdk types are used by IDEX servers and clients so enumerations and types are always up-to-date and accurate.
+- 🦺 **End-to-End type safety** - the sdk types are used by Kuma servers and clients so enumerations and types are always up-to-date and accurate.
 - 🌐 **Universal Compatibility** - Optimized to work in both Node.js and browser environments for maximum compatibility.
 
 ## Links & Resource
 
-- 🏠 [IDEX Homepage](https://idex.io)
-- 📈 [IDEX v4 Exchange Sandbox](https://exchange-sandbox.idex.io)
-- 📖 [IDEX v4 Typescript SDK Reference Documentation](https://sdk-js-docs-v4.idex.io)
-- 📖 [IDEX v4 API Documentation](https://api-docs-v4.idex.io)
-- 🔗 [IDEX v4 SDK GitHub](https://github.com/idexio/idex-sdk-js)
+- 🏠 [Kuma Homepage](https://idex.io)
+- 📈 [Kuma v4 Exchange Sandbox](https://exchange-sandbox.idex.io)
+- 📖 [Kuma v4 Typescript SDK Reference Documentation](https://sdk-js-docs-v4.idex.io)
+- 📖 [Kuma v4 API Documentation](https://api-docs-v4.idex.io)
+- 🔗 [Kuma v4 SDK GitHub](https://github.com/idexio/idex-sdk-js)
 
 ## Installation
 
@@ -67,7 +67,7 @@ const markets = await publicClient.getMarkets();
 const wallets = await authenticatedClient.getWallets();
 ```
 
-- Start with **sandbox** testing by getting [IDEX v4 sandbox API keys](https://api-docs-v4.idex.io/#sandbox).
+- Start with **sandbox** testing by getting [Kuma v4 sandbox API keys](https://api-docs-v4.idex.io/#sandbox).
 
 ## Node Versions
 
@@ -97,4 +97,4 @@ import * as typechain from '@idexio/idex-sdk/typechain';
 
 ## License
 
-The IDEX JavaScript SDK is released under the [MIT License](https://opensource.org/licenses/MIT).
+The Kuma JavaScript SDK is released under the [MIT License](https://opensource.org/licenses/MIT).

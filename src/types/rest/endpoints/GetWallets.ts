@@ -1,14 +1,14 @@
-import type { RestRequestByWalletOptional, IDEXPosition } from '#index';
+import type { RestRequestByWalletOptional, KumaPosition } from '#index';
 
 /**
- * - HTTP Request: `GET /v4/wallets`
- * - Endpoint Security: [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
- * - API Key Scope: [Read](https://api-docs-v4.idex.io/#api-keys)
+ * - HTTP Request: `GET /v1/wallets`
+ * - Endpoint Security: [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+ * - API Key Scope: [Read](https://api-docs-v1.kuma.bid/#api-keys)
  *
  * @see response {@link RestResponseGetWallets}
- * @see type {@link IDEXWallet}
+ * @see type {@link KumaWallet}
  *
- * @category IDEX - Get Wallets
+ * @category Kuma - Get Wallets
  */
 export interface RestRequestGetWallets extends RestRequestByWalletOptional {
   /**
@@ -33,15 +33,15 @@ export interface RestRequestGetWallets extends RestRequestByWalletOptional {
 /**
  * The Standard `wallet` response shape.
  *
- * @see [API Documentation](https://api-docs-v4.idex.io/#get-wallets)
+ * @see [API Documentation](https://api-docs-v1.kuma.bid/#get-wallets)
  * @see request {@link RestRequestGetWallets}
  * @see response {@link RestResponseGetWallets}
  *
- * @category IDEX - Get Wallets
- * @category IDEX - Associate Wallet
- * @category IDEX Interfaces
+ * @category Kuma - Get Wallets
+ * @category Kuma - Associate Wallet
+ * @category Kuma Interfaces
  */
-export interface IDEXWallet {
+export interface KumaWallet {
   /** Address of the wallet */
   wallet: string;
   /** Total account value */
@@ -98,13 +98,13 @@ export interface IDEXWallet {
    *
    * - Only present if {@link RestRequestGetWallets.includePositions} was not set to `false`
    */
-  positions?: undefined | IDEXPosition[];
+  positions?: undefined | KumaPosition[];
 }
 
 /**
- * @see type {@link IDEXWallet}
+ * @see type {@link KumaWallet}
  * @see request {@link RestRequestGetWallets}
  *
- * @category IDEX - Get Wallets
+ * @category Kuma - Get Wallets
  */
-export type RestResponseGetWallets = IDEXWallet[];
+export type RestResponseGetWallets = KumaWallet[];

@@ -2,11 +2,11 @@ import * as chai from 'chai';
 
 import { calculateMaximumInitialMarginFractionOverride } from '#orderbook/quantities';
 
-import type { IDEXMarket } from '#types/index';
+import type { KumaMarket } from '#types/index';
 
 const { expect } = chai;
 
-const market: IDEXMarket = {
+const market: KumaMarket = {
   market: 'DIL-USD',
   type: 'perpetual',
   status: 'active',

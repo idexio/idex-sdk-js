@@ -4,8 +4,8 @@ import type { RestRequestByMarketOptional, RestRequestByWallet } from '#index';
  * Get Positions
  *
  * @see response {@link RestResponseGetPositions}
- * @see type {@link IDEXPosition}
- * @category IDEX - Get Positions
+ * @see type {@link KumaPosition}
+ * @category Kuma - Get Positions
  */
 export interface RestRequestGetPositions
   extends RestRequestByWallet,
@@ -14,10 +14,10 @@ export interface RestRequestGetPositions
 /**
  * @see request {@link RestRequestGetPositions}
  * @see response {@link RestResponseGetPositions}
- * @category IDEX Interfaces
- * @category IDEX - Get Positions
+ * @category Kuma Interfaces
+ * @category Kuma - Get Positions
  */
-export interface IDEXPosition {
+export interface KumaPosition {
   /**
    * Market symbol for the item
    */
@@ -100,9 +100,9 @@ export interface IDEXPosition {
 }
 
 /**
- * @see type {@link IDEXPosition}
+ * @see type {@link KumaPosition}
  * @see request {@link RestRequestGetPositions}
  *
- * @category IDEX - Get Positions
+ * @category Kuma - Get Positions
  */
-export type RestResponseGetPositions = IDEXPosition[];
+export type RestResponseGetPositions = KumaPosition[];

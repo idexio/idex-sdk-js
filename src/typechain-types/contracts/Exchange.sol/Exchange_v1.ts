@@ -386,7 +386,7 @@ export type WithdrawalStructOutput = [
   walletSignature: string;
 };
 
-export interface Exchange_v4Interface extends Interface {
+export interface Exchange_v1Interface extends Interface {
   getFunction(
     nameOrSignature:
       | 'activateMarket'
@@ -440,6 +440,7 @@ export interface Exchange_v4Interface extends Interface {
       | 'loadTotalMaintenanceMarginRequirementFromOraclePrices'
       | 'marketBaseAssetSymbols'
       | 'marketOverridesByBaseAssetSymbolAndWallet'
+      | 'migrateQuoteTokenAddress'
       | 'nonceInvalidationsByWallet'
       | 'oraclePriceAdapter'
       | 'ownerWallet'
@@ -505,6 +506,7 @@ export interface Exchange_v4Interface extends Interface {
       | 'OrderNonceInvalidated'
       | 'PendingDepositApplied'
       | 'PositionBelowMinimumLiquidationPriceToleranceMultiplierChanged'
+      | 'QuoteTokenAddressChanged'
       | 'TradeExecuted'
       | 'Transferred'
       | 'WalletExitCleared'
@@ -710,6 +712,10 @@ export interface Exchange_v4Interface extends Interface {
   encodeFunctionData(
     functionFragment: 'marketOverridesByBaseAssetSymbolAndWallet',
     values: [string, AddressLike],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'migrateQuoteTokenAddress',
+    values?: undefined,
   ): string;
   encodeFunctionData(
     functionFragment: 'nonceInvalidationsByWallet',
@@ -1029,6 +1035,10 @@ export interface Exchange_v4Interface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: 'marketOverridesByBaseAssetSymbolAndWallet',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'migrateQuoteTokenAddress',
     data: BytesLike,
   ): Result;
   decodeFunctionResult(
@@ -1655,6 +1665,19 @@ export namespace PositionBelowMinimumLiquidationPriceToleranceMultiplierChangedE
   export type LogDescription = TypedLogDescription<Event>;
 }
 
+export namespace QuoteTokenAddressChangedEvent {
+  export type InputTuple = [previousValue: AddressLike, newValue: AddressLike];
+  export type OutputTuple = [previousValue: string, newValue: string];
+  export interface OutputObject {
+    previousValue: string;
+    newValue: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
 export namespace TradeExecutedEvent {
   export type InputTuple = [
     buyWallet: AddressLike,
@@ -1786,11 +1809,11 @@ export namespace WithdrawnEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export interface Exchange_v4 extends BaseContract {
-  connect(runner?: ContractRunner | null): Exchange_v4;
+export interface Exchange_v1 extends BaseContract {
+  connect(runner?: ContractRunner | null): Exchange_v1;
   waitForDeployment(): Promise<this>;
 
-  interface: Exchange_v4Interface;
+  interface: Exchange_v1Interface;
 
   queryFilter<TCEvent extends TypedContractEvent>(
     event: TCEvent,
@@ -2092,6 +2115,8 @@ export interface Exchange_v4 extends BaseContract {
     ],
     'view'
   >;
+
+  migrateQuoteTokenAddress: TypedContractMethod<[], [void], 'nonpayable'>;
 
   nonceInvalidationsByWallet: TypedContractMethod<
     [arg0: AddressLike, arg1: BigNumberish],
@@ -2520,6 +2545,9 @@ export interface Exchange_v4 extends BaseContract {
     'view'
   >;
   getFunction(
+    nameOrSignature: 'migrateQuoteTokenAddress',
+  ): TypedContractMethod<[], [void], 'nonpayable'>;
+  getFunction(
     nameOrSignature: 'nonceInvalidationsByWallet',
   ): TypedContractMethod<
     [arg0: AddressLike, arg1: BigNumberish],
@@ -2889,6 +2917,13 @@ export interface Exchange_v4 extends BaseContract {
     PositionBelowMinimumLiquidationPriceToleranceMultiplierChangedEvent.OutputObject
   >;
   getEvent(
+    key: 'QuoteTokenAddressChanged',
+  ): TypedContractEvent<
+    QuoteTokenAddressChangedEvent.InputTuple,
+    QuoteTokenAddressChangedEvent.OutputTuple,
+    QuoteTokenAddressChangedEvent.OutputObject
+  >;
+  getEvent(
     key: 'TradeExecuted',
   ): TypedContractEvent<
     TradeExecutedEvent.InputTuple,
@@ -3227,6 +3262,17 @@ export interface Exchange_v4 extends BaseContract {
       PositionBelowMinimumLiquidationPriceToleranceMultiplierChangedEvent.InputTuple,
       PositionBelowMinimumLiquidationPriceToleranceMultiplierChangedEvent.OutputTuple,
       PositionBelowMinimumLiquidationPriceToleranceMultiplierChangedEvent.OutputObject
+    >;
+
+    'QuoteTokenAddressChanged(address,address)': TypedContractEvent<
+      QuoteTokenAddressChangedEvent.InputTuple,
+      QuoteTokenAddressChangedEvent.OutputTuple,
+      QuoteTokenAddressChangedEvent.OutputObject
+    >;
+    QuoteTokenAddressChanged: TypedContractEvent<
+      QuoteTokenAddressChangedEvent.InputTuple,
+      QuoteTokenAddressChangedEvent.OutputTuple,
+      QuoteTokenAddressChangedEvent.OutputObject
     >;
 
     'TradeExecuted(address,address,string,string,uint64,uint64,uint8,int64,uint64)': TypedContractEvent<

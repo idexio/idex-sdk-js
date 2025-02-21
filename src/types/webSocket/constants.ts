@@ -11,9 +11,9 @@ import type { Expand } from '#types/utils';
  *
  * A Base type that all authenticated WebSocket subscriptions extend upon.
  *
- * @see         [WebSocket API Docs](https://api-docs-v4.idex.io/#websocket-api-interaction)
+ * @see         [WebSocket API Docs](https://api-docs-v1.kuma.bid/#websocket-api-interaction)
  * @see names   {@link SubscriptionNameAuthenticated}
- * @see related {@link IDEXSubscribeTypeAuthenticated}
+ * @see related {@link KumaSubscribeTypeAuthenticated}
  */
 /**
  * Simple filter function to remove the `candles` that is both type safe

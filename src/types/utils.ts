@@ -36,8 +36,8 @@ export type EmptyObj = { [key: string]: never };
  *
  * @example
  * ```typescript
- *  // the ExpandedCandle can be hovered to see the properties of IDEXCandle directly
- *  type ExpandedCandle = Expand<IDEXCandle>;
+ *  // the ExpandedCandle can be hovered to see the properties of KumaCandle directly
+ *  type ExpandedCandle = Expand<KumaCandle>;
  * ```
  */
 export type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;

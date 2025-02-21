@@ -24,10 +24,10 @@ import type * as _types from '#index';
  *
  * @see client  {@link _types.RestPublicClient.getCandles RestPublicClient.getCandles}
  * @see request {@link _types.RestRequestGetCandles RestRequestGetCandles}
- * @see related {@link _types.IDEXCandle IDEXCandle}
+ * @see related {@link _types.KumaCandle KumaCandle}
  *
  * @category Enums - Request Parameters
- * @category IDEX - Get Candles
+ * @category Kuma - Get Candles
  * @enum
  */
 export const CandleInterval = Object.freeze({
@@ -65,17 +65,17 @@ export type CandleInterval =
   (typeof CandleInterval)[keyof typeof CandleInterval];
 
 /**
- * Time in force policies specify the behavior of a {@link _types.IDEXOrder limit order} upon execution.
+ * Time in force policies specify the behavior of a {@link _types.KumaOrder limit order} upon execution.
  *
- * @see docs    [IDEX API Documentation: Time in Force Explained](https://api-docs-v4.idex.io/#time-in-force)
+ * @see docs    [Kuma API Documentation: Time in Force Explained](https://api-docs-v1.kuma.bid/#time-in-force)
  * @see request {@link _types.RestRequestOrderBase.timeInForce RestRequestOrder.timeInForce}
  *  > This enum is most useful when calling the {@link _types.RestAuthenticatedClient.createOrder RestAuthenticatedClient.createOrder}
  *    method to provide inline completion and documentation for the `timeInForce` parameter.
- * @see related {@link _types.IDEXOrder IDEXOrder}
- *  > The `IDEXOrder` interface provides the shape for orders and are returned whenever an order is created or queried.
+ * @see related {@link _types.KumaOrder KumaOrder}
+ *  > The `KumaOrder` interface provides the shape for orders and are returned whenever an order is created or queried.
  *
  * @category Enums - Request Parameters
- * @category IDEX - Create Order
+ * @category Kuma - Create Order
  * @enum
  */
 export const TimeInForce = Object.freeze({
@@ -105,7 +105,7 @@ export const TimeInForce = Object.freeze({
    * });
    * ```
    *
-   * @see docs [IDEX API Documentation: Time in Force Explained](https://api-docs-v4.idex.io/#time-in-force)
+   * @see docs [Kuma API Documentation: Time in Force Explained](https://api-docs-v1.kuma.bid/#time-in-force)
    */
   gtc: 'gtc',
 
@@ -135,7 +135,7 @@ export const TimeInForce = Object.freeze({
    * });
    * ```
    *
-   * @see docs [IDEX API Documentation: Time in Force Explained](https://api-docs-v4.idex.io/#time-in-force)
+   * @see docs [Kuma API Documentation: Time in Force Explained](https://api-docs-v1.kuma.bid/#time-in-force)
    */
   gtx: 'gtx',
 
@@ -166,7 +166,7 @@ export const TimeInForce = Object.freeze({
    * });
    * ```
    *
-   * @see docs [IDEX API Documentation: Time in Force Explained](https://api-docs-v4.idex.io/#time-in-force)
+   * @see docs [Kuma API Documentation: Time in Force Explained](https://api-docs-v1.kuma.bid/#time-in-force)
    */
   ioc: 'ioc',
 
@@ -199,7 +199,7 @@ export const TimeInForce = Object.freeze({
    * });
    * ```
    *
-   * @see docs [IDEX API Documentation: Time in Force Explained](https://api-docs-v4.idex.io/#time-in-force)
+   * @see docs [Kuma API Documentation: Time in Force Explained](https://api-docs-v1.kuma.bid/#time-in-force)
    * @see enum {@link SelfTradePrevention}
    *  > `fok` time in force policy requires that the {@link _types.RestRequestOrderBase.selfTradePrevention selfTradePrevention}
    *    parameter is set to {@link SelfTradePrevention.cn} (Cancel Newest)
@@ -213,12 +213,12 @@ export type TimeInForce = (typeof TimeInForce)[keyof typeof TimeInForce];
  * Can be used as a convenience when specifying your orders to benefit from
  * inline documentation and auto-complete.
  *
- * @see docs    [API Documentation: Order Types](https://api-docs-v4.idex.io/#order-types)
+ * @see docs    [API Documentation: Order Types](https://api-docs-v1.kuma.bid/#order-types)
  * @see request {@link _types.RestRequestOrderBase.type RestRequestOrder.type}
- * @see related {@link _types.IDEXOrder IDEXOrder}
+ * @see related {@link _types.KumaOrder KumaOrder}
  *
  * @category Enums - Request Parameters
- * @category IDEX - Create Order
+ * @category Kuma - Create Order
  * @enum
  *
  * @example
@@ -272,7 +272,7 @@ export const OrderType = Object.freeze({
    *   - *(i.e. buy orders priced above the current lowest sell price, or sell orders priced below the current highest buy price)*
    * - Any unfilled portion of a limit order enters the order book, adhering to the specified
    *   {@link _types.RestRequestOrderBase.timeInForce timeInForce} constraints and the maker trade minimum requirements as detailed
-   *   in [IDEX API Documentation - Minimums](https://api-docs-v4.idex.io/#minimums).
+   *   in [Kuma API Documentation - Minimums](https://api-docs-v1.kuma.bid/#minimums).
    *
    * ---
    *
@@ -482,11 +482,11 @@ export type OrderSubType = (typeof OrderSubType)[keyof typeof OrderSubType];
 
 /**
  * @see request {@link _types.RestRequestOrderBase.side RestRequestOrder.side}
- * @see related {@link _types.IDEXOrder IDEXOrder Interface}
- * @see related {@link _types.IDEXFill IDEXFill Interface}
+ * @see related {@link _types.KumaOrder KumaOrder Interface}
+ * @see related {@link _types.KumaFill KumaFill Interface}
  *
  * @category Enums - Request Parameters
- * @category IDEX - Create Order
+ * @category Kuma - Create Order
  * @enum
  */
 export const OrderSide = Object.freeze({
@@ -500,12 +500,12 @@ export type OrderSide = (typeof OrderSide)[keyof typeof OrderSide];
  * Provides all available self-trade prevention policies in a way that provides inline documentation,
  * auto-completion, and linking for easy type/code navigation.
  *
- * @see docs    [API Documentation: Self-Trade Prevention](https://api-docs-v4.idex.io/#self-trade-prevention)
+ * @see docs    [API Documentation: Self-Trade Prevention](https://api-docs-v1.kuma.bid/#self-trade-prevention)
  * @see request {@link _types.RestRequestOrderBase.selfTradePrevention RestRequestOrder.selfTradePrevention}
- * @see related {@link _types.IDEXOrder IDEXOrder}
+ * @see related {@link _types.KumaOrder KumaOrder}
  *
  * @category Enums - Request Parameters
- * @category IDEX - Create Order
+ * @category Kuma - Create Order
  * @enum
  */
 export const SelfTradePrevention = Object.freeze({
@@ -546,8 +546,8 @@ export type SelfTradePrevention =
  * The available payout programs to use for the payout program endpoints.
  *
  * @category Enums - Request Parameters
- * @category IDEX - Get Payouts
- * @category IDEX - Authorize Payout
+ * @category Kuma - Get Payouts
+ * @category Kuma - Authorize Payout
  * @enum
  */
 export const PayoutProgram = Object.freeze({
@@ -568,7 +568,7 @@ export const PayoutProgram = Object.freeze({
    */
   tradingCompetitions: 'tradingCompetitions',
   /**
-   * The IDEX Trading Rewards program.
+   * The Kuma Trading Rewards program.
    */
   tradingRewardsV2: 'tradingRewardsV2',
 } as const);
@@ -582,22 +582,7 @@ export type PayoutProgram = (typeof PayoutProgram)[keyof typeof PayoutProgram];
  */
 export const BridgeTarget = {
   XCHAIN_XCHAIN: 'xchain.xchain',
-  STARGATE_ARBITRUM: 'stargate.arbitrum',
-  STARGATE_AURORA: 'stargate.aurora',
-  STARGATE_AVALANCHE: 'stargate.avalanche',
-  STARGATE_BASE: 'stargate.base',
   STARGATE_BERACHAIN: 'stargate.berachain',
-  STARGATE_BNB: 'stargate.bnb',
-  STARGATE_ETHEREUM: 'stargate.ethereum',
-  STARGATE_IOTA: 'stargate.iota',
-  STARGATE_KLAYTN: 'stargate.klaytn',
-  STARGATE_MANTLE: 'stargate.mantle',
-  STARGATE_OPTIMISM: 'stargate.optimism',
-  STARGATE_POLYGON: 'stargate.polygon',
-  STARGATE_SCROLL: 'stargate.scroll',
-  STARGATE_RARI: 'stargate.rari',
-  STARGATE_SEI: 'stargate.sei',
-  STARGATE_TAIKO: 'stargate.taiko',
 } as const;
 
 export type BridgeTarget = (typeof BridgeTarget)[keyof typeof BridgeTarget];
@@ -728,41 +713,41 @@ export const SubscriptionNameAuthenticated = {
   /**
    * **Subscription Update Events:**
    *
-   * - Receives {@link _types.IDEXDepositEvent IDEXDepositEvent} WebSocket updates via
+   * - Receives {@link _types.KumaDepositEvent KumaDepositEvent} WebSocket updates via
    *   the {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler.
-   * - `event.data` will match {@link _types.IDEXDepositEventData IDEXDepositEventData}
+   * - `event.data` will match {@link _types.KumaDepositEventData KumaDepositEventData}
    */
   deposits: 'deposits',
   /**
    * **Subscription Update Events:**
    *
-   * - Receives {@link _types.IDEXFundingPaymentEvent IDEXFundingPaymentEvent} WebSocket updates via
+   * - Receives {@link _types.KumaFundingPaymentEvent KumaFundingPaymentEvent} WebSocket updates via
    *   the {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler.
-   * - `event.data` will match {@link _types.IDEXFundingPaymentEventData IDEXFundingPaymentEventData}
+   * - `event.data` will match {@link _types.KumaFundingPaymentEventData KumaFundingPaymentEventData}
    */
   fundingPayments: 'fundingPayments',
   /**
    * **Subscription Update Events:**
    *
-   * - Receives {@link _types.IDEXOrderEvent IDEXOrderEvent} WebSocket updates via
+   * - Receives {@link _types.KumaOrderEvent KumaOrderEvent} WebSocket updates via
    *   the {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler.
-   * - `event.data` will match {@link _types.IDEXOrderEventData IDEXOrderEventData}
+   * - `event.data` will match {@link _types.KumaOrderEventData KumaOrderEventData}
    */
   orders: 'orders',
   /**
    * **Subscription Update Events:**
    *
-   * - Receives {@link _types.IDEXPositionEvent IDEXPositionEvent} WebSocket updates via
+   * - Receives {@link _types.KumaPositionEvent KumaPositionEvent} WebSocket updates via
    *   the {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler.
-   * - `event.data` will match {@link _types.IDEXPositionEventData IDEXPositionEventData}
+   * - `event.data` will match {@link _types.KumaPositionEventData KumaPositionEventData}
    */
   positions: 'positions',
   /**
    * **Subscription Update Events:**
    *
-   * - Receives {@link _types.IDEXWithdrawalEvent IDEXWithdrawalEvent} WebSocket updates via
+   * - Receives {@link _types.KumaWithdrawalEvent KumaWithdrawalEvent} WebSocket updates via
    *   the {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler.
-   * - `event.data` will match {@link _types.IDEXWithdrawalEventData IDEXWithdrawalEventData}
+   * - `event.data` will match {@link _types.KumaWithdrawalEventData KumaWithdrawalEventData}
    */
   withdrawals: 'withdrawals',
   /**
@@ -817,9 +802,9 @@ export const SubscriptionNamePublic = Object.freeze({
    *
    * **Subscription Update Events:**
    *
-   * - Receives {@link _types.IDEXTickerEvent IDEXTickerEvent} WebSocket updates via the
+   * - Receives {@link _types.KumaTickerEvent KumaTickerEvent} WebSocket updates via the
    *   {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler.
-   * - `event.data` will match {@link _types.IDEXTickerEventData IDEXTickerEventData}
+   * - `event.data` will match {@link _types.KumaTickerEventData KumaTickerEventData}
    */
   tickers: 'tickers',
   /**
@@ -829,9 +814,9 @@ export const SubscriptionNamePublic = Object.freeze({
    *
    * **Subscription Update Events:**
    *
-   * - Receives {@link _types.IDEXTradeEvent IDEXTradeEvent} WebSocket updates via the
+   * - Receives {@link _types.KumaTradeEvent KumaTradeEvent} WebSocket updates via the
    *   {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler.
-   * - `event.data` will match {@link _types.IDEXTradeEventData IDEXTradeEventData}
+   * - `event.data` will match {@link _types.KumaTradeEventData KumaTradeEventData}
    */
   trades: 'trades',
   /**
@@ -841,9 +826,9 @@ export const SubscriptionNamePublic = Object.freeze({
    *
    * **Subscription Update Events:**
    *
-   * - Receives {@link _types.IDEXLiquidationEvent IDEXLiquidationEvent} WebSocket updates via the
+   * - Receives {@link _types.KumaLiquidationEvent KumaLiquidationEvent} WebSocket updates via the
    *   {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler.
-   * - `event.data` will match {@link _types.IDEXLiquidationEventData IDEXLiquidationEventData}
+   * - `event.data` will match {@link _types.KumaLiquidationEventData KumaLiquidationEventData}
    */
   liquidations: 'liquidations',
   /**
@@ -854,9 +839,9 @@ export const SubscriptionNamePublic = Object.freeze({
    *
    * **Subscription Update Events:**
    *
-   * - Receives {@link _types.IDEXCandleEvent IDEXCandleEvent} WebSocket updates via the
+   * - Receives {@link _types.KumaCandleEvent KumaCandleEvent} WebSocket updates via the
    *   {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler.
-   * - `event.data` will match {@link _types.IDEXCandleEventData IDEXCandleEventData}
+   * - `event.data` will match {@link _types.KumaCandleEventData KumaCandleEventData}
    */
   candles: 'candles',
   /**
@@ -866,9 +851,9 @@ export const SubscriptionNamePublic = Object.freeze({
    *
    * **Subscription Update Events:**
    *
-   * - Receives {@link _types.IDEXOrderBookLevel1Event IDEXOrderBookLevel1Event} WebSocket updates via
+   * - Receives {@link _types.KumaOrderBookLevel1Event KumaOrderBookLevel1Event} WebSocket updates via
    *   the {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler.
-   * - `event.data` will match {@link _types.IDEXOrderBookLevel1EventData IDEXOrderBookLevel1EventData}
+   * - `event.data` will match {@link _types.KumaOrderBookLevel1EventData KumaOrderBookLevel1EventData}
    */
   l1orderbook: 'l1orderbook',
   /**
@@ -878,9 +863,9 @@ export const SubscriptionNamePublic = Object.freeze({
    *
    * **Subscription Update Events:**
    *
-   * - Receives {@link _types.IDEXOrderBookLevel2Event IDEXOrderBookLevel2Event} WebSocket updates via
+   * - Receives {@link _types.KumaOrderBookLevel2Event KumaOrderBookLevel2Event} WebSocket updates via
    *   the {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler.
-   * - `event.data` will match {@link _types.IDEXOrderBookLevel2EventData IDEXOrderBookLevel2EventData}
+   * - `event.data` will match {@link _types.KumaOrderBookLevel2EventData KumaOrderBookLevel2EventData}
    */
   l2orderbook: 'l2orderbook',
   /**
@@ -928,10 +913,10 @@ export const WebSocketRequestMethod = Object.freeze({
    *
    * **Subscription Update Events:**
    *
-   * - Receives a {@link _types.IDEXSubscriptionsListEvent IDEXSubscriptionsListEvent} WebSocket response via
+   * - Receives a {@link _types.KumaSubscriptionsListEvent KumaSubscriptionsListEvent} WebSocket response via
    *   the {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler listing all active
    *   subscriptions.
-   * - Begins receiving {@link _types.IDEXSubscriptionEvent IDEXSubscriptionEvent}'s for all subscribed
+   * - Begins receiving {@link _types.KumaSubscriptionEvent KumaSubscriptionEvent}'s for all subscribed
    *   subscriptions via the {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler.
    */
   subscribe: 'subscribe',
@@ -940,7 +925,7 @@ export const WebSocketRequestMethod = Object.freeze({
    *
    * **Subscription Update Events:**
    *
-   * - Receives a {@link _types.IDEXSubscriptionsListEvent IDEXSubscriptionsListEvent} WebSocket response via
+   * - Receives a {@link _types.KumaSubscriptionsListEvent KumaSubscriptionsListEvent} WebSocket response via
    *   the {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler listing all active
    *   subscriptions..
    */
@@ -950,7 +935,7 @@ export const WebSocketRequestMethod = Object.freeze({
    *
    * **Subscription Update Events:**
    *
-   * - Receives a {@link _types.IDEXSubscriptionsListEvent IDEXSubscriptionsListEvent} WebSocket response via
+   * - Receives a {@link _types.KumaSubscriptionsListEvent KumaSubscriptionsListEvent} WebSocket response via
    *   the {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler listing all active
    *   subscriptions.
    */

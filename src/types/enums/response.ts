@@ -16,7 +16,7 @@ import type * as _types from '#index';
  * @category Enums - Response Properties
  * @enum
  *
- * @see related {@link _types.IDEXPosition IDEXPosition Interface}
+ * @see related {@link _types.KumaPosition KumaPosition Interface}
  */
 export const PositionSide = Object.freeze({
   long: 'long',
@@ -100,8 +100,8 @@ export type FillAction = (typeof FillAction)[keyof typeof FillAction];
  * @category Enums - Response Properties
  * @enum
  *
- * @see related {@link _types.IDEXOrder IDEXOrder Interface}
- * @see docs    [API Documentation - Order States & Lifecycle](https://api-docs-v4.idex.io/#order-states-amp-lifecycle)
+ * @see related {@link _types.KumaOrder KumaOrder Interface}
+ * @see docs    [API Documentation - Order States & Lifecycle](https://api-docs-v1.kuma.bid/#order-states-amp-lifecycle)
  */
 export const OrderStatus = Object.freeze({
   /**
@@ -210,7 +210,7 @@ export type MarketStatus = (typeof MarketStatus)[keyof typeof MarketStatus];
  * @category Enums - Response Properties
  * @enum
  *
- * @see related {@link _types.IDEXOrder IDEXOrder}
+ * @see related {@link _types.KumaOrder KumaOrder}
  */
 export const TriggerType = Object.freeze({
   last: 'last',
@@ -297,7 +297,7 @@ export const MessageEventType = Object.freeze({
   /**
    * **Subscription Update Events:**
    *
-   * - Receives a {@link _types.IDEXErrorEvent IDEXErrorEvent} WebSocket response via
+   * - Receives a {@link _types.KumaErrorEvent KumaErrorEvent} WebSocket response via
    *   the {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler
    *   detailing an error that occured while processing your request on the server.
    */
@@ -307,9 +307,9 @@ export const MessageEventType = Object.freeze({
    *
    * **Subscription Update Events:**
    *
-   * - Receives a {@link _types.IDEXSubscriptionsListEvent IDEXSubscriptionsListEvent} WebSocket response via
+   * - Receives a {@link _types.KumaSubscriptionsListEvent KumaSubscriptionsListEvent} WebSocket response via
    *   the {@link _types.WebSocketClient.onMessage WebSocketClient.onMessage} handler listing all active
-   *   subscriptions as an array on the {@link _types.IDEXSubscriptionsListEvent.subscriptions subscriptions} property
+   *   subscriptions as an array on the {@link _types.KumaSubscriptionsListEvent.subscriptions subscriptions} property
    */
   subscriptions: 'subscriptions',
   ...SubscriptionNameAuthenticated,

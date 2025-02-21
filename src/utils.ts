@@ -51,7 +51,7 @@ export function createDelegatedKeyWalletAndNonce(): readonly [
 }
 
 /**
- * - For use internally at IDEX and may be removed or changed anywhere it is implemented without warning.
+ * - For use internally at Kuma and may be removed or changed anywhere it is implemented without warning.
  *
  * @internal
  */
@@ -120,7 +120,7 @@ export function deriveBaseURL(options: {
 
   const baseURL =
     overrideBaseURL ??
-    constants.URLS[sandbox ? 'sandbox' : 'production'].v4[api];
+    constants.URLS[sandbox ? 'sandbox' : 'production'].v1[api];
 
   if (!baseURL) {
     throw new Error(

@@ -4,9 +4,9 @@ import type { RestRequestByMarket, RestRequestPagination } from '#index';
  * Get Funding Rates
  *
  * @see response {@link RestResponseGetFundingRates}
- * @see type {@link IDEXFundingRate}
+ * @see type {@link KumaFundingRate}
  *
- * @category IDEX - Get Funding Rates
+ * @category Kuma - Get Funding Rates
  */
 export interface RestRequestGetFundingRates
   extends RestRequestPagination,
@@ -16,10 +16,10 @@ export interface RestRequestGetFundingRates
  * @see request {@link RestRequestGetFundingRates}
  * @see response {@link RestResponseGetFundingRates}
  *
- * @category IDEX - Get Funding Rates
- * @category IDEX Interfaces
+ * @category Kuma - Get Funding Rates
+ * @category Kuma Interfaces
  */
-export interface IDEXFundingRate {
+export interface KumaFundingRate {
   /** Funding rate for the period */
   fundingRate: string;
   /** Index price of the market at payment time */
@@ -29,9 +29,9 @@ export interface IDEXFundingRate {
 }
 
 /**
- * @see type {@link IDEXFundingRate}
+ * @see type {@link KumaFundingRate}
  * @see request {@link RestRequestGetFundingRates}
  *
- * @category IDEX - Get Funding Rates
+ * @category Kuma - Get Funding Rates
  */
-export type RestResponseGetFundingRates = IDEXFundingRate[];
+export type RestResponseGetFundingRates = KumaFundingRate[];

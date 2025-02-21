@@ -7,10 +7,10 @@ import type {
 /**
  * Get Trades
  *
- * @see [API Documentation](https://api-docs-v4.idex.io/#get-trades)
+ * @see [API Documentation](https://api-docs-v1.kuma.bid/#get-trades)
  * @see response {@link RestResponseGetTrades}
- * @see type {@link IDEXTrade}
- * @category IDEX - Get Trades
+ * @see type {@link KumaTrade}
+ * @category Kuma - Get Trades
  */
 export interface RestRequestGetTrades
   extends RestRequestPaginationWithFromId,
@@ -30,16 +30,16 @@ export interface RestRequestGetTrades
 }
 
 /**
- * IDEX Trade Response
+ * Kuma Trade Response
  *
- * @see [API Documentation](https://api-docs-v4.idex.io/#get-trades)
+ * @see [API Documentation](https://api-docs-v1.kuma.bid/#get-trades)
  * @see request {@link RestRequestGetTrades}
  * @see response {@link RestResponseGetTrades}
  *
- * @category IDEX - Get Trades
- * @category IDEX Interfaces
+ * @category Kuma - Get Trades
+ * @category Kuma Interfaces
  */
-export interface IDEXTrade {
+export interface KumaTrade {
   /** Trade identifier */
   fillId: string;
   /** Price of the trade in quote terms */
@@ -61,10 +61,10 @@ export interface IDEXTrade {
 }
 
 /**
- * @see [API Documentation](https://api-docs-v4.idex.io/#get-trades)
- * @see type {@link IDEXTrade}
+ * @see [API Documentation](https://api-docs-v1.kuma.bid/#get-trades)
+ * @see type {@link KumaTrade}
  * @see request {@link RestRequestGetTrades}
  *
- * @category IDEX - Get Trades
+ * @category Kuma - Get Trades
  */
-export type RestResponseGetTrades = IDEXTrade[];
+export type RestResponseGetTrades = KumaTrade[];
