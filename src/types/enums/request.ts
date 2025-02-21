@@ -469,6 +469,18 @@ export const OrderType = Object.freeze({
 export type OrderType = (typeof OrderType)[keyof typeof OrderType];
 
 /**
+ * @internal
+ */
+export const OrderSubType = Object.freeze({
+  conditional: 'conditional',
+});
+
+/**
+ * @internal
+ */
+export type OrderSubType = (typeof OrderSubType)[keyof typeof OrderSubType];
+
+/**
  * @see request {@link _types.RestRequestOrderBase.side RestRequestOrder.side}
  * @see related {@link _types.IDEXOrder IDEXOrder Interface}
  * @see related {@link _types.IDEXFill IDEXFill Interface}
@@ -574,6 +586,7 @@ export const BridgeTarget = {
   STARGATE_AURORA: 'stargate.aurora',
   STARGATE_AVALANCHE: 'stargate.avalanche',
   STARGATE_BASE: 'stargate.base',
+  STARGATE_BERACHAIN: 'stargate.berachain',
   STARGATE_BNB: 'stargate.bnb',
   STARGATE_ETHEREUM: 'stargate.ethereum',
   STARGATE_IOTA: 'stargate.iota',

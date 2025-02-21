@@ -626,7 +626,7 @@ __metadata:
     semantic-release: "npm:^23.1.1"
     semantic-release-slack-bot: "npm:^4.0.2"
     slackify-markdown: "npm:^4.4.0"
-    tslib: "npm:^2.6.2"
+    tslib: "npm:^2.7.0"
     tsx: "npm:^4.10.2"
     typedoc: "npm:0.25.13"
     typedoc-plugin-extras: "npm:^3.0.0"
@@ -11191,6 +11191,13 @@ __metadata:
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 10c0/e03a8a4271152c8b26604ed45535954c0a45296e32445b4b87f8a5abdb2421f40b59b4ca437c4346af0f28179780d604094eb64546bee2019d903d01c6c19bdb
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.7.0":
+  version: 2.8.1
+  resolution: "tslib@npm:2.8.1"
+  checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
   languageName: node
   linkType: hard
 

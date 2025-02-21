@@ -141,6 +141,7 @@ export interface IDEXOrder {
    * - Only applicable to stop {@link OrderType order types}:
    *   - {@link OrderType.stopLossMarket stopLossMarket}
    *   - {@link OrderType.stopLossLimit stopLossLimit}
+   *   - {@link OrderType.takeProfitMarket takeProfitMarket}
    *   - {@link OrderType.trailingStopMarket trailingStopMarket}
    * - Indicates an {@link orderId} of an open {@link OrderType.limit limit} order
    *   by the same wallet in the same market that must be filled before the stop becomes active.
@@ -185,14 +186,23 @@ export interface IDEXOrder {
   isLiquidationAcquisitionOnly?: true | undefined;
 }
 
-/**
- * @see type {@link IDEXOrder}
- * @category IDEX - Get Orders
- */
-export type RestResponseGetOrder = IDEXOrder;
+type ConditionalOrdersMixin = {
+  conditionalTakeProfitOrder?: IDEXOrder & {
+    type: typeof OrderType.takeProfitMarket;
+  };
+  conditionalStopLossOrder?: IDEXOrder & {
+    type: typeof OrderType.stopLossMarket;
+  };
+};
 
 /**
  * @see type {@link IDEXOrder}
  * @category IDEX - Get Orders
  */
-export type RestResponseGetOrders = IDEXOrder[];
+export type RestResponseGetOrder = IDEXOrder & ConditionalOrdersMixin;
+
+/**
+ * @see type {@link IDEXOrder}
+ * @category IDEX - Get Orders
+ */
+export type RestResponseGetOrders = (IDEXOrder & ConditionalOrdersMixin)[];
