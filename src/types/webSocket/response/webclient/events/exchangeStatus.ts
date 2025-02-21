@@ -3,10 +3,10 @@ import type {
   WebClientEventExchangeStatusAction,
 } from '#types/enums/index';
 import type { AnyObj } from '#types/utils';
-import type { IDEXWebClientEventDataBase } from '../base.js';
+import type { KumaWebClientEventDataBase } from '../base.js';
 
-interface IDEXWebClientEventDataExchangeStatusBase
-  extends IDEXWebClientEventDataBase {
+interface KumaWebClientEventDataExchangeStatusBase
+  extends KumaWebClientEventDataBase {
   readonly event: typeof WebClientEvent.exchange_status_updated;
   /**
    * @see enum {@link WebClientEventExchangeStatusAction}
@@ -15,15 +15,15 @@ interface IDEXWebClientEventDataExchangeStatusBase
   readonly payload?: AnyObj;
 }
 
-export interface IDEXWebClientEventDataExchangeStatusExchange
-  extends IDEXWebClientEventDataExchangeStatusBase {
+export interface KumaWebClientEventDataExchangeStatusExchange
+  extends KumaWebClientEventDataExchangeStatusBase {
   readonly action: typeof WebClientEventExchangeStatusAction.controls_exchange;
   readonly wallet?: undefined;
   readonly payload?: undefined;
 }
 
-export interface IDEXWebClientEventDataExchangeStatusMarket
-  extends IDEXWebClientEventDataExchangeStatusBase {
+export interface KumaWebClientEventDataExchangeStatusMarket
+  extends KumaWebClientEventDataExchangeStatusBase {
   readonly action: typeof WebClientEventExchangeStatusAction.controls_market;
   readonly wallet?: undefined;
   readonly payload: {
@@ -31,14 +31,14 @@ export interface IDEXWebClientEventDataExchangeStatusMarket
   };
 }
 
-export interface IDEXWebClientEventDataExchangeStatusWallet
-  extends IDEXWebClientEventDataExchangeStatusBase {
+export interface KumaWebClientEventDataExchangeStatusWallet
+  extends KumaWebClientEventDataExchangeStatusBase {
   readonly action: typeof WebClientEventExchangeStatusAction.controls_wallet;
   readonly wallet: string;
   readonly payload?: undefined;
 }
 
-export type IDEXWebClientEventDataExchangeStatus =
-  | IDEXWebClientEventDataExchangeStatusExchange
-  | IDEXWebClientEventDataExchangeStatusMarket
-  | IDEXWebClientEventDataExchangeStatusWallet;
+export type KumaWebClientEventDataExchangeStatus =
+  | KumaWebClientEventDataExchangeStatusExchange
+  | KumaWebClientEventDataExchangeStatusMarket
+  | KumaWebClientEventDataExchangeStatusWallet;

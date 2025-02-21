@@ -6,12 +6,12 @@ import type {
 } from '#index';
 
 /**
- * Get a single {@link IDEXWithdrawal}
+ * Get a single {@link KumaWithdrawal}
  *
  * @see response {@link RestResponseGetWithdrawal}
- * @see type     {@link IDEXWithdrawal}
+ * @see type     {@link KumaWithdrawal}
  *
- * @category IDEX - Get Withdrawals
+ * @category Kuma - Get Withdrawals
  */
 export interface RestRequestGetWithdrawal extends RestRequestByWallet {
   /**
@@ -21,12 +21,12 @@ export interface RestRequestGetWithdrawal extends RestRequestByWallet {
 }
 
 /**
- *  GET an array of {@link IDEXWithdrawal}
+ *  GET an array of {@link KumaWithdrawal}
  *
  * @see response {@link RestResponseGetWithdrawals}
- * @see type     {@link IDEXWithdrawal}
+ * @see type     {@link KumaWithdrawal}
  *
- * @category IDEX - Get Withdrawals
+ * @category Kuma - Get Withdrawals
  */
 export interface RestRequestGetWithdrawals
   extends RestRequestByWallet,
@@ -47,11 +47,11 @@ export interface RestRequestGetWithdrawals
  * @see request {@link RestRequestGetWithdrawal}
  * @see response {@link RestResponseGetWithdrawal}
  *
- * @category IDEX - Get Withdrawals
- * @category IDEX - Withdraw Funds
- * @category IDEX Interfaces
+ * @category Kuma - Get Withdrawals
+ * @category Kuma - Withdraw Funds
+ * @category Kuma Interfaces
  */
-export interface IDEXWithdrawal {
+export interface KumaWithdrawal {
   /** Exchange-assigned withdrawal identifier */
   withdrawalId: string;
   /** Asset symbol */
@@ -82,19 +82,19 @@ export interface IDEXWithdrawal {
 }
 
 /**
- * @see type {@link IDEXWithdrawal}
+ * @see type {@link KumaWithdrawal}
  * @see request {@link RestRequestGetWithdrawal}
  * @see related {@link RestResponseGetWithdrawals}
  *
- * @category IDEX - Get Withdrawals
+ * @category Kuma - Get Withdrawals
  */
-export type RestResponseGetWithdrawal = IDEXWithdrawal;
+export type RestResponseGetWithdrawal = KumaWithdrawal;
 
 /**
- * @see type {@link IDEXWithdrawal}
+ * @see type {@link KumaWithdrawal}
  * @see request {@link RestRequestGetWithdrawals}
  * @see related {@link RestResponseGetWithdrawal}
  *
- * @category IDEX - Get Withdrawals
+ * @category Kuma - Get Withdrawals
  */
-export type RestResponseGetWithdrawals = IDEXWithdrawal[];
+export type RestResponseGetWithdrawals = KumaWithdrawal[];

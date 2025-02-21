@@ -8,7 +8,7 @@ import type {
   RestResponseGetOrderBookLevel1,
   RestResponseGetOrderBookLevel2,
 } from '#types/rest/endpoints/GetOrderBook';
-import type { IDEXOrderBookLevel2EventData } from '#types/webSocket/response/orderbook';
+import type { KumaOrderBookLevel2EventData } from '#types/webSocket/response/orderbook';
 
 export function L1OrderBookToRestResponse(
   l1: L1OrderBook,
@@ -94,7 +94,7 @@ export function restResponseToL2OrderBook(
 }
 
 export function webSocketResponseToL2OrderBook(
-  response: IDEXOrderBookLevel2EventData,
+  response: KumaOrderBookLevel2EventData,
 ): L2OrderBook {
   return {
     ...response,

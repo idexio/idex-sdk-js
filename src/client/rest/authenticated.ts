@@ -55,7 +55,7 @@ import type {
  *
  * ---
  *
- * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/interfaces/RestAuthenticatedClientOptions.html)
+ * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/interfaces/RestAuthenticatedClientOptions.html)
  * @see client   {@link RestAuthenticatedClient}
  *
  * @category API Clients
@@ -81,8 +81,8 @@ export interface RestAuthenticatedClientOptions {
   walletPrivateKey?: string;
 
   /**
-   * - If `true`, the client will point to [IDEX Sandbox API](https;//api-docs-v4.idex.io/#sandbox)
-   * - If not provided or `false`, will point to the IDEX Production API.
+   * - If `true`, the client will point to [Kuma Sandbox API](https;//api-docs-v1.kuma.bid/#sandbox)
+   * - If not provided or `false`, will point to the Kuma Production API.
    *
    * @defaultValue false
    */
@@ -100,7 +100,7 @@ export interface RestAuthenticatedClientOptions {
   /**
    * **Optionally** provide the `exchangeContractAddress` as returned by the public clients
    * {@link RestPublicClient.getExchange getExchange} response's
-   * {@link idex.IDEXExchange.exchangeContractAddress exchangeContractAddress} property.
+   * {@link idex.KumaExchange.exchangeContractAddress exchangeContractAddress} property.
    *
    * - If not provided, this will be fetched and cached automatically from the public client before
    *   making the first request which requires it.
@@ -111,7 +111,7 @@ export interface RestAuthenticatedClientOptions {
   /**
    * Optionally provide the `chainId` as returned by the public clients
    * {@link RestPublicClient.getExchange getExchange} response's
-   * {@link idex.IDEXExchange.chainId chainId} property.
+   * {@link idex.KumaExchange.chainId chainId} property.
    *
    * - If not provided, this will be fetched and cached automatically from the public client before
    *   making the first request which requires it.
@@ -122,7 +122,7 @@ export interface RestAuthenticatedClientOptions {
   /**
    * Optionally provide the `stargateBridgeAdapterContractAddress` as returned by the public clients
    * {@link RestPublicClient.getExchange getExchange} response's
-   * {@link idex.IDEXExchange.stargateBridgeAdapterContractAddress stargateBridgeAdapterContractAddress}
+   * {@link idex.KumaExchange.stargateBridgeAdapterContractAddress stargateBridgeAdapterContractAddress}
    * property.
    *
    * - If not provided, this will be fetched and cached automatically from the public client before
@@ -147,7 +147,7 @@ export interface RestAuthenticatedClientOptions {
 }
 
 /**
- * The {@link RestAuthenticatedClient} is used to make authenticated requests to the IDEX API.  It includes
+ * The {@link RestAuthenticatedClient} is used to make authenticated requests to the Kuma API.  It includes
  * methods that make requests on behalf of a specific wallet such as creating and cancelling orders.
  *
  * - The client requires the following properties to automatically handle authentication
@@ -156,7 +156,7 @@ export interface RestAuthenticatedClientOptions {
  *   - {@link RestAuthenticatedClientOptions.apiSecret apiSecret}
  *   - {@link RestAuthenticatedClientOptions.walletPrivateKey walletPrivateKey}
  * - Optionally, a {@link RestAuthenticatedClientOptions.sandbox sandbox} option can
- *   be set to `true` in order to point to the IDEX Sandbox API.
+ *   be set to `true` in order to point to the Kuma Sandbox API.
  *
  * @example
  * ```typescript
@@ -175,26 +175,26 @@ export interface RestAuthenticatedClientOptions {
  *
  * ---
  *
- * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html)
+ * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html)
  * @see options  {@link RestAuthenticatedClientOptions}
  *
  * @category API Clients
- * @category IDEX - Get Market Maker Rewards Epochs
- * @category IDEX - Get Wallets
- * @category IDEX - Get Positions
- * @category IDEX - Associate Wallet
- * @category IDEX - Create Order
- * @category IDEX - Cancel Order
- * @category IDEX - Get Orders
- * @category IDEX - Get Fills
- * @category IDEX - Get Payouts
- * @category IDEX - Authorize Payout
- * @category IDEX - Get Deposits
- * @category IDEX - Get Withdrawals
- * @category IDEX - Withdraw Funds
- * @category IDEX - Get Funding Payments
- * @category IDEX - Get Historical PnL
- * @category IDEX - Get WebSocket Token
+ * @category Kuma - Get Market Maker Rewards Epochs
+ * @category Kuma - Get Wallets
+ * @category Kuma - Get Positions
+ * @category Kuma - Associate Wallet
+ * @category Kuma - Create Order
+ * @category Kuma - Cancel Order
+ * @category Kuma - Get Orders
+ * @category Kuma - Get Fills
+ * @category Kuma - Get Payouts
+ * @category Kuma - Authorize Payout
+ * @category Kuma - Get Deposits
+ * @category Kuma - Get Withdrawals
+ * @category Kuma - Withdraw Funds
+ * @category Kuma - Get Funding Payments
+ * @category Kuma - Get Historical PnL
+ * @category Kuma - Get WebSocket Token
  */
 export class RestAuthenticatedClient {
   /**
@@ -202,8 +202,8 @@ export class RestAuthenticatedClient {
    * created and can be used based on the config given for this client.
    *
    * - Can be utilized to fetch public data instead of creating both clients.
-   * - Used when fetching the {@link idex.IDEXExchange.exchangeContractAddress exchangeContractAddress}
-   *   and {@link idex.IDEXExchange.chainId chainId} properties from the public client's
+   * - Used when fetching the {@link idex.KumaExchange.exchangeContractAddress exchangeContractAddress}
+   *   and {@link idex.KumaExchange.chainId chainId} properties from the public client's
    *   {@link RestPublicClient.getExchange getExchange} method.
    *
    * @example
@@ -231,8 +231,8 @@ export class RestAuthenticatedClient {
    */
   readonly public: idex.RestPublicClient;
 
-  #exchange: null | idex.IDEXExchange = null;
-  #exchangeProm: null | Promise<idex.IDEXExchange> = null;
+  #exchange: null | idex.KumaExchange = null;
+  #exchangeProm: null | Promise<idex.KumaExchange> = null;
 
   readonly #signer: undefined | idex.SignTypedData = undefined;
 
@@ -248,7 +248,7 @@ export class RestAuthenticatedClient {
     autoCreateHmacHeader: boolean;
   } & Partial<
     Pick<
-      idex.IDEXExchange,
+      idex.KumaExchange,
       | 'stargateBridgeAdapterContractAddress'
       | 'exchangeContractAddress'
       | 'chainId'
@@ -275,7 +275,7 @@ export class RestAuthenticatedClient {
   }
 
   /**
-   * The {@link RestAuthenticatedClient} is used to make authenticated requests to the IDEX API.  It includes
+   * The {@link RestAuthenticatedClient} is used to make authenticated requests to the Kuma API.  It includes
    * methods that make requests on behalf of a specific wallet such as creating and cancelling orders.
    *
    * - The client requires the following properties to automatically handle authentication
@@ -284,7 +284,7 @@ export class RestAuthenticatedClient {
    *   - {@link RestAuthenticatedClientOptions.apiSecret apiSecret}
    *   - {@link RestAuthenticatedClientOptions.walletPrivateKey walletPrivateKey}
    * - Optionally, a {@link RestAuthenticatedClientOptions.sandbox sandbox} option can
-   *   be set to `true` in order to point to the IDEX Sandbox API.
+   *   be set to `true` in order to point to the Kuma Sandbox API.
    *
    * @example
    * ```typescript
@@ -305,7 +305,7 @@ export class RestAuthenticatedClient {
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/WebSocketClient.html)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/WebSocketClient.html)
    * @see options {@link RestAuthenticatedClientOptions}
    *
    * @category Constructor
@@ -394,9 +394,9 @@ export class RestAuthenticatedClient {
    * ---
    * **Endpoint Parameters**
    *
-   * > - HTTP Request:      `GET /v4/marketMakerRewardsV1/epoch`
-   * > - Endpoint Security: [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - API Key Scope:     [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - HTTP Request:      `GET /v1/marketMakerRewardsV1/epoch`
+   * > - Endpoint Security: [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - API Key Scope:     [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * ---
    *
    * <br />
@@ -438,10 +438,10 @@ export class RestAuthenticatedClient {
    * > When **not** providing a {@link idex.RestRequestGetMarketMakerRewardsEpochWithWallet.wallet wallet},
    * > the resulting response will be {@link idex.MarketMakerRewardsEpochDetailedWithoutWallet MarketMakerRewardsEpochDetailedWithoutWallet}
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#getMarketMakerRewardsEpoch)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#getMarketMakerRewardsEpoch)
    * @see request   {@link idex.RestRequestGetMarketMakerRewardsEpoch RestRequestGetMarketMakerRewardsEpoch}
    * @see response  {@link idex.RestResponseGetMarketMakerRewardsEpoch RestResponseGetMarketMakerRewardsEpoch}
-   * @see type      {@link idex.IDEXMarketMakerRewardsEpoch IDEXMarketMakerRewardsEpoch}
+   * @see type      {@link idex.KumaMarketMakerRewardsEpoch KumaMarketMakerRewardsEpoch}
    * @see related   {@link getMarketMakerRewardsEpochs this.getMarketMakerRewardsEpochs}
    *
    * @category Rewards & Payouts
@@ -465,15 +465,15 @@ export class RestAuthenticatedClient {
    * ---
    * **Endpoint Parameters**
    *
-   * > - HTTP Request:      `GET /v4/marketMakerRewardsV1/epochs`
-   * > - Endpoint Security: [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - API Key Scope:     [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - HTTP Request:      `GET /v1/marketMakerRewardsV1/epochs`
+   * > - Endpoint Security: [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - API Key Scope:     [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * ---
    *
-   * @see typedoc   [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#getMarketMakerRewardsEpochs)
+   * @see typedoc   [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#getMarketMakerRewardsEpochs)
    * @see request   {@link idex.RestRequestGetMarketMakerRewardsEpochs RestRequestGetMarketMakerRewardsEpochs}
    * @see response  {@link idex.RestResponseGetMarketMakerRewardsEpochs RestResponseGetMarketMakerRewardsEpochs}
-   * @see type      {@link idex.IDEXMarketMakerRewardsEpochSummary IDEXMarketMakerRewardsEpochSummary}
+   * @see type      {@link idex.KumaMarketMakerRewardsEpochSummary KumaMarketMakerRewardsEpochSummary}
    * @see related   {@link getMarketMakerRewardsEpoch client.getMarketMakerRewardsEpoch}
    *
    * @category Rewards & Payouts
@@ -495,14 +495,14 @@ export class RestAuthenticatedClient {
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `POST /v4/wallets`
-   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `POST /v1/wallets`
+   * > - **Endpoint Security:**    [Trade](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**           `None`
    * ---
    *
    * @returns
-   * - Returns the {@link idex.IDEXWallet IDEXWallet} which was associated by the request.
+   * - Returns the {@link idex.KumaWallet KumaWallet} which was associated by the request.
    *
    * ---
    *
@@ -518,10 +518,10 @@ export class RestAuthenticatedClient {
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#associateWallet)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#associateWallet)
    * @see request  {@link idex.RestRequestAssociateWallet RestRequestAssociateWallet}
    * @see response {@link idex.RestResponseAssociateWallet RestResponseAssociateWallet}
-   * @see type     {@link idex.IDEXWallet IDEXWallet}
+   * @see type     {@link idex.KumaWallet KumaWallet}
    *
    * @category Wallets & Positions
    */
@@ -553,21 +553,21 @@ export class RestAuthenticatedClient {
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `GET /v4/wallets`
-   * > - **Endpoint Security:**    [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `GET /v1/wallets`
+   * > - **Endpoint Security:**    [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**           `None`
    * ---
    *
    * @returns
-   *  - An array of {@link idex.IDEXWallet IDEXWallet} objects representing all associated wallets.
+   *  - An array of {@link idex.KumaWallet KumaWallet} objects representing all associated wallets.
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#getWallets)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#getWallets)
    * @see request  {@link idex.RestRequestGetWallets RestRequestGetWallets}
    * @see response {@link idex.RestResponseGetWallets RestResponseGetWallets}
-   * @see type     {@link idex.IDEXWallet IDEXWallet}
+   * @see type     {@link idex.KumaWallet KumaWallet}
    *
    * @category Wallets & Positions
    */
@@ -581,22 +581,22 @@ export class RestAuthenticatedClient {
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `GET /v4/positions`
-   * > - **Endpoint Security:**    [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `GET /v1/positions`
+   * > - **Endpoint Security:**    [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**           `None`
    * ---
    *
    * @returns
-   *  - An array of {@link idex.IDEXPosition IDEXPosition} objects representing all matching positions based
+   *  - An array of {@link idex.KumaPosition KumaPosition} objects representing all matching positions based
    *    on your requested params.
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#getPositions)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#getPositions)
    * @see request  {@link idex.RestRequestGetPositions RestRequestGetPositions}
    * @see response {@link idex.RestResponseGetPositions RestResponseGetPositions}
-   * @see type     {@link idex.IDEXPosition IDEXPosition}
+   * @see type     {@link idex.KumaPosition KumaPosition}
    *
    * @category Wallets & Positions
    */
@@ -615,14 +615,14 @@ export class RestAuthenticatedClient {
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `POST /v4/orders`
-   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityTrade)
-   * > - **API Key Scope:**        [Trade](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `POST /v1/orders`
+   * > - **Endpoint Security:**    [Trade](https://api-docs-v1.kuma.bid/#endpointSecurityTrade)
+   * > - **API Key Scope:**        [Trade](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**           `None`
    * ---
    *
    * @returns
-   *  - Returns the {@link idex.IDEXOrder IDEXOrder} which was created by the request.
+   *  - Returns the {@link idex.KumaOrder KumaOrder} which was created by the request.
    *
    * ---
    *
@@ -658,10 +658,10 @@ export class RestAuthenticatedClient {
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#createOrder)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#createOrder)
    * @see request  {@link idex.RestRequestOrder RestRequestOrder}
    * @see response {@link idex.RestResponseGetOrder RestResponseGetOrder}
-   * @see type     {@link idex.IDEXOrder IDEXOrder}
+   * @see type     {@link idex.KumaOrder KumaOrder}
    *
    * @category Orders
    */
@@ -697,14 +697,14 @@ export class RestAuthenticatedClient {
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `DELETE /v4/orders`
-   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Trade](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `DELETE /v1/orders`
+   * > - **Endpoint Security:**    [Trade](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Trade](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**           `None`
    * ---
    *
    * @returns
-   * - Returns an array of cancelled orders matching {@link idex.IDEXCanceledOrder IDEXCanceledOrder}
+   * - Returns an array of cancelled orders matching {@link idex.KumaCanceledOrder KumaCanceledOrder}
    *
    * ---
    *
@@ -726,10 +726,10 @@ export class RestAuthenticatedClient {
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#cancelOrders)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#cancelOrders)
    * @see request  {@link idex.RestRequestCancelOrders RestRequestCancelOrders}
    * @see response {@link idex.RestResponseCancelOrders RestResponseCancelOrders}
-   * @see type     {@link idex.IDEXCanceledOrder IDEXCanceledOrder}
+   * @see type     {@link idex.KumaCanceledOrder KumaCanceledOrder}
    * @see related  {@link cancelOrder client.cancelOrder}
    *
    * @category Orders
@@ -767,23 +767,23 @@ export class RestAuthenticatedClient {
   /**
    * Returns an order matching your {@link idex.RestRequestGetOrder.orderId orderId} request parameter.
    *
-   * - Can be an order's {@link idex.IDEXOrder.orderId orderId}
-   * - To get an order by its {@link idex.IDEXOrder.clientOrderId clientOrderId},
+   * - Can be an order's {@link idex.KumaOrder.orderId orderId}
+   * - To get an order by its {@link idex.KumaOrder.clientOrderId clientOrderId},
    *   you should prefix the value with `client:`.
    *
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `GET /v4/orders`
-   * > - **Endpoint Security:**    [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `GET /v1/orders`
+   * > - **Endpoint Security:**    [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**           `None`
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#getOrder)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#getOrder)
    * @see request  {@link idex.RestRequestGetOrder RestRequestGetOrder}
    * @see response {@link idex.RestResponseGetOrder RestResponseGetOrder}
-   * @see type     {@link idex.IDEXOrder IDEXOrder}
+   * @see type     {@link idex.KumaOrder KumaOrder}
    * @see related  {@link getOrders client.getOrders}
    *
    * @category Orders
@@ -793,14 +793,14 @@ export class RestAuthenticatedClient {
   }
 
   /**
-   * Returns information about open and past {@link idex.IDEXOrder orders}.
+   * Returns information about open and past {@link idex.KumaOrder orders}.
    *
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `GET /v4/orders`
-   * > - **Endpoint Security:**    [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `GET /v1/orders`
+   * > - **Endpoint Security:**    [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**
    * > {@link idex.RestRequestPaginationWithFromId.start start},
    * > {@link idex.RestRequestPaginationWithFromId.end end},
@@ -808,10 +808,10 @@ export class RestAuthenticatedClient {
    * > {@link idex.RestRequestPaginationWithFromId.fromId fromId}
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#getOrders)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#getOrders)
    * @see request  {@link idex.RestRequestGetOrders RestRequestGetOrders}
    * @see response {@link idex.RestResponseGetOrders RestResponseGetOrders}
-   * @see type     {@link idex.IDEXOrder IDEXOrder}
+   * @see type     {@link idex.KumaOrder KumaOrder}
    * @see related  {@link getOrder client.getOrder}
    *
    * @category Orders
@@ -827,16 +827,16 @@ export class RestAuthenticatedClient {
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `GET /v4/fills`
-   * > - **Endpoint Security:**    [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `GET /v1/fills`
+   * > - **Endpoint Security:**    [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**           `None`
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#getFill)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#getFill)
    * @see request  {@link idex.RestRequestGetFill RestRequestGetFill}
    * @see response {@link idex.RestResponseGetFill RestResponseGetFill}
-   * @see type     {@link idex.IDEXFill IDEXFill}
+   * @see type     {@link idex.KumaFill KumaFill}
    * @see related  {@link getFills client.getFills}
    *
    * @category Fills & Historical
@@ -846,14 +846,14 @@ export class RestAuthenticatedClient {
   }
 
   /**
-   * Get an array of {@link IDEXFill} objects matching your request parameters.
+   * Get an array of {@link KumaFill} objects matching your request parameters.
    *
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `GET /v4/fills`
-   * > - **Endpoint Security:**    [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `GET /v1/fills`
+   * > - **Endpoint Security:**    [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**
    * > {@link idex.RestRequestPaginationWithFromId.start start},
    * > {@link idex.RestRequestPaginationWithFromId.end end},
@@ -861,10 +861,10 @@ export class RestAuthenticatedClient {
    * > {@link idex.RestRequestPaginationWithFromId.fromId fromId}
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#getFills)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#getFills)
    * @see request  {@link idex.RestRequestGetFills RestRequestGetFills}
    * @see response {@link idex.RestResponseGetFills RestResponseGetFills}
-   * @see type     {@link idex.IDEXFill IDEXFill}
+   * @see type     {@link idex.KumaFill KumaFill}
    * @see related  {@link getFill client.getFill}
    *
    * @category Fills & Historical
@@ -879,15 +879,15 @@ export class RestAuthenticatedClient {
    *
    * - Includes the data required to authorize a payout using the `distribute`
    *   function of the escrow contract.
-   * - Throws an error if the {@link idex.IDEXPayoutProgram.quantityOwed quantityOwed}
+   * - Throws an error if the {@link idex.KumaPayoutProgram.quantityOwed quantityOwed}
    *   is `0`
    *
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `POST /v4/payouts`
-   * > - **Endpoint Security:**    [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `POST /v1/payouts`
+   * > - **Endpoint Security:**    [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**           `None`
    * ---
    *
@@ -906,10 +906,10 @@ export class RestAuthenticatedClient {
    * ```
    *
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#authorizePayout)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#authorizePayout)
    * @see request  {@link idex.RestRequestAuthorizePayout RestRequestAuthorizePayout}
    * @see response {@link idex.RestResponseAuthorizePayout RestResponseAuthorizePayout}
-   * @see type     {@link idex.IDEXPayoutProgramAuthorization IDEXPayoutProgramAuthorization}
+   * @see type     {@link idex.KumaPayoutProgramAuthorization KumaPayoutProgramAuthorization}
    *
    * @category Rewards & Payouts
    */
@@ -924,9 +924,9 @@ export class RestAuthenticatedClient {
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**       `GET /v4/payouts`
-   * > - **Endpoint Security:**  [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**      [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**       `GET /v1/payouts`
+   * > - **Endpoint Security:**  [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**      [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**         `None`
    * ---
    *
@@ -948,10 +948,10 @@ export class RestAuthenticatedClient {
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#getPayouts)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#getPayouts)
    * @see request  {@link idex.RestRequestGetPayouts RestRequestGetPayouts}
    * @see response {@link idex.RestResponseGetPayouts RestResponseGetPayouts}
-   * @see type     {@link idex.IDEXPayoutProgram IDEXPayoutProgram}
+   * @see type     {@link idex.KumaPayoutProgram KumaPayoutProgram}
    *
    * @category Rewards & Payouts
    */
@@ -965,21 +965,21 @@ export class RestAuthenticatedClient {
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `GET /v4/deposits`
-   * > - **Endpoint Security:**    [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `GET /v1/deposits`
+   * > - **Endpoint Security:**    [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**           `None`
    * ---
    *
    * @returns
-   * - Returns a single {@link idex.IDEXDeposit IDEXDeposit} object matching your parameters.
+   * - Returns a single {@link idex.KumaDeposit KumaDeposit} object matching your parameters.
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#getDeposit)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#getDeposit)
    * @see request  {@link idex.RestRequestGetDeposit RestRequestGetDeposit}
    * @see response {@link idex.RestResponseGetDeposit RestResponseGetDeposit}
-   * @see type     {@link idex.IDEXDeposit IDEXDeposit}
+   * @see type     {@link idex.KumaDeposit KumaDeposit}
    * @see related  {@link getDeposits client.getDeposits}
    *
    * @category Deposits & Withdrawals
@@ -994,9 +994,9 @@ export class RestAuthenticatedClient {
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `GET /v4/deposits`
-   * > - **Endpoint Security:**    [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `GET /v1/deposits`
+   * > - **Endpoint Security:**    [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**
    * > {@link idex.RestRequestPaginationWithFromId.start start},
    * > {@link idex.RestRequestPaginationWithFromId.end end},
@@ -1005,14 +1005,14 @@ export class RestAuthenticatedClient {
    * ---
    *
    * @returns
-   * - Returns an array of {@link idex.IDEXDeposit IDEXDeposit} objects matching your parameters.
+   * - Returns an array of {@link idex.KumaDeposit KumaDeposit} objects matching your parameters.
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#getDeposits)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#getDeposits)
    * @see request  {@link idex.RestRequestGetDeposits RestRequestGetDeposits}
    * @see response {@link idex.RestResponseGetDeposits RestResponseGetDeposits}
-   * @see type     {@link idex.IDEXDeposit IDEXDeposit}
+   * @see type     {@link idex.KumaDeposit KumaDeposit}
    * @see related  {@link getDeposit client.getDeposit}
    *
    * @category Deposits & Withdrawals
@@ -1069,7 +1069,7 @@ export class RestAuthenticatedClient {
    *
    * ---
    *
-   * @see typedoc   [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#calculateWithdrawalMaximumGasFee)
+   * @see typedoc   [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#calculateWithdrawalMaximumGasFee)
    * @see related {@link withdraw client.withdraw}
    */
   public async calculateWithdrawalMaximumGasFee({
@@ -1125,20 +1125,20 @@ export class RestAuthenticatedClient {
    * Withdraw funds from the exchange.
    *
    * - Unlike deposits, withdrawals are initiated via this REST API endpoint.
-   * - Once the withdrawal is validated, IDEX automatically dispatches the
+   * - Once the withdrawal is validated, Kuma automatically dispatches the
    *   resulting transaction to send funds to the wallet.
    *
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `POST /v4/withdrawals`
-   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Withdraw](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `POST /v1/withdrawals`
+   * > - **Endpoint Security:**    [Trade](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Withdraw](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**           `None`
    * ---
    *
    * @returns
-   * - Returns an {@link idex.IDEXWithdrawal IDEXWithdrawal} object providing the details of the
+   * - Returns an {@link idex.KumaWithdrawal KumaWithdrawal} object providing the details of the
    *   withdrawal.
    *
    * ---
@@ -1170,10 +1170,10 @@ export class RestAuthenticatedClient {
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#withdraw)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#withdraw)
    * @see request  {@link idex.RestRequestWithdrawFunds RestRequestWithdrawFunds}
    * @see response {@link idex.RestResponseWithdrawFunds RestResponseWithdrawFunds}
-   * @see type     {@link idex.IDEXWithdrawal IDEXWithdrawal}
+   * @see type     {@link idex.KumaWithdrawal KumaWithdrawal}
    * @see related  {@link calculateWithdrawalMaximumGasFee}
    *
    * @category Deposits & Withdrawals
@@ -1232,21 +1232,21 @@ export class RestAuthenticatedClient {
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `GET /v4/withdrawals`
-   * > - **Endpoint Security:**    [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `GET /v1/withdrawals`
+   * > - **Endpoint Security:**    [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**           `None`
    * ---
    *
    * @returns
-   * - Returns an {@link idex.IDEXWithdrawal IDEXWithdrawal} object matching your request.
+   * - Returns an {@link idex.KumaWithdrawal KumaWithdrawal} object matching your request.
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#getWithdrawal)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#getWithdrawal)
    * @see request  {@link idex.RestRequestGetWithdrawal RestRequestGetWithdrawal}
    * @see response {@link idex.RestResponseGetWithdrawal RestResponseGetWithdrawal}
-   * @see type     {@link idex.IDEXWithdrawal IDEXWithdrawal}
+   * @see type     {@link idex.KumaWithdrawal KumaWithdrawal}
    * @see related  {@link getWithdrawals client.getWithdrawals}
    *
    * @category Deposits & Withdrawals
@@ -1261,9 +1261,9 @@ export class RestAuthenticatedClient {
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `GET /v4/withdrawals`
-   * > - **Endpoint Security:**    [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `GET /v1/withdrawals`
+   * > - **Endpoint Security:**    [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**
    * > {@link idex.RestRequestPaginationWithFromId.start start},
    * > {@link idex.RestRequestPaginationWithFromId.end end},
@@ -1272,14 +1272,14 @@ export class RestAuthenticatedClient {
    * ---
    *
    * @returns
-   * - Returns an array of {@link idex.IDEXWithdrawal IDEXWithdrawal} objects matching your request.
+   * - Returns an array of {@link idex.KumaWithdrawal KumaWithdrawal} objects matching your request.
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#getWithdrawals)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#getWithdrawals)
    * @see request  {@link idex.RestRequestGetWithdrawals RestRequestGetWithdrawals}
    * @see response {@link idex.RestResponseGetWithdrawals RestResponseGetWithdrawals}
-   * @see type     {@link idex.IDEXWithdrawal IDEXWithdrawal}
+   * @see type     {@link idex.KumaWithdrawal KumaWithdrawal}
    * @see related  {@link getWithdrawal client.getWithdrawal}
    *
    * @category Deposits & Withdrawals
@@ -1289,24 +1289,24 @@ export class RestAuthenticatedClient {
   }
 
   /**
-   * Get Funding Payments for wallet matching {@link idex.IDEXFundingPayment IDEXFundingPayment}
+   * Get Funding Payments for wallet matching {@link idex.KumaFundingPayment KumaFundingPayment}
    *
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `GET /v4/fundingPayments`
-   * > - **Endpoint Security:**    [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `GET /v1/fundingPayments`
+   * > - **Endpoint Security:**    [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**
    * > {@link idex.RestRequestPaginationWithFromId.start start},
    * > {@link idex.RestRequestPaginationWithFromId.end end},
    * > {@link idex.RestRequestPaginationWithFromId.limit limit}
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#getFundingPayments)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#getFundingPayments)
    * @see request  {@link idex.RestRequestGetFundingPayments RestRequestGetFundingPayments}
    * @see response {@link idex.RestResponseGetFundingPayments RestResponseGetFundingPayments}
-   * @see type     {@link idex.IDEXFundingPayment IDEXFundingPayment}
+   * @see type     {@link idex.KumaFundingPayment KumaFundingPayment}
    *
    * @category Fills & Historical
    */
@@ -1322,14 +1322,14 @@ export class RestAuthenticatedClient {
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `POST /v4/initialMarginFractionOverride`
-   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityTrade)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `POST /v1/initialMarginFractionOverride`
+   * > - **Endpoint Security:**    [Trade](https://api-docs-v1.kuma.bid/#endpointSecurityTrade)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**
    * ---
    *
    * @returns
-   * - Returns an {@link idex.IDEXInitialMarginFractionOverride IDEXInitialMarginFractionOverride}
+   * - Returns an {@link idex.KumaInitialMarginFractionOverride KumaInitialMarginFractionOverride}
    *   object providing the details of the new  setting.
 
    *
@@ -1365,14 +1365,14 @@ export class RestAuthenticatedClient {
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `GET /v4/initialMarginFractionOverride`
-   * > - **Endpoint Security:**    [Trade](https://api-docs-v4.idex.io/#endpointSecurityTrade)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `GET /v1/initialMarginFractionOverride`
+   * > - **Endpoint Security:**    [Trade](https://api-docs-v1.kuma.bid/#endpointSecurityTrade)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**
    * ---
    *
    * @returns
-   * - Returns an {@link idex.IDEXInitialMarginFractionOverride IDEXInitialMarginFractionOverride}
+   * - Returns an {@link idex.KumaInitialMarginFractionOverride KumaInitialMarginFractionOverride}
    *   object providing the details of the setting.
 
    *
@@ -1385,24 +1385,24 @@ export class RestAuthenticatedClient {
   }
 
   /**
-   * Get Historical PnL for the wallet / market matching {@link idex.IDEXHistoricalProfitLoss IDEXHistoricalProfitLoss}
+   * Get Historical PnL for the wallet / market matching {@link idex.KumaHistoricalProfitLoss KumaHistoricalProfitLoss}
    *
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `GET /v4/historicalPnL`
-   * > - **Endpoint Security:**    [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `GET /v1/historicalPnL`
+   * > - **Endpoint Security:**    [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**
    * > {@link idex.RestRequestPaginationWithFromId.start start},
    * > {@link idex.RestRequestPaginationWithFromId.end end},
    * > {@link idex.RestRequestPaginationWithFromId.limit limit}
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#getHistoricalPnL)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#getHistoricalPnL)
    * @see request  {@link idex.RestRequestGetHistoricalPnL RestRequestGetHistoricalPnL}
    * @see response {@link idex.RestResponseGetHistoricalPnL RestResponseGetHistoricalPnL}
-   * @see type     {@link idex.IDEXHistoricalProfitLoss IDEXHistoricalProfitLoss}
+   * @see type     {@link idex.KumaHistoricalProfitLoss KumaHistoricalProfitLoss}
    *
    * @category Fills & Historical
    */
@@ -1421,19 +1421,19 @@ export class RestAuthenticatedClient {
    * ---
    * **Endpoint Parameters**
    *
-   * > - **HTTP Request:**         `GET /v4/wsToken`
-   * > - **Endpoint Security:**    [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
-   * > - **API Key Scope:**        [Read](https://api-docs-v4.idex.io/#api-keys)
+   * > - **HTTP Request:**         `GET /v1/wsToken`
+   * > - **Endpoint Security:**    [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+   * > - **API Key Scope:**        [Read](https://api-docs-v1.kuma.bid/#api-keys)
    * > - **Pagination:**           `None`
    * ---
    *
    * @returns
-   * - Returns the {@link idex.IDEXWebSocketToken.token IDEXWebSocketToken.token} string
+   * - Returns the {@link idex.KumaWebSocketToken.token KumaWebSocketToken.token} string
    *   directly which you can use to authenticate with the WebSocket server.
    *
    * ---
    *
-   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/classes/RestAuthenticatedClient.html#getWsToken)
+   * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/classes/RestAuthenticatedClient.html#getWsToken)
    * @see request  {@link idex.RestRequestGetAuthenticationToken RestRequestGetAuthenticationToken}
    * @see response {@link idex.RestResponseGetAuthenticationToken RestResponseGetAuthenticationToken}
    *

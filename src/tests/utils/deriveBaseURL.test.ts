@@ -38,12 +38,12 @@ describe('deriveBaseURL', () => {
 
   it('should return the production URL if no options are provided', () => {
     const baseURL = deriveBaseURL({ api: 'rest' });
-    expect(baseURL).to.equal(URLS.production.v4.rest);
+    expect(baseURL).to.equal(URLS.production.v1.rest);
   });
 
   it('should return the sandbox URL if sandbox option is true', () => {
     const baseURL = deriveBaseURL({ sandbox: true, api: 'rest' });
-    expect(baseURL).to.equal(URLS.sandbox.v4.rest);
+    expect(baseURL).to.equal(URLS.sandbox.v1.rest);
   });
 
   it('should throw an error if baseURL cannot be derived', () => {

@@ -6,7 +6,7 @@ import type * as idex from '#index';
  * @see request  {@link idex.RestAuthenticatedClient.getDeposit RestAuthenticatedClient.getDeposit}
  * @see related  {@link RestRequestGetDeposits}
  *
- * @category IDEX - Get Deposits
+ * @category Kuma - Get Deposits
  */
 export interface RestRequestGetDeposit extends idex.RestRequestByWallet {
   /**
@@ -16,13 +16,13 @@ export interface RestRequestGetDeposit extends idex.RestRequestByWallet {
 }
 
 /**
- * Get {@link IDEXDeposit Deposits}
+ * Get {@link KumaDeposit Deposits}
  *
- * @see typedoc  [Reference Documentation](https://sdk-js-docs-v4.idex.io/interfaces/RestRequestGetDeposits.html)
+ * @see typedoc  [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/interfaces/RestRequestGetDeposits.html)
  * @see request  {@link idex.RestAuthenticatedClient.getDeposits RestAuthenticatedClient.getDeposits}
  * @see related  {@link RestRequestGetDeposit}
  *
- * @category IDEX - Get Deposits
+ * @category Kuma - Get Deposits
  */
 export interface RestRequestGetDeposits
   extends idex.RestRequestByWallet,
@@ -36,12 +36,12 @@ export interface RestRequestGetDeposits
  * @see request  {@link idex.RestAuthenticatedClient.getDeposit RestAuthenticatedClient.getDeposit}
  * @see request  {@link idex.RestAuthenticatedClient.getDeposits RestAuthenticatedClient.getDeposits}
  *
- * @category IDEX - Get Deposits
- * @category IDEX Interfaces
+ * @category Kuma - Get Deposits
+ * @category Kuma Interfaces
  */
-export interface IDEXDeposit {
+export interface KumaDeposit {
   /**
-   * IDEX-issued deposit identifier
+   * Kuma-issued deposit identifier
    */
   depositId: string;
   /**
@@ -79,23 +79,23 @@ export interface IDEXDeposit {
 /**
  * Returns of a single deposit by the `depositId` provided.
  *
- * @see type    {@link IDEXDeposit}
+ * @see type    {@link KumaDeposit}
  * @see request {@link RestRequestGetDeposit}
  * @see related {@link RestResponseGetDeposits}
  * @see related {@link RestRequestGetDeposits}
  *
- * @category IDEX - Get Deposits
+ * @category Kuma - Get Deposits
  */
-export type RestResponseGetDeposit = IDEXDeposit;
+export type RestResponseGetDeposit = KumaDeposit;
 
 /**
  * Returns deposits according to the request parameters.
  *
- * @see type    {@link IDEXDeposit}
+ * @see type    {@link KumaDeposit}
  * @see request {@link RestRequestGetDeposits}
  * @see related {@link RestResponseGetDeposit}
  * @see related {@link RestRequestGetDeposit}
  *
- * @category IDEX - Get Deposits
+ * @category Kuma - Get Deposits
  */
-export type RestResponseGetDeposits = IDEXDeposit[];
+export type RestResponseGetDeposits = KumaDeposit[];

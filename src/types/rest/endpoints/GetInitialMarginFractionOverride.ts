@@ -1,8 +1,8 @@
 import type { RestRequestByMarketOptional, RestRequestByWallet } from '#index';
-import type { IDEXInitialMarginFractionOverride } from './SetInitialMarginFractionOverride.js';
+import type { KumaInitialMarginFractionOverride } from './SetInitialMarginFractionOverride.js';
 
 /**
- * - Rest Request: `GET /v4/initialMarginFractionOverride`
+ * - Rest Request: `GET /v1/initialMarginFractionOverride`
  * - Security:     `User`
  * - API Scope:    `Read`
  *
@@ -11,9 +11,9 @@ import type { IDEXInitialMarginFractionOverride } from './SetInitialMarginFracti
 
 /**
  * @see response {@link RestResponseGetInitialMarginFractionOverride}
- * @see type     {@link IDEXInitialMarginFractionOverride}
+ * @see type     {@link KumaInitialMarginFractionOverride}
  *
- * @category IDEX - Get Initial Margin Fraction override
+ * @category Kuma - Get Initial Margin Fraction override
  */
 export interface RestRequestGetInitialMarginFractionOverride
   extends Required<RestRequestByWallet>,
@@ -27,10 +27,10 @@ export interface RestRequestGetInitialMarginFractionOverride
 }
 
 /**
- * @see type    {@link IDEXInitialMarginFractionOverride}
+ * @see type    {@link KumaInitialMarginFractionOverride}
  * @see request {@link RestRequestGetInitialMarginFractionOverride}
  *
- * @category IDEX - Get Initial Margin Fraction override
+ * @category Kuma - Get Initial Margin Fraction override
  */
 export type RestResponseGetInitialMarginFractionOverride =
-  IDEXInitialMarginFractionOverride[];
+  KumaInitialMarginFractionOverride[];

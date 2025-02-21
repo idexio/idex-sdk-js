@@ -1,9 +1,9 @@
 /**
- * `/v4/time`
+ * `/v1/time`
  *
- * @see [API Documentation](https://api-docs-v4.idex.io/#get-time)
+ * @see [API Documentation](https://api-docs-v1.kuma.bid/#get-time)
  *
- * @category IDEX - Get Time
+ * @category Kuma - Get Time
  */
 export interface RestResponseGetTime {
   /**

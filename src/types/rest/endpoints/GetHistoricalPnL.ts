@@ -4,19 +4,19 @@ import type { RestRequestPagination, RestRequestByWallet } from '#index';
  * Get Historical PnL
  *
  * @see response {@link RestResponseGetHistoricalPnL}
- * @see type {@link IDEXHistoricalProfitLoss}
+ * @see type {@link KumaHistoricalProfitLoss}
  *
- * @category IDEX - Get Historical PnL
+ * @category Kuma - Get Historical PnL
  */
 export interface RestRequestGetHistoricalPnL
   extends RestRequestByWallet,
     RestRequestPagination {}
 
 /**
- * @category IDEX - Get Historical PnL
- * @category IDEX Interfaces
+ * @category Kuma - Get Historical PnL
+ * @category Kuma Interfaces
  */
-export interface IDEXHistoricalProfitLoss {
+export interface KumaHistoricalProfitLoss {
   /** Total account value */
   equity: string;
   /**
@@ -34,9 +34,9 @@ export interface IDEXHistoricalProfitLoss {
 }
 
 /**
- * @see type {@link IDEXHistoricalProfitLoss}
+ * @see type {@link KumaHistoricalProfitLoss}
  * @see request {@link RestRequestGetHistoricalPnL}
  *
- * @category IDEX - Get Historical PnL
+ * @category Kuma - Get Historical PnL
  */
-export type RestResponseGetHistoricalPnL = IDEXHistoricalProfitLoss[];
+export type RestResponseGetHistoricalPnL = KumaHistoricalProfitLoss[];

@@ -1,8 +1,8 @@
 import type { WebSocketClient as _WebSocketClient } from '#client/webSocket/index';
 import type { AugmentedRequired } from '#types/utils';
 import type {
-  IDEXSubscribeTypeAuthenticated as _WebSocketSubscribeAuthenticatedType,
-  IDEXSubscribeTypePublic as _WebSocketSubscribePublicType,
+  KumaSubscribeTypeAuthenticated as _WebSocketSubscribeAuthenticatedType,
+  KumaSubscribeTypePublic as _WebSocketSubscribePublicType,
 } from '#types/webSocket/index';
 
 /**
@@ -35,17 +35,17 @@ import type {
 export interface WebSocketClientAuthOptions {
   /**
    * The user's API Key for the account they wish to make authenticated subscriptions with,
-   * this is used to retrieve a [WebSocket Token](https://api-docs-v4.idex.io/#websocket-authentication-endpoints)
+   * this is used to retrieve a [WebSocket Token](https://api-docs-v1.kuma.bid/#websocket-authentication-endpoints)
    * that can be used to authenticate the connection.
    *
-   * @see [WebSocket Token API Docs](https://api-docs-v4.idex.io/#websocket-authentication-endpoints)
+   * @see [WebSocket Token API Docs](https://api-docs-v1.kuma.bid/#websocket-authentication-endpoints)
    */
   apiKey: string;
   /**
    * Used to compute HMAC signature when refreshing the
-   * [WebSocket Token](https://api-docs-v4.idex.io/#websocket-authentication-endpoints)
+   * [WebSocket Token](https://api-docs-v1.kuma.bid/#websocket-authentication-endpoints)
    *
-   * @see [WebSocket Token API Docs](https://api-docs-v4.idex.io/#websocket-authentication-endpoints)
+   * @see [WebSocket Token API Docs](https://api-docs-v1.kuma.bid/#websocket-authentication-endpoints)
    */
   apiSecret: string;
   /**
@@ -64,19 +64,19 @@ export interface WebSocketClientOptionsBase {
    *
    * ---
    *
-   * - These properties are used to fetch a [WebSocket Token](https://api-docs-v4.idex.io/#websocket-authentication-endpoints)
+   * - These properties are used to fetch a [WebSocket Token](https://api-docs-v1.kuma.bid/#websocket-authentication-endpoints)
    *   from the REST API.
    *
    * ---
    *
-   * @see [WebSocket Token API Docs](https://api-docs-v4.idex.io/#websocket-authentication-endpoints)
+   * @see [WebSocket Token API Docs](https://api-docs-v1.kuma.bid/#websocket-authentication-endpoints)
    */
   readonly auth?: WebSocketClientAuthOptions;
 
   /**
    * If `true`, client will point to the sandbox API endpoint.
    *
-   * @see [Sandbox API Documentation](https://api-docs-v4.idex.io/#sandbox)
+   * @see [Sandbox API Documentation](https://api-docs-v1.kuma.bid/#sandbox)
    *
    * @defaultValue false
    */
@@ -105,7 +105,7 @@ export interface WebSocketClientOptionsBase {
   /**
    * If `true` (default), automatically reconnects when connection is closed by the server or network errors
    *
-   * @see [WebSocket Connection Maintenance](https://api-docs-v4.idex.io/#connection-maintenance)
+   * @see [WebSocket Connection Maintenance](https://api-docs-v1.kuma.bid/#connection-maintenance)
    *
    * @defaultValue
    * ```typescript
@@ -125,7 +125,7 @@ export interface WebSocketClientOptionsBase {
    * @internal
    *
    * @example
-   * 'wss://websocket.idex.io/v4'
+   * 'wss://websocket.kuma.bid/v1'
    */
   baseWebSocketURL?: string;
 
@@ -141,7 +141,7 @@ export interface WebSocketClientOptionsBase {
    * @internal
    *
    * @example
-   *  `https://api.idex.io/v4`
+   *  `https://api.kuma.bid/v1`
    */
   baseRestApiURL?: string;
 
@@ -158,7 +158,7 @@ export interface WebSocketClientOptionsBase {
   /**
    * [INTERNAL USE ONLY]
    *
-   * @see [WebSocket API Documentation](https://api-docs-v4.idex.io/#websocket-authentication-endpoints)
+   * @see [WebSocket API Documentation](https://api-docs-v1.kuma.bid/#websocket-authentication-endpoints)
    *
    * @internal
    */
@@ -233,7 +233,7 @@ export interface WebSocketClientOptionsWithFetch
  *
  * ---
  *
- * @see docs [WebSocket API Documentation](https://api-docs-v4.idex.io/#subscriptions)
+ * @see docs [WebSocket API Documentation](https://api-docs-v1.kuma.bid/#subscriptions)
  *
  * @category WebSocket - Client Options
  */
@@ -283,7 +283,7 @@ export interface WebSocketClientOptionsWithAPIKey
  *
  * ---
  *
- * @see docs    [WebSocket API Documentation](https://api-docs-v4.idex.io/#subscriptions)
+ * @see docs    [WebSocket API Documentation](https://api-docs-v1.kuma.bid/#subscriptions)
  * @see related {@link WebSocketClientOptionsWithAPIKey}
  * @see related {@link WebSocketClientOptionsPublicOnly}
  *

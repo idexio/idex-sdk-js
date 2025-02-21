@@ -4,25 +4,25 @@ import type { RestRequestByMarketOptional } from '#index';
  * Get Tickers
  *
  * @see response {@link RestResponseGetTickers}
- * @see type {@link IDEXTicker}
+ * @see type {@link KumaTicker}
  *
- * @category IDEX - Get Tickers
+ * @category Kuma - Get Tickers
  */
 export interface RestRequestGetTickers extends RestRequestByMarketOptional {}
 
 /**
- * IDEX Ticker Response
+ * Kuma Ticker Response
  *
  * Response to `GET /v1/tickers`
  *
- * @see docs     [API Documentation: Get Tickers](https://api-docs-v4.idex.io/#get-tickers)
+ * @see docs     [API Documentation: Get Tickers](https://api-docs-v1.kuma.bid/#get-tickers)
  * @see response {@link RestResponseGetTickers}
  * @see request  {@link RestRequestGetTickers}
  *
- * @category IDEX - Get Tickers
- * @category IDEX Interfaces
+ * @category Kuma - Get Tickers
+ * @category Kuma Interfaces
  */
-export interface IDEXTicker {
+export interface KumaTicker {
   /** Market symbol */
   market: string;
   /**
@@ -124,9 +124,9 @@ export interface IDEXTicker {
 }
 
 /**
- * @see type {@link IDEXTicker}
+ * @see type {@link KumaTicker}
  * @see request {@link RestRequestGetTickers}
  *
- * @category IDEX - Get Tickers
+ * @category Kuma - Get Tickers
  */
-export type RestResponseGetTickers = IDEXTicker[];
+export type RestResponseGetTickers = KumaTicker[];

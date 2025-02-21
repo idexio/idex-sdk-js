@@ -1,9 +1,9 @@
 /**
  * **Endpoint Parameters**
  *
- * > - **HTTP Request**:      `GET /v4/exchange`
- * > - **Endpoint Security:** [Public](https://api-docs-v4.idex.io/#endpointSecurityPublic)
- * > - **API Key Scope:**     [None](https://api-docs-v4.idex.io/#api-keys)
+ * > - **HTTP Request**:      `GET /v1/exchange`
+ * > - **Endpoint Security:** [Public](https://api-docs-v1.kuma.bid/#endpointSecurityPublic)
+ * > - **API Key Scope:**     [None](https://api-docs-v1.kuma.bid/#api-keys)
  */
 
 export interface RestRequestGetExchange {}
@@ -11,13 +11,13 @@ export interface RestRequestGetExchange {}
 /**
  * Basic exchange info
  *
- * @category IDEX - Get Exchange
- * @category IDEX Interfaces
+ * @category Kuma - Get Exchange
+ * @category Kuma Interfaces
  *
- * @see docs [API Documentation](https://api-docs-v4.idex.io/#get-exchange)
+ * @see docs [API Documentation](https://api-docs-v1.kuma.bid/#get-exchange)
  * @see response {@link RestResponseGetExchange}
  */
-export interface IDEXExchange {
+export interface KumaExchange {
   /** Server time zone, always UTC */
   timeZone: 'UTC';
   /**
@@ -46,23 +46,12 @@ export interface IDEXExchange {
   totalOpenInterest: string;
   /** Total exchange trading volume for the trailing 24 hours in USD */
   volume24h: string;
-  /** Total exchange trading volume for IDEX in USD */
+  /** Total exchange trading volume for Kuma in USD */
   totalVolume: string;
-  /** Total number of trade executions for IDEX */
+  /** Total number of trade executions for Kuma */
   totalTrades: number;
   /** Balance of the insurance fund in USD */
   insuranceFundBalance?: string;
-  /** Token contract address for the IDEX token on Ethereum */
-  idexTokenAddressEthereum: string;
-  /** Token contract address for the IDEX token on L2 Arbitrum */
-  idexTokenAddressArbitrum: string;
-  /**  Token contract address for the IDEX token on [Polygon PoS](https://polygon.technology/polygon-pos) */
-  idexTokenAddressPolygon: string;
-
-  /** Current price of the IDEX token in USD */
-  idexTokenPrice: string;
-  /** Market capitalization of the IDEX token in USD */
-  idexMarketCap: string;
   /** Default exchange-wide maker trade fee rate */
   defaultMakerFeeRate: string;
   /** Default exchange-wide taker trade fee rate */
@@ -88,9 +77,9 @@ export interface IDEXExchange {
 }
 
 /**
- * @see docs [API Documentation](https://api-docs-v4.idex.io/#get-exchange)
- * @see type {@link IDEXExchange}
+ * @see docs [API Documentation](https://api-docs-v1.kuma.bid/#get-exchange)
+ * @see type {@link KumaExchange}
  *
- * @category IDEX - Get Exchange
+ * @category Kuma - Get Exchange
  */
-export type RestResponseGetExchange = IDEXExchange;
+export type RestResponseGetExchange = KumaExchange;

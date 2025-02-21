@@ -67,6 +67,7 @@ export interface MockPythInterface extends Interface {
       | 'getUpdateFee'
       | 'getValidTimePeriod'
       | 'parsePriceFeedUpdates'
+      | 'parsePriceFeedUpdatesUnique'
       | 'priceFeedExists'
       | 'queryPriceFeed'
       | 'updatePriceFeeds'
@@ -81,6 +82,7 @@ export interface MockPythInterface extends Interface {
     functionFragment: 'createPriceFeedUpdateData',
     values: [
       BytesLike,
+      BigNumberish,
       BigNumberish,
       BigNumberish,
       BigNumberish,
@@ -120,6 +122,10 @@ export interface MockPythInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: 'parsePriceFeedUpdates',
+    values: [BytesLike[], BytesLike[], BigNumberish, BigNumberish],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'parsePriceFeedUpdatesUnique',
     values: [BytesLike[], BytesLike[], BigNumberish, BigNumberish],
   ): string;
   encodeFunctionData(
@@ -174,6 +180,10 @@ export interface MockPythInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: 'parsePriceFeedUpdates',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'parsePriceFeedUpdatesUnique',
     data: BytesLike,
   ): Result;
   decodeFunctionResult(
@@ -287,6 +297,7 @@ export interface MockPyth extends BaseContract {
       emaPrice: BigNumberish,
       emaConf: BigNumberish,
       publishTime: BigNumberish,
+      prevPublishTime: BigNumberish,
     ],
     [string],
     'view'
@@ -347,6 +358,17 @@ export interface MockPyth extends BaseContract {
     'payable'
   >;
 
+  parsePriceFeedUpdatesUnique: TypedContractMethod<
+    [
+      updateData: BytesLike[],
+      priceIds: BytesLike[],
+      minPublishTime: BigNumberish,
+      maxPublishTime: BigNumberish,
+    ],
+    [PythStructs.PriceFeedStructOutput[]],
+    'payable'
+  >;
+
   priceFeedExists: TypedContractMethod<[id: BytesLike], [boolean], 'view'>;
 
   queryPriceFeed: TypedContractMethod<
@@ -386,6 +408,7 @@ export interface MockPyth extends BaseContract {
       emaPrice: BigNumberish,
       emaConf: BigNumberish,
       publishTime: BigNumberish,
+      prevPublishTime: BigNumberish,
     ],
     [string],
     'view'
@@ -440,6 +463,18 @@ export interface MockPyth extends BaseContract {
   ): TypedContractMethod<[], [bigint], 'view'>;
   getFunction(
     nameOrSignature: 'parsePriceFeedUpdates',
+  ): TypedContractMethod<
+    [
+      updateData: BytesLike[],
+      priceIds: BytesLike[],
+      minPublishTime: BigNumberish,
+      maxPublishTime: BigNumberish,
+    ],
+    [PythStructs.PriceFeedStructOutput[]],
+    'payable'
+  >;
+  getFunction(
+    nameOrSignature: 'parsePriceFeedUpdatesUnique',
   ): TypedContractMethod<
     [
       updateData: BytesLike[],

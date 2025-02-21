@@ -3,11 +3,11 @@ import type { PayoutProgram, RestRequestByWallet } from '#index';
 /**
  * Payout distribution fields to be provided to the escrow contract's `distribute` function.
  *
- * @see parent {@link IDEXPayoutProgramAuthorization}
+ * @see parent {@link KumaPayoutProgramAuthorization}
  *
- * @category IDEX - Authorize Payout
+ * @category Kuma - Authorize Payout
  */
-export interface IDEXPayoutDistribution {
+export interface KumaPayoutDistribution {
   nonce: string;
   parentNonce: string;
   walletAddress: string;
@@ -38,11 +38,11 @@ export interface IDEXPayoutDistribution {
  *
  * ---
  *
- * @see [API Documentation](https://api-docs-v4.idex.io/#get-payouts)
+ * @see [API Documentation](https://api-docs-v1.kuma.bid/#get-payouts)
  * @see response {@link RestResponseGetPayouts}
- * @see type {@link IDEXPayoutProgram}
+ * @see type {@link KumaPayoutProgram}
  *
- * @category IDEX - Get Payouts
+ * @category Kuma - Get Payouts
  */
 export interface RestRequestGetPayouts extends RestRequestByWallet {
   /**
@@ -88,11 +88,11 @@ export interface RestRequestGetPayouts extends RestRequestByWallet {
  *
  * ---
  *
- * @see [API Documentation](https://api-docs-v4.idex.io/#authorize-payout)
+ * @see [API Documentation](https://api-docs-v1.kuma.bid/#authorize-payout)
  * @see response {@link RestResponseAuthorizePayout}
- * @see type {@link IDEXPayoutProgramAuthorization}
+ * @see type {@link KumaPayoutProgramAuthorization}
  *
- * @category IDEX - Authorize Payout
+ * @category Kuma - Authorize Payout
  */
 export interface RestRequestAuthorizePayout extends RestRequestByWallet {
   /**
@@ -116,15 +116,15 @@ export interface RestRequestAuthorizePayout extends RestRequestByWallet {
 }
 
 /**
- * IDEX Get Payout Program Response
+ * Kuma Get Payout Program Response
  *
- * @see docs     [API Documentation: Get Payouts](https://api-docs-v4.idex.io/#get-payouts)
+ * @see docs     [API Documentation: Get Payouts](https://api-docs-v1.kuma.bid/#get-payouts)
  * @see request  {@link RestRequestGetPayouts}
  * @see response {@link RestResponseGetPayouts}
  *
- * @category IDEX - Get Payouts
+ * @category Kuma - Get Payouts
  */
-export interface IDEXPayoutProgram {
+export interface KumaPayoutProgram {
   /**
    * Contract address of the rewarded asset for the {@link PayoutProgram payout program}
    */
@@ -168,39 +168,39 @@ export interface IDEXPayoutProgram {
 }
 
 /**
- * IDEX Authorize Payout Program Response
+ * Kuma Authorize Payout Program Response
  *
- * @see [API Documentation](https://api-docs-v4.idex.io/#authorize-payout)
+ * @see [API Documentation](https://api-docs-v1.kuma.bid/#authorize-payout)
  * @see request {@link RestRequestAuthorizePayout}
  * @see response {@link RestResponseAuthorizePayout}
  *
- * @category IDEX - Authorize Payout
+ * @category Kuma - Authorize Payout
  */
-export interface IDEXPayoutProgramAuthorization
-  extends Omit<IDEXPayoutProgram, `quantity${string}`> {
+export interface KumaPayoutProgramAuthorization
+  extends Omit<KumaPayoutProgram, `quantity${string}`> {
   /**
-   * Payout distribution fields to be provided to the {@link IDEXPayoutProgram.escrowContractAddress escrow contract's} `distribute` function
+   * Payout distribution fields to be provided to the {@link KumaPayoutProgram.escrowContractAddress escrow contract's} `distribute` function
    *
-   * @see {@link IDEXPayoutDistribution}
+   * @see {@link KumaPayoutDistribution}
    */
-  distribution: IDEXPayoutDistribution;
+  distribution: KumaPayoutDistribution;
 }
 
 /**
- * @see [API Documentation](https://api-docs-v4.idex.io/#get-payouts)
- * @see type {@link IDEXPayoutProgram}
+ * @see [API Documentation](https://api-docs-v1.kuma.bid/#get-payouts)
+ * @see type {@link KumaPayoutProgram}
  * @see request {@link RestRequestAuthorizePayout}
  * @see related {@link RestResponseAuthorizePayout}
  *
- * @category IDEX - Get Payouts
+ * @category Kuma - Get Payouts
  */
-export type RestResponseGetPayouts = IDEXPayoutProgram;
+export type RestResponseGetPayouts = KumaPayoutProgram;
 
 /**
- * @see [API Documentation](https://api-docs-v4.idex.io/#authorize-payout)
- * @see type {@link IDEXPayoutProgramAuthorization}
+ * @see [API Documentation](https://api-docs-v1.kuma.bid/#authorize-payout)
+ * @see type {@link KumaPayoutProgramAuthorization}
  * @see request {@link RestRequestGetPayouts}
  *
- * @category IDEX - Authorize Payout
+ * @category Kuma - Authorize Payout
  */
-export type RestResponseAuthorizePayout = IDEXPayoutProgramAuthorization;
+export type RestResponseAuthorizePayout = KumaPayoutProgramAuthorization;

@@ -1,38 +1,38 @@
 import type { MessageEventType } from '#types/enums/index';
-import type { IDEXWithdrawal } from '#types/rest/endpoints/GetWithdrawals';
-import type { IDEXSubscriptionEventBase } from '#types/webSocket/base';
+import type { KumaWithdrawal } from '#types/rest/endpoints/GetWithdrawals';
+import type { KumaSubscriptionEventBase } from '#types/webSocket/base';
 
 /**
  * When the `withdrawals` subscription provides an update
  *
  * @category WebSocket - Message Types
- * @category IDEX - Get Withdrawals
+ * @category Kuma - Get Withdrawals
  */
-export interface IDEXWithdrawalEvent extends IDEXSubscriptionEventBase {
+export interface KumaWithdrawalEvent extends KumaSubscriptionEventBase {
   /**
    * @inheritDoc
    */
   type: typeof MessageEventType.withdrawals;
   /**
-   * @inheritDoc IDEXWithdrawalEventData
+   * @inheritDoc KumaWithdrawalEventData
    *
-   * @see type {@link IDEXWithdrawalEventData}
+   * @see type {@link KumaWithdrawalEventData}
    */
-  data: IDEXWithdrawalEventData;
+  data: KumaWithdrawalEventData;
 }
 
 /**
- * - Includes most properties from the REST API's {@link IDEXWithdrawal} type.
+ * - Includes most properties from the REST API's {@link KumaWithdrawal} type.
  * - Additionally includes the
- *    {@link IDEXWithdrawalEventData.wallet wallet},
- *    {@link IDEXWithdrawalEventData.time time},
- *    and {@link IDEXWithdrawalEventData.quoteBalance quoteBalance} properties.
+ *    {@link KumaWithdrawalEventData.wallet wallet},
+ *    {@link KumaWithdrawalEventData.time time},
+ *    and {@link KumaWithdrawalEventData.quoteBalance quoteBalance} properties.
  *
  * @category WebSocket - Message Types
- * @category IDEX - Get Withdrawals
+ * @category Kuma - Get Withdrawals
  */
-export interface IDEXWithdrawalEventData
-  extends Pick<IDEXWithdrawal, 'withdrawalId' | 'quantity' | 'asset' | 'gas'> {
+export interface KumaWithdrawalEventData
+  extends Pick<KumaWithdrawal, 'withdrawalId' | 'quantity' | 'asset' | 'gas'> {
   /**
    * Wallet address
    */
@@ -48,7 +48,7 @@ export interface IDEXWithdrawalEventData
 }
 
 export interface WebSocketResponseSubscriptionMessageShortWithdrawals
-  extends IDEXSubscriptionEventBase {
+  extends KumaSubscriptionEventBase {
   type: typeof MessageEventType.withdrawals;
   data: WebSocketResponseWithdrawalsShort;
 }
@@ -58,31 +58,31 @@ export interface WebSocketResponseSubscriptionMessageShortWithdrawals
  */
 export interface WebSocketResponseWithdrawalsShort {
   /**
-   * @see inflated {@link IDEXWithdrawalEventData.wallet}
+   * @see inflated {@link KumaWithdrawalEventData.wallet}
    */
-  w: IDEXWithdrawalEventData['wallet'];
+  w: KumaWithdrawalEventData['wallet'];
   /**
-   * @see inflated {@link IDEXWithdrawalEventData.withdrawalId}
+   * @see inflated {@link KumaWithdrawalEventData.withdrawalId}
    */
-  i: IDEXWithdrawalEventData['withdrawalId'];
+  i: KumaWithdrawalEventData['withdrawalId'];
   /**
-   * @see inflated {@link IDEXWithdrawalEventData.asset}
+   * @see inflated {@link KumaWithdrawalEventData.asset}
    */
-  a: IDEXWithdrawalEventData['asset'];
+  a: KumaWithdrawalEventData['asset'];
   /**
-   * @see inflated {@link IDEXWithdrawalEventData.quantity}
+   * @see inflated {@link KumaWithdrawalEventData.quantity}
    */
-  q: IDEXWithdrawalEventData['quantity'];
+  q: KumaWithdrawalEventData['quantity'];
   /**
-   * @see inflated {@link IDEXWithdrawalEventData.quoteBalance}
+   * @see inflated {@link KumaWithdrawalEventData.quoteBalance}
    */
-  qb: IDEXWithdrawalEventData['quoteBalance'];
+  qb: KumaWithdrawalEventData['quoteBalance'];
   /**
-   * @see inflated {@link IDEXWithdrawalEventData.gas}
+   * @see inflated {@link KumaWithdrawalEventData.gas}
    */
-  g: IDEXWithdrawalEventData['gas'];
+  g: KumaWithdrawalEventData['gas'];
   /**
-   * @see inflated {@link IDEXWithdrawalEventData.time}
+   * @see inflated {@link KumaWithdrawalEventData.time}
    */
-  t: IDEXWithdrawalEventData['time'];
+  t: KumaWithdrawalEventData['time'];
 }

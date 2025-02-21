@@ -3,5 +3,5 @@
 /* eslint-disable */
 import type * as storkIndexAndOraclePriceAdapterSol from './StorkIndexAndOraclePriceAdapter.sol';
 export type { storkIndexAndOraclePriceAdapterSol };
-export type { IDEXIndexAndOraclePriceAdapter } from './IDEXIndexAndOraclePriceAdapter';
+export type { KumaIndexAndOraclePriceAdapter } from './KumaIndexAndOraclePriceAdapter';
 export type { PythIndexPriceAdapter } from './PythIndexPriceAdapter';

@@ -5,9 +5,9 @@ import type {
 } from '#types/enums/index';
 import type {
   WebSocketRequestUnsubscribeSubscription,
-  IDEXSubscribeTypeAuthenticated,
-  IDEXSubscribeTypePublic,
-  IDEXSubscribeType,
+  KumaSubscribeTypeAuthenticated,
+  KumaSubscribeTypePublic,
+  KumaSubscribeType,
 } from '#types/webSocket/index';
 
 /**
@@ -63,7 +63,7 @@ export interface WebSocketRequestSubscribe extends WebSocketRequestBase {
    *     by their name.
    *   - authenticated subscriptions may still be defined by name
    */
-  subscriptions: IDEXSubscribeType[];
+  subscriptions: KumaSubscribeType[];
 }
 
 /**
@@ -105,14 +105,14 @@ export interface WebSocketRequestSubscribeStrictWithoutTopLevelMarkets
    * @inheritDoc
    */
   subscriptions: (
-    | (IDEXSubscribeTypePublic & {
+    | (KumaSubscribeTypePublic & {
         /**
          * - When a top-level markets is not provided, all public subscriptions require a markets
          *   array.
          */
         markets: string[];
       })
-    | IDEXSubscribeTypeAuthenticated
+    | KumaSubscribeTypeAuthenticated
   )[];
 }
 

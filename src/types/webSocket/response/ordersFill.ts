@@ -3,15 +3,15 @@ import type {
   FillTypeOrder,
   FillTypeSystem,
 } from '#types/enums/response';
-import type { IDEXOrderFill } from '#types/rest/index';
+import type { KumaOrderFill } from '#types/rest/index';
 
 /**
  * [[include:base.md]]
  *
  * @category Base Types
  */
-export interface IDEXOrderFillEventDataBase
-  extends Omit<IDEXOrderFill, 'type' | 'makerSide' | 'sequence' | 'liquidity'> {
+export interface KumaOrderFillEventDataBase
+  extends Omit<KumaOrderFill, 'type' | 'makerSide' | 'sequence' | 'liquidity'> {
   /**
    * @inheritDoc
    */
@@ -21,17 +21,17 @@ export interface IDEXOrderFillEventDataBase
 /**
  * Fills of type {@link FillTypeSystem}
  *
- * - These types of fills do not include values from {@link IDEXOrderFill}
+ * - These types of fills do not include values from {@link KumaOrderFill}
  *   that other fill types include:
- *   - {@link IDEXOrderFill.makerSide makerSide}
- *   - {@link IDEXOrderFill.sequence sequence}
- *   - {@link IDEXOrderFill.liquidity liquidity}
+ *   - {@link KumaOrderFill.makerSide makerSide}
+ *   - {@link KumaOrderFill.sequence sequence}
+ *   - {@link KumaOrderFill.liquidity liquidity}
  *
  * @see type {@link FillTypeSystem}
- * @category IDEX - Get Orders
+ * @category Kuma - Get Orders
  */
-export interface IDEXOrderFillEventDataSystem
-  extends IDEXOrderFillEventDataBase {
+export interface KumaOrderFillEventDataSystem
+  extends KumaOrderFillEventDataBase {
   /**
    * @inheritDoc
    */
@@ -42,11 +42,11 @@ export interface IDEXOrderFillEventDataSystem
  * Non-liquidation Order Fill Type
  *
  * @see type {@link FillTypeOrder}
- * @category IDEX - Get Orders
+ * @category Kuma - Get Orders
  */
-export interface IDEXOrderFillEventDataGeneral
-  extends IDEXOrderFillEventDataBase,
-    Pick<IDEXOrderFill, 'makerSide' | 'sequence' | 'liquidity'> {
+export interface KumaOrderFillEventDataGeneral
+  extends KumaOrderFillEventDataBase,
+    Pick<KumaOrderFill, 'makerSide' | 'sequence' | 'liquidity'> {
   /**
    * @inheritDoc
    */
@@ -57,64 +57,64 @@ export interface IDEXOrderFillEventDataGeneral
  * An orders `fills` will potentially have a different shape
  * dependent on the `type` property of the fill.
  *
- * @category IDEX - Get Orders
+ * @category Kuma - Get Orders
  */
-export type IDEXOrderFillEventData =
-  | IDEXOrderFillEventDataSystem
-  | IDEXOrderFillEventDataGeneral;
+export type KumaOrderFillEventData =
+  | KumaOrderFillEventDataSystem
+  | KumaOrderFillEventDataGeneral;
 
 /**
  * @internal
  */
 export interface WebSocketResponseOrderFillShortBase {
   /**
-   * @see inflated {@link IDEXOrderFillEventData.type}
+   * @see inflated {@link KumaOrderFillEventData.type}
    */
-  y: IDEXOrderFillEventDataBase['type'];
+  y: KumaOrderFillEventDataBase['type'];
   /**
-   * @see inflated {@link IDEXOrderFillEventData.fillId}
+   * @see inflated {@link KumaOrderFillEventData.fillId}
    */
-  i: IDEXOrderFillEventDataGeneral['fillId'];
+  i: KumaOrderFillEventDataGeneral['fillId'];
   /**
-   * @see inflated {@link IDEXOrderFillEventData.price}
+   * @see inflated {@link KumaOrderFillEventData.price}
    */
-  p: IDEXOrderFillEventDataGeneral['price'];
+  p: KumaOrderFillEventDataGeneral['price'];
   /**
-   * @see inflated {@link IDEXOrderFillEventData.quantity}
+   * @see inflated {@link KumaOrderFillEventData.quantity}
    */
-  q: IDEXOrderFillEventDataGeneral['quantity'];
+  q: KumaOrderFillEventDataGeneral['quantity'];
   /**
-   * @see inflated {@link IDEXOrderFillEventData.quoteQuantity}
+   * @see inflated {@link KumaOrderFillEventData.quoteQuantity}
    */
-  Q: IDEXOrderFillEventDataGeneral['quoteQuantity'];
+  Q: KumaOrderFillEventDataGeneral['quoteQuantity'];
   /**
-   * @see inflated {@link IDEXOrderFillEventData.realizedPnL}
+   * @see inflated {@link KumaOrderFillEventData.realizedPnL}
    */
-  rn: IDEXOrderFillEventDataGeneral['realizedPnL'];
+  rn: KumaOrderFillEventDataGeneral['realizedPnL'];
   /**
-   * @see inflated {@link IDEXOrderFillEventData.time}
+   * @see inflated {@link KumaOrderFillEventData.time}
    */
-  t: IDEXOrderFillEventDataGeneral['time'];
+  t: KumaOrderFillEventDataGeneral['time'];
   /**
-   * @see inflated {@link IDEXOrderFillEventData.fee}
+   * @see inflated {@link KumaOrderFillEventData.fee}
    */
-  f?: IDEXOrderFillEventDataGeneral['fee'];
+  f?: KumaOrderFillEventDataGeneral['fee'];
   /**
-   * @see inflated {@link IDEXOrderFillEventData.action}
+   * @see inflated {@link KumaOrderFillEventData.action}
    */
-  a: IDEXOrderFillEventDataGeneral['action'];
+  a: KumaOrderFillEventDataGeneral['action'];
   /**
-   * @see inflated {@link IDEXOrderFillEventData.position}
+   * @see inflated {@link KumaOrderFillEventData.position}
    */
-  P: IDEXOrderFillEventDataGeneral['position'];
+  P: KumaOrderFillEventDataGeneral['position'];
   /**
-   * @see inflated {@link IDEXOrderFillEventData.txId}
+   * @see inflated {@link KumaOrderFillEventData.txId}
    */
-  T: IDEXOrderFillEventDataGeneral['txId'];
+  T: KumaOrderFillEventDataGeneral['txId'];
   /**
-   * @see inflated {@link IDEXOrderFillEventData.txStatus}
+   * @see inflated {@link KumaOrderFillEventData.txStatus}
    */
-  S: IDEXOrderFillEventDataGeneral['txStatus'];
+  S: KumaOrderFillEventDataGeneral['txStatus'];
 }
 
 /**
@@ -123,9 +123,9 @@ export interface WebSocketResponseOrderFillShortBase {
 export interface WebSocketResponseOrderFillShortSystem
   extends WebSocketResponseOrderFillShortBase {
   /**
-   * @see inflated {@link IDEXOrderFillEventData.type}
+   * @see inflated {@link KumaOrderFillEventData.type}
    */
-  y: IDEXOrderFillEventDataSystem['type'];
+  y: KumaOrderFillEventDataSystem['type'];
 }
 
 /**
@@ -134,21 +134,21 @@ export interface WebSocketResponseOrderFillShortSystem
 export interface WebSocketResponseOrderFillShortGeneral
   extends WebSocketResponseOrderFillShortBase {
   /**
-   * @see inflated {@link IDEXOrderFillEventData.type}
+   * @see inflated {@link KumaOrderFillEventData.type}
    */
-  y: IDEXOrderFillEventDataGeneral['type'];
+  y: KumaOrderFillEventDataGeneral['type'];
   /**
-   * @see inflated {@link IDEXOrderFillEventData.makerSide}
+   * @see inflated {@link KumaOrderFillEventData.makerSide}
    */
-  s: {} & IDEXOrderFillEventDataGeneral['makerSide'];
+  s: {} & KumaOrderFillEventDataGeneral['makerSide'];
   /**
-   * @see inflated {@link IDEXOrderFillEventData.sequence}
+   * @see inflated {@link KumaOrderFillEventData.sequence}
    */
-  u: {} & IDEXOrderFillEventDataGeneral['sequence'];
+  u: {} & KumaOrderFillEventDataGeneral['sequence'];
   /**
-   * @see inflated {@link IDEXOrderFillEventData.liquidity}
+   * @see inflated {@link KumaOrderFillEventData.liquidity}
    */
-  l: {} & IDEXOrderFillEventDataGeneral['liquidity'];
+  l: {} & KumaOrderFillEventDataGeneral['liquidity'];
 }
 
 /**

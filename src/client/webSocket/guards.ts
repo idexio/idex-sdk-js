@@ -1,7 +1,7 @@
 import {
-  type IDEXSubscribeTypeAuthenticated,
-  type IDEXSubscribeTypePublic,
-  type IDEXSubscribeType,
+  type KumaSubscribeTypeAuthenticated,
+  type KumaSubscribeTypePublic,
+  type KumaSubscribeType,
   type WebSocketClientOptionsPublicOnly,
   type WebSocketClientOptionsWithAPIKey,
   type WebSocketClientOptionsWithFetch,
@@ -22,11 +22,11 @@ import {
  */
 export function isWebSocketAuthenticatedSubscription(
   subscription:
-    | IDEXSubscribeType
+    | KumaSubscribeType
     | WebSocketSubscriptionShortNameAuthenticated
     | WebSocketSubscriptionShortNamePublic,
   walletAuthAvailable: boolean = false,
-): subscription is IDEXSubscribeTypeAuthenticated {
+): subscription is KumaSubscribeTypeAuthenticated {
   const name =
     typeof subscription === 'string' ? subscription : subscription?.name;
 
@@ -41,10 +41,10 @@ export function isWebSocketAuthenticatedSubscription(
 
 export function isWebSocketPublicSubscription(
   subscription:
-    | IDEXSubscribeType
+    | KumaSubscribeType
     | WebSocketSubscriptionShortNamePublic
     | WebSocketSubscriptionShortNameAuthenticated,
-): subscription is IDEXSubscribeTypePublic {
+): subscription is KumaSubscribeTypePublic {
   const name =
     typeof subscription === 'string' ? subscription : subscription?.name;
 

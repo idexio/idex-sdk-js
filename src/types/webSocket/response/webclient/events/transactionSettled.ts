@@ -4,10 +4,10 @@ import type {
   WebClientEventTxSettledAction,
 } from '#types/enums/index';
 import type { AnyObj } from '#types/utils';
-import type { IDEXWebClientEventDataBase } from '../base.js';
+import type { KumaWebClientEventDataBase } from '../base.js';
 
-interface IDEXWebClientEventDataTxSettledBase
-  extends IDEXWebClientEventDataBase {
+interface KumaWebClientEventDataTxSettledBase
+  extends KumaWebClientEventDataBase {
   /**
    * @inheritDoc
    */
@@ -26,8 +26,8 @@ interface IDEXWebClientEventDataTxSettledBase
   readonly payload: AnyObj;
 }
 
-export interface IDEXWebClientEventDataTxSettledPayout
-  extends IDEXWebClientEventDataTxSettledBase {
+export interface KumaWebClientEventDataTxSettledPayout
+  extends KumaWebClientEventDataTxSettledBase {
   /**
    * @inheritDoc
    */
@@ -44,15 +44,15 @@ export interface IDEXWebClientEventDataTxSettledPayout
      * @see enum {@link PayoutProgram}
      */
     program: PayoutProgram;
-    asset: 'USDC' | 'IDEX';
+    asset: 'USDC' | 'KUMA';
     amountPaid: string;
     nonce: string;
     txHash: string;
   };
 }
 
-export interface IDEXWebClientEventDataTxSettledWithdraw
-  extends IDEXWebClientEventDataTxSettledBase {
+export interface KumaWebClientEventDataTxSettledWithdraw
+  extends KumaWebClientEventDataTxSettledBase {
   /**
    * @inheritDoc
    */
@@ -67,8 +67,8 @@ export interface IDEXWebClientEventDataTxSettledWithdraw
   };
 }
 
-export interface IDEXWebClientEventDataTxSettledExecuteTrade
-  extends IDEXWebClientEventDataTxSettledBase {
+export interface KumaWebClientEventDataTxSettledExecuteTrade
+  extends KumaWebClientEventDataTxSettledBase {
   /**
    * @inheritDoc
    */
@@ -84,7 +84,7 @@ export interface IDEXWebClientEventDataTxSettledExecuteTrade
   };
 }
 
-export type IDEXWebClientEventDataTxSettled =
-  | IDEXWebClientEventDataTxSettledPayout
-  | IDEXWebClientEventDataTxSettledWithdraw
-  | IDEXWebClientEventDataTxSettledExecuteTrade;
+export type KumaWebClientEventDataTxSettled =
+  | KumaWebClientEventDataTxSettledPayout
+  | KumaWebClientEventDataTxSettledWithdraw
+  | KumaWebClientEventDataTxSettledExecuteTrade;

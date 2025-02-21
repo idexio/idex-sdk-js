@@ -3,7 +3,7 @@ import type { Expand } from '#types/utils';
 
 /**
  * @category Base Types
- * @category IDEX - Get Market Maker Rewards Epochs
+ * @category Kuma - Get Market Maker Rewards Epochs
  */
 interface RestRequestWithEpochId extends RestRequestByWalletOptional {
   /**
@@ -34,7 +34,7 @@ interface RestRequestWithEpochId extends RestRequestByWalletOptional {
  * @see response {@link RestResponseGetMarketMakerRewardsEpoch}
  * @see related  {@link RestRequestGetMarketMakerRewardsEpochs}
  *
- * @category IDEX - Get Market Maker Rewards Epochs
+ * @category Kuma - Get Market Maker Rewards Epochs
  */
 export interface RestRequestGetMarketMakerRewardsEpochWithoutWallet
   extends RestRequestWithEpochId {
@@ -56,7 +56,7 @@ export interface RestRequestGetMarketMakerRewardsEpochWithoutWallet
  * @see response {@link RestResponseGetMarketMakerRewardsEpoch}
  * @see related  {@link RestRequestGetMarketMakerRewardsEpochs}
  *
- * @category IDEX - Get Market Maker Rewards Epochs
+ * @category Kuma - Get Market Maker Rewards Epochs
  */
 export interface RestRequestGetMarketMakerRewardsEpochWithWallet
   extends RestRequestWithEpochId {
@@ -78,16 +78,16 @@ export interface RestRequestGetMarketMakerRewardsEpochWithWallet
  * ---
  * **Endpoint Parameters**
  *
- * > - HTTP Request:      `GET /v4/marketMakerRewardsV1/epoch`
- * > - Endpoint Security: [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
- * > - API Key Scope:     [Read](https://api-docs-v4.idex.io/#api-keys)
+ * > - HTTP Request:      `GET /v1/marketMakerRewardsV1/epoch`
+ * > - Endpoint Security: [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+ * > - API Key Scope:     [Read](https://api-docs-v1.kuma.bid/#api-keys)
  * ---
  *
- * @see type     {@link IDEXMarketMakerRewardsEpoch}
+ * @see type     {@link KumaMarketMakerRewardsEpoch}
  * @see response {@link RestResponseGetMarketMakerRewardsEpoch}
  * @see related  {@link RestRequestGetMarketMakerRewardsEpochs}
  *
- * @category IDEX - Get Market Maker Rewards Epochs
+ * @category Kuma - Get Market Maker Rewards Epochs
  */
 export type RestRequestGetMarketMakerRewardsEpoch =
   | RestRequestGetMarketMakerRewardsEpochWithWallet
@@ -100,22 +100,22 @@ export type RestRequestGetMarketMakerRewardsEpoch =
  * ---
  * **Endpoint Parameters**
  *
- * > - HTTP Request:      `GET /v4/marketMakerRewardsV1/epochs`
- * > - Endpoint Security: [User Data](https://api-docs-v4.idex.io/#endpointSecurityUserData)
- * > - API Key Scope:     [Read](https://api-docs-v4.idex.io/#api-keys)
+ * > - HTTP Request:      `GET /v1/marketMakerRewardsV1/epochs`
+ * > - Endpoint Security: [User Data](https://api-docs-v1.kuma.bid/#endpointSecurityUserData)
+ * > - API Key Scope:     [Read](https://api-docs-v1.kuma.bid/#api-keys)
  * ---
  *
- * @see type     {@link IDEXMarketMakerRewardsEpochSummary}
+ * @see type     {@link KumaMarketMakerRewardsEpochSummary}
  * @see response {@link RestResponseGetMarketMakerRewardsEpochs}
  * @see related  {@link RestRequestGetMarketMakerRewardsEpoch}
  *
- * @category IDEX - Get Market Maker Rewards Epochs
+ * @category Kuma - Get Market Maker Rewards Epochs
  */
 export interface RestRequestGetMarketMakerRewardsEpochs {}
 
 /**
  * @category Base Types
- * @category IDEX - Get Market Maker Rewards Epochs
+ * @category Kuma - Get Market Maker Rewards Epochs
  */
 interface MarketMakerRewardsEpochMarketBase {
   /**
@@ -201,7 +201,7 @@ interface MarketMakerRewardsEpochMarketBase {
  *
  * @see MarketMakerRewardsEpochMarketWithWallet
  *
- * @category IDEX - Get Market Maker Rewards Epochs
+ * @category Kuma - Get Market Maker Rewards Epochs
  */
 export interface MarketMakerRewardsEpochMarketWithoutWallet
   extends MarketMakerRewardsEpochMarketBase {
@@ -222,7 +222,7 @@ export interface MarketMakerRewardsEpochMarketWithoutWallet
  *
  * @see related {@link MarketMakerRewardsEpochMarketWithoutWallet}
  *
- * @category IDEX - Get Market Maker Rewards Epochs
+ * @category Kuma - Get Market Maker Rewards Epochs
  */
 export interface MarketMakerRewardsEpochMarketWithWallet
   extends MarketMakerRewardsEpochMarketBase {
@@ -242,13 +242,13 @@ export interface MarketMakerRewardsEpochMarketWithWallet
 
 /**
  * The possible types representing the {@link RestRequestGetMarketMakerRewardsEpoch} response's
- * {@link IDEXMarketMakerRewardsEpoch.markets} markets details.
+ * {@link KumaMarketMakerRewardsEpoch.markets} markets details.
  *
  * ---
  *
- * @see type {@link IDEXMarketMakerRewardsEpoch}
+ * @see type {@link KumaMarketMakerRewardsEpoch}
  *
- * @category IDEX - Get Market Maker Rewards Epochs
+ * @category Kuma - Get Market Maker Rewards Epochs
  */
 export type MarketMakerRewardsEpochMarket =
   | MarketMakerRewardsEpochMarketWithWallet
@@ -267,7 +267,7 @@ export type MarketMakerRewardsEpochMarket =
  * - {@link MarketMakerRewardsEpochDetailedWithWallet.walletEligibilityVolumePercent walletEligibilityVolumePercent}
  * - {@link MarketMakerRewardsEpochMarketWithWallet markets} - with wallet-specific details
  *
- * @category IDEX - Get Market Maker Rewards Epochs
+ * @category Kuma - Get Market Maker Rewards Epochs
  * @category Base Types
  */
 interface MarketMakerRewardsEpochBase {
@@ -372,8 +372,8 @@ interface MarketMakerRewardsEpochBase {
    */
   walletEligibilityVolumePercent?: string;
   /**
-   * - When wallet was in the request:  {@link MarketMakerRewardsEpochMarketWithWallet IDEXEpochMarketWithWallet[]}
-   * - Otherwise: {@link MarketMakerRewardsEpochMarketWithoutWallet IDEXEpochMarketWithoutWallet[]}
+   * - When wallet was in the request:  {@link MarketMakerRewardsEpochMarketWithWallet KumaEpochMarketWithWallet[]}
+   * - Otherwise: {@link MarketMakerRewardsEpochMarketWithoutWallet KumaEpochMarketWithoutWallet[]}
    *
    * @see MarketMakerRewardsEpochMarket
    */
@@ -390,13 +390,13 @@ interface MarketMakerRewardsEpochBase {
  * ---
  * @see request  {@link RestRequestGetMarketMakerRewardsEpochs}
  * @see response {@link RestResponseGetMarketMakerRewardsEpochs}
- * @see related  {@link IDEXMarketMakerRewardsEpoch}
+ * @see related  {@link KumaMarketMakerRewardsEpoch}
  *
- * @category IDEX - Get Market Maker Rewards Epochs
+ * @category Kuma - Get Market Maker Rewards Epochs
  *
  * @interface
  */
-export type IDEXMarketMakerRewardsEpochSummary = Expand<
+export type KumaMarketMakerRewardsEpochSummary = Expand<
   Pick<
     MarketMakerRewardsEpochBase,
     'epochId' | 'startsAt' | 'endsAt' | 'reviewEndsAt'
@@ -417,12 +417,12 @@ export type IDEXMarketMakerRewardsEpochSummary = Expand<
  * - {@link MarketMakerRewardsEpochMarketWithWallet markets} - with wallet-specific details
  *
  * ---
- * @see type     {@link IDEXMarketMakerRewardsEpoch}
+ * @see type     {@link KumaMarketMakerRewardsEpoch}
  * @see request  {@link RestRequestGetMarketMakerRewardsEpoch}
  * @see response {@link RestResponseGetMarketMakerRewardsEpoch}
  * @see related  {@link MarketMakerRewardsEpochDetailedWithWallet}
  *
- * @category IDEX - Get Market Maker Rewards Epochs
+ * @category Kuma - Get Market Maker Rewards Epochs
  */
 export interface MarketMakerRewardsEpochDetailedWithoutWallet
   extends MarketMakerRewardsEpochBase {
@@ -458,12 +458,12 @@ export interface MarketMakerRewardsEpochDetailedWithoutWallet
  *
  * ---
  *
- * @see type     {@link IDEXMarketMakerRewardsEpoch}
+ * @see type     {@link KumaMarketMakerRewardsEpoch}
  * @see request  {@link RestRequestGetMarketMakerRewardsEpoch}
  * @see response {@link RestResponseGetMarketMakerRewardsEpoch}
  * @see related  {@link MarketMakerRewardsEpochDetailedWithoutWallet}
  *
- * @category IDEX - Get Market Maker Rewards Epochs
+ * @category Kuma - Get Market Maker Rewards Epochs
  */
 export interface MarketMakerRewardsEpochDetailedWithWallet
   extends MarketMakerRewardsEpochBase {
@@ -502,12 +502,12 @@ export interface MarketMakerRewardsEpochDetailedWithWallet
  * @see request  {@link RestRequestGetMarketMakerRewardsEpoch}
  * @see response {@link RestResponseGetMarketMakerRewardsEpoch}
  *
- * @see related  {@link IDEXMarketMakerRewardsEpochSummary}
+ * @see related  {@link KumaMarketMakerRewardsEpochSummary}
  *
- * @category IDEX - Get Market Maker Rewards Epochs
- * @category IDEX Interfaces
+ * @category Kuma - Get Market Maker Rewards Epochs
+ * @category Kuma Interfaces
  */
-export type IDEXMarketMakerRewardsEpoch =
+export type KumaMarketMakerRewardsEpoch =
   | MarketMakerRewardsEpochDetailedWithoutWallet
   | MarketMakerRewardsEpochDetailedWithWallet;
 
@@ -515,13 +515,13 @@ export type IDEXMarketMakerRewardsEpoch =
  * Returns the detailed information about the requested epoch.
  *
  * ---
- * @see type    {@link IDEXMarketMakerRewardsEpoch}
+ * @see type    {@link KumaMarketMakerRewardsEpoch}
  * @see request {@link RestRequestGetMarketMakerRewardsEpoch}
  *
  * @see related {@link RestResponseGetMarketMakerRewardsEpochs}
  * @see related {@link RestRequestGetMarketMakerRewardsEpochs}
  *
- * @category IDEX - Get Market Maker Rewards Epochs
+ * @category Kuma - Get Market Maker Rewards Epochs
  *
  * @typeParam RequestType - Optionally provide the request parameters
  *                          used to return strong types based on if
@@ -530,22 +530,22 @@ export type IDEXMarketMakerRewardsEpoch =
  *
  * @example
  * ```ts
- *  // IDEXMarketMakerRewardsEpochDetailedWithWallet | IDEXMarketMakerRewardsEpochDetailedWithoutWallet
+ *  // KumaMarketMakerRewardsEpochDetailedWithWallet | KumaMarketMakerRewardsEpochDetailedWithoutWallet
  *  type Response = RestResponseGetEpoch;
  *
- *  // IDEXMarketMakerRewardsEpochDetailedWithWallet
+ *  // KumaMarketMakerRewardsEpochDetailedWithWallet
  *  const response = await client.getEpoch({ wallet: '0x...', nonce: '...', epochId: '...' });
- *  // IDEXEpochDetailedWithoutWallet
+ *  // KumaEpochDetailedWithoutWallet
  *  const response = await client.getEpoch({ nonce: '...', epochId: '...' });
- *  // IDEXMarketMakerRewardsEpochDetailedWithoutWallet | IDEXMarketMakerRewardsEpochDetailedWithWallet
+ *  // KumaMarketMakerRewardsEpochDetailedWithoutWallet | KumaMarketMakerRewardsEpochDetailedWithWallet
  *  const response = await client.getEpoch(someUntypedObj)
  *
  *  // When the response is returned as either, you can easily narrow the type
  *  // by checking any of the wallet-specific properties:
  *  if (response.walletScorePercent) {
- *     // response satisfies IDEXMarketMakerRewardsEpochDetailedWithWallet
+ *     // response satisfies KumaMarketMakerRewardsEpochDetailedWithWallet
  *  } else {
- *    // response satisfies IDEXMarketMakerRewardsEpochDetailedWithoutWallet
+ *    // response satisfies KumaMarketMakerRewardsEpochDetailedWithoutWallet
  *  }
  * ```
  */
@@ -565,13 +565,13 @@ export type RestResponseGetMarketMakerRewardsEpoch<
  *
  * ----
  *
- * @see type    {@link IDEXMarketMakerRewardsEpochSummary}
+ * @see type    {@link KumaMarketMakerRewardsEpochSummary}
  * @see request {@link RestRequestGetMarketMakerRewardsEpochs}
  *
  * @see related {@link RestResponseGetMarketMakerRewardsEpoch}
  * @see related {@link RestRequestGetMarketMakerRewardsEpoch}
  *
- * @category IDEX - Get Market Maker Rewards Epochs
+ * @category Kuma - Get Market Maker Rewards Epochs
  */
 export type RestResponseGetMarketMakerRewardsEpochs =
-  IDEXMarketMakerRewardsEpochSummary[];
+  KumaMarketMakerRewardsEpochSummary[];

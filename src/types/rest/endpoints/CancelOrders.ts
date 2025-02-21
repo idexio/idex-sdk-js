@@ -12,8 +12,8 @@ interface RestRequestCancelOrdersBase
     idex.RestRequestByMarketOptional {
   /**
    * - When specified, cancels multiple orders by orderId or clientOrderId.
-   *   - You may provide an orders {@link idex.IDEXOrder.orderId orderId}
-   *   - You may provide an orders {@link idex.IDEXOrder.clientOrderId clientOrderId}
+   *   - You may provide an orders {@link idex.KumaOrder.orderId orderId}
+   *   - You may provide an orders {@link idex.KumaOrder.clientOrderId clientOrderId}
    *     by prefixing it with `client:`
    *
    * @throws {BAD_REQUEST} If `orderIds` array is empty
@@ -29,7 +29,7 @@ interface RestRequestCancelOrdersBase
 /**
  * Allows cancelling all open orders for a given wallet.
  *
- * @category IDEX - Cancel Order
+ * @category Kuma - Cancel Order
  *
  * @see request {@link RestRequestCancelOrders}
  */
@@ -43,7 +43,7 @@ export interface RestRequestCancelOrdersByWallet
 /**
  * Allows cancelling all open orders by one or more orderId's or clientOrderId's.
  *
- * @category IDEX - Cancel Order
+ * @category Kuma - Cancel Order
  *
  * @see request {@link RestRequestCancelOrders}
  */
@@ -60,7 +60,7 @@ export interface RestRequestCancelOrdersByOrderIds
 /**
  * Allows cancelling all open orders of a wallet for a given market.
  *
- * @category IDEX - Cancel Order
+ * @category Kuma - Cancel Order
  *
  * @see request {@link RestRequestCancelOrders}
  */
@@ -77,7 +77,7 @@ export interface RestRequestCancelOrdersByMarket
 /**
  * Allows cancelling all open orders of a wallet using the given delegated key.
  *
- * @category IDEX - Cancel Order
+ * @category Kuma - Cancel Order
  *
  * @see request {@link RestRequestCancelOrders}
  */
@@ -102,7 +102,7 @@ export interface RestRequestCancelOrdersByDelegatedKey
  *
  * @see related {@link RestRequestCancelOrder} - Cancel a single order by its `orderId`.
  *
- * @category IDEX - Cancel Order
+ * @category Kuma - Cancel Order
  */
 export type RestRequestCancelOrders =
   | RestRequestCancelOrdersByOrderIds
@@ -114,10 +114,10 @@ export type RestRequestCancelOrders =
  * Response to "cancel order" requests (single or multiple orders). Includes
  * one object for each successfully canceled order.
  *
- * @category IDEX Interfaces
- * @category IDEX - Cancel Order
+ * @category Kuma Interfaces
+ * @category Kuma - Cancel Order
  */
-export interface IDEXCanceledOrder {
+export interface KumaCanceledOrder {
   /**
    * Exchange-assigned order identifier. Will not be present for client order IDs
    * that were not found on the books and were not filled
@@ -137,14 +137,14 @@ export interface IDEXCanceledOrder {
 }
 
 /**
- * @see type {@link IDEXCanceledOrder}
+ * @see type {@link KumaCanceledOrder}
  *
- * @category IDEX - Cancel Order
+ * @category Kuma - Cancel Order
  */
-export type RestResponseCancelOrders = IDEXCanceledOrder[];
+export type RestResponseCancelOrders = KumaCanceledOrder[];
 
 /**
- * The raw request body for the `DELETE /v4/orders` endpoint
+ * The raw request body for the `DELETE /v1/orders` endpoint
  * including `signature` and the body in `parameters`.
  *
  * @internal

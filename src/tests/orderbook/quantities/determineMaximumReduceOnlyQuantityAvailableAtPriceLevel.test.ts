@@ -4,12 +4,12 @@ import { decimalToPip, pipToDecimal } from '#pipmath';
 
 import * as orderbook from '#orderbook/index';
 
-import type { IDEXPosition } from '#types/rest/endpoints/index';
+import type { KumaPosition } from '#types/rest/endpoints/index';
 import type { OrderSide } from '../../../types/enums/request';
 
 const { expect } = chai;
 
-function makeAPosition(marketSymbol: string, quantity: string): IDEXPosition {
+function makeAPosition(marketSymbol: string, quantity: string): KumaPosition {
   // All empty values are not used by the function under test
   return {
     market: marketSymbol,

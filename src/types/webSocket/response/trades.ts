@@ -1,36 +1,36 @@
 import type { MessageEventType } from '#types/enums/index';
-import type { IDEXTrade } from '#types/rest/endpoints/GetTrades';
-import type { IDEXSubscriptionEventBase } from '#types/webSocket/base';
+import type { KumaTrade } from '#types/rest/endpoints/GetTrades';
+import type { KumaSubscriptionEventBase } from '#types/webSocket/base';
 
 /**
  * When the `trades` subscription provides an update
  *
- * @category IDEX - Get Trades
+ * @category Kuma - Get Trades
  * @category WebSocket - Message Types
  */
-export interface IDEXTradeEvent extends IDEXSubscriptionEventBase {
+export interface KumaTradeEvent extends KumaSubscriptionEventBase {
   /**
    * @inheritDoc
    */
   type: typeof MessageEventType.trades;
   /**
-   * @inheritDoc IDEXTradeEventData
+   * @inheritDoc KumaTradeEventData
    *
-   * @see type {@link IDEXTradeEventData}
+   * @see type {@link KumaTradeEventData}
    */
-  data: IDEXTradeEventData;
+  data: KumaTradeEventData;
 }
 
 /**
- * - Trade updates on the WebSocket include all {@link IDEXTrade} properties as well
+ * - Trade updates on the WebSocket include all {@link KumaTrade} properties as well
  *   as the `market` symbol that corresponds to the trade.
  *
- * @see related {@link IDEXTrade}
+ * @see related {@link KumaTrade}
  *
- * @category IDEX - Get Trades
+ * @category Kuma - Get Trades
  * @category WebSocket - Message Types
  */
-export interface IDEXTradeEventData extends IDEXTrade {
+export interface KumaTradeEventData extends KumaTrade {
   /**
    * Market Symbol
    */
@@ -38,7 +38,7 @@ export interface IDEXTradeEventData extends IDEXTrade {
 }
 
 export interface WebSocketResponseSubscriptionMessageShortTrades
-  extends IDEXSubscriptionEventBase {
+  extends KumaSubscriptionEventBase {
   type: typeof MessageEventType.trades;
   data: WebSocketResponseTradeShort;
 }
@@ -52,43 +52,43 @@ export interface WebSocketResponseSubscriptionMessageShortTrades
  */
 export interface WebSocketResponseTradeShort {
   /**
-   * @see inflated {@link IDEXTradeEventData.market}
+   * @see inflated {@link KumaTradeEventData.market}
    */
-  m: IDEXTradeEventData['market'];
+  m: KumaTradeEventData['market'];
   /**
    * @see related {@link RestResponseTrade.fillId}
-   * @see inflated {@link IDEXTradeEventData.fillId}
+   * @see inflated {@link KumaTradeEventData.fillId}
    */
-  i: IDEXTradeEventData['fillId'];
+  i: KumaTradeEventData['fillId'];
   /**
    * @see related {@link RestResponseTrade.price}
-   * @see inflated {@link IDEXTradeEventData.price}
+   * @see inflated {@link KumaTradeEventData.price}
    */
-  p: IDEXTradeEventData['price'];
+  p: KumaTradeEventData['price'];
   /**
    * @see related {@link RestResponseTrade.quantity}
-   * @see inflated {@link IDEXTradeEventData.quantity}
+   * @see inflated {@link KumaTradeEventData.quantity}
    */
-  q: IDEXTradeEventData['quantity'];
+  q: KumaTradeEventData['quantity'];
   /**
    * @see related {@link RestResponseTrade.quoteQuantity}
-   * @see inflated {@link IDEXTradeEventData.quoteQuantity}
+   * @see inflated {@link KumaTradeEventData.quoteQuantity}
    */
-  Q: IDEXTradeEventData['quoteQuantity'];
+  Q: KumaTradeEventData['quoteQuantity'];
   /**
    * @see related {@link RestResponseTrade.time}
-   * @see inflated {@link IDEXTradeEventData.time}
+   * @see inflated {@link KumaTradeEventData.time}
    */
-  t: IDEXTradeEventData['time'];
+  t: KumaTradeEventData['time'];
   /**
    * @see enum {@link enums2.OrderSide}
    * @see related {@link RestResponseTrade.makerSide}
-   * @see inflated {@link IDEXTradeEventData.makerSide}
+   * @see inflated {@link KumaTradeEventData.makerSide}
    */
-  s: IDEXTradeEventData['makerSide'];
+  s: KumaTradeEventData['makerSide'];
   /**
    * @see related {@link RestResponseTrade.sequence}
-   * @see inflated {@link IDEXTradeEventData.sequence}
+   * @see inflated {@link KumaTradeEventData.sequence}
    */
-  u: IDEXTradeEventData['sequence'];
+  u: KumaTradeEventData['sequence'];
 }
