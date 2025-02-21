@@ -8,9 +8,9 @@ import type {
  * Get Funding Payments
  *
  * @see response {@link RestResponseGetFundingPayments}
- * @see type {@link IDEXFundingPayment}
+ * @see type {@link KumaFundingPayment}
  *
- * @category IDEX - Get Funding Payments
+ * @category Kuma - Get Funding Payments
  */
 export interface RestRequestGetFundingPayments
   extends RestRequestByWallet,
@@ -21,10 +21,10 @@ export interface RestRequestGetFundingPayments
  * @see request {@link RestRequestGetFundingPayments}
  * @see response {@link RestResponseGetFundingPayments}
  *
- * @category IDEX - Get Funding Payments
- * @category IDEX Interfaces
+ * @category Kuma - Get Funding Payments
+ * @category Kuma Interfaces
  */
-export interface IDEXFundingPayment {
+export interface KumaFundingPayment {
   /**
    * The timestamp indicating when the item was created.
    */
@@ -52,9 +52,9 @@ export interface IDEXFundingPayment {
 }
 
 /**
- * @see type {@link IDEXFundingPayment}
+ * @see type {@link KumaFundingPayment}
  * @see request {@link RestRequestGetFundingPayments}
  *
- * @category IDEX - Get Funding Payments
+ * @category Kuma - Get Funding Payments
  */
-export type RestResponseGetFundingPayments = IDEXFundingPayment[];
+export type RestResponseGetFundingPayments = KumaFundingPayment[];

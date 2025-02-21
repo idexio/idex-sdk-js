@@ -3,6 +3,7 @@
 /* eslint-disable */
 import type {
   BaseContract,
+  BigNumberish,
   BytesLike,
   FunctionFragment,
   Result,
@@ -23,12 +24,12 @@ import type {
 export interface PythOraclePriceAdapterInterface extends Interface {
   getFunction(
     nameOrSignature:
-      | 'addBaseAssetSymbolAndPriceId'
+      | 'addMarket'
       | 'adminWallet'
-      | 'baseAssetSymbolsByPriceId'
       | 'loadPriceForBaseAssetSymbol'
+      | 'marketsByBaseAssetSymbol'
+      | 'marketsByPriceId'
       | 'ownerWallet'
-      | 'priceIdsByBaseAssetSymbol'
       | 'pyth'
       | 'removeAdmin'
       | 'removeOwner'
@@ -38,28 +39,28 @@ export interface PythOraclePriceAdapterInterface extends Interface {
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: 'addBaseAssetSymbolAndPriceId',
-    values: [string, BytesLike],
+    functionFragment: 'addMarket',
+    values: [string, BytesLike, BigNumberish],
   ): string;
   encodeFunctionData(
     functionFragment: 'adminWallet',
     values?: undefined,
   ): string;
   encodeFunctionData(
-    functionFragment: 'baseAssetSymbolsByPriceId',
-    values: [BytesLike],
-  ): string;
-  encodeFunctionData(
     functionFragment: 'loadPriceForBaseAssetSymbol',
     values: [string],
   ): string;
   encodeFunctionData(
-    functionFragment: 'ownerWallet',
-    values?: undefined,
+    functionFragment: 'marketsByBaseAssetSymbol',
+    values: [string],
   ): string;
   encodeFunctionData(
-    functionFragment: 'priceIdsByBaseAssetSymbol',
-    values: [string],
+    functionFragment: 'marketsByPriceId',
+    values: [BytesLike],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'ownerWallet',
+    values?: undefined,
   ): string;
   encodeFunctionData(functionFragment: 'pyth', values?: undefined): string;
   encodeFunctionData(
@@ -83,16 +84,9 @@ export interface PythOraclePriceAdapterInterface extends Interface {
     values: [AddressLike],
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: 'addBaseAssetSymbolAndPriceId',
-    data: BytesLike,
-  ): Result;
+  decodeFunctionResult(functionFragment: 'addMarket', data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: 'adminWallet',
-    data: BytesLike,
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: 'baseAssetSymbolsByPriceId',
     data: BytesLike,
   ): Result;
   decodeFunctionResult(
@@ -100,11 +94,15 @@ export interface PythOraclePriceAdapterInterface extends Interface {
     data: BytesLike,
   ): Result;
   decodeFunctionResult(
-    functionFragment: 'ownerWallet',
+    functionFragment: 'marketsByBaseAssetSymbol',
     data: BytesLike,
   ): Result;
   decodeFunctionResult(
-    functionFragment: 'priceIdsByBaseAssetSymbol',
+    functionFragment: 'marketsByPriceId',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'ownerWallet',
     data: BytesLike,
   ): Result;
   decodeFunctionResult(functionFragment: 'pyth', data: BytesLike): Result;
@@ -164,19 +162,17 @@ export interface PythOraclePriceAdapter extends BaseContract {
     event?: TCEvent,
   ): Promise<this>;
 
-  addBaseAssetSymbolAndPriceId: TypedContractMethod<
-    [baseAssetSymbol: string, priceId: BytesLike],
+  addMarket: TypedContractMethod<
+    [
+      baseAssetSymbol: string,
+      priceId: BytesLike,
+      priceMultiplier: BigNumberish,
+    ],
     [void],
     'nonpayable'
   >;
 
   adminWallet: TypedContractMethod<[], [string], 'view'>;
-
-  baseAssetSymbolsByPriceId: TypedContractMethod<
-    [arg0: BytesLike],
-    [string],
-    'view'
-  >;
 
   loadPriceForBaseAssetSymbol: TypedContractMethod<
     [baseAssetSymbol: string],
@@ -184,13 +180,33 @@ export interface PythOraclePriceAdapter extends BaseContract {
     'view'
   >;
 
-  ownerWallet: TypedContractMethod<[], [string], 'view'>;
-
-  priceIdsByBaseAssetSymbol: TypedContractMethod<
+  marketsByBaseAssetSymbol: TypedContractMethod<
     [arg0: string],
-    [string],
+    [
+      [boolean, string, string, bigint] & {
+        exists: boolean;
+        baseAssetSymbol: string;
+        priceId: string;
+        priceMultiplier: bigint;
+      },
+    ],
     'view'
   >;
+
+  marketsByPriceId: TypedContractMethod<
+    [arg0: BytesLike],
+    [
+      [boolean, string, string, bigint] & {
+        exists: boolean;
+        baseAssetSymbol: string;
+        priceId: string;
+        priceMultiplier: bigint;
+      },
+    ],
+    'view'
+  >;
+
+  ownerWallet: TypedContractMethod<[], [string], 'view'>;
 
   pyth: TypedContractMethod<[], [string], 'view'>;
 
@@ -213,9 +229,13 @@ export interface PythOraclePriceAdapter extends BaseContract {
   ): T;
 
   getFunction(
-    nameOrSignature: 'addBaseAssetSymbolAndPriceId',
+    nameOrSignature: 'addMarket',
   ): TypedContractMethod<
-    [baseAssetSymbol: string, priceId: BytesLike],
+    [
+      baseAssetSymbol: string,
+      priceId: BytesLike,
+      priceMultiplier: BigNumberish,
+    ],
     [void],
     'nonpayable'
   >;
@@ -223,17 +243,35 @@ export interface PythOraclePriceAdapter extends BaseContract {
     nameOrSignature: 'adminWallet',
   ): TypedContractMethod<[], [string], 'view'>;
   getFunction(
-    nameOrSignature: 'baseAssetSymbolsByPriceId',
-  ): TypedContractMethod<[arg0: BytesLike], [string], 'view'>;
-  getFunction(
     nameOrSignature: 'loadPriceForBaseAssetSymbol',
   ): TypedContractMethod<[baseAssetSymbol: string], [bigint], 'view'>;
+  getFunction(nameOrSignature: 'marketsByBaseAssetSymbol'): TypedContractMethod<
+    [arg0: string],
+    [
+      [boolean, string, string, bigint] & {
+        exists: boolean;
+        baseAssetSymbol: string;
+        priceId: string;
+        priceMultiplier: bigint;
+      },
+    ],
+    'view'
+  >;
+  getFunction(nameOrSignature: 'marketsByPriceId'): TypedContractMethod<
+    [arg0: BytesLike],
+    [
+      [boolean, string, string, bigint] & {
+        exists: boolean;
+        baseAssetSymbol: string;
+        priceId: string;
+        priceMultiplier: bigint;
+      },
+    ],
+    'view'
+  >;
   getFunction(
     nameOrSignature: 'ownerWallet',
   ): TypedContractMethod<[], [string], 'view'>;
-  getFunction(
-    nameOrSignature: 'priceIdsByBaseAssetSymbol',
-  ): TypedContractMethod<[arg0: string], [string], 'view'>;
   getFunction(
     nameOrSignature: 'pyth',
   ): TypedContractMethod<[], [string], 'view'>;

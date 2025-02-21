@@ -30,7 +30,7 @@ export interface RestRequestOrderBase
    *  })
    * ```
    *
-   * @see docs [API Documentation: Order Types](https://api-docs-v4.idex.io/#order-types)
+   * @see docs [API Documentation: Order Types](https://api-docs-v1.kuma.bid/#order-types)
    * @see enum {@link idex.OrderType OrderType}
    */
   readonly type: idex.OrderType;
@@ -92,7 +92,7 @@ export interface RestRequestOrderBase
    *   - {@link idex.OrderType.stopLossMarket stopLossMarket}
    *   - {@link idex.OrderType.stopLossLimit stopLossLimit}
    *   - {@link idex.OrderType.trailingStopMarket trailingStopMarket}
-   * - Indicates an {@link idex.IDEXOrder.orderId orderId} of an open {@link idex.OrderType.limit limit} order
+   * - Indicates an {@link idex.KumaOrder.orderId orderId} of an open {@link idex.OrderType.limit limit} order
    *   by the same wallet in the same market that must be filled before the stop becomes active.
    * - Canceling the conditional order also cancels the stop order.
    *
@@ -153,7 +153,7 @@ export interface RestRequestOrderBase
    * When this parameter is `true` it indicates that the order is an LP side
    * channel order not to be executed against the order book.
    *
-   * - Wallet placing the order **MUST BE WHITELISTED.** Contact the IDEX team for more details.
+   * - Wallet placing the order **MUST BE WHITELISTED.** Contact the Kuma team for more details.
    * - This parameter is only allowed to be `true` on {@link idex.OrderType.market market} and
    *   {@link idex.OrderType.limit limit} order types.
    * - In the case of `limit` orders, {@link timeInForce} must be {@link idex.TimeInForce.gtc TimeInForce.gtc}
@@ -194,7 +194,7 @@ interface RestRequestOrderBaseWithoutTriggerPrice extends RestRequestOrderBase {
 }
 
 /**
- * @category IDEX - Create Order
+ * @category Kuma - Create Order
  */
 export interface RestRequestOrderTypeLimit
   extends RestRequestOrderBaseWithoutTriggerPrice {
@@ -214,9 +214,9 @@ export interface RestRequestOrderTypeLimit
 /**
  * > Orders with {@link RestRequestOrderBase.isLiquidationAcquisitionOnly isLiquidationAcquisitionOnly} set to `true` are
  * > only allowed for whitelisted wallets at this time.  Please contact
- * > the IDEX team if you would like more details.
+ * > the Kuma team if you would like more details.
  *
- * @category IDEX - Create Order
+ * @category Kuma - Create Order
  */
 export interface RestRequestOrderTypeLimitLPP
   extends RestRequestOrderBaseWithoutTriggerPrice {
@@ -243,7 +243,7 @@ export interface RestRequestOrderTypeLimitLPP
 }
 
 /**
- * @category IDEX - Create Order
+ * @category Kuma - Create Order
  */
 export interface RestRequestOrderTypeMarket
   extends RestRequestOrderBaseWithoutTriggerPrice {
@@ -261,9 +261,9 @@ export interface RestRequestOrderTypeMarket
 /**
  * > Orders with {@link RestRequestOrderBase.isLiquidationAcquisitionOnly isLiquidationAcquisitionOnly} set to `true` are
  * > only allowed for whitelisted wallets at this time.  Please contact
- * > the IDEX team if you would like more details.
+ * > the Kuma team if you would like more details.
  *
- * @category IDEX - Create Order
+ * @category Kuma - Create Order
  */
 export interface RestRequestOrderTypeMarketLPP
   extends RestRequestOrderBaseWithoutTriggerPrice {
@@ -284,7 +284,7 @@ export interface RestRequestOrderTypeMarketLPP
 }
 
 /**
- * @category IDEX - Create Order
+ * @category Kuma - Create Order
  */
 export interface RestRequestOrderTypeStopLossMarket
   extends RestRequestOrderBaseWithTriggerPrice {
@@ -299,7 +299,7 @@ export interface RestRequestOrderTypeStopLossMarket
 /**
  * Order request parameters for when the {@link idex.OrderType type} is a {@link idex.OrderType.stopLossLimit stopLossLimit} order.
  *
- * @category IDEX - Create Order
+ * @category Kuma - Create Order
  *
  * @see related {@link idex.OrderType.stopLossLimit OrderType.stopLossLimit}
  * @see enum {@link idex.OrderType OrderType}
@@ -319,7 +319,7 @@ export interface RestRequestOrderTypeStopLossLimit
 }
 
 /**
- * @category IDEX - Create Order
+ * @category Kuma - Create Order
  */
 export interface RestRequestOrderTypeTakeProfitMarket
   extends RestRequestOrderBaseWithTriggerPrice {
@@ -335,7 +335,7 @@ export interface RestRequestOrderTypeTakeProfitMarket
 }
 
 /**
- * @category IDEX - Create Order
+ * @category Kuma - Create Order
  */
 export interface RestRequestOrderTypeTakeProfitLimit
   extends RestRequestOrderBaseWithTriggerPrice {
@@ -353,7 +353,7 @@ export interface RestRequestOrderTypeTakeProfitLimit
 }
 
 /**
- * @category IDEX - Create Order
+ * @category Kuma - Create Order
  */
 export interface RestRequestOrderTypeTrailingStopMarket
   extends RestRequestOrderBaseWithTriggerPrice {
@@ -398,7 +398,7 @@ export interface RestRequestOrderTypeTrailingStopMarket
  *   - parameter {@link RestRequestOrderBase.isLiquidationAcquisitionOnly isLiquidationAcquisitionOnly} set to `true`
  *   - parameter {@link RestRequestOrderBase.type type} is {@link idex.OrderType.market OrderType.market} order
  *
- * @category IDEX - Create Order
+ * @category Kuma - Create Order
  */
 export type RestRequestOrder =
   | RestRequestOrderTypeLimit
@@ -435,7 +435,7 @@ export type RestRequestOrderTypeLPP = Extract<
 >;
 
 /**
- * The raw request body for the `DELETE /v4/orders` endpoint
+ * The raw request body for the `DELETE /v1/orders` endpoint
  * including `signature` and the body in `parameters`.
  *
  * @internal

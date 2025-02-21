@@ -1,46 +1,46 @@
 import type { MessageEventType } from '#types/enums/index';
 import type {
-  IDEXOrderBook,
+  KumaOrderBook,
   OrderBookPriceLevel,
   RestResponseGetOrderBookLevel2,
 } from '#types/rest/endpoints/GetOrderBook';
-import type { IDEXSubscriptionEventBase } from '#types/webSocket/base';
+import type { KumaSubscriptionEventBase } from '#types/webSocket/base';
 
 /**
  * - `l1orderbook` updates provided to the message handler when subscribed.
  *
- * @inheritDoc IDEXSubscriptionEventBase
+ * @inheritDoc KumaSubscriptionEventBase
  *
  * @category WebSocket - Message Types
- * @category IDEX - Get OrderBook
+ * @category Kuma - Get OrderBook
  *
  * @see enum {@link MessageEventType}
- * @see data {@link IDEXOrderBookLevel1EventData}
+ * @see data {@link KumaOrderBookLevel1EventData}
  */
-export interface IDEXOrderBookLevel1Event extends IDEXSubscriptionEventBase {
+export interface KumaOrderBookLevel1Event extends KumaSubscriptionEventBase {
   /**
    * @inheritDoc
    */
   type: typeof MessageEventType.l1orderbook;
   /**
-   * @inheritDoc IDEXOrderBookLevel1EventData
+   * @inheritDoc KumaOrderBookLevel1EventData
    *
-   * @see type {@link IDEXOrderBookLevel1EventData}
+   * @see type {@link KumaOrderBookLevel1EventData}
    */
-  data: IDEXOrderBookLevel1EventData;
+  data: KumaOrderBookLevel1EventData;
 }
 
 /**
  * Level-1 event messages include properties that help indicate what changes
  * were made that triggered the message event.
  *
- * @see parent {@link IDEXOrderBookLevel1Event}
+ * @see parent {@link KumaOrderBookLevel1Event}
  *
- * @category IDEX - Get OrderBook
+ * @category Kuma - Get OrderBook
  * @category WebSocket - Message Types
  */
-export interface IDEXOrderBookLevel1EventData
-  extends Pick<IDEXOrderBook, 'markPrice' | 'indexPrice' | 'lastPrice'> {
+export interface KumaOrderBookLevel1EventData
+  extends Pick<KumaOrderBook, 'markPrice' | 'indexPrice' | 'lastPrice'> {
   /**
    * Market symbol
    */
@@ -78,36 +78,36 @@ export interface IDEXOrderBookLevel1EventData
 /**
  * - Level-2 updates provided to the message handler when subscribed.
  *
- * @inheritDoc IDEXSubscriptionEventBase
+ * @inheritDoc KumaSubscriptionEventBase
  * @category WebSocket - Message Types
- * @category IDEX - Get OrderBook
+ * @category Kuma - Get OrderBook
  *
- * @see data {@link IDEXOrderBookLevel2EventData}
+ * @see data {@link KumaOrderBookLevel2EventData}
  */
-export interface IDEXOrderBookLevel2Event extends IDEXSubscriptionEventBase {
+export interface KumaOrderBookLevel2Event extends KumaSubscriptionEventBase {
   /**
    * @inheritDoc
    */
   type: 'l2orderbook';
   /**
-   * @inheritDoc IDEXOrderBookLevel2EventData
+   * @inheritDoc KumaOrderBookLevel2EventData
    *
-   * @see type {@link IDEXOrderBookLevel2EventData}
+   * @see type {@link KumaOrderBookLevel2EventData}
    */
-  data: IDEXOrderBookLevel2EventData;
+  data: KumaOrderBookLevel2EventData;
 }
 
 /**
  * - Level-2 OrderBook updates are identical to {@link RestResponseGetOrderBookLevel2}
- *   but also include a {@link IDEXOrderBookLevel2EventData.market market} and
- *   {@link IDEXOrderBookLevel2EventData.time time} property.
+ *   but also include a {@link KumaOrderBookLevel2EventData.market market} and
+ *   {@link KumaOrderBookLevel2EventData.time time} property.
  *
- * @see parent {@link IDEXOrderBookLevel2Event}
+ * @see parent {@link KumaOrderBookLevel2Event}
  *
- * @category IDEX - Get OrderBook
+ * @category Kuma - Get OrderBook
  * @category WebSocket - Message Types
  */
-export interface IDEXOrderBookLevel2EventData
+export interface KumaOrderBookLevel2EventData
   extends RestResponseGetOrderBookLevel2 {
   /**
    * Market symbol
@@ -120,13 +120,13 @@ export interface IDEXOrderBookLevel2EventData
 }
 
 export interface WebSocketResponseSubscriptionMessageShortL1Orderbook
-  extends IDEXSubscriptionEventBase {
+  extends KumaSubscriptionEventBase {
   type: 'l1orderbook';
   data: WebSocketResponseL1OrderBookShort;
 }
 
 export interface WebSocketResponseSubscriptionMessageShortL2Orderbook
-  extends IDEXSubscriptionEventBase {
+  extends KumaSubscriptionEventBase {
   type: 'l2orderbook';
   data: WebSocketResponseL2OrderBookShort;
 }
@@ -140,44 +140,44 @@ export interface WebSocketResponseSubscriptionMessageShortL2Orderbook
  */
 export interface WebSocketResponseL1OrderBookShort {
   /**
-   * @see inflated {@link IDEXOrderBookLevel1EventData.market}
+   * @see inflated {@link KumaOrderBookLevel1EventData.market}
    */
-  m: IDEXOrderBookLevel1EventData['market'];
+  m: KumaOrderBookLevel1EventData['market'];
   /**
-   * @see inflated {@link IDEXOrderBookLevel1EventData.time}
+   * @see inflated {@link KumaOrderBookLevel1EventData.time}
    */
-  t: IDEXOrderBookLevel1EventData['time'];
+  t: KumaOrderBookLevel1EventData['time'];
   /**
-   * @see inflated {@link IDEXOrderBookLevel1EventData.bidPrice}
+   * @see inflated {@link KumaOrderBookLevel1EventData.bidPrice}
    */
-  b: IDEXOrderBookLevel1EventData['bidPrice'];
+  b: KumaOrderBookLevel1EventData['bidPrice'];
   /**
-   * @see inflated {@link IDEXOrderBookLevel1EventData.bidQuantity}
+   * @see inflated {@link KumaOrderBookLevel1EventData.bidQuantity}
    */
-  B: IDEXOrderBookLevel1EventData['bidQuantity'];
+  B: KumaOrderBookLevel1EventData['bidQuantity'];
   /**
-   * @see inflated {@link IDEXOrderBookLevel1EventData.askPrice}
+   * @see inflated {@link KumaOrderBookLevel1EventData.askPrice}
    */
-  a: IDEXOrderBookLevel1EventData['askPrice'];
+  a: KumaOrderBookLevel1EventData['askPrice'];
   /**
-   * @see inflated {@link IDEXOrderBookLevel1EventData.askQuantity}
+   * @see inflated {@link KumaOrderBookLevel1EventData.askQuantity}
    */
-  A: IDEXOrderBookLevel1EventData['askQuantity'];
+  A: KumaOrderBookLevel1EventData['askQuantity'];
   /**
    * @see related {@link RestResponseOrderBook.lastPrice}
-   * @see inflated {@link IDEXOrderBookLevel1EventData.lastPrice}
+   * @see inflated {@link KumaOrderBookLevel1EventData.lastPrice}
    */
-  lp: IDEXOrderBookLevel1EventData['lastPrice'];
+  lp: KumaOrderBookLevel1EventData['lastPrice'];
   /**
    * @see related {@link RestResponseOrderBook.markPrice}
-   * @see inflated {@link IDEXOrderBookLevel1EventData.markPrice}
+   * @see inflated {@link KumaOrderBookLevel1EventData.markPrice}
    */
-  mp: IDEXOrderBookLevel1EventData['markPrice'];
+  mp: KumaOrderBookLevel1EventData['markPrice'];
   /**
    * @see related {@link RestResponseOrderBook.indexPrice}
-   * @see inflated {@link IDEXOrderBookLevel1EventData.indexPrice}
+   * @see inflated {@link KumaOrderBookLevel1EventData.indexPrice}
    */
-  ip: IDEXOrderBookLevel1EventData['indexPrice'];
+  ip: KumaOrderBookLevel1EventData['indexPrice'];
 }
 
 /**
@@ -189,41 +189,41 @@ export interface WebSocketResponseL1OrderBookShort {
  */
 export interface WebSocketResponseL2OrderBookShort {
   /**
-   * @see inflated {@link IDEXOrderBookLevel2EventData.market}
+   * @see inflated {@link KumaOrderBookLevel2EventData.market}
    */
   m: string;
   /**
-   * @see inflated {@link IDEXOrderBookLevel2EventData.time}
+   * @see inflated {@link KumaOrderBookLevel2EventData.time}
    */
   t: number;
   /**
    * @see related {@link RestResponseGetOrderBookLevel2.sequence}
-   * @see inflated {@link IDEXOrderBookLevel2EventData.sequence}
+   * @see inflated {@link KumaOrderBookLevel2EventData.sequence}
    */
-  u: IDEXOrderBookLevel2EventData['sequence'];
+  u: KumaOrderBookLevel2EventData['sequence'];
   /**
    * @see related {@link RestResponseGetOrderBookLevel2.bids}
-   * @see inflated {@link IDEXOrderBookLevel2EventData.bids}
+   * @see inflated {@link KumaOrderBookLevel2EventData.bids}
    */
-  b: IDEXOrderBookLevel2EventData['bids'];
+  b: KumaOrderBookLevel2EventData['bids'];
   /**
    * @see related {@link RestResponseGetOrderBookLevel2.asks}
-   * @see inflated {@link IDEXOrderBookLevel2EventData.asks}
+   * @see inflated {@link KumaOrderBookLevel2EventData.asks}
    */
-  a: IDEXOrderBookLevel2EventData['asks'];
+  a: KumaOrderBookLevel2EventData['asks'];
   /**
    * @see related {@link RestResponseGetOrderBookLevel2.lastPrice}
-   * @see inflated {@link IDEXOrderBookLevel2EventData.lastPrice}
+   * @see inflated {@link KumaOrderBookLevel2EventData.lastPrice}
    */
-  lp: IDEXOrderBookLevel2EventData['lastPrice'];
+  lp: KumaOrderBookLevel2EventData['lastPrice'];
   /**
    * @see related {@link RestResponseGetOrderBookLevel2.markPrice}
-   * @see inflated {@link IDEXOrderBookLevel2EventData.markPrice}
+   * @see inflated {@link KumaOrderBookLevel2EventData.markPrice}
    */
-  mp: IDEXOrderBookLevel2EventData['markPrice'];
+  mp: KumaOrderBookLevel2EventData['markPrice'];
   /**
    * @see related {@link RestResponseGetOrderBookLevel2.indexPrice}
-   * @see inflated {@link IDEXOrderBookLevel2EventData.indexPrice}
+   * @see inflated {@link KumaOrderBookLevel2EventData.indexPrice}
    */
-  ip: IDEXOrderBookLevel2EventData['indexPrice'];
+  ip: KumaOrderBookLevel2EventData['indexPrice'];
 }

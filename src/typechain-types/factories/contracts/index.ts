@@ -2,7 +2,14 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as exchangeSol from './Exchange.sol';
+export * as assetMigrators from './asset-migrators';
 export * as bridgeAdapters from './bridge-adapters';
 export * as indexPriceAdapters from './index-price-adapters';
+export * as libraries from './libraries';
 export * as oraclePriceAdapters from './oracle-price-adapters';
+export * as test from './test';
+export * as util from './util';
+export { Custodian__factory } from './Custodian__factory';
 export { EarningsEscrow__factory } from './EarningsEscrow__factory';
+export { Governance__factory } from './Governance__factory';
+export { Owned__factory } from './Owned__factory';

@@ -3,7 +3,7 @@
 // https://typedoc.org/guides/options/
 /** @type {Partial<import('typedoc').TypeDocOptions>} */
 const config = {
-  name: 'IDEX SDK Reference',
+  name: 'Kuma SDK Reference',
   entryPoints: ['../src'],
   githubPages: true,
   out: '../docs',
@@ -30,13 +30,13 @@ const config = {
     includeFolders: true,
   },
   favicon: 'assets/favicon.ico',
-  customDescription: `IDEX v4's TypeScript/Javascript Developer SDK Reference, designed for low-latency and guaranteed execution in a secure trading environment. This documentation outlines a platform where control and transparency are paramount, offering gas-free settlements and Ethereum-backed security. Ensuring only you have the power to move funds, it exemplifies a commitment to security and efficiency for developers seeking robust integration solutions`,
+  customDescription: `Kuma v4's TypeScript/Javascript Developer SDK Reference, designed for low-latency and guaranteed execution in a secure trading environment. This documentation outlines a platform where control and transparency are paramount, offering gas-free settlements and Ethereum-backed security. Ensuring only you have the power to move funds, it exemplifies a commitment to security and efficiency for developers seeking robust integration solutions`,
   footerLastModified: true,
   sort: ['required-first', 'source-order'],
   // navigationLinks: {},
   sidebarLinks: {
-    'IDEX Home': 'https://idex.io',
-    'IDEX API Docs': 'https://api-docs-v4.idex.io',
+    'Kuma Home': 'https://idex.io',
+    'Kuma API Docs': 'https://api-docs-v4.idex.io',
     'SDK GitHub': 'https://github.com/idexio/idex-sdk-js',
     'Exchange Sandbox': 'https://exchange-sandbox.idex.io',
   },
@@ -72,7 +72,7 @@ const config = {
     'API Clients': 1.5,
     'Enums - Request Parameters': 1.4,
     'Enums - Response Properties': 1.3,
-    'IDEX Interfaces': 1.2,
+    'Kuma Interfaces': 1.2,
     'WebSocket - Message Types': 1.2,
   },
 

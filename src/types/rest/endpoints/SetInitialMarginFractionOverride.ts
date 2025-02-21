@@ -3,7 +3,7 @@ import type { RestRequestWithSignature } from '#types/utils';
 import type { DelegatedKeyParams } from '../../delegatedKeys';
 
 /**
- * - Rest Request: `POST /v4/initialMarginFractionOverride`
+ * - Rest Request: `POST /v1/initialMarginFractionOverride`
  *
  * @packageDocumentation
  */
@@ -12,8 +12,8 @@ import type { DelegatedKeyParams } from '../../delegatedKeys';
  *  - Automatically associates wallets that are not yet associated.
  *
  * @see response {@link RestResponseSetInitialMarginFractionOverride}
- * @see type     {@link IDEXInitialMarginFractionOverride}
- * @category IDEX - Set or clear Initial Margin Fraction override
+ * @see type     {@link KumaInitialMarginFractionOverride}
+ * @category Kuma - Set or clear Initial Margin Fraction override
  *
  * @hidden
  */
@@ -39,14 +39,14 @@ export interface RestRequestSetInitialMarginFractionOverride
  * @see request (GET)   {@link RestRequestGetInitialMarginFractionOverride}
  * @see response (GET)  {@link RestResponseGetInitialMarginFractionOverride}
  *
- * @category IDEX - Set Initial Margin Fraction override
- * @category IDEX - Get Initial Margin Fraction override
- * @category IDEX Interfaces
+ * @category Kuma - Set Initial Margin Fraction override
+ * @category Kuma - Get Initial Margin Fraction override
+ * @category Kuma Interfaces
  *
  * @hidden
  *
  */
-export interface IDEXInitialMarginFractionOverride {
+export interface KumaInitialMarginFractionOverride {
   /**
    * Wallet address
    */
@@ -64,27 +64,27 @@ export interface IDEXInitialMarginFractionOverride {
 /**
  * - Automatically associates wallets that are not yet associated.
  *
- * @see type    {@link IDEXInitialMarginFractionOverride}
+ * @see type    {@link KumaInitialMarginFractionOverride}
  * @see request {@link RestRequestSetInitialMarginFractionOverride}
  *
- * @category IDEX - Set initial margin fraction
+ * @category Kuma - Set initial margin fraction
  *
  * @hidden
  */
 export type RestResponseSetInitialMarginFractionOverride =
-  IDEXInitialMarginFractionOverride;
+  KumaInitialMarginFractionOverride;
 
 /**
- * The raw request body for the `POST /v4/initialMarginFractionOverride` endpoint
+ * The raw request body for the `POST /v1/initialMarginFractionOverride` endpoint
  * including `signature` and the body in `parameters`.
  *
  * - Automatically associates wallets that are not yet associated.
  *
  * @see parameters {@link RestRequestSetInitialMarginFractionOverride}
  * @see response   {@link RestResponseSetInitialMarginFractionOverride}
- * @see type       {@link IDEXInitialMarginFractionOverride}
+ * @see type       {@link KumaInitialMarginFractionOverride}
  *
- * @category IDEX - Set Initial Margin Fraction override
+ * @category Kuma - Set Initial Margin Fraction override
  *
  * @hidden
  */

@@ -11,7 +11,7 @@ import type { RestRequestByMarket, RestRequestPagination } from '#index';
  *  [ "202.01000000", "8.11400000", 0 ]
  * ```
  *
- * @category IDEX - Get OrderBook
+ * @category Kuma - Get OrderBook
  */
 export type OrderBookPriceLevel = [
   price: string,
@@ -44,11 +44,11 @@ export interface GetOrderBookBase extends RestRequestByMarket {
  * @see level 2 - request  - {@link RestRequestGetOrderBookLevel2}
  * @see level 2 - response - {@link RestResponseGetOrderBookLevel2}
  *
- * @category IDEX - Get OrderBook
+ * @category Kuma - Get OrderBook
  */
 export interface RestRequestGetOrderBookLevel1 extends GetOrderBookBase {
   /**
-   * - Not required & ignored when using the IDEX SDK, and is already defaulted
+   * - Not required & ignored when using the Kuma SDK, and is already defaulted
    *   to level 1 when using the REST API.
    *
    * @inheritDoc
@@ -65,13 +65,13 @@ export interface RestRequestGetOrderBookLevel1 extends GetOrderBookBase {
  * @see level 2 - request  - {@link RestRequestGetOrderBookLevel2}
  * @see level 2 - response - {@link RestResponseGetOrderBookLevel2}
  *
- * @category IDEX - Get OrderBook
+ * @category Kuma - Get OrderBook
  */
 export interface RestRequestGetOrderBookLevel2
   extends GetOrderBookBase,
     Pick<RestRequestPagination, 'limit'> {
   /**
-   * - Not required & ignored when using the IDEX SDK, but required when using the REST API directly
+   * - Not required & ignored when using the Kuma SDK, but required when using the REST API directly
    *   as it normally will default to level 1.
    *
    * @inheritDoc
@@ -97,10 +97,10 @@ export interface RestRequestGetOrderBookLevel2
  * @see level 2 - request  - {@link RestRequestGetOrderBookLevel2}
  * @see level 2 - response - {@link RestResponseGetOrderBookLevel2}
  *
- * @category IDEX - Get OrderBook
- * @category IDEX Interfaces
+ * @category Kuma - Get OrderBook
+ * @category Kuma Interfaces
  */
-export interface IDEXOrderBook {
+export interface KumaOrderBook {
   /**
    * Most recent order book update sequence number reflected in the returned snapshot
    */
@@ -134,17 +134,17 @@ export interface IDEXOrderBook {
 /**
  * Level-1 order book data is limited to the best bid and ask for a market, including hybrid liquidity synthetic price levels.
  *
- * @see [API Documentation](https://api-docs-v4.idex.io/#get-order-books)
+ * @see [API Documentation](https://api-docs-v1.kuma.bid/#get-order-books)
  * @see related {@link OrderBookPriceLevel} (bids/asks)
- * @see type {@link IDEXOrderBook}
+ * @see type {@link KumaOrderBook}
  * @see level 1 - request  - {@link RestRequestGetOrderBookLevel1}
  * @see level 1 - response - {@link RestResponseGetOrderBookLevel1}
  * @see level 2 - request  - {@link RestRequestGetOrderBookLevel2}
  * @see level 2 - response - {@link RestResponseGetOrderBookLevel2}
  *
- * @category IDEX - Get OrderBook
+ * @category Kuma - Get OrderBook
  */
-export interface RestResponseGetOrderBookLevel1 extends IDEXOrderBook {
+export interface RestResponseGetOrderBookLevel1 extends KumaOrderBook {
   /**
    * - Level-1 order book data is limited to the best bid and ask for a market
    * @inheritDoc
@@ -160,17 +160,17 @@ export interface RestResponseGetOrderBookLevel1 extends IDEXOrderBook {
 /**
  * Level-2 order book data includes price and quantity information for all price levels in the order book.
  *
- * @see [API Documentation](https://api-docs-v4.idex.io/#get-order-books)
- * @see type {@link IDEXOrderBook}
+ * @see [API Documentation](https://api-docs-v1.kuma.bid/#get-order-books)
+ * @see type {@link KumaOrderBook}
  * @see related {@link OrderBookPriceLevel} (bids/asks)
  * @see level 1 - request  - {@link RestRequestGetOrderBookLevel1}
  * @see level 1 - response - {@link RestResponseGetOrderBookLevel1}
  * @see level 2 - request  - {@link RestRequestGetOrderBookLevel2}
  * @see level 2 - response - {@link RestResponseGetOrderBookLevel2}
  *
- * @category IDEX - Get OrderBook
+ * @category Kuma - Get OrderBook
  */
-export interface RestResponseGetOrderBookLevel2 extends IDEXOrderBook {
+export interface RestResponseGetOrderBookLevel2 extends KumaOrderBook {
   /**
    * - Level-2 order book data includes price and quantity information for all price levels in the order book.
    * @inheritDoc

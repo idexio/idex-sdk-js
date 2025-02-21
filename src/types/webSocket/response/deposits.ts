@@ -1,43 +1,43 @@
 import type { MessageEventType } from '#types/enums/index';
-import type { IDEXDeposit } from '#types/rest/endpoints/GetDeposits';
-import type { IDEXSubscriptionEventBase } from '#types/webSocket/base';
+import type { KumaDeposit } from '#types/rest/endpoints/GetDeposits';
+import type { KumaSubscriptionEventBase } from '#types/webSocket/base';
 
 /**
  * - `deposits` updates provided to the message handler when subscribed.
  *
- * @inheritDoc IDEXSubscriptionEventBase
+ * @inheritDoc KumaSubscriptionEventBase
  * @category WebSocket - Message Types
- * @category IDEX - Get Deposits
+ * @category Kuma - Get Deposits
  *
- * @see data {@link IDEXDepositEventData}
+ * @see data {@link KumaDepositEventData}
  */
-export interface IDEXDepositEvent extends IDEXSubscriptionEventBase {
+export interface KumaDepositEvent extends KumaSubscriptionEventBase {
   /**
    * @inheritDoc
    */
   type: typeof MessageEventType.deposits;
   /**
-   * @inheritDoc IDEXDepositEventData
+   * @inheritDoc KumaDepositEventData
    *
-   * @see type {@link IDEXDepositEventData}
+   * @see type {@link KumaDepositEventData}
    */
-  data: IDEXDepositEventData;
+  data: KumaDepositEventData;
 }
 
 /**
- * `deposits` events provide a specialized `data` property which is similar to {@link IDEXDeposit} with the following changes:
+ * `deposits` events provide a specialized `data` property which is similar to {@link KumaDeposit} with the following changes:
  *
- * - `depositId`, `quantity`, `asset`, and `time` are provided from the {@link IDEXDeposit} interface.
+ * - `depositId`, `quantity`, `asset`, and `time` are provided from the {@link KumaDeposit} interface.
  * - WebSocket `deposits` events include additional exclusive properties:
- *   - {@link IDEXDepositEventData.wallet wallet}, {@link IDEXDepositEventData.quoteBalance quoteBalance}
+ *   - {@link KumaDepositEventData.wallet wallet}, {@link KumaDepositEventData.quoteBalance quoteBalance}
  *
- * @see parent {@link IDEXDepositEvent}
+ * @see parent {@link KumaDepositEvent}
  *
  * @category WebSocket - Message Types
- * @category IDEX - Get Deposits
+ * @category Kuma - Get Deposits
  */
-export interface IDEXDepositEventData
-  extends Pick<IDEXDeposit, 'depositId' | 'quantity' | 'asset' | 'time'> {
+export interface KumaDepositEventData
+  extends Pick<KumaDeposit, 'depositId' | 'quantity' | 'asset' | 'time'> {
   /**
    * Wallet address associated with the deposit message.
    */
@@ -49,7 +49,7 @@ export interface IDEXDepositEventData
 }
 
 export interface WebSocketResponseSubscriptionMessageShortDeposits
-  extends IDEXSubscriptionEventBase {
+  extends KumaSubscriptionEventBase {
   type: typeof MessageEventType.deposits;
   data: WebSocketResponseDepositsShort;
 }
@@ -59,27 +59,27 @@ export interface WebSocketResponseSubscriptionMessageShortDeposits
  */
 export interface WebSocketResponseDepositsShort {
   /**
-   * @see inflated {@link IDEXDepositEventData.wallet}
+   * @see inflated {@link KumaDepositEventData.wallet}
    */
-  w: IDEXDepositEventData['wallet'];
+  w: KumaDepositEventData['wallet'];
   /**
-   * @see inflated {@link IDEXDepositEventData.depositId}
+   * @see inflated {@link KumaDepositEventData.depositId}
    */
-  i: IDEXDepositEventData['depositId'];
+  i: KumaDepositEventData['depositId'];
   /**
-   * @see inflated {@link IDEXDepositEventData.asset}
+   * @see inflated {@link KumaDepositEventData.asset}
    */
-  a: IDEXDepositEventData['asset'];
+  a: KumaDepositEventData['asset'];
   /**
-   * @see inflated {@link IDEXDepositEventData.quantity}
+   * @see inflated {@link KumaDepositEventData.quantity}
    */
-  q: IDEXDepositEventData['quantity'];
+  q: KumaDepositEventData['quantity'];
   /**
-   * @see inflated {@link IDEXDepositEventData.quoteBalance}
+   * @see inflated {@link KumaDepositEventData.quoteBalance}
    */
-  qb: IDEXDepositEventData['quoteBalance'];
+  qb: KumaDepositEventData['quoteBalance'];
   /**
-   * @see inflated {@link IDEXDepositEventData.time}
+   * @see inflated {@link KumaDepositEventData.time}
    */
-  t: IDEXDepositEventData['time'];
+  t: KumaDepositEventData['time'];
 }

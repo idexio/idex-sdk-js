@@ -3,11 +3,11 @@ import type { RestRequestByWallet } from '#index';
 /**
  * Returns a single-use authentication token for access to private subscriptions in the WebSocket API.
  *
- * @see typedoc [Reference Documentation](https://sdk-js-docs-v4.idex.io/interfaces/RestRequestGetAuthenticationToken.html)
+ * @see typedoc [Reference Documentation](https://sdk-js-docs-v1.kuma.bid/interfaces/RestRequestGetAuthenticationToken.html)
  * @see response {@link RestResponseGetAuthenticationToken}
- * @see type {@link IDEXWebSocketToken}
+ * @see type {@link KumaWebSocketToken}
  *
- * @category IDEX - Get WebSocket Token
+ * @category Kuma - Get WebSocket Token
  */
 export interface RestRequestGetAuthenticationToken
   extends RestRequestByWallet {}
@@ -17,14 +17,14 @@ export interface RestRequestGetAuthenticationToken
 /**
  * Returns a single-use authentication token for access to private subscriptions in the WebSocket API.
  *
- * @see [API Documentation](https://api-docs-v4.idex.io/#get-authentication-token)
+ * @see [API Documentation](https://api-docs-v1.kuma.bid/#get-authentication-token)
  * @see request {@link RestRequestGetAuthenticationToken}
  * @see response {@link RestResponseGetAuthenticationToken}
  *
- * @category IDEX Interfaces
- * @category IDEX - Get WebSocket Token
+ * @category Kuma Interfaces
+ * @category Kuma - Get WebSocket Token
  */
-export interface IDEXWebSocketToken {
+export interface KumaWebSocketToken {
   /**
    * WebSocket subscription authentication token
    */
@@ -34,10 +34,10 @@ export interface IDEXWebSocketToken {
 /**
  * Returns a single-use authentication token for access to private subscriptions in the WebSocket API.
  *
- * @see [API Documentation](https://api-docs-v4.idex.io/#get-authentication-token)
- * @see type {@link IDEXWebSocketToken}
+ * @see [API Documentation](https://api-docs-v1.kuma.bid/#get-authentication-token)
+ * @see type {@link KumaWebSocketToken}
  * @see request {@link RestRequestGetAuthenticationToken}
  *
- * @category IDEX - Get WebSocket Token
+ * @category Kuma - Get WebSocket Token
  */
-export type RestResponseGetAuthenticationToken = IDEXWebSocketToken;
+export type RestResponseGetAuthenticationToken = KumaWebSocketToken;

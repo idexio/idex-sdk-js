@@ -21,15 +21,15 @@ import type {
   OrderBookLevelL2,
 } from '#types/orderBook';
 import type {
-  IDEXInitialMarginFractionOverride,
-  IDEXMarket,
-  IDEXOrder,
-  IDEXPosition,
-  IDEXWallet,
+  KumaInitialMarginFractionOverride,
+  KumaMarket,
+  KumaOrder,
+  KumaPosition,
+  KumaWallet,
 } from '#types/rest/endpoints/index';
 
 export type LeverageParameters = Pick<
-  IDEXMarket,
+  KumaMarket,
   | 'maximumPositionSize'
   | 'initialMarginFraction'
   | 'maintenanceMarginFraction'
@@ -55,7 +55,7 @@ export type PriceAndSize = Pick<OrderBookLevelL1, 'price' | 'size'>;
  * Standing orders
  */
 export type StandingOrder = Pick<
-  IDEXOrder,
+  KumaOrder,
   'market' | 'side' | 'originalQuantity' | 'executedQuantity' | 'price'
 >;
 type ActiveStandingOrder = StandingOrder & { price: string };
@@ -106,7 +106,7 @@ function calculateInitialMarginFraction(
 /**
  * Returns the initial margin fraction for a position or an order.
  *
- * Use {@link convertToLeverageParametersBigInt} to convert a {@link IDEXMarket}
+ * Use {@link convertToLeverageParametersBigInt} to convert a {@link KumaMarket}
  * or {@link LeverageParameters} object to {@link LeverageParametersBigInt}.
  */
 export function calculateInitialMarginFractionWithOverride(args: {
@@ -125,9 +125,9 @@ export function calculateInitialMarginFractionWithOverride(args: {
 }
 
 export function calculateMaximumInitialMarginFractionOverride(
-  market: Pick<IDEXMarket, 'market' | 'initialMarginFraction'>,
-  wallet: Pick<IDEXWallet, 'positions' | 'freeCollateral' | 'heldCollateral'>,
-  walletInitialMarginFractionOverrides: IDEXInitialMarginFractionOverride[],
+  market: Pick<KumaMarket, 'market' | 'initialMarginFraction'>,
+  wallet: Pick<KumaWallet, 'positions' | 'freeCollateral' | 'heldCollateral'>,
+  walletInitialMarginFractionOverrides: KumaInitialMarginFractionOverride[],
 ) {
   const positionForMarket =
     wallet.positions &&
@@ -205,10 +205,10 @@ export function convertToLeverageParametersBigInt(
 }
 
 /**
- * Converts a {@link IDEXPosition} object to one used by some functions in this
+ * Converts a {@link KumaPosition} object to one used by some functions in this
  * file.
  */
-export function convertToPositionBigInt(position: IDEXPosition): Position {
+export function convertToPositionBigInt(position: KumaPosition): Position {
   return {
     market: position.market,
     quantity: decimalToPip(position.quantity),
@@ -371,7 +371,7 @@ function doOrdersMatch(
  */
 export function determineMaximumReduceOnlyQuantityAvailableAtPriceLevel(args: {
   limitPrice: bigint;
-  position: IDEXPosition;
+  position: KumaPosition;
   orderSide: OrderSide;
   walletsStandingOrders: StandingOrder[];
 }): bigint {

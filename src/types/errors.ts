@@ -1,5 +1,5 @@
 /**
- * The possible error short codes when interacting with the IDEX API's.
+ * The possible error short codes when interacting with the Kuma API's.
  */
 export type ErrorShortCodes =
   | 'TOKEN_NOT_FOUND'

@@ -3,10 +3,21 @@
 /* eslint-disable */
 import type * as exchangeSol from './Exchange.sol';
 export type { exchangeSol };
+import type * as assetMigrators from './asset-migrators';
+export type { assetMigrators };
 import type * as bridgeAdapters from './bridge-adapters';
 export type { bridgeAdapters };
 import type * as indexPriceAdapters from './index-price-adapters';
 export type { indexPriceAdapters };
+import type * as libraries from './libraries';
+export type { libraries };
 import type * as oraclePriceAdapters from './oracle-price-adapters';
 export type { oraclePriceAdapters };
+import type * as test from './test';
+export type { test };
+import type * as util from './util';
+export type { util };
+export type { Custodian } from './Custodian';
 export type { EarningsEscrow } from './EarningsEscrow';
+export type { Governance } from './Governance';
+export type { Owned } from './Owned';

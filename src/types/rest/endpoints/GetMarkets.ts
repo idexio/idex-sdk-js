@@ -4,19 +4,19 @@ import type { MarketStatus, RestRequestByMarketOptional } from '#index';
  * GET markets
  *
  * @see response {@link RestResponseGetMarkets}
- * @see type     {@link IDEXMarket}
+ * @see type     {@link KumaMarket}
  *
- * @category IDEX - Get Markets
+ * @category Kuma - Get Markets
  */
 export interface RestRequestGetMarkets extends RestRequestByMarketOptional {}
 
 /**
- * IDEX Market
+ * Kuma Market
  *
- * @category IDEX - Get Markets
- * @category IDEX Interfaces
+ * @category Kuma - Get Markets
+ * @category Kuma Interfaces
  */
-export interface IDEXMarket {
+export interface KumaMarket {
   /**
    * Market symbol
    */
@@ -154,9 +154,9 @@ export interface IDEXMarket {
 }
 
 /**
- * @see type {@link IDEXMarket}
+ * @see type {@link KumaMarket}
  * @see request {@link RestRequestGetMarkets}
  *
- * @category IDEX - Get Markets
+ * @category Kuma - Get Markets
  */
-export type RestResponseGetMarkets = IDEXMarket[];
+export type RestResponseGetMarkets = KumaMarket[];

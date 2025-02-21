@@ -52,6 +52,11 @@ const _abi = [
   },
   {
     inputs: [],
+    name: 'InvalidWormholeAddressToSet',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'InvalidWormholeVaa',
     type: 'error',
   },
@@ -83,7 +88,7 @@ const _abi = [
 ] as const;
 
 const _bytecode =
-  '0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea2646970667358221220b15feae9b8f975c557c54f842333b8e05aeb3a7ec59c3bc1ddbe18dfe44d56ea64736f6c63430008120033';
+  '0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea2646970667358221220ead99d04aab6372578213630a265a3fee83c2395017c36dc6e35a1be9e8a8f2164736f6c63430008190033';
 
 type PythErrorsConstructorParams =
   | [signer?: Signer]

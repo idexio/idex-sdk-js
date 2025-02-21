@@ -66,6 +66,7 @@ export interface AbstractPythInterface extends Interface {
       | 'getUpdateFee'
       | 'getValidTimePeriod'
       | 'parsePriceFeedUpdates'
+      | 'parsePriceFeedUpdatesUnique'
       | 'priceFeedExists'
       | 'queryPriceFeed'
       | 'updatePriceFeeds'
@@ -107,6 +108,10 @@ export interface AbstractPythInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: 'parsePriceFeedUpdates',
+    values: [BytesLike[], BytesLike[], BigNumberish, BigNumberish],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'parsePriceFeedUpdatesUnique',
     values: [BytesLike[], BytesLike[], BigNumberish, BigNumberish],
   ): string;
   encodeFunctionData(
@@ -157,6 +162,10 @@ export interface AbstractPythInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: 'parsePriceFeedUpdates',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'parsePriceFeedUpdatesUnique',
     data: BytesLike,
   ): Result;
   decodeFunctionResult(
@@ -316,6 +325,17 @@ export interface AbstractPyth extends BaseContract {
     'payable'
   >;
 
+  parsePriceFeedUpdatesUnique: TypedContractMethod<
+    [
+      updateData: BytesLike[],
+      priceIds: BytesLike[],
+      minPublishTime: BigNumberish,
+      maxPublishTime: BigNumberish,
+    ],
+    [PythStructs.PriceFeedStructOutput[]],
+    'payable'
+  >;
+
   priceFeedExists: TypedContractMethod<[id: BytesLike], [boolean], 'view'>;
 
   queryPriceFeed: TypedContractMethod<
@@ -394,6 +414,18 @@ export interface AbstractPyth extends BaseContract {
   ): TypedContractMethod<[], [bigint], 'view'>;
   getFunction(
     nameOrSignature: 'parsePriceFeedUpdates',
+  ): TypedContractMethod<
+    [
+      updateData: BytesLike[],
+      priceIds: BytesLike[],
+      minPublishTime: BigNumberish,
+      maxPublishTime: BigNumberish,
+    ],
+    [PythStructs.PriceFeedStructOutput[]],
+    'payable'
+  >;
+  getFunction(
+    nameOrSignature: 'parsePriceFeedUpdatesUnique',
   ): TypedContractMethod<
     [
       updateData: BytesLike[],

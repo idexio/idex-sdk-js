@@ -3,22 +3,22 @@ import type { BridgeTarget } from '@idexio/idex-sdk/types';
 /**
  * Estimated gas fees by bridge and target chain
  *
- * @see docs [API Documentation](https://api-docs-v4.idex.io/#get-gas-fees)
+ * @see docs [API Documentation](https://api-docs-v1.kuma.bid/#get-gas-fees)
  * @see response {@link RestResponseGetGasFees}
  *
- * @category IDEX - Get Gas Fees
- * @category IDEX Interfaces
+ * @category Kuma - Get Gas Fees
+ * @category Kuma Interfaces
  */
-export interface IDEXGasFees {
+export interface KumaGasFees {
   withdrawal: {
     [K in BridgeTarget]?: string;
   };
 }
 
 /**
- * @see docs [API Documentation](https://api-docs-v4.idex.io/#get-gas-fees)
- * @see type {@link IDEXGasFees}
+ * @see docs [API Documentation](https://api-docs-v1.kuma.bid/#get-gas-fees)
+ * @see type {@link KumaGasFees}
  *
- * @category IDEX - Get Gas Fees
+ * @category Kuma - Get Gas Fees
  */
-export type RestResponseGetGasFees = IDEXGasFees;
+export type RestResponseGetGasFees = KumaGasFees;

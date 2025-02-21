@@ -7,7 +7,7 @@ import type {
   TriggerType,
   RestRequestByWallet,
   RestRequestPaginationWithFromId,
-  IDEXOrderFill,
+  KumaOrderFill,
   RestRequestByMarketOptional,
   RestAuthenticatedClient as _RestAuthenticatedClient,
 } from '#index';
@@ -17,7 +17,7 @@ import type {
  *
  * @see request {@link _RestAuthenticatedClient.getOrder RestAuthenticatedClient.getOrder}
  *
- * @category IDEX - Get Orders
+ * @category Kuma - Get Orders
  */
 export interface RestRequestGetOrder extends RestRequestByWallet {
   /**
@@ -31,7 +31,7 @@ export interface RestRequestGetOrder extends RestRequestByWallet {
  *
  * @see request {@link _RestAuthenticatedClient.getOrders RestAuthenticatedClient.getOrders}
  *
- * @category IDEX - Get Orders
+ * @category Kuma - Get Orders
  */
 export interface RestRequestGetOrders
   extends RestRequestByWallet,
@@ -49,10 +49,10 @@ export interface RestRequestGetOrders
 /**
  * The standard order object.
  *
- * @category IDEX - Get Orders
- * @category IDEX Interfaces
+ * @category Kuma - Get Orders
+ * @category Kuma Interfaces
  */
-export interface IDEXOrder {
+export interface KumaOrder {
   /** Market symbol as base-quote pair e.g. 'ETH-USD' */
   market: string;
   /** Exchange-assigned order identifier */
@@ -162,7 +162,7 @@ export interface IDEXOrder {
   /**
    * Self-trade prevention policy
    *
-   * @see [API Documentation](https://api-docs-v4.idex.io/#self-trade-prevention)
+   * @see [API Documentation](https://api-docs-v1.kuma.bid/#self-trade-prevention)
    * @see enum {@link SelfTradePrevention}
    */
   selfTradePrevention: SelfTradePrevention;
@@ -175,7 +175,7 @@ export interface IDEXOrder {
   /**
    * Array of order fill objects
    */
-  fills?: IDEXOrderFill[];
+  fills?: KumaOrderFill[];
 
   /**
    * - When `true`, the order is a liquidation acquisition only order.
@@ -187,22 +187,22 @@ export interface IDEXOrder {
 }
 
 type ConditionalOrdersMixin = {
-  conditionalTakeProfitOrder?: IDEXOrder & {
+  conditionalTakeProfitOrder?: KumaOrder & {
     type: typeof OrderType.takeProfitMarket;
   };
-  conditionalStopLossOrder?: IDEXOrder & {
+  conditionalStopLossOrder?: KumaOrder & {
     type: typeof OrderType.stopLossMarket;
   };
 };
 
 /**
- * @see type {@link IDEXOrder}
- * @category IDEX - Get Orders
+ * @see type {@link KumaOrder}
+ * @category Kuma - Get Orders
  */
-export type RestResponseGetOrder = IDEXOrder & ConditionalOrdersMixin;
+export type RestResponseGetOrder = KumaOrder & ConditionalOrdersMixin;
 
 /**
- * @see type {@link IDEXOrder}
- * @category IDEX - Get Orders
+ * @see type {@link KumaOrder}
+ * @category Kuma - Get Orders
  */
-export type RestResponseGetOrders = (IDEXOrder & ConditionalOrdersMixin)[];
+export type RestResponseGetOrders = (KumaOrder & ConditionalOrdersMixin)[];

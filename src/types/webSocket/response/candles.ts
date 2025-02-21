@@ -1,44 +1,44 @@
 import type { MessageEventType } from '#types/enums/index';
 import type { CandleInterval } from '#types/enums/request';
-import type { IDEXCandle } from '#types/rest/endpoints/GetCandles';
-import type { IDEXSubscriptionEventBase } from '#types/webSocket/base';
+import type { KumaCandle } from '#types/rest/endpoints/GetCandles';
+import type { KumaSubscriptionEventBase } from '#types/webSocket/base';
 
 /**
  * - `candles` updates provided to the message handler when subscribed.
  *
- * @inheritDoc IDEXSubscriptionEventBase
+ * @inheritDoc KumaSubscriptionEventBase
  * @category WebSocket - Message Types
- * @category IDEX - Get Candles
+ * @category Kuma - Get Candles
  *
- * @see {@link IDEXSubscriptionEventBase}
+ * @see {@link KumaSubscriptionEventBase}
  */
-export interface IDEXCandleEvent extends IDEXSubscriptionEventBase {
+export interface KumaCandleEvent extends KumaSubscriptionEventBase {
   /**
    * @inheritDoc
    */
   type: typeof MessageEventType.candles;
   /**
-   * @inheritDoc IDEXCandleEventData
+   * @inheritDoc KumaCandleEventData
    *
-   * @see type {@link IDEXCandleEventData}
+   * @see type {@link KumaCandleEventData}
    */
-  data: IDEXCandleEventData;
+  data: KumaCandleEventData;
 }
 
 /**
- * - Extended {@link IDEXCandle} which includes additional properties for WebSocket messages:
- *   - {@link IDEXCandleEventData.market market},
- *     {@link IDEXCandleEventData.time time},
- *     {@link IDEXCandleEventData.interval interval},
- *     {@link IDEXCandleEventData.end end},
- *     {@link IDEXCandleEventData.trades trades}
+ * - Extended {@link KumaCandle} which includes additional properties for WebSocket messages:
+ *   - {@link KumaCandleEventData.market market},
+ *     {@link KumaCandleEventData.time time},
+ *     {@link KumaCandleEventData.interval interval},
+ *     {@link KumaCandleEventData.end end},
+ *     {@link KumaCandleEventData.trades trades}
  *
- * @see parent {@link IDEXCandleEvent}
+ * @see parent {@link KumaCandleEvent}
  *
  * @category WebSocket - Message Types
- * @category IDEX - Get Candles
+ * @category Kuma - Get Candles
  */
-export interface IDEXCandleEventData extends IDEXCandle {
+export interface KumaCandleEventData extends KumaCandle {
   /**
    * Market symbol
    */
@@ -66,7 +66,7 @@ export interface IDEXCandleEventData extends IDEXCandle {
 }
 
 export interface WebSocketResponseSubscriptionMessageShortCandles
-  extends IDEXSubscriptionEventBase {
+  extends KumaSubscriptionEventBase {
   type: typeof MessageEventType.candles;
   data: WebSocketResponseCandleShort;
 }
@@ -76,67 +76,67 @@ export interface WebSocketResponseSubscriptionMessageShortCandles
  *
  * WebSocket Response Candle - Short (Deflated)
  *
- * An extended version used by WebSocket of {@link IDEXCandle}
+ * An extended version used by WebSocket of {@link KumaCandle}
  */
 export interface WebSocketResponseCandleShort {
   /**
-   * @see inflated {@link IDEXCandleEventData.market}
+   * @see inflated {@link KumaCandleEventData.market}
    */
-  m: IDEXCandleEventData['market'];
+  m: KumaCandleEventData['market'];
   /**
-   * @see inflated {@link IDEXCandleEventData.time}
+   * @see inflated {@link KumaCandleEventData.time}
    */
-  t: IDEXCandleEventData['time'];
+  t: KumaCandleEventData['time'];
   /**
-   * @see inflated {@link IDEXCandleEventData.interval}
+   * @see inflated {@link KumaCandleEventData.interval}
    */
-  i: IDEXCandleEventData['interval'];
+  i: KumaCandleEventData['interval'];
   /**
-   * @see inflated {@link IDEXCandleEventData.start}
+   * @see inflated {@link KumaCandleEventData.start}
    */
-  s: IDEXCandleEventData['start'];
+  s: KumaCandleEventData['start'];
   /**
-   * @see inflated {@link IDEXCandleEventData.end}
+   * @see inflated {@link KumaCandleEventData.end}
    */
-  e: IDEXCandleEventData['end'];
+  e: KumaCandleEventData['end'];
   /**
-   * @see related {@link IDEXCandle.open}
-   * @see inflated {@link IDEXCandleEventData.open}
+   * @see related {@link KumaCandle.open}
+   * @see inflated {@link KumaCandleEventData.open}
    */
-  o: IDEXCandleEventData['open'];
+  o: KumaCandleEventData['open'];
   /**
-   * @see related {@link IDEXCandle.high}
-   * @see inflated {@link IDEXCandleEventData.high}
+   * @see related {@link KumaCandle.high}
+   * @see inflated {@link KumaCandleEventData.high}
    */
-  h: IDEXCandleEventData['high'];
+  h: KumaCandleEventData['high'];
   /**
-   * @see related {@link IDEXCandle.low}
-   * @see inflated {@link IDEXCandleEventData.low}
+   * @see related {@link KumaCandle.low}
+   * @see inflated {@link KumaCandleEventData.low}
    */
-  l: IDEXCandleEventData['low'];
+  l: KumaCandleEventData['low'];
   /**
-   * @see related {@link IDEXCandle.close}
-   * @see inflated {@link IDEXCandleEventData.close}
+   * @see related {@link KumaCandle.close}
+   * @see inflated {@link KumaCandleEventData.close}
    */
-  c: IDEXCandleEventData['close'];
+  c: KumaCandleEventData['close'];
   /**
-   * @see {@link IDEXCandle.baseVolume}
-   * @see inflated {@link IDEXCandleEventData.baseVolume}
+   * @see {@link KumaCandle.baseVolume}
+   * @see inflated {@link KumaCandleEventData.baseVolume}
    */
-  v: IDEXCandleEventData['baseVolume'];
+  v: KumaCandleEventData['baseVolume'];
   /**
-   * @see related {@link IDEXCandle.quoteVolume}
-   * @see inflated {@link IDEXCandleEventData.quoteVolume}
+   * @see related {@link KumaCandle.quoteVolume}
+   * @see inflated {@link KumaCandleEventData.quoteVolume}
    */
-  q: IDEXCandleEventData['quoteVolume'];
+  q: KumaCandleEventData['quoteVolume'];
   /**
-   * @see related {@link IDEXCandle.trades}
-   * @see inflated {@link IDEXCandleEventData.trades}
+   * @see related {@link KumaCandle.trades}
+   * @see inflated {@link KumaCandleEventData.trades}
    */
-  n: IDEXCandleEventData['trades'];
+  n: KumaCandleEventData['trades'];
   /**
-   * @see related {@link IDEXCandle.sequence}
-   * @see inflated {@link IDEXCandleEventData.sequence}
+   * @see related {@link KumaCandle.sequence}
+   * @see inflated {@link KumaCandleEventData.sequence}
    */
-  u: IDEXCandleEventData['sequence'];
+  u: KumaCandleEventData['sequence'];
 }

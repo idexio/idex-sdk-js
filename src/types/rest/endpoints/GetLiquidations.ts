@@ -8,9 +8,9 @@ import type {
  * Get Liquidations
  *
  * @see response {@link RestResponseGetLiquidations}
- * @see type {@link IDEXLiquidation}
+ * @see type {@link KumaLiquidation}
  *
- * @category IDEX - Get Liquidations
+ * @category Kuma - Get Liquidations
  */
 export interface RestRequestGetLiquidations
   extends RestRequestByMarket,
@@ -20,10 +20,10 @@ export interface RestRequestGetLiquidations
  * @see request {@link RestRequestGetLiquidations}
  * @see response {@link RestResponseGetLiquidations}
  *
- * @category IDEX - Get Liquidations
- * @category IDEX Interfaces
+ * @category Kuma - Get Liquidations
+ * @category Kuma Interfaces
  */
-export interface IDEXLiquidation {
+export interface KumaLiquidation {
   /**
    * Liquidation identifier
    */
@@ -51,9 +51,9 @@ export interface IDEXLiquidation {
 }
 
 /**
- * @see type {@link IDEXLiquidation}
+ * @see type {@link KumaLiquidation}
  * @see request {@link RestRequestGetLiquidations}
  *
- * @category IDEX - Get Liquidations
+ * @category Kuma - Get Liquidations
  */
-export type RestResponseGetLiquidations = IDEXLiquidation[];
+export type RestResponseGetLiquidations = KumaLiquidation[];

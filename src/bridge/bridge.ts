@@ -5,7 +5,7 @@ import { assetUnitsToDecimal, decimalToPip, multiplyPips } from '#pipmath';
 
 import { getExchangeAddressAndChainFromApi } from '#client/rest/public';
 import { ExchangeStargateV2Adapter__factory } from '#typechain-types/factories/contracts/bridge-adapters/ExchangeStargateV2Adapter.sol/ExchangeStargateV2Adapter__factory';
-import { IStargateV2__factory } from '#typechain-types/index';
+import { IOFT__factory } from '#typechain-types/index';
 import { StargateV2Target } from '#types/enums/request';
 
 import {
@@ -36,6 +36,23 @@ export function isStargateV2MainnetLayerZeroEndpointId(
   );
 }
 
+export const StargateV2TestnetLayerZeroEndpointIds = Object.values(
+  StargateV2ConfigByLayerZeroEndpointId.testnet,
+).map((value) => {
+  return value.layerZeroEndpointId;
+});
+
+export type StargateV2LayerZeroEndpointIdsTestnet =
+  (typeof StargateV2TestnetLayerZeroEndpointIds)[number];
+
+export function isStargateV2TestnetLayerZeroEndpointId(
+  layerZeroEndpointId: number,
+): layerZeroEndpointId is StargateV2LayerZeroEndpointIdsTestnet {
+  return StargateV2TestnetLayerZeroEndpointIds.includes(
+    layerZeroEndpointId as StargateV2LayerZeroEndpointIdsTestnet,
+  );
+}
+
 /**
  * Get a stargate config with strict typing to allow narrowing on the
  * `config.supported` boolean
@@ -49,13 +66,14 @@ export function getStargateV2TargetConfig<
   T extends StargateV2Target,
   S extends true | false,
 >(stargateTarget: T, sandbox: S) {
-  if (sandbox) {
-    throw new Error('Testnet not supported');
-  }
-
-  const targetConfig = StargateV2Config.mainnet[stargateTarget];
+  const targetConfig =
+    sandbox ?
+      StargateV2Config.testnet[stargateTarget]
+    : StargateV2Config.mainnet[stargateTarget];
   if (!targetConfig) {
-    throw new Error(`No config found for ${stargateTarget}`);
+    throw new Error(
+      `No config found for ${stargateTarget} ${sandbox ? 'testnet' : 'mainnet'}`,
+    );
   }
 
   return targetConfig;
@@ -65,11 +83,11 @@ export function stargateV2TargetForLayerZeroEndpointId(
   layerZeroEndpointId: number,
   sandbox: boolean,
 ) {
-  if (sandbox) {
-    throw new Error('Testnet not supported');
+  if (sandbox && isStargateV2TestnetLayerZeroEndpointId(layerZeroEndpointId)) {
+    return StargateV2ConfigByLayerZeroEndpointId.testnet[layerZeroEndpointId]
+      .target;
   }
-
-  if (isStargateV2MainnetLayerZeroEndpointId(layerZeroEndpointId)) {
+  if (!sandbox && isStargateV2MainnetLayerZeroEndpointId(layerZeroEndpointId)) {
     return StargateV2ConfigByLayerZeroEndpointId.mainnet[layerZeroEndpointId]
       .target;
   }
@@ -110,15 +128,14 @@ export function getEncodedWithdrawalPayloadForBridgeTarget(
   bridgeTarget: BridgeTarget,
   sandbox = false,
 ): EncodedStargateV2Payload {
-  if (sandbox) {
-    throw new Error('Testnet not supported');
-  }
-
-  const targetConfig = StargateV2Config.mainnet[bridgeTarget];
+  const targetConfig =
+    sandbox ?
+      StargateV2Config.testnet[bridgeTarget]
+    : StargateV2Config.mainnet[bridgeTarget];
 
   if (!targetConfig || !targetConfig.isSupported) {
     throw new Error(
-      `Stargate withdrawals not supported to chain ${targetConfig.target} (Chain ID: ${String(targetConfig.evmChainId)})`,
+      `Stargate withdrawals not supported to chain ${targetConfig.target} ${sandbox ? 'testnet' : 'mainnet'} (Chain ID: ${String(targetConfig.evmChainId)})`,
     );
   }
 
@@ -147,7 +164,7 @@ export async function depositViaStargateV2(
       parameters,
       sandbox,
     );
-  const stargate = IStargateV2__factory.connect(
+  const stargate = IOFT__factory.connect(
     sourceConfig.stargateOFTAddress,
     signer,
   );
@@ -222,7 +239,7 @@ export async function estimateStargateV2DepositGasFeeAndQuantityDeliveredInAsset
       sandbox,
     );
 
-  const stargate = IStargateV2__factory.connect(
+  const stargate = IOFT__factory.connect(
     sourceConfig.stargateOFTAddress,
     provider,
   );
@@ -246,16 +263,18 @@ async function getStargateV2DepositSendParamAndSourceConfig(
   },
   sandbox: boolean,
 ) {
-  if (sandbox) {
-    throw new Error('Testnet not supported');
-  }
-
-  const sourceConfig = StargateV2Config.mainnet[sourceStargateTarget];
-  const targetConfig = StargateV2Config.mainnet[StargateV2Target.XCHAIN_XCHAIN];
+  const sourceConfig =
+    sandbox ?
+      StargateV2Config.testnet[sourceStargateTarget]
+    : StargateV2Config.mainnet[sourceStargateTarget];
+  const targetConfig =
+    sandbox ?
+      StargateV2Config.testnet[StargateV2Target.XCHAIN_XCHAIN]
+    : StargateV2Config.mainnet[StargateV2Target.XCHAIN_XCHAIN];
 
   if (!sourceConfig || !sourceConfig.isSupported || !targetConfig.isSupported) {
     throw new Error(
-      `Stargate deposits not supported from chain ${sourceConfig.target} (Chain ID: ${String(sourceConfig.evmChainId)}) to chain ${targetConfig.target} (Chain ID: ${String(targetConfig.evmChainId)})`,
+      `Stargate deposits not supported from chain ${sourceConfig.target} ${sandbox ? 'testnet' : 'mainnet'} (Chain ID: ${String(sourceConfig.evmChainId)}) to chain ${targetConfig.target} (Chain ID: ${String(targetConfig.evmChainId)})`,
     );
   }
 
@@ -269,26 +288,6 @@ async function getStargateV2DepositSendParamAndSourceConfig(
       ]
     : await getExchangeAddressAndChainFromApi();
 
-  // Configure the gas limit for the composed call on the destination chain. Encode as a tuple of
-  // (index, gasLimit) where index is 0 as there is only one call executed on the destination chain
-  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/oapp/contracts/oapp/libs/OptionsBuilder.sol#L92
-  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/protocol/contracts/messagelib/libs/ExecutorOptions.sol#L82
-  const gasLimitOption = ethers.solidityPacked(
-    ['uint16', 'uint128'],
-    [0, StargateV2Config.settings.swapDestinationGasLimit],
-  );
-  // Build a new options container and add the gas limit option built above. Encode as a tuple of
-  // (optionsType, workerId, gasLimitOption.length+1, optionType, gasLimitOption) where optionsType
-  // is the constant 3, workerId is the constant 1, gasLimitOption.length is the packed byte width
-  // of the gas limit option, and optionType is the constant 3 indicating lzCompose
-  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/oapp/contracts/oapp/libs/OptionsBuilder.sol#L133
-  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/protocol/contracts/messagelib/libs/ExecutorOptions.sol#L10
-  // https://github.com/LayerZero-Labs/LayerZero-v2/blob/1fde89479fdc68b1a54cda7f19efa84483fcacc4/protocol/contracts/messagelib/libs/ExecutorOptions.sol#L14
-  const extraOptions = ethers.solidityPacked(
-    ['uint16', 'uint8', 'uint16', 'uint8', 'bytes'],
-    [3, 1, 2 + 16 + 1, 3, gasLimitOption],
-  );
-
   const sendParam = {
     dstEid: targetConfig.layerZeroEndpointId, // Destination endpoint ID
     to: ethers.zeroPadValue(stargateBridgeAdapterContractAddress, 32), // Recipient address
@@ -297,7 +296,7 @@ async function getStargateV2DepositSendParamAndSourceConfig(
       parameters.quantityInAssetUnits,
       parameters.minimumWithdrawQuantityMultiplierInPips,
     ), // Minimum amount to send in local decimals
-    extraOptions,
+    extraOptions: '0x',
     composeMsg: ethers.AbiCoder.defaultAbiCoder().encode(
       ['address'],
       [parameters.wallet],

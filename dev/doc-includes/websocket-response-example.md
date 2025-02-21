@@ -5,24 +5,24 @@ import {
   WebSocketClient,
   MessageEventType,
   SubscriptionNamePublic,
-  type IDEXMessageEvent,
-  type IDEXTickerEventData,
-  type IDEXSubscribeType,
+  type KumaMessageEvent,
+  type KumaTickerEventData,
+  type KumaSubscribeType,
 } from '@idexio/idex-sdk';
 
 const client = new WebSocketClient();
 
-function handleSubscriptions(subscriptions: IDEXSubscribeType[]) {
+function handleSubscriptions(subscriptions: KumaSubscribeType[]) {
   // all subscribed subscriptions
   console.log('Active Subscriptions: ', subscriptions);
 }
 
-function handleTickersUpdate(message: IDEXTickerEventData) {
+function handleTickersUpdate(message: KumaTickerEventData) {
   // handle the updated data
   console.log('Ticker: ', message);
 }
 
-client.onMessage((message: IDEXMessageEvent) => {
+client.onMessage((message: KumaMessageEvent) => {
   switch (message.type) {
     case MessageEventType.error:
       console.error(
@@ -31,7 +31,7 @@ client.onMessage((message: IDEXMessageEvent) => {
       break;
     case MessageEventType.subscriptions:
       return handleSubscriptions(message.subscriptions);
-    // narrows the type to the specific IDEX<name>Event type
+    // narrows the type to the specific Kuma<name>Event type
     case MessageEventType.tickers:
       return handleTickersUpdate(message.data);
     default:

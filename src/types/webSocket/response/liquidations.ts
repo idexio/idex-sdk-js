@@ -1,40 +1,40 @@
 import type { MessageEventType } from '#types/enums/index';
-import type { IDEXLiquidation } from '#types/rest/endpoints/GetLiquidations';
-import type { IDEXSubscriptionEventBase } from '#types/webSocket/base';
+import type { KumaLiquidation } from '#types/rest/endpoints/GetLiquidations';
+import type { KumaSubscriptionEventBase } from '#types/webSocket/base';
 
 /**
  * - `liquidations` updates provided to the message handler when subscribed.
  *
- * @inheritDoc IDEXSubscriptionEventBase
+ * @inheritDoc KumaSubscriptionEventBase
  * @category WebSocket - Message Types
- * @category IDEX - Get Liquidations
+ * @category Kuma - Get Liquidations
  *
  * @see enum {@link MessageEventType}
- * @see data {@link IDEXLiquidationEventData}
+ * @see data {@link KumaLiquidationEventData}
  */
-export interface IDEXLiquidationEvent extends IDEXSubscriptionEventBase {
+export interface KumaLiquidationEvent extends KumaSubscriptionEventBase {
   /**
    * @inheritDoc
    */
   type: typeof MessageEventType.liquidations;
   /**
-   * @inheritDoc IDEXLiquidationEventData
+   * @inheritDoc KumaLiquidationEventData
    *
-   * @see type {@link IDEXLiquidationEventData}
+   * @see type {@link KumaLiquidationEventData}
    */
-  data: IDEXLiquidationEventData;
+  data: KumaLiquidationEventData;
 }
 
 /**
- * - Liquidation updates on the WebSocket include all {@link IDEXLiquidation} properties as well
+ * - Liquidation updates on the WebSocket include all {@link KumaLiquidation} properties as well
  *   as the `market` symbol that corresponds to the liquidation.
  *
- * @see parent {@link IDEXLiquidationEvent}
+ * @see parent {@link KumaLiquidationEvent}
  *
  * @category WebSocket - Message Types
- * @category IDEX - Get Liquidations
+ * @category Kuma - Get Liquidations
  */
-export interface IDEXLiquidationEventData extends IDEXLiquidation {
+export interface KumaLiquidationEventData extends KumaLiquidation {
   /**
    * Market symbol
    */
@@ -42,7 +42,7 @@ export interface IDEXLiquidationEventData extends IDEXLiquidation {
 }
 
 export interface WebSocketResponseSubscriptionMessageShortLiquidations
-  extends IDEXSubscriptionEventBase {
+  extends KumaSubscriptionEventBase {
   type: typeof MessageEventType.liquidations;
   data: WebSocketResponseLiquidationsShort;
 }
@@ -52,31 +52,31 @@ export interface WebSocketResponseSubscriptionMessageShortLiquidations
  */
 export interface WebSocketResponseLiquidationsShort {
   /**
-   * @see inflated {@link IDEXLiquidationEventData.market}
+   * @see inflated {@link KumaLiquidationEventData.market}
    */
-  m: IDEXLiquidationEventData['market'];
+  m: KumaLiquidationEventData['market'];
   /**
-   * @see inflated {@link IDEXLiquidationEventData.fillId}
+   * @see inflated {@link KumaLiquidationEventData.fillId}
    */
-  i: IDEXLiquidationEventData['fillId'];
+  i: KumaLiquidationEventData['fillId'];
   /**
-   * @see inflated {@link IDEXLiquidationEventData.price}
+   * @see inflated {@link KumaLiquidationEventData.price}
    */
-  p: IDEXLiquidationEventData['price'];
+  p: KumaLiquidationEventData['price'];
   /**
-   * @see inflated {@link IDEXLiquidationEventData.quantity}
+   * @see inflated {@link KumaLiquidationEventData.quantity}
    */
-  q: IDEXLiquidationEventData['quantity'];
+  q: KumaLiquidationEventData['quantity'];
   /**
-   * @see inflated {@link IDEXLiquidationEventData.quoteQuantity}
+   * @see inflated {@link KumaLiquidationEventData.quoteQuantity}
    */
-  Q: IDEXLiquidationEventData['quoteQuantity'];
+  Q: KumaLiquidationEventData['quoteQuantity'];
   /**
-   * @see inflated {@link IDEXLiquidationEventData.time}
+   * @see inflated {@link KumaLiquidationEventData.time}
    */
-  t: IDEXLiquidationEventData['time'];
+  t: KumaLiquidationEventData['time'];
   /**
-   * @see inflated {@link IDEXLiquidationEventData.liquidationSide}
+   * @see inflated {@link KumaLiquidationEventData.liquidationSide}
    */
-  s: IDEXLiquidationEventData['liquidationSide'];
+  s: KumaLiquidationEventData['liquidationSide'];
 }

@@ -1,7 +1,7 @@
 import type { WebClientEvent } from '#types/enums/index';
 import type { AnyObj } from '#types/utils';
 
-export interface IDEXWebClientEventDataBase {
+export interface KumaWebClientEventDataBase {
   /**
    * When provided, use the value to narrow the shape of {@link action}
    */

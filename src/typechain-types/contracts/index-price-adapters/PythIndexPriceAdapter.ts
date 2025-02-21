@@ -37,12 +37,12 @@ export interface PythIndexPriceAdapterInterface extends Interface {
   getFunction(
     nameOrSignature:
       | 'activator'
-      | 'addBaseAssetSymbolAndPriceId'
+      | 'addMarket'
       | 'adminWallet'
-      | 'baseAssetSymbolsByPriceId'
       | 'exchange'
+      | 'marketsByBaseAssetSymbol'
+      | 'marketsByPriceId'
       | 'ownerWallet'
-      | 'priceIdsByBaseAssetSymbol'
       | 'pyth'
       | 'removeAdmin'
       | 'removeOwner'
@@ -55,25 +55,25 @@ export interface PythIndexPriceAdapterInterface extends Interface {
 
   encodeFunctionData(functionFragment: 'activator', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'addBaseAssetSymbolAndPriceId',
-    values: [string, BytesLike],
+    functionFragment: 'addMarket',
+    values: [string, BytesLike, BigNumberish],
   ): string;
   encodeFunctionData(
     functionFragment: 'adminWallet',
     values?: undefined,
   ): string;
+  encodeFunctionData(functionFragment: 'exchange', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'baseAssetSymbolsByPriceId',
+    functionFragment: 'marketsByBaseAssetSymbol',
+    values: [string],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'marketsByPriceId',
     values: [BytesLike],
   ): string;
-  encodeFunctionData(functionFragment: 'exchange', values?: undefined): string;
   encodeFunctionData(
     functionFragment: 'ownerWallet',
     values?: undefined,
-  ): string;
-  encodeFunctionData(
-    functionFragment: 'priceIdsByBaseAssetSymbol',
-    values: [string],
   ): string;
   encodeFunctionData(functionFragment: 'pyth', values?: undefined): string;
   encodeFunctionData(
@@ -106,25 +106,22 @@ export interface PythIndexPriceAdapterInterface extends Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: 'activator', data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: 'addBaseAssetSymbolAndPriceId',
-    data: BytesLike,
-  ): Result;
+  decodeFunctionResult(functionFragment: 'addMarket', data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: 'adminWallet',
     data: BytesLike,
   ): Result;
-  decodeFunctionResult(
-    functionFragment: 'baseAssetSymbolsByPriceId',
-    data: BytesLike,
-  ): Result;
   decodeFunctionResult(functionFragment: 'exchange', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'ownerWallet',
+    functionFragment: 'marketsByBaseAssetSymbol',
     data: BytesLike,
   ): Result;
   decodeFunctionResult(
-    functionFragment: 'priceIdsByBaseAssetSymbol',
+    functionFragment: 'marketsByPriceId',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'ownerWallet',
     data: BytesLike,
   ): Result;
   decodeFunctionResult(functionFragment: 'pyth', data: BytesLike): Result;
@@ -194,29 +191,47 @@ export interface PythIndexPriceAdapter extends BaseContract {
 
   activator: TypedContractMethod<[], [string], 'view'>;
 
-  addBaseAssetSymbolAndPriceId: TypedContractMethod<
-    [baseAssetSymbol: string, priceId: BytesLike],
+  addMarket: TypedContractMethod<
+    [
+      baseAssetSymbol: string,
+      priceId: BytesLike,
+      priceMultiplier: BigNumberish,
+    ],
     [void],
     'nonpayable'
   >;
 
   adminWallet: TypedContractMethod<[], [string], 'view'>;
 
-  baseAssetSymbolsByPriceId: TypedContractMethod<
-    [arg0: BytesLike],
-    [string],
-    'view'
-  >;
-
   exchange: TypedContractMethod<[], [string], 'view'>;
 
-  ownerWallet: TypedContractMethod<[], [string], 'view'>;
-
-  priceIdsByBaseAssetSymbol: TypedContractMethod<
+  marketsByBaseAssetSymbol: TypedContractMethod<
     [arg0: string],
-    [string],
+    [
+      [boolean, string, string, bigint] & {
+        exists: boolean;
+        baseAssetSymbol: string;
+        priceId: string;
+        priceMultiplier: bigint;
+      },
+    ],
     'view'
   >;
+
+  marketsByPriceId: TypedContractMethod<
+    [arg0: BytesLike],
+    [
+      [boolean, string, string, bigint] & {
+        exists: boolean;
+        baseAssetSymbol: string;
+        priceId: string;
+        priceMultiplier: bigint;
+      },
+    ],
+    'view'
+  >;
+
+  ownerWallet: TypedContractMethod<[], [string], 'view'>;
 
   pyth: TypedContractMethod<[], [string], 'view'>;
 
@@ -254,9 +269,13 @@ export interface PythIndexPriceAdapter extends BaseContract {
     nameOrSignature: 'activator',
   ): TypedContractMethod<[], [string], 'view'>;
   getFunction(
-    nameOrSignature: 'addBaseAssetSymbolAndPriceId',
+    nameOrSignature: 'addMarket',
   ): TypedContractMethod<
-    [baseAssetSymbol: string, priceId: BytesLike],
+    [
+      baseAssetSymbol: string,
+      priceId: BytesLike,
+      priceMultiplier: BigNumberish,
+    ],
     [void],
     'nonpayable'
   >;
@@ -264,17 +283,35 @@ export interface PythIndexPriceAdapter extends BaseContract {
     nameOrSignature: 'adminWallet',
   ): TypedContractMethod<[], [string], 'view'>;
   getFunction(
-    nameOrSignature: 'baseAssetSymbolsByPriceId',
-  ): TypedContractMethod<[arg0: BytesLike], [string], 'view'>;
-  getFunction(
     nameOrSignature: 'exchange',
   ): TypedContractMethod<[], [string], 'view'>;
+  getFunction(nameOrSignature: 'marketsByBaseAssetSymbol'): TypedContractMethod<
+    [arg0: string],
+    [
+      [boolean, string, string, bigint] & {
+        exists: boolean;
+        baseAssetSymbol: string;
+        priceId: string;
+        priceMultiplier: bigint;
+      },
+    ],
+    'view'
+  >;
+  getFunction(nameOrSignature: 'marketsByPriceId'): TypedContractMethod<
+    [arg0: BytesLike],
+    [
+      [boolean, string, string, bigint] & {
+        exists: boolean;
+        baseAssetSymbol: string;
+        priceId: string;
+        priceMultiplier: bigint;
+      },
+    ],
+    'view'
+  >;
   getFunction(
     nameOrSignature: 'ownerWallet',
   ): TypedContractMethod<[], [string], 'view'>;
-  getFunction(
-    nameOrSignature: 'priceIdsByBaseAssetSymbol',
-  ): TypedContractMethod<[arg0: string], [string], 'view'>;
   getFunction(
     nameOrSignature: 'pyth',
   ): TypedContractMethod<[], [string], 'view'>;
