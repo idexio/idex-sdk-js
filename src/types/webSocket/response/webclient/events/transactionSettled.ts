@@ -44,7 +44,7 @@ export interface KumaWebClientEventDataTxSettledPayout
      * @see enum {@link PayoutProgram}
      */
     program: PayoutProgram;
-    asset: 'USDC' | 'KUMA';
+    asset: 'USDC' | 'KUMA' | 'iBGT';
     amountPaid: string;
     nonce: string;
     txHash: string;
