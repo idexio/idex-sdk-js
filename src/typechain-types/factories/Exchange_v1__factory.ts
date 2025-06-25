@@ -48,117 +48,6 @@ const _abi = [
     type: 'constructor',
   },
   {
-    inputs: [],
-    name: 'CurrentExitFundWalletCannotHaveOpenBalance',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'ExitFundCannotHaveOpenPosition',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'ExitFundHasNoPositions',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'InvalidContractAddress',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'InvalidShortString',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'InvalidWalletAddress',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'NewExitFundWalletCannotHaveOpenBalance',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'NewInsuranceFundWalletCannotBeExited',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'NewValueExceedsMaximum',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'NewValueMustBeDifferentFromCurrent',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'SenderMustBeAdmin',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'SenderMustBeAdminOrDispatcher',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'SenderMustBeDispatcher',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'SenderMustBeGovernance',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'SenderMustBeOwner',
-    type: 'error',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'string',
-        name: 'str',
-        type: 'string',
-      },
-    ],
-    name: 'StringTooLong',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'UnknownBaseAssetSymbol',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'ValueCanOnlyBetSetOnce',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'WalletCannotBeExited',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'WalletHasNoOverridesForMarket',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'WalletMustBeExited',
-    type: 'error',
-  },
-  {
     anonymous: false,
     inputs: [
       {
@@ -362,7 +251,7 @@ const _abi = [
       {
         indexed: false,
         internalType: 'address',
-        name: 'depositorWallet',
+        name: 'destinationWallet',
         type: 'address',
       },
       {
@@ -370,12 +259,6 @@ const _abi = [
         internalType: 'uint64',
         name: 'quantity',
         type: 'uint64',
-      },
-      {
-        indexed: false,
-        internalType: 'bool',
-        name: 'isAssociatedWithManagedAccount',
-        type: 'bool',
       },
     ],
     name: 'Deposited',
@@ -410,12 +293,6 @@ const _abi = [
       },
     ],
     name: 'DispatcherChanged',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [],
-    name: 'EIP712DomainChanged',
     type: 'event',
   },
   {
@@ -772,12 +649,6 @@ const _abi = [
         name: 'newExchangeBalance',
         type: 'int64',
       },
-      {
-        indexed: false,
-        internalType: 'bool',
-        name: 'isAssociatedWithManagedAccount',
-        type: 'bool',
-      },
     ],
     name: 'PendingDepositApplied',
     type: 'event',
@@ -965,12 +836,6 @@ const _abi = [
         name: 'effectiveBlockTimestamp',
         type: 'uint256',
       },
-      {
-        indexed: false,
-        internalType: 'bool',
-        name: 'isAssociatedWithManagedAccount',
-        type: 'bool',
-      },
     ],
     name: 'WalletExited',
     type: 'event',
@@ -995,12 +860,6 @@ const _abi = [
         internalType: 'int64',
         name: 'newExchangeBalance',
         type: 'int64',
-      },
-      {
-        indexed: false,
-        internalType: 'bool',
-        name: 'isAssociatedWithManagedAccount',
-        type: 'bool',
       },
     ],
     name: 'Withdrawn',
@@ -1141,29 +1000,6 @@ const _abi = [
     inputs: [
       {
         internalType: 'uint64',
-        name: 'depositIndex_',
-        type: 'uint64',
-      },
-      {
-        internalType: 'uint64',
-        name: 'quantity',
-        type: 'uint64',
-      },
-      {
-        internalType: 'address',
-        name: 'managerWallet',
-        type: 'address',
-      },
-    ],
-    name: 'applyPendingDepositForManagedAccount',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint64',
         name: 'quantity',
         type: 'uint64',
       },
@@ -1182,13 +1018,24 @@ const _abi = [
     inputs: [
       {
         internalType: 'address',
-        name: 'managerWallet',
+        name: '',
         type: 'address',
       },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    name: 'associateManagerWalletWithManagedAccount',
-    outputs: [],
-    stateMutability: 'nonpayable',
+    name: 'baseAssetSymbolsWithOpenPositionsByWallet',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -1208,175 +1055,6 @@ const _abi = [
       },
     ],
     stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: 'enum ManagedAccountWithdrawalType',
-            name: 'withdrawalType',
-            type: 'uint8',
-          },
-          {
-            components: [
-              {
-                internalType: 'uint128',
-                name: 'nonce',
-                type: 'uint128',
-              },
-              {
-                internalType: 'address',
-                name: 'managerWallet',
-                type: 'address',
-              },
-              {
-                internalType: 'address',
-                name: 'depositorWallet',
-                type: 'address',
-              },
-              {
-                internalType: 'uint64',
-                name: 'quantity',
-                type: 'uint64',
-              },
-              {
-                internalType: 'uint64',
-                name: 'minimumQuantity',
-                type: 'uint64',
-              },
-              {
-                internalType: 'uint64',
-                name: 'maxShares',
-                type: 'uint64',
-              },
-              {
-                internalType: 'uint64',
-                name: 'maximumGasFee',
-                type: 'uint64',
-              },
-              {
-                internalType: 'contract IManagedAccountProvider',
-                name: 'managedAccount',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'managedAccountPayload',
-                type: 'bytes',
-              },
-              {
-                internalType: 'address',
-                name: 'bridgeAdapter',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'bridgeAdapterPayload',
-                type: 'bytes',
-              },
-              {
-                internalType: 'uint64',
-                name: 'gasFee',
-                type: 'uint64',
-              },
-              {
-                internalType: 'uint64',
-                name: 'grossQuantity',
-                type: 'uint64',
-              },
-              {
-                internalType: 'bytes',
-                name: 'walletSignature',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct WithdrawalFromManagedAccountByQuantity',
-            name: 'withdrawalByQuantity',
-            type: 'tuple',
-          },
-          {
-            components: [
-              {
-                internalType: 'uint128',
-                name: 'nonce',
-                type: 'uint128',
-              },
-              {
-                internalType: 'address',
-                name: 'managerWallet',
-                type: 'address',
-              },
-              {
-                internalType: 'address',
-                name: 'depositorWallet',
-                type: 'address',
-              },
-              {
-                internalType: 'uint64',
-                name: 'shares',
-                type: 'uint64',
-              },
-              {
-                internalType: 'uint64',
-                name: 'minimumQuantity',
-                type: 'uint64',
-              },
-              {
-                internalType: 'uint64',
-                name: 'maximumGasFee',
-                type: 'uint64',
-              },
-              {
-                internalType: 'contract IManagedAccountProvider',
-                name: 'managedAccount',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'managedAccountPayload',
-                type: 'bytes',
-              },
-              {
-                internalType: 'address',
-                name: 'bridgeAdapter',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'bridgeAdapterPayload',
-                type: 'bytes',
-              },
-              {
-                internalType: 'uint64',
-                name: 'gasFee',
-                type: 'uint64',
-              },
-              {
-                internalType: 'uint64',
-                name: 'grossQuantity',
-                type: 'uint64',
-              },
-              {
-                internalType: 'bytes',
-                name: 'walletSignature',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct WithdrawalFromManagedAccountByShares',
-            name: 'withdrawalByShares',
-            type: 'tuple',
-          },
-        ],
-        internalType: 'struct WithdrawalFromManagedAccount',
-        name: 'withdrawal',
-        type: 'tuple',
-      },
-    ],
-    name: 'cancelWithdrawalFromManagedAccount',
-    outputs: [],
-    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -1607,7 +1285,7 @@ const _abi = [
       },
       {
         internalType: 'address',
-        name: 'depositorWallet',
+        name: 'destinationWallet',
         type: 'address',
       },
     ],
@@ -1630,39 +1308,6 @@ const _abi = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'quantityInAssetUnits',
-        type: 'uint256',
-      },
-      {
-        internalType: 'address',
-        name: 'depositorWallet',
-        type: 'address',
-      },
-      {
-        internalType: 'contract IManagedAccountProvider',
-        name: 'managedAccount',
-        type: 'address',
-      },
-      {
-        internalType: 'bytes',
-        name: 'managedAccountPayload',
-        type: 'bytes',
-      },
-      {
-        internalType: 'address',
-        name: 'managerWallet',
-        type: 'address',
-      },
-    ],
-    name: 'depositToManagedAccount',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
     inputs: [],
     name: 'dispatcherWallet',
     outputs: [
@@ -1676,181 +1321,50 @@ const _abi = [
     type: 'function',
   },
   {
-    inputs: [],
-    name: 'domainSeparatorV4',
-    outputs: [
-      {
-        internalType: 'bytes32',
-        name: '',
-        type: 'bytes32',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'eip712Domain',
-    outputs: [
-      {
-        internalType: 'bytes1',
-        name: 'fields',
-        type: 'bytes1',
-      },
-      {
-        internalType: 'string',
-        name: 'name',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: 'version',
-        type: 'string',
-      },
-      {
-        internalType: 'uint256',
-        name: 'chainId',
-        type: 'uint256',
-      },
-      {
-        internalType: 'address',
-        name: 'verifyingContract',
-        type: 'address',
-      },
-      {
-        internalType: 'bytes32',
-        name: 'salt',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'uint256[]',
-        name: 'extensions',
-        type: 'uint256[]',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
     inputs: [
       {
         components: [
           {
-            internalType: 'string',
-            name: 'baseAssetSymbol',
-            type: 'string',
-          },
-          {
-            internalType: 'uint64',
-            name: 'baseQuantity',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint64',
-            name: 'quoteQuantity',
-            type: 'uint64',
-          },
-          {
-            internalType: 'int64',
-            name: 'makerFeeQuantity',
-            type: 'int64',
-          },
-          {
-            internalType: 'uint64',
-            name: 'takerFeeQuantity',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint64',
-            name: 'price',
-            type: 'uint64',
-          },
-          {
-            internalType: 'enum OrderSide',
-            name: 'makerSide',
-            type: 'uint8',
-          },
-        ],
-        internalType: 'struct Trade',
-        name: 'trade',
-        type: 'tuple',
-      },
-      {
-        components: [
-          {
-            internalType: 'uint128',
-            name: 'nonce',
-            type: 'uint128',
-          },
-          {
-            internalType: 'address',
-            name: 'wallet',
-            type: 'address',
-          },
-          {
-            internalType: 'enum OrderType',
-            name: 'orderType',
-            type: 'uint8',
-          },
-          {
-            internalType: 'enum OrderSide',
-            name: 'side',
-            type: 'uint8',
-          },
-          {
-            internalType: 'uint64',
-            name: 'quantity',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint64',
-            name: 'limitPrice',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint64',
-            name: 'triggerPrice',
-            type: 'uint64',
-          },
-          {
-            internalType: 'enum OrderTriggerType',
-            name: 'triggerType',
-            type: 'uint8',
-          },
-          {
-            internalType: 'uint64',
-            name: 'callbackRate',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint128',
-            name: 'conditionalOrderId',
-            type: 'uint128',
-          },
-          {
-            internalType: 'bool',
-            name: 'isReduceOnly',
-            type: 'bool',
-          },
-          {
-            internalType: 'enum OrderTimeInForce',
-            name: 'timeInForce',
-            type: 'uint8',
-          },
-          {
-            internalType: 'enum OrderSelfTradePrevention',
-            name: 'selfTradePrevention',
-            type: 'uint8',
-          },
-          {
-            internalType: 'bool',
-            name: 'isLiquidationAcquisitionOnly',
-            type: 'bool',
-          },
-          {
-            internalType: 'bool',
-            name: 'isSignedByDelegatedKey',
-            type: 'bool',
+            components: [
+              {
+                internalType: 'string',
+                name: 'baseAssetSymbol',
+                type: 'string',
+              },
+              {
+                internalType: 'uint64',
+                name: 'baseQuantity',
+                type: 'uint64',
+              },
+              {
+                internalType: 'uint64',
+                name: 'quoteQuantity',
+                type: 'uint64',
+              },
+              {
+                internalType: 'int64',
+                name: 'makerFeeQuantity',
+                type: 'int64',
+              },
+              {
+                internalType: 'uint64',
+                name: 'takerFeeQuantity',
+                type: 'uint64',
+              },
+              {
+                internalType: 'uint64',
+                name: 'price',
+                type: 'uint64',
+              },
+              {
+                internalType: 'enum OrderSide',
+                name: 'makerSide',
+                type: 'uint8',
+              },
+            ],
+            internalType: 'struct Trade',
+            name: 'trade',
+            type: 'tuple',
           },
           {
             components: [
@@ -1861,110 +1375,110 @@ const _abi = [
               },
               {
                 internalType: 'address',
-                name: 'delegatedPublicKey',
+                name: 'wallet',
                 type: 'address',
               },
               {
+                internalType: 'enum OrderType',
+                name: 'orderType',
+                type: 'uint8',
+              },
+              {
+                internalType: 'enum OrderSide',
+                name: 'side',
+                type: 'uint8',
+              },
+              {
+                internalType: 'uint64',
+                name: 'quantity',
+                type: 'uint64',
+              },
+              {
+                internalType: 'uint64',
+                name: 'limitPrice',
+                type: 'uint64',
+              },
+              {
+                internalType: 'uint64',
+                name: 'triggerPrice',
+                type: 'uint64',
+              },
+              {
+                internalType: 'enum OrderTriggerType',
+                name: 'triggerType',
+                type: 'uint8',
+              },
+              {
+                internalType: 'uint64',
+                name: 'callbackRate',
+                type: 'uint64',
+              },
+              {
+                internalType: 'uint128',
+                name: 'conditionalOrderId',
+                type: 'uint128',
+              },
+              {
+                internalType: 'bool',
+                name: 'isReduceOnly',
+                type: 'bool',
+              },
+              {
+                internalType: 'enum OrderTimeInForce',
+                name: 'timeInForce',
+                type: 'uint8',
+              },
+              {
+                internalType: 'enum OrderSelfTradePrevention',
+                name: 'selfTradePrevention',
+                type: 'uint8',
+              },
+              {
+                internalType: 'bool',
+                name: 'isLiquidationAcquisitionOnly',
+                type: 'bool',
+              },
+              {
+                internalType: 'bool',
+                name: 'isSignedByDelegatedKey',
+                type: 'bool',
+              },
+              {
+                components: [
+                  {
+                    internalType: 'uint128',
+                    name: 'nonce',
+                    type: 'uint128',
+                  },
+                  {
+                    internalType: 'address',
+                    name: 'delegatedPublicKey',
+                    type: 'address',
+                  },
+                  {
+                    internalType: 'bytes',
+                    name: 'signature',
+                    type: 'bytes',
+                  },
+                ],
+                internalType: 'struct DelegatedKeyAuthorization',
+                name: 'delegatedKeyAuthorization',
+                type: 'tuple',
+              },
+              {
+                internalType: 'string',
+                name: 'clientOrderId',
+                type: 'string',
+              },
+              {
                 internalType: 'bytes',
-                name: 'signature',
+                name: 'walletSignature',
                 type: 'bytes',
               },
             ],
-            internalType: 'struct DelegatedKeyAuthorization',
-            name: 'delegatedKeyAuthorization',
+            internalType: 'struct Order',
+            name: 'buy',
             type: 'tuple',
-          },
-          {
-            internalType: 'string',
-            name: 'clientOrderId',
-            type: 'string',
-          },
-          {
-            internalType: 'bytes',
-            name: 'walletSignature',
-            type: 'bytes',
-          },
-        ],
-        internalType: 'struct Order',
-        name: 'buy',
-        type: 'tuple',
-      },
-      {
-        components: [
-          {
-            internalType: 'uint128',
-            name: 'nonce',
-            type: 'uint128',
-          },
-          {
-            internalType: 'address',
-            name: 'wallet',
-            type: 'address',
-          },
-          {
-            internalType: 'enum OrderType',
-            name: 'orderType',
-            type: 'uint8',
-          },
-          {
-            internalType: 'enum OrderSide',
-            name: 'side',
-            type: 'uint8',
-          },
-          {
-            internalType: 'uint64',
-            name: 'quantity',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint64',
-            name: 'limitPrice',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint64',
-            name: 'triggerPrice',
-            type: 'uint64',
-          },
-          {
-            internalType: 'enum OrderTriggerType',
-            name: 'triggerType',
-            type: 'uint8',
-          },
-          {
-            internalType: 'uint64',
-            name: 'callbackRate',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint128',
-            name: 'conditionalOrderId',
-            type: 'uint128',
-          },
-          {
-            internalType: 'bool',
-            name: 'isReduceOnly',
-            type: 'bool',
-          },
-          {
-            internalType: 'enum OrderTimeInForce',
-            name: 'timeInForce',
-            type: 'uint8',
-          },
-          {
-            internalType: 'enum OrderSelfTradePrevention',
-            name: 'selfTradePrevention',
-            type: 'uint8',
-          },
-          {
-            internalType: 'bool',
-            name: 'isLiquidationAcquisitionOnly',
-            type: 'bool',
-          },
-          {
-            internalType: 'bool',
-            name: 'isSignedByDelegatedKey',
-            type: 'bool',
           },
           {
             components: [
@@ -1975,32 +1489,114 @@ const _abi = [
               },
               {
                 internalType: 'address',
-                name: 'delegatedPublicKey',
+                name: 'wallet',
                 type: 'address',
               },
               {
+                internalType: 'enum OrderType',
+                name: 'orderType',
+                type: 'uint8',
+              },
+              {
+                internalType: 'enum OrderSide',
+                name: 'side',
+                type: 'uint8',
+              },
+              {
+                internalType: 'uint64',
+                name: 'quantity',
+                type: 'uint64',
+              },
+              {
+                internalType: 'uint64',
+                name: 'limitPrice',
+                type: 'uint64',
+              },
+              {
+                internalType: 'uint64',
+                name: 'triggerPrice',
+                type: 'uint64',
+              },
+              {
+                internalType: 'enum OrderTriggerType',
+                name: 'triggerType',
+                type: 'uint8',
+              },
+              {
+                internalType: 'uint64',
+                name: 'callbackRate',
+                type: 'uint64',
+              },
+              {
+                internalType: 'uint128',
+                name: 'conditionalOrderId',
+                type: 'uint128',
+              },
+              {
+                internalType: 'bool',
+                name: 'isReduceOnly',
+                type: 'bool',
+              },
+              {
+                internalType: 'enum OrderTimeInForce',
+                name: 'timeInForce',
+                type: 'uint8',
+              },
+              {
+                internalType: 'enum OrderSelfTradePrevention',
+                name: 'selfTradePrevention',
+                type: 'uint8',
+              },
+              {
+                internalType: 'bool',
+                name: 'isLiquidationAcquisitionOnly',
+                type: 'bool',
+              },
+              {
+                internalType: 'bool',
+                name: 'isSignedByDelegatedKey',
+                type: 'bool',
+              },
+              {
+                components: [
+                  {
+                    internalType: 'uint128',
+                    name: 'nonce',
+                    type: 'uint128',
+                  },
+                  {
+                    internalType: 'address',
+                    name: 'delegatedPublicKey',
+                    type: 'address',
+                  },
+                  {
+                    internalType: 'bytes',
+                    name: 'signature',
+                    type: 'bytes',
+                  },
+                ],
+                internalType: 'struct DelegatedKeyAuthorization',
+                name: 'delegatedKeyAuthorization',
+                type: 'tuple',
+              },
+              {
+                internalType: 'string',
+                name: 'clientOrderId',
+                type: 'string',
+              },
+              {
                 internalType: 'bytes',
-                name: 'signature',
+                name: 'walletSignature',
                 type: 'bytes',
               },
             ],
-            internalType: 'struct DelegatedKeyAuthorization',
-            name: 'delegatedKeyAuthorization',
+            internalType: 'struct Order',
+            name: 'sell',
             type: 'tuple',
           },
-          {
-            internalType: 'string',
-            name: 'clientOrderId',
-            type: 'string',
-          },
-          {
-            internalType: 'bytes',
-            name: 'walletSignature',
-            type: 'bytes',
-          },
         ],
-        internalType: 'struct Order',
-        name: 'sell',
+        internalType: 'struct ExecuteTradeArguments',
+        name: 'tradeArguments',
         type: 'tuple',
       },
     ],
@@ -2033,19 +1629,6 @@ const _abi = [
       },
     ],
     stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'managerWallet',
-        type: 'address',
-      },
-    ],
-    name: 'exitManagedAccountManagerWallet',
-    outputs: [],
-    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -2356,7 +1939,7 @@ const _abi = [
     outputs: [
       {
         internalType: 'int64',
-        name: '',
+        name: 'balance',
         type: 'int64',
       },
     ],
@@ -2384,11 +1967,6 @@ const _abi = [
             internalType: 'bool',
             name: 'isMigrated',
             type: 'bool',
-          },
-          {
-            internalType: 'contract IManagedAccountProvider',
-            name: 'managedAccount',
-            type: 'address',
           },
           {
             internalType: 'int64',
@@ -2725,53 +2303,17 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: 'address',
-        name: 'wallet',
-        type: 'address',
-      },
-    ],
-    name: 'loadWalletExitStatus',
-    outputs: [
-      {
-        components: [
-          {
-            internalType: 'bool',
-            name: 'exists',
-            type: 'bool',
-          },
-          {
-            internalType: 'uint64',
-            name: 'effectiveBlockTimestamp',
-            type: 'uint64',
-          },
-          {
-            internalType: 'enum WalletExitAcquisitionDeleveragePriceStrategy',
-            name: 'deleveragePriceStrategy',
-            type: 'uint8',
-          },
-        ],
-        internalType: 'struct WalletExit',
-        name: '',
-        type: 'tuple',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
         internalType: 'uint256',
         name: '',
         type: 'uint256',
       },
     ],
-    name: 'managedAccounts',
+    name: 'marketBaseAssetSymbols',
     outputs: [
       {
-        internalType: 'contract IManagedAccountProvider',
+        internalType: 'string',
         name: '',
-        type: 'address',
+        type: 'string',
       },
     ],
     stateMutability: 'view',
@@ -2848,6 +2390,35 @@ const _abi = [
     name: 'migrateQuoteTokenAddress',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'nonceInvalidationsByWallet',
+    outputs: [
+      {
+        internalType: 'uint64',
+        name: 'timestampInMs',
+        type: 'uint64',
+      },
+      {
+        internalType: 'uint256',
+        name: 'effectiveBlockTimestamp',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -3031,6 +2602,11 @@ const _abi = [
         name: 'newCustodian',
         type: 'address',
       },
+      {
+        internalType: 'contract IBridgeAdapter[]',
+        name: 'newBridgeAdapters',
+        type: 'address[]',
+      },
     ],
     name: 'setCustodian',
     outputs: [],
@@ -3131,19 +2707,6 @@ const _abi = [
       },
     ],
     name: 'setInsuranceFundWallet',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'contract IManagedAccountProvider[]',
-        name: 'newManagedAccounts',
-        type: 'address[]',
-      },
-    ],
-    name: 'setManagedAccounts',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -3326,6 +2889,35 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'walletExits',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: 'exists',
+        type: 'bool',
+      },
+      {
+        internalType: 'uint64',
+        name: 'effectiveBlockTimestamp',
+        type: 'uint64',
+      },
+      {
+        internalType: 'enum WalletExitAcquisitionDeleveragePriceStrategy',
+        name: 'deleveragePriceStrategy',
+        type: 'uint8',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         components: [
           {
             internalType: 'uint128',
@@ -3400,175 +2992,6 @@ const _abi = [
       },
     ],
     name: 'withdrawExitAdmin',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: 'enum ManagedAccountWithdrawalType',
-            name: 'withdrawalType',
-            type: 'uint8',
-          },
-          {
-            components: [
-              {
-                internalType: 'uint128',
-                name: 'nonce',
-                type: 'uint128',
-              },
-              {
-                internalType: 'address',
-                name: 'managerWallet',
-                type: 'address',
-              },
-              {
-                internalType: 'address',
-                name: 'depositorWallet',
-                type: 'address',
-              },
-              {
-                internalType: 'uint64',
-                name: 'quantity',
-                type: 'uint64',
-              },
-              {
-                internalType: 'uint64',
-                name: 'minimumQuantity',
-                type: 'uint64',
-              },
-              {
-                internalType: 'uint64',
-                name: 'maxShares',
-                type: 'uint64',
-              },
-              {
-                internalType: 'uint64',
-                name: 'maximumGasFee',
-                type: 'uint64',
-              },
-              {
-                internalType: 'contract IManagedAccountProvider',
-                name: 'managedAccount',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'managedAccountPayload',
-                type: 'bytes',
-              },
-              {
-                internalType: 'address',
-                name: 'bridgeAdapter',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'bridgeAdapterPayload',
-                type: 'bytes',
-              },
-              {
-                internalType: 'uint64',
-                name: 'gasFee',
-                type: 'uint64',
-              },
-              {
-                internalType: 'uint64',
-                name: 'grossQuantity',
-                type: 'uint64',
-              },
-              {
-                internalType: 'bytes',
-                name: 'walletSignature',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct WithdrawalFromManagedAccountByQuantity',
-            name: 'withdrawalByQuantity',
-            type: 'tuple',
-          },
-          {
-            components: [
-              {
-                internalType: 'uint128',
-                name: 'nonce',
-                type: 'uint128',
-              },
-              {
-                internalType: 'address',
-                name: 'managerWallet',
-                type: 'address',
-              },
-              {
-                internalType: 'address',
-                name: 'depositorWallet',
-                type: 'address',
-              },
-              {
-                internalType: 'uint64',
-                name: 'shares',
-                type: 'uint64',
-              },
-              {
-                internalType: 'uint64',
-                name: 'minimumQuantity',
-                type: 'uint64',
-              },
-              {
-                internalType: 'uint64',
-                name: 'maximumGasFee',
-                type: 'uint64',
-              },
-              {
-                internalType: 'contract IManagedAccountProvider',
-                name: 'managedAccount',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'managedAccountPayload',
-                type: 'bytes',
-              },
-              {
-                internalType: 'address',
-                name: 'bridgeAdapter',
-                type: 'address',
-              },
-              {
-                internalType: 'bytes',
-                name: 'bridgeAdapterPayload',
-                type: 'bytes',
-              },
-              {
-                internalType: 'uint64',
-                name: 'gasFee',
-                type: 'uint64',
-              },
-              {
-                internalType: 'uint64',
-                name: 'grossQuantity',
-                type: 'uint64',
-              },
-              {
-                internalType: 'bytes',
-                name: 'walletSignature',
-                type: 'bytes',
-              },
-            ],
-            internalType: 'struct WithdrawalFromManagedAccountByShares',
-            name: 'withdrawalByShares',
-            type: 'tuple',
-          },
-        ],
-        internalType: 'struct WithdrawalFromManagedAccount',
-        name: 'withdrawal',
-        type: 'tuple',
-      },
-    ],
-    name: 'withdrawFromManagedAccount',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',

@@ -11,4 +11,3 @@ export { IRewardVault__factory } from './IRewardVault__factory';
 export { KumaOFTAdapterUSDC__factory } from './KumaOFTAdapterUSDC__factory';
 export { KumaOFTUSDC__factory } from './KumaOFTUSDC__factory';
 export { KumaStargateForwarder_v1__factory } from './KumaStargateForwarder_v1__factory';
-export { StargatePoolUSDC__factory } from './StargatePoolUSDC__factory';

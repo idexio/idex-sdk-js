@@ -19,20 +19,6 @@ export enum EthTransactionStatus {
 /**
  * @internal
  */
-export enum ManagedAccountWithdrawalType {
-  /**
-   * Withdraw by quantity
-   */
-  byQuantity,
-  /**
-   * Withdraw by shares
-   */
-  byShares,
-}
-
-/**
- * @internal
- */
 export enum MarketType {
   /**
    * Orderbook trades accepted
