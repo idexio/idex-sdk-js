@@ -1,11 +1,9 @@
 import { ethers } from 'ethers';
-import { stringify as uuidStringify } from 'uuid';
 
 import * as constants from '#constants';
 import { assertNonceIsValid } from '#utils';
 
 import {
-  ManagedAccountWithdrawalType,
   OrderTypeSigEnum,
   OrderSideSigEnum,
   OrderTimeInForceSigEnum,
@@ -13,10 +11,7 @@ import {
   OrderTriggerTypeSigEnum,
 } from '#types/enums/signature';
 
-import { pipToDecimal } from './pipmath';
-
 import type * as types from '#index';
-import type { WithdrawalFromManagedAccountStruct } from './typechain-types/Exchange_v1';
 
 export type SignTypedData = (
   domain: ethers.TypedDataDomain,
@@ -332,169 +327,6 @@ export const getOrderCancellationSignatureTypedData = (
   );
 };
 
-export const getWithdrawalFromManagedAccountContractStructSignatureTypedData =
-  async (
-    data: WithdrawalFromManagedAccountStruct,
-    contractAddress: string,
-    chainId: number,
-    sandbox: boolean,
-  ): Promise<Parameters<ethers.JsonRpcSigner['signTypedData']>> => {
-    if (data.withdrawalType === ManagedAccountWithdrawalType.byQuantity) {
-      return getWithdrawalFromManagedAccountByQuantitySignatureTypedData(
-        {
-          nonce: uint128ToUuid(data.withdrawalByQuantity.nonce),
-          managerWallet: await ethers.resolveAddress(
-            data.withdrawalByQuantity.managerWallet,
-          ),
-          wallet: await ethers.resolveAddress(
-            data.withdrawalByQuantity.depositorWallet,
-          ),
-          quantity: pipToDecimal(BigInt(data.withdrawalByQuantity.quantity)),
-          minimumQuantity: pipToDecimal(
-            BigInt(data.withdrawalByQuantity.minimumQuantity),
-          ),
-          maxShares: pipToDecimal(BigInt(data.withdrawalByQuantity.maxShares)),
-          maximumGasFee: pipToDecimal(
-            BigInt(data.withdrawalByQuantity.maximumGasFee),
-          ),
-          managedAccount: await ethers.resolveAddress(
-            data.withdrawalByQuantity.managedAccount,
-          ),
-          managedAccountPayload: ethers.hexlify(
-            data.withdrawalByQuantity.managedAccountPayload,
-          ),
-          bridgeAdapterAddress: await ethers.resolveAddress(
-            data.withdrawalByQuantity.bridgeAdapter,
-          ),
-          bridgeAdapterPayload: ethers.hexlify(
-            data.withdrawalByQuantity.bridgeAdapterPayload,
-          ),
-        },
-        contractAddress,
-        chainId,
-        sandbox,
-      );
-    }
-    if (data.withdrawalType === ManagedAccountWithdrawalType.byShares) {
-      return getWithdrawalFromManagedAccountBySharesSignatureTypedData(
-        {
-          nonce: uint128ToUuid(data.withdrawalByShares.nonce),
-          managerWallet: await ethers.resolveAddress(
-            data.withdrawalByShares.managerWallet,
-          ),
-          wallet: await ethers.resolveAddress(
-            data.withdrawalByShares.depositorWallet,
-          ),
-          shares: pipToDecimal(BigInt(data.withdrawalByShares.shares)),
-          minimumQuantity: pipToDecimal(
-            BigInt(data.withdrawalByShares.minimumQuantity),
-          ),
-          maximumGasFee: pipToDecimal(
-            BigInt(data.withdrawalByShares.maximumGasFee),
-          ),
-          managedAccount: await ethers.resolveAddress(
-            data.withdrawalByShares.managedAccount,
-          ),
-          managedAccountPayload: ethers.hexlify(
-            data.withdrawalByShares.managedAccountPayload,
-          ),
-          bridgeAdapterAddress: await ethers.resolveAddress(
-            data.withdrawalByShares.bridgeAdapter,
-          ),
-          bridgeAdapterPayload: ethers.hexlify(
-            data.withdrawalByShares.bridgeAdapterPayload,
-          ),
-        },
-        contractAddress,
-        chainId,
-        sandbox,
-      );
-    }
-    throw new Error(
-      `Invalid ManagedAccountWithdrawalType ${data.withdrawalType}`,
-    );
-  };
-
-export const getWithdrawalFromManagedAccountByQuantitySignatureTypedData = (
-  data: types.RestRequestWithdrawFundsFromManagedAccountByQuantity,
-  contractAddress: string,
-  chainId: number,
-  sandbox: boolean,
-): Parameters<ethers.JsonRpcSigner['signTypedData']> => {
-  assertNonceIsValid(data.nonce);
-
-  return [
-    getDomainSeparator(contractAddress, chainId, sandbox),
-    {
-      WithdrawalFromManagedAccountByQuantity: [
-        { name: 'nonce', type: 'uint128' },
-        { name: 'managerWallet', type: 'address' },
-        { name: 'depositorWallet', type: 'address' },
-        { name: 'quantity', type: 'string' },
-        { name: 'minimumQuantity', type: 'string' },
-        { name: 'maxShares', type: 'string' },
-        { name: 'maximumGasFee', type: 'string' },
-        { name: 'managedAccount', type: 'address' },
-        { name: 'managedAccountPayload', type: 'bytes' },
-        { name: 'bridgeAdapter', type: 'address' },
-        { name: 'bridgeAdapterPayload', type: 'bytes' },
-      ],
-    },
-    {
-      nonce: uuidToUint128(data.nonce),
-      managerWallet: data.managerWallet,
-      depositorWallet: data.wallet,
-      quantity: data.quantity,
-      minimumQuantity: data.minimumQuantity,
-      maxShares: data.maxShares,
-      maximumGasFee: data.maximumGasFee,
-      managedAccount: data.managedAccount,
-      managedAccountPayload: data.managedAccountPayload,
-      bridgeAdapter: data.bridgeAdapterAddress,
-      bridgeAdapterPayload: data.bridgeAdapterPayload,
-    },
-  ];
-};
-
-export const getWithdrawalFromManagedAccountBySharesSignatureTypedData = (
-  data: types.RestRequestWithdrawFundsFromManagedAccountByShares,
-  contractAddress: string,
-  chainId: number,
-  sandbox: boolean,
-): Parameters<ethers.JsonRpcSigner['signTypedData']> => {
-  assertNonceIsValid(data.nonce);
-
-  return [
-    getDomainSeparator(contractAddress, chainId, sandbox),
-    {
-      WithdrawalFromManagedAccountByShares: [
-        { name: 'nonce', type: 'uint128' },
-        { name: 'managerWallet', type: 'address' },
-        { name: 'depositorWallet', type: 'address' },
-        { name: 'shares', type: 'string' },
-        { name: 'minimumQuantity', type: 'string' },
-        { name: 'maximumGasFee', type: 'string' },
-        { name: 'managedAccount', type: 'address' },
-        { name: 'managedAccountPayload', type: 'bytes' },
-        { name: 'bridgeAdapter', type: 'address' },
-        { name: 'bridgeAdapterPayload', type: 'bytes' },
-      ],
-    },
-    {
-      nonce: uuidToUint128(data.nonce),
-      managerWallet: data.managerWallet,
-      depositorWallet: data.wallet,
-      shares: data.shares,
-      minimumQuantity: data.minimumQuantity,
-      maximumGasFee: data.maximumGasFee,
-      managedAccount: data.managedAccount,
-      managedAccountPayload: data.managedAccountPayload,
-      bridgeAdapter: data.bridgeAdapterAddress,
-      bridgeAdapterPayload: data.bridgeAdapterPayload,
-    },
-  ];
-};
-
 export function getWithdrawalSignatureTypedData(
   data: types.RestRequestWithdrawFunds,
   contractAddress: string,
@@ -553,10 +385,6 @@ export function getInitialMarginFractionOverrideSettingsSignatureTypedData(
       delegatedPublicKey: data.delegatedKey || ethers.ZeroAddress,
     },
   ];
-}
-
-function uint128ToUuid(uint: ethers.BigNumberish): string {
-  return uuidStringify(ethers.toBeArray(uint));
 }
 
 function uuidToHexString(uuid: string): string {

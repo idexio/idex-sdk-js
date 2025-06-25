@@ -129,7 +129,7 @@
     "@layerzerolabs/lz-v2-utilities": "^3.0.83",
     "axios": "1.6.8",
     "bignumber.js": "^9.1.2",
-    "ethers": "6.13.5",
+    "ethers": "6.9.0",
     "isomorphic-ws": "^5.0.0",
     "tslib": "^2.7.0",
     "uuid": "^9.0.1",
