@@ -63,6 +63,17 @@ export const StargateV2Config = {
       tokenDecimals: 6,
       usdcAddress: '0x368EBb46ACa6b8D0787C96B2b20bD3CC3F2c45F7',
     },
+    [StargateV2Target.STARGATE_AVALANCHE]: {
+      target: StargateV2Target.STARGATE_AVALANCHE,
+      evmChainId: 43114,
+      // https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#avalanche
+      layerZeroEndpointId: 30106,
+      // https://stargateprotocol.gitbook.io/stargate/v/v2-developer-docs/technical-reference/mainnet-contracts#avalanche
+      stargateOFTAddress: '0x5634c4a5FEd09819E3c46D86A965Dd9447d86e47',
+      // https://stargateprotocol.gitbook.io/stargate/v2-developer-docs/technical-reference/v2-supported-networks-and-assets#avalanche
+      tokenDecimals: 6,
+      usdcAddress: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
+    },
     [StargateV2Target.STARGATE_BASE]: {
       target: StargateV2Target.STARGATE_BASE,
       // https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#base
@@ -179,6 +190,9 @@ export const StargateV2ConfigByLayerZeroEndpointId = {
     [StargateV2Config.mainnet[StargateV2Target.STARGATE_AURORA]
       .layerZeroEndpointId]:
       StargateV2Config.mainnet[StargateV2Target.STARGATE_AURORA],
+    [StargateV2Config.mainnet[StargateV2Target.STARGATE_AVALANCHE]
+      .layerZeroEndpointId]:
+      StargateV2Config.mainnet[StargateV2Target.STARGATE_AVALANCHE],
     [StargateV2Config.mainnet[StargateV2Target.STARGATE_BASE]
       .layerZeroEndpointId]:
       StargateV2Config.mainnet[StargateV2Target.STARGATE_BASE],

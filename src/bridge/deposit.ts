@@ -332,7 +332,7 @@ async function getDepositViaForwarderSendParamAndSourceConfig(
     composeMsg: ethers.AbiCoder.defaultAbiCoder().encode(
       ['uint8', 'tuple(address)'],
       [
-        0, //  ComposeMessageType.DepositToXhain
+        0, //  ComposeMessageType.DepositToXchain
         [
           parameters.wallet, // Destination wallet
         ],
