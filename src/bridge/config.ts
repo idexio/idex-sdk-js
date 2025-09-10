@@ -78,12 +78,23 @@ export const StargateV2Config = {
       target: StargateV2Target.STARGATE_BASE,
       // https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#base
       evmChainId: 8453,
-      layerZeroEndpointId: 30184,
       // https://stargateprotocol.gitbook.io/stargate/v/v2-developer-docs/technical-reference/mainnet-contracts#base
+      layerZeroEndpointId: 30184,
       stargateOFTAddress: '0x27a16dc786820B16E5c9028b75B99F6f604b5d26',
       // https://stargateprotocol.gitbook.io/stargate/v2-developer-docs/technical-reference/v2-supported-networks-and-assets#base
       tokenDecimals: 6,
       usdcAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+    },
+    [StargateV2Target.STARGATE_BNB]: {
+      target: StargateV2Target.STARGATE_BNB,
+      // https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#bnb
+      evmChainId: 56,
+      // https://stargateprotocol.gitbook.io/stargate/v/v2-developer-docs/technical-reference/mainnet-contracts#bnb-chain
+      layerZeroEndpointId: 30102,
+      stargateOFTAddress: '0x962Bd449E630b0d928f308Ce63f1A21F02576057',
+      // https://stargateprotocol.gitbook.io/stargate/v/v2-developer-docs/technical-reference/mainnet-contracts#bnb-chain
+      tokenDecimals: 18,
+      usdcAddress: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
     },
     [StargateV2Target.STARGATE_ETHEREUM]: {
       target: StargateV2Target.STARGATE_ETHEREUM,
@@ -196,6 +207,9 @@ export const StargateV2ConfigByLayerZeroEndpointId = {
     [StargateV2Config.mainnet[StargateV2Target.STARGATE_BASE]
       .layerZeroEndpointId]:
       StargateV2Config.mainnet[StargateV2Target.STARGATE_BASE],
+    [StargateV2Config.mainnet[StargateV2Target.STARGATE_BNB]
+      .layerZeroEndpointId]:
+      StargateV2Config.mainnet[StargateV2Target.STARGATE_BNB],
     [StargateV2Config.mainnet[StargateV2Target.STARGATE_ETHEREUM]
       .layerZeroEndpointId]:
       StargateV2Config.mainnet[StargateV2Target.STARGATE_ETHEREUM],
