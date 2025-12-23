@@ -13,7 +13,7 @@ export const StargateV2TargetsArray = Object.values(StargateV2Target);
 export const StargateV2Config = {
   settings: {
     depositSourceChainGasLimit: 450_000,
-    stargateBridgeForwarderGasLimit: 450_000,
+    stargateBridgeForwarderGasLimit: 1_000_000,
     localBridgeTarget: StargateV2Target.XCHAIN_XCHAIN,
   },
   // better way to handle the kuma config as it doesnt have a
